@@ -332,3 +332,9 @@ if (shareBtn) {
 console.log(
   `Universe139 Daily Page: ${year}-${monthName}-${dayNumber}`
 );
+// Automatically reveal a message when the page opens
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    revealMessage();
+  }, 1000);
+});
