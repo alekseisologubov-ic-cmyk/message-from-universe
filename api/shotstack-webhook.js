@@ -8,21 +8,33 @@ export default async function handler(req, res) {
     });
   }
 
-  const bufferApiKey = process.env.BUFFER_API_KEY;
-  const channelId = process.env.BUFFER_TIKTOK_CHANNEL_ID;
+  const rawKey = process.env.BUFFER_API_KEY;
 
-  if (!bufferApiKey) {
-    console.error("BUFFER_API_KEY is missing");
+  // NEVER log the actual secret.
+  const key = typeof rawKey === "string"
+    ? rawKey.trim()
+    : "";
 
+  console.log("BUFFER KEY CHECK:", {
+    exists: Boolean(rawKey),
+    length: key.length,
+    startsWithMutation: key.startsWith("mutation"),
+    startsWithBearer: key.startsWith("Bearer"),
+    containsNewline: /\r|\n/.test(rawKey || ""),
+    prefix: key.substring(0, 6)
+  });
+
+  if (!key) {
     return res.status(500).json({
       success: false,
       error: "BUFFER_API_KEY is missing"
     });
   }
 
-  if (!channelId) {
-    console.error("BUFFER_TIKTOK_CHANNEL_ID is missing");
+  const channelId =
+    process.env.BUFFER_TIKTOK_CHANNEL_ID;
 
+  if (!channelId) {
     return res.status(500).json({
       success: false,
       error: "BUFFER_TIKTOK_CHANNEL_ID is missing"
@@ -36,63 +48,37 @@ export default async function handler(req, res) {
     JSON.stringify(payload, null, 2)
   );
 
-  /*
-   * Shotstack can send different webhook events.
-   *
-   * We only want the completed EDIT render.
-   *
-   * type = edit
-   * status = done
-   */
-
-  const isCompletedEdit =
-    payload.type === "edit" &&
-    payload.status === "done" &&
-    payload.url;
-
-  /*
-   * Ignore other callbacks such as:
-   *
-   * type = serve
-   * action = copy
-   *
-   * because they can be sent separately.
-   */
-
-  if (!isCompletedEdit) {
+  // Only process completed edit renders.
+  if (
+    payload.type !== "edit" ||
+    payload.status !== "done" ||
+    !payload.url
+  ) {
     return res.status(200).json({
       success: true,
       ignored: true,
       type: payload.type || null,
-      status: payload.status || null,
-      action: payload.action || null
+      status: payload.status || null
     });
   }
 
   const videoUrl = String(payload.url).trim();
 
-  if (!videoUrl.startsWith("http")) {
-    return res.status(400).json({
-      success: false,
-      error: "Invalid video URL",
-      videoUrl
-    });
-  }
-
-  /*
-   * TikTok caption
-   */
-
-  const caption =
-    "✨ A message from the universe, just for you.\n\n" +
-    "Today may bring a small sign that changes how you see everything.\n\n" +
-    "Discover your personal message:\n" +
-    "https://message-from-universe.vercel.app/\n\n" +
-    "#Universe139 #MessageFromTheUniverse #DailyMessage #Universe #Motivation #DailyInspiration";
-
-  /*
-   * Current Buffer GraphQL mutation.
-   */
+  const caption = [
+    "✨ A message from the universe, just for you.",
+    "",
+    "Something in this message may be meant for you today.",
+    "",
+    "Discover your personal message:",
+    "https://message-from-universe.vercel.app/",
+    "",
+    "#Universe139",
+    "#MessageFromTheUniverse",
+    "#DailyMessage",
+    "#Universe",
+    "#Motivation",
+    "#DailyInspiration"
+  ].join("\n");
 
   const query = `
     mutation CreatePost {
@@ -131,28 +117,16 @@ export default async function handler(req, res) {
   `;
 
   try {
-    /*
-     * IMPORTANT:
-     * Build the Authorization header directly from the
-     * Vercel secret. Do not include the GraphQL query
-     * inside the header.
-     */
-
-    const authorization =
-      "Bearer " + String(bufferApiKey).trim();
-
     const response = await fetch(
       "https://api.buffer.com",
       {
         method: "POST",
-
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": authorization
+          "Authorization": `Bearer ${key}`,
+          "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
-          query: query
+          query
         })
       }
     );
@@ -164,9 +138,14 @@ export default async function handler(req, res) {
       JSON.stringify(data, null, 2)
     );
 
-    /*
-     * GraphQL errors
-     */
+    if (!response.ok) {
+      return res.status(500).json({
+        success: false,
+        error: "Buffer HTTP error",
+        status: response.status,
+        details: data
+      });
+    }
 
     if (data.errors) {
       return res.status(500).json({
@@ -181,14 +160,10 @@ export default async function handler(req, res) {
     if (!result) {
       return res.status(500).json({
         success: false,
-        error: "Buffer returned no createPost result",
+        error: "No createPost result",
         details: data
       });
     }
-
-    /*
-     * Buffer may return a typed MutationError.
-     */
 
     if (result.message) {
       return res.status(500).json({
@@ -197,22 +172,15 @@ export default async function handler(req, res) {
       });
     }
 
-    /*
-     * SUCCESS
-     */
-
     return res.status(200).json({
       success: true,
-      message: "TikTok video added to Buffer queue",
-      videoUrl: videoUrl,
+      message: "TikTok post added to Buffer",
+      videoUrl,
       post: result.post || null
     });
 
   } catch (error) {
-    console.error(
-      "BUFFER REQUEST ERROR:",
-      error
-    );
+    console.error("BUFFER REQUEST ERROR:", error);
 
     return res.status(500).json({
       success: false,
