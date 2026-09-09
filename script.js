@@ -1868,30 +1868,149 @@ function shareWhatsApp() {
 
 async function shareFacebook() {
 
-  const text =
-    getShareText();
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
 
-  // Facebook's dialog only reliably renders the link preview,
-  // but it does still accept a "quote" param to prefill the
-  // post text — pass the full message + link through that too,
-  // and back it up with a clipboard copy just in case.
-  await copyShareTextWithNotice();
+  if (!currentMessage) {
 
-  const shareURL =
-    "https://www.facebook.com/sharer/sharer.php?u=" +
-    encodeURIComponent(
-      UNIVERSE139_URL
-    ) +
-    "&quote=" +
-    encodeURIComponent(
-      text
+    showShareToast(
+      translations[currentLanguage].noMessage
     );
 
-  window.open(
-    shareURL,
-    "_blank",
-    "width=700,height=650,noopener,noreferrer"
-  );
+    return;
+
+  }
+
+  // Facebook's sharer.php dialog no longer honors any prefilled
+  // post text (the old "quote" param is silently ignored now —
+  // that's why the exact message wasn't showing up). The message
+  // only reliably shows on Facebook if it's baked into an image,
+  // the same way TikTok/Instagram sharing already works here.
+  try {
+
+    const blob =
+      await createMessageImageBlob();
+
+    const file =
+      new File(
+        [blob],
+        "Universe139-message.png",
+        {
+          type: "image/png"
+        }
+      );
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file]
+      })
+    ) {
+
+      // On phones this hands the image straight to the Facebook
+      // app (feed post, Story, Messenger, etc) with the message
+      // visible in the picture itself.
+      await navigator.share({
+
+        title:
+          "Universe139",
+
+        text:
+          getShareText(),
+
+        files:
+          [file]
+
+      });
+
+      return;
+
+    }
+
+    // Desktop fallback: download the image, copy the message +
+    // link to the clipboard, and open Facebook's share dialog so
+    // the person can attach the image and paste the caption in.
+    const objectURL =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href =
+      objectURL;
+
+    link.download =
+      "Universe139-message.png";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    link.remove();
+
+    window.setTimeout(() => {
+
+      URL.revokeObjectURL(
+        objectURL
+      );
+
+    }, 2000);
+
+    await copyShareTextWithNotice();
+
+    const shareURL =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.setTimeout(() => {
+
+      window.open(
+        shareURL,
+        "_blank",
+        "width=700,height=650,noopener,noreferrer"
+      );
+
+    }, 1200);
+
+  } catch (error) {
+
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error(
+      "Universe139 Facebook share error:",
+      error
+    );
+
+    // Emergency fallback if image generation itself fails.
+    await copyShareTextWithNotice();
+
+    const shareURL =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      shareURL,
+      "_blank",
+      "width=700,height=650,noopener,noreferrer"
+    );
+
+  }
 
 }
 
