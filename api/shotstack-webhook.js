@@ -1,5 +1,18 @@
 // api/shotstack-webhook.js
 
+function getQueryParameter(req, name) {
+  try {
+    const url = new URL(
+      req.url,
+      "https://message-from-universe.vercel.app"
+    );
+
+    return url.searchParams.get(name);
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -8,36 +21,24 @@ export default async function handler(req, res) {
     });
   }
 
-  const rawKey = process.env.BUFFER_API_KEY;
+  const bufferApiKey =
+    process.env.BUFFER_API_KEY;
 
-  // NEVER log the actual secret.
-  const key = typeof rawKey === "string"
-    ? rawKey.trim()
-    : "";
+  const channelId =
+    process.env.BUFFER_TIKTOK_CHANNEL_ID;
 
-  console.log("BUFFER KEY CHECK:", {
-    exists: Boolean(rawKey),
-    length: key.length,
-    startsWithMutation: key.startsWith("mutation"),
-    startsWithBearer: key.startsWith("Bearer"),
-    containsNewline: /\r|\n/.test(rawKey || ""),
-    prefix: key.substring(0, 6)
-  });
-
-  if (!key) {
+  if (!bufferApiKey) {
     return res.status(500).json({
       success: false,
       error: "BUFFER_API_KEY is missing"
     });
   }
 
-  const channelId =
-    process.env.BUFFER_TIKTOK_CHANNEL_ID;
-
   if (!channelId) {
     return res.status(500).json({
       success: false,
-      error: "BUFFER_TIKTOK_CHANNEL_ID is missing"
+      error:
+        "BUFFER_TIKTOK_CHANNEL_ID is missing"
     });
   }
 
@@ -48,7 +49,15 @@ export default async function handler(req, res) {
     JSON.stringify(payload, null, 2)
   );
 
-  // Only process completed edit renders.
+  /*
+   * Shotstack edit callback:
+   *
+   * type = edit
+   * status = done
+   * url = finished MP4
+   *
+   * Ignore serve/copy callbacks.
+   */
   if (
     payload.type !== "edit" ||
     payload.status !== "done" ||
@@ -62,23 +71,27 @@ export default async function handler(req, res) {
     });
   }
 
-  const videoUrl = String(payload.url).trim();
+  const videoUrl =
+    String(payload.url).trim();
 
-  const caption = [
-    "✨ A message from the universe, just for you.",
-    "",
-    "Something in this message may be meant for you today.",
-    "",
-    "Discover your personal message:",
-    "https://message-from-universe.vercel.app/",
-    "",
-    "#Universe139",
-    "#MessageFromTheUniverse",
-    "#DailyMessage",
-    "#Universe",
-    "#Motivation",
-    "#DailyInspiration"
-  ].join("\n");
+  const message =
+    getQueryParameter(req, "message") ||
+    "A message from the universe, just for you.";
+
+  const slot =
+    getQueryParameter(req, "slot") || "1";
+
+  const caption =
+    `✨ ${message}\n\n` +
+    `Your message from the universe today.\n\n` +
+    `Discover your personal message:\n` +
+    `https://message-from-universe.vercel.app/\n\n` +
+    `#Universe139 ` +
+    `#MessageFromTheUniverse ` +
+    `#DailyMessage ` +
+    `#Universe ` +
+    `#Motivation ` +
+    `#DailyInspiration`;
 
   const query = `
     mutation CreatePost {
@@ -106,6 +119,11 @@ export default async function handler(req, res) {
             text
             dueAt
             status
+            assets {
+              id
+              mimeType
+              source
+            }
           }
         }
 
@@ -121,10 +139,14 @@ export default async function handler(req, res) {
       "https://api.buffer.com",
       {
         method: "POST",
+
         headers: {
-          "Authorization": `Bearer ${key}`,
-          "Content-Type": "application/json"
+          "Authorization":
+            `Bearer ${bufferApiKey.trim()}`,
+          "Content-Type":
+            "application/json"
         },
+
         body: JSON.stringify({
           query
         })
@@ -134,7 +156,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     console.log(
-      "BUFFER RESPONSE:",
+      `BUFFER RESPONSE SLOT ${slot}:`,
       JSON.stringify(data, null, 2)
     );
 
@@ -155,13 +177,14 @@ export default async function handler(req, res) {
       });
     }
 
-    const result = data?.data?.createPost;
+    const result =
+      data?.data?.createPost;
 
     if (!result) {
       return res.status(500).json({
         success: false,
-        error: "No createPost result",
-        details: data
+        error:
+          "Buffer returned no createPost result"
       });
     }
 
@@ -174,13 +197,18 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "TikTok post added to Buffer",
+      message:
+        "TikTok video added to Buffer",
+      slot,
       videoUrl,
       post: result.post || null
     });
 
   } catch (error) {
-    console.error("BUFFER REQUEST ERROR:", error);
+    console.error(
+      "BUFFER REQUEST ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
