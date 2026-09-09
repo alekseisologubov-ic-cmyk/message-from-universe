@@ -29,18 +29,11 @@
 
     body {
       min-height: 100vh;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+      font-family: Arial, Helvetica, sans-serif;
       color: white;
-
       display: flex;
       justify-content: center;
       align-items: center;
-
       overflow-x: hidden;
 
       background:
@@ -54,10 +47,6 @@
 
       position: relative;
     }
-
-    /* =========================================
-       BACKGROUND GLOW
-       ========================================= */
 
     body::before {
       content: "";
@@ -83,10 +72,6 @@
 
       pointer-events: none;
     }
-
-    /* =========================================
-       STARS
-       ========================================= */
 
     .stars {
       position: fixed;
@@ -119,10 +104,6 @@
       }
     }
 
-    /* =========================================
-       MAIN
-       ========================================= */
-
     .container {
       width: 100%;
       max-width: 760px;
@@ -143,29 +124,17 @@
       z-index: 2;
     }
 
-    /* =========================================
-       LOGO
-       ========================================= */
-
     .logo {
       font-size: 13px;
-
       letter-spacing: 7px;
-
       text-transform: uppercase;
-
       opacity: 0.55;
-
       margin-bottom: 22px;
 
       text-shadow:
         0 0 20px
         rgba(210,160,255,0.6);
     }
-
-    /* =========================================
-       TITLE
-       ========================================= */
 
     #title {
       font-size:
@@ -176,11 +145,8 @@
         );
 
       line-height: 1.05;
-
       letter-spacing: 3px;
-
       font-weight: 700;
-
       margin-bottom: 18px;
 
       text-shadow:
@@ -191,23 +157,12 @@
         rgba(170,100,255,0.4);
     }
 
-    /* =========================================
-       SUBTITLE
-       ========================================= */
-
     #subtitle {
       font-size: 18px;
-
       line-height: 1.5;
-
       opacity: 0.75;
-
       margin-bottom: 35px;
     }
-
-    /* =========================================
-       LANGUAGE GRID
-       ========================================= */
 
     #languageBox {
       width: 100%;
@@ -227,10 +182,6 @@
       margin-bottom: 20px;
     }
 
-    /* =========================================
-       CHOOSE LANGUAGE
-       ========================================= */
-
     #chooseLanguage {
       grid-column: 1 / -1;
 
@@ -244,10 +195,6 @@
 
       margin-bottom: 5px;
     }
-
-    /* =========================================
-       DIAMOND
-       ========================================= */
 
     .languageBtn {
       width: 140px;
@@ -319,10 +266,6 @@
         transparent;
     }
 
-    /* =========================================
-       CONTENT INSIDE DIAMOND
-       ========================================= */
-
     .diamondContent {
       transform:
         rotate(-45deg);
@@ -342,10 +285,6 @@
       z-index: 5;
     }
 
-    /* =========================================
-       FLOAT
-       ========================================= */
-
     @keyframes diamondFloat {
 
       0%,
@@ -362,10 +301,6 @@
       }
 
     }
-
-    /* =========================================
-       DIFFERENT SPEEDS
-       ========================================= */
 
     .languageBtn:nth-of-type(2) {
       animation-delay: -1s;
@@ -390,10 +325,6 @@
     .languageBtn:nth-of-type(7) {
       animation-delay: -2.5s;
     }
-
-    /* =========================================
-       SHINE
-       ========================================= */
 
     .languageBtn::before {
       content: "";
@@ -441,10 +372,6 @@
 
     }
 
-    /* =========================================
-       HIGHLIGHT
-       ========================================= */
-
     .languageBtn::after {
       content: "";
 
@@ -466,10 +393,6 @@
       pointer-events: none;
     }
 
-    /* =========================================
-       FLAG
-       ========================================= */
-
     .flag {
       display: block;
 
@@ -484,10 +407,6 @@
         );
     }
 
-    /* =========================================
-       LANGUAGE NAME
-       ========================================= */
-
     .languageName {
       font-size: 15px;
 
@@ -497,10 +416,6 @@
         0 2px 8px
         rgba(0,0,0,0.5);
     }
-
-    /* =========================================
-       HOVER
-       ========================================= */
 
     .languageBtn:hover {
       transform:
@@ -535,10 +450,6 @@
         translateY(-2px)
         scale(1.02);
     }
-
-    /* =========================================
-       REVEAL BUTTON
-       ========================================= */
 
     #revealBtn {
       border: none;
@@ -581,10 +492,6 @@
         rgba(150,80,255,0.5);
     }
 
-    /* =========================================
-       LOADING
-       ========================================= */
-
     #loading {
       margin-top: 25px;
     }
@@ -613,10 +520,6 @@
       }
 
     }
-
-    /* =========================================
-       MESSAGE BOX
-       ========================================= */
 
     #messageBox {
       width: 100%;
@@ -657,10 +560,6 @@
         rgba(150,90,255,0.15);
     }
 
-    /* =========================================
-       TODAY
-       ========================================= */
-
     #month {
       font-size: 13px;
 
@@ -670,10 +569,6 @@
 
       margin-bottom: 25px;
     }
-
-    /* =========================================
-       MESSAGE
-       ========================================= */
 
     #message {
       font-size:
@@ -694,10 +589,6 @@
         rgba(255,255,255,0.18);
     }
 
-    /* =========================================
-       SMALL TEXT
-       ========================================= */
-
     #smallText {
       font-size: 14px;
 
@@ -705,10 +596,6 @@
 
       margin-bottom: 25px;
     }
-
-    /* =========================================
-       BUTTONS
-       ========================================= */
 
     .buttons {
       display: flex;
@@ -769,17 +656,10 @@
         translateY(-3px);
     }
 
-    /* =========================================
-       HIDDEN
-       ========================================= */
-
+    /* IMPORTANT */
     .hidden {
       display: none !important;
     }
-
-    /* =========================================
-       MOBILE
-       ========================================= */
 
     @media (max-width: 650px) {
 
@@ -831,10 +711,6 @@
       }
     }
 
-    /* =========================================
-       SMALL PHONES
-       ========================================= */
-
     @media (max-width: 360px) {
 
       .languageBtn {
@@ -852,10 +728,6 @@
 
     }
 
-    /* =========================================
-       REDUCE MOTION
-       ========================================= */
-
     @media (prefers-reduced-motion: reduce) {
 
       .stars,
@@ -872,7 +744,6 @@
 
   </style>
 </head>
-
 
 <body>
 
@@ -893,15 +764,11 @@
       You were guided here for a reason.
     </p>
 
-
-    <!-- LANGUAGE DIAMONDS -->
-
     <div id="languageBox">
 
       <div id="chooseLanguage">
         Choose your language
       </div>
-
 
       <button
         class="languageBtn"
@@ -914,7 +781,6 @@
         </div>
       </button>
 
-
       <button
         class="languageBtn"
         data-language="es"
@@ -925,7 +791,6 @@
           <span class="languageName">Español</span>
         </div>
       </button>
-
 
       <button
         class="languageBtn"
@@ -938,7 +803,6 @@
         </div>
       </button>
 
-
       <button
         class="languageBtn"
         data-language="ru"
@@ -950,7 +814,6 @@
         </div>
       </button>
 
-
       <button
         class="languageBtn"
         data-language="hi"
@@ -961,7 +824,6 @@
           <span class="languageName">हिन्दी</span>
         </div>
       </button>
-
 
       <button
         class="languageBtn"
@@ -976,19 +838,13 @@
 
     </div>
 
-
-    <!-- REVEAL -->
-
     <button
       id="revealBtn"
       class="hidden"
       type="button"
     >
-      ✨ REVEAL MY MESSAGE
+      ✨ RECEIVE MY MESSAGE
     </button>
-
-
-    <!-- LOADING -->
 
     <div
       id="loading"
@@ -998,9 +854,6 @@
         Connecting to the universe...
       </div>
     </div>
-
-
-    <!-- MESSAGE -->
 
     <section
       id="messageBox"
@@ -1021,6 +874,7 @@
 
         <button
           id="againBtn"
+          class="hidden"
           type="button"
         >
           🔮 RECEIVE ANOTHER MESSAGE
@@ -1038,7 +892,6 @@
     </section>
 
   </main>
-
 
   <script src="script.js"></script>
 
