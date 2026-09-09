@@ -1,12 +1,16 @@
 // =====================================================
-// UNIVERSE139 — COMPLETE SCRIPT
+// UNIVERSE139 — COMPLETE CORRECTED SCRIPT
 // =====================================================
 
-// -----------------------------------------------------
+"use strict";
+
+
+// =====================================================
 // LANGUAGES
-// -----------------------------------------------------
+// =====================================================
 
 const languages = {
+
     en: {
         title: "A Message From The Universe",
         subtitle: "Choose your language and receive your message",
@@ -66,12 +70,13 @@ const languages = {
         share: "แชร์ข้อความของฉัน",
         small: "ข้อความนี้มาถึงคุณด้วยเหตุผลบางอย่าง"
     }
+
 };
 
 
-// -----------------------------------------------------
+// =====================================================
 // MESSAGES
-// -----------------------------------------------------
+// =====================================================
 
 const messages = {
 
@@ -212,22 +217,24 @@ const messages = {
         "การเปลี่ยนแปลงที่รอคอยมานานกำลังเริ่มต้น",
         "ชีวิตของคุณกำลังเตรียมพร้อมที่จะเบาและมีความสุขมากขึ้น"
     ]
+
 };
 
 
-// -----------------------------------------------------
+// =====================================================
 // STATE
-// -----------------------------------------------------
+// =====================================================
 
 let currentLanguage = "en";
 let currentMessage = "";
 let lastMessageIndex = -1;
 let revealTimer = null;
+let initialized = false;
 
 
-// -----------------------------------------------------
-// DOM
-// -----------------------------------------------------
+// =====================================================
+// DOM VARIABLES
+// =====================================================
 
 let languageBox;
 let chooseLanguage;
@@ -244,411 +251,847 @@ let againBtn;
 let shareBtn;
 
 
-// -----------------------------------------------------
-// GET SHARE URL
-// -----------------------------------------------------
+// =====================================================
+// SHARE URL
+// =====================================================
 
 function getShareURL() {
+
     try {
-        // Always use the page that is actually running.
-        // This prevents old hard-coded Vercel URLs.
-        return window.location.origin + window.location.pathname;
+
+        const url =
+            new URL(window.location.href);
+
+        url.search = "";
+        url.hash = "";
+
+        return url.toString();
+
     } catch (error) {
+
         return window.location.href;
     }
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // INITIALIZE DOM
-// -----------------------------------------------------
+// =====================================================
 
 function initializeDOM() {
 
-    languageBox = document.getElementById("languageBox");
-    chooseLanguage = document.getElementById("chooseLanguage");
-    title = document.getElementById("title");
-    subtitle = document.getElementById("subtitle");
-    revealBtn = document.getElementById("revealBtn");
-    loading = document.getElementById("loading");
-    loadingText = document.getElementById("loadingText");
-    messageBox = document.getElementById("messageBox");
-    month = document.getElementById("month");
-    message = document.getElementById("message");
-    smallText = document.getElementById("smallText");
-    againBtn = document.getElementById("againBtn");
-    shareBtn = document.getElementById("shareBtn");
+    languageBox =
+        document.getElementById("languageBox");
 
-    console.log("Universe139 DOM initialized");
+    chooseLanguage =
+        document.getElementById("chooseLanguage");
 
-    if (!revealBtn) {
-        console.error("Universe139 ERROR: #revealBtn not found");
-    }
+    title =
+        document.getElementById("title");
 
-    if (!message) {
-        console.error("Universe139 ERROR: #message not found");
-    }
+    subtitle =
+        document.getElementById("subtitle");
+
+    revealBtn =
+        document.getElementById("revealBtn");
+
+    loading =
+        document.getElementById("loading");
+
+    loadingText =
+        document.getElementById("loadingText");
+
+    messageBox =
+        document.getElementById("messageBox");
+
+    month =
+        document.getElementById("month");
+
+    message =
+        document.getElementById("message");
+
+    smallText =
+        document.getElementById("smallText");
+
+    againBtn =
+        document.getElementById("againBtn");
+
+    shareBtn =
+        document.getElementById("shareBtn");
+
+
+    console.log(
+        "Universe139 DOM loaded."
+    );
+
+    console.log(
+        "Language buttons:",
+        document.querySelectorAll("[data-language]").length
+    );
+
+    console.log(
+        "Reveal button:",
+        !!revealBtn
+    );
+
+    console.log(
+        "Message element:",
+        !!message
+    );
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // SET LANGUAGE
-// -----------------------------------------------------
+// =====================================================
 
 function setLanguage(lang) {
 
+    console.log(
+        "Universe139 setLanguage:",
+        lang
+    );
+
+
     if (!languages[lang]) {
-        console.error("Universe139: unknown language:", lang);
+
+        console.error(
+            "Universe139: language does not exist:",
+            lang
+        );
+
         return;
     }
 
+
     currentLanguage = lang;
 
-    const data = languages[lang];
+    const data =
+        languages[lang];
 
-    if (title) title.textContent = data.title;
-    if (subtitle) subtitle.textContent = data.subtitle;
-    if (revealBtn) revealBtn.textContent = data.reveal;
-    if (loadingText) loadingText.textContent = data.loading;
-    if (againBtn) againBtn.textContent = data.again;
-    if (shareBtn) shareBtn.textContent = data.share;
-    if (smallText) smallText.textContent = data.small;
 
-    // Reset message when language changes
-    currentMessage = "";
-    lastMessageIndex = -1;
+    // Cancel previous loading
+    if (revealTimer) {
 
-    if (messageBox) {
-        messageBox.style.display = "none";
+        clearTimeout(
+            revealTimer
+        );
+
+        revealTimer = null;
     }
 
-    if (loading) {
-        loading.style.display = "none";
+
+    // Update text
+
+    if (title) {
+        title.textContent =
+            data.title;
+    }
+
+    if (subtitle) {
+        subtitle.textContent =
+            data.subtitle;
     }
 
     if (revealBtn) {
-        revealBtn.style.display = "inline-block";
+        revealBtn.textContent =
+            data.reveal;
     }
 
-    // Highlight selected language
-    document.querySelectorAll("[data-language]").forEach(button => {
+    if (loadingText) {
+        loadingText.textContent =
+            data.loading;
+    }
 
-        const buttonLanguage = button.getAttribute("data-language");
+    if (againBtn) {
+        againBtn.textContent =
+            data.again;
+    }
 
-        if (buttonLanguage === lang) {
-            button.classList.add("active");
-            button.setAttribute("aria-selected", "true");
-        } else {
-            button.classList.remove("active");
-            button.setAttribute("aria-selected", "false");
-        }
-    });
+    if (shareBtn) {
+        shareBtn.textContent =
+            data.share;
+    }
 
-    console.log("Universe139 language:", lang);
+    if (smallText) {
+        smallText.textContent =
+            data.small;
+    }
+
+
+    // Reset current message
+
+    currentMessage = "";
+
+    lastMessageIndex = -1;
+
+
+    // Hide message
+
+    if (messageBox) {
+
+        messageBox.style.display =
+            "none";
+    }
+
+
+    // Hide loading
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+    }
+
+
+    // Show reveal button
+
+    if (revealBtn) {
+
+        revealBtn.style.display =
+            "inline-block";
+
+        revealBtn.disabled =
+            false;
+    }
+
+
+    // Update selected language
+
+    document
+        .querySelectorAll("[data-language]")
+        .forEach(button => {
+
+            const buttonLanguage =
+                button.getAttribute(
+                    "data-language"
+                );
+
+            if (
+                buttonLanguage ===
+                lang
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+                button.setAttribute(
+                    "aria-selected",
+                    "true"
+                );
+
+            } else {
+
+                button.classList.remove(
+                    "active"
+                );
+
+                button.setAttribute(
+                    "aria-selected",
+                    "false"
+                );
+            }
+        });
+
+
+    console.log(
+        "Universe139 language changed to:",
+        currentLanguage
+    );
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // RANDOM MESSAGE
-// -----------------------------------------------------
+// =====================================================
 
 function getRandomMessage() {
 
-    const list = messages[currentLanguage];
+    const list =
+        messages[currentLanguage];
 
-    if (!list || list.length === 0) {
-        console.error("No messages found for:", currentLanguage);
+
+    if (
+        !list ||
+        list.length === 0
+    ) {
+
+        console.error(
+            "Universe139: no messages for:",
+            currentLanguage
+        );
+
         return "";
     }
 
+
     let index;
 
-    // Prevent immediate repeat
+
     if (list.length === 1) {
+
         index = 0;
+
     } else {
+
         do {
-            index = Math.floor(Math.random() * list.length);
-        } while (index === lastMessageIndex);
+
+            index =
+                Math.floor(
+                    Math.random() *
+                    list.length
+                );
+
+        } while (
+            index ===
+            lastMessageIndex
+        );
     }
 
-    lastMessageIndex = index;
+
+    lastMessageIndex =
+        index;
+
 
     return list[index];
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // REVEAL MESSAGE
-// -----------------------------------------------------
+// =====================================================
 
 function revealMessage() {
 
-    console.log("Universe139: revealMessage()");
+    console.log(
+        "Universe139: revealMessage()"
+    );
 
-    if (!message || !messageBox) {
+
+    // Re-find elements in case HTML changed
+
+    if (!revealBtn) {
+        revealBtn =
+            document.getElementById(
+                "revealBtn"
+            );
+    }
+
+    if (!loading) {
+        loading =
+            document.getElementById(
+                "loading"
+            );
+    }
+
+    if (!loadingText) {
+        loadingText =
+            document.getElementById(
+                "loadingText"
+            );
+    }
+
+    if (!messageBox) {
+        messageBox =
+            document.getElementById(
+                "messageBox"
+            );
+    }
+
+    if (!message) {
+        message =
+            document.getElementById(
+                "message"
+            );
+    }
+
+
+    if (!message) {
+
         console.error(
-            "Universe139 ERROR: message elements are missing."
+            "Universe139: #message was not found."
         );
+
         return;
     }
 
-    // Prevent multiple timers
+
+    // Cancel existing timer
+
     if (revealTimer) {
-        clearTimeout(revealTimer);
-        revealTimer = null;
+
+        clearTimeout(
+            revealTimer
+        );
     }
+
+
+    // Hide reveal button
 
     if (revealBtn) {
-        revealBtn.style.display = "none";
+
+        revealBtn.style.display =
+            "none";
+
+        revealBtn.disabled =
+            true;
     }
+
+
+    // Hide previous message
 
     if (messageBox) {
-        messageBox.style.display = "none";
+
+        messageBox.style.display =
+            "none";
     }
+
+
+    // Show loading
 
     if (loading) {
-        loading.style.display = "block";
+
+        loading.style.display =
+            "block";
     }
+
 
     if (loadingText) {
+
         loadingText.textContent =
-            languages[currentLanguage].loading;
+            languages[
+                currentLanguage
+            ].loading;
     }
 
-    revealTimer = setTimeout(function () {
 
-        try {
+    // Wait 1.8 seconds
 
-            currentMessage = getRandomMessage();
+    revealTimer =
+        setTimeout(
+            function () {
 
-            if (!currentMessage) {
-                throw new Error("Message could not be generated.");
-            }
+                try {
 
-            message.textContent = currentMessage;
+                    currentMessage =
+                        getRandomMessage();
 
-            // Month / year
-            if (month) {
 
-                const localeMap = {
-                    en: "en-US",
-                    es: "es-ES",
-                    zh: "zh-CN",
-                    ru: "ru-RU",
-                    hi: "hi-IN",
-                    th: "th-TH"
-                };
+                    if (!currentMessage) {
 
-                month.textContent =
-                    new Intl.DateTimeFormat(
-                        localeMap[currentLanguage] || "en-US",
-                        {
-                            month: "long",
-                            year: "numeric"
-                        }
-                    ).format(new Date());
-            }
+                        throw new Error(
+                            "No message generated."
+                        );
+                    }
 
-            if (smallText) {
-                smallText.textContent =
-                    languages[currentLanguage].small;
-            }
 
-            if (loading) {
-                loading.style.display = "none";
-            }
+                    // Put message on page
 
-            if (messageBox) {
-                messageBox.style.display = "block";
-            }
+                    message.textContent =
+                        currentMessage;
 
-            if (againBtn) {
-                againBtn.style.display = "inline-block";
-            }
 
-            console.log(
-                "Universe139 message:",
-                currentMessage
-            );
+                    // Month
 
-        } catch (error) {
+                    if (month) {
 
-            console.error(
-                "Universe139 reveal error:",
-                error
-            );
+                        const localeMap = {
 
-            if (loading) {
-                loading.style.display = "none";
-            }
+                            en: "en-US",
+                            es: "es-ES",
+                            zh: "zh-CN",
+                            ru: "ru-RU",
+                            hi: "hi-IN",
+                            th: "th-TH"
 
-            if (revealBtn) {
-                revealBtn.style.display = "inline-block";
-            }
-        }
+                        };
 
-    }, 1800);
+
+                        month.textContent =
+                            new Intl.DateTimeFormat(
+
+                                localeMap[
+                                    currentLanguage
+                                ] || "en-US",
+
+                                {
+                                    month: "long",
+                                    year: "numeric"
+                                }
+
+                            ).format(
+                                new Date()
+                            );
+                    }
+
+
+                    // Small text
+
+                    if (smallText) {
+
+                        smallText.textContent =
+                            languages[
+                                currentLanguage
+                            ].small;
+                    }
+
+
+                    // Hide loading
+
+                    if (loading) {
+
+                        loading.style.display =
+                            "none";
+                    }
+
+
+                    // Show message
+
+                    if (messageBox) {
+
+                        messageBox.style.display =
+                            "block";
+                    }
+
+
+                    // Show again button
+
+                    if (againBtn) {
+
+                        againBtn.style.display =
+                            "inline-block";
+
+                        againBtn.disabled =
+                            false;
+                    }
+
+
+                    console.log(
+                        "Universe139 message:",
+                        currentMessage
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Universe139 reveal error:",
+                        error
+                    );
+
+
+                    if (loading) {
+
+                        loading.style.display =
+                            "none";
+                    }
+
+
+                    if (revealBtn) {
+
+                        revealBtn.style.display =
+                            "inline-block";
+
+                        revealBtn.disabled =
+                            false;
+                    }
+
+                }
+
+
+            },
+            1800
+        );
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // ESCAPE HTML
-// -----------------------------------------------------
+// =====================================================
 
 function escapeHTML(text) {
 
-    const div = document.createElement("div");
-    div.textContent = text;
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
 
     return div.innerHTML;
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // SHARE TEXT
-// -----------------------------------------------------
+// =====================================================
 
 function getShareText() {
 
     if (!currentMessage) {
-        return languages[currentLanguage].title;
+
+        return languages[
+            currentLanguage
+        ].title;
     }
 
+
     return (
-        languages[currentLanguage].title +
+
+        languages[
+            currentLanguage
+        ].title +
+
         "\n\n" +
+
         currentMessage +
+
         "\n\n" +
-        languages[currentLanguage].small
+
+        languages[
+            currentLanguage
+        ].small
+
     );
 }
 
 
-// -----------------------------------------------------
-// LOAD HTML2CANVAS
-// -----------------------------------------------------
+// =====================================================
+// HTML2CANVAS
+// =====================================================
 
 function loadHtml2Canvas() {
 
-    return new Promise((resolve, reject) => {
-
-        if (window.html2canvas) {
-            resolve(window.html2canvas);
-            return;
-        }
-
-        const existing =
-            document.querySelector(
-                'script[data-universe139-html2canvas]'
-            );
-
-        if (existing) {
-
-            existing.addEventListener(
-                "load",
-                () => resolve(window.html2canvas)
-            );
-
-            existing.addEventListener(
-                "error",
-                reject
-            );
-
-            return;
-        }
-
-        const script = document.createElement("script");
-
-        script.src =
-            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-        script.async = true;
-
-        script.dataset.universe139Html2canvas = "true";
-
-        script.onload = function () {
+    return new Promise(
+        function (resolve, reject) {
 
             if (window.html2canvas) {
-                resolve(window.html2canvas);
-            } else {
-                reject(
-                    new Error(
-                        "html2canvas loaded but unavailable."
-                    )
+
+                resolve(
+                    window.html2canvas
                 );
+
+                return;
             }
-        };
 
-        script.onerror = function () {
-            reject(
-                new Error(
-                    "Could not load html2canvas."
-                )
+
+            const existing =
+                document.querySelector(
+                    "script[data-universe139-html2canvas]"
+                );
+
+
+            if (existing) {
+
+                existing.addEventListener(
+                    "load",
+                    function () {
+
+                        if (
+                            window.html2canvas
+                        ) {
+
+                            resolve(
+                                window.html2canvas
+                            );
+
+                        } else {
+
+                            reject(
+                                new Error(
+                                    "html2canvas unavailable."
+                                )
+                            );
+                        }
+                    }
+                );
+
+
+                existing.addEventListener(
+                    "error",
+                    reject
+                );
+
+
+                return;
+            }
+
+
+            const script =
+                document.createElement(
+                    "script"
+                );
+
+
+            script.src =
+                "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+
+
+            script.async = true;
+
+
+            script.dataset.universe139Html2canvas =
+                "true";
+
+
+            script.onload =
+                function () {
+
+                    if (
+                        window.html2canvas
+                    ) {
+
+                        resolve(
+                            window.html2canvas
+                        );
+
+                    } else {
+
+                        reject(
+                            new Error(
+                                "html2canvas loaded but unavailable."
+                            )
+                        );
+                    }
+                };
+
+
+            script.onerror =
+                function () {
+
+                    reject(
+                        new Error(
+                            "Could not load html2canvas."
+                        )
+                    );
+                };
+
+
+            document.head.appendChild(
+                script
             );
-        };
 
-        document.head.appendChild(script);
-    });
+        }
+    );
 }
 
 
-// -----------------------------------------------------
-// CREATE PROFESSIONAL SHARE CARD
-// -----------------------------------------------------
+// =====================================================
+// CREATE SHARE CARD
+// =====================================================
 
 function createShareCard() {
 
     if (!currentMessage) {
-        throw new Error("There is no message to share.");
+
+        throw new Error(
+            "There is no message to share."
+        );
     }
 
-    const card = document.createElement("div");
 
-    card.id = "universe139-share-card";
+    const card =
+        document.createElement(
+            "div"
+        );
 
-    card.style.position = "fixed";
-    card.style.left = "-10000px";
-    card.style.top = "0";
-    card.style.width = "1080px";
-    card.style.height = "1350px";
-    card.style.boxSizing = "border-box";
-    card.style.overflow = "hidden";
+
+    card.id =
+        "universe139-share-card";
+
+
+    card.style.position =
+        "fixed";
+
+    card.style.left =
+        "-10000px";
+
+    card.style.top =
+        "0";
+
+    card.style.width =
+        "1080px";
+
+    card.style.height =
+        "1350px";
+
+    card.style.boxSizing =
+        "border-box";
+
+    card.style.overflow =
+        "hidden";
+
 
     card.style.background =
         "radial-gradient(circle at 50% 35%, #4a176d 0%, #19072c 42%, #07020e 100%)";
 
-    card.style.color = "#ffffff";
+
+    card.style.color =
+        "#ffffff";
+
 
     card.style.fontFamily =
         "Arial, Helvetica, sans-serif";
 
-    card.style.display = "flex";
-    card.style.flexDirection = "column";
-    card.style.alignItems = "center";
-    card.style.justifyContent = "center";
 
-    card.style.padding = "100px";
+    card.style.display =
+        "flex";
 
+    card.style.flexDirection =
+        "column";
+
+    card.style.alignItems =
+        "center";
+
+    card.style.justifyContent =
+        "center";
+
+
+    card.style.padding =
+        "100px";
+
+
+    // -------------------------------------------------
     // Stars
-    for (let i = 0; i < 100; i++) {
+    // -------------------------------------------------
 
-        const star = document.createElement("div");
+    for (
+        let i = 0;
+        i < 100;
+        i++
+    ) {
+
+        const star =
+            document.createElement(
+                "div"
+            );
+
 
         const size =
             Math.random() * 4 + 2;
 
-        star.style.position = "absolute";
 
-        star.style.width = size + "px";
-        star.style.height = size + "px";
+        star.style.position =
+            "absolute";
 
-        star.style.borderRadius = "50%";
+        star.style.width =
+            size + "px";
 
-        star.style.background = "white";
+        star.style.height =
+            size + "px";
+
+        star.style.borderRadius =
+            "50%";
+
+        star.style.background =
+            "white";
 
         star.style.opacity =
-            String(Math.random() * 0.8 + 0.2);
+            String(
+                Math.random() * 0.8 + 0.2
+            );
 
         star.style.left =
             Math.random() * 1080 + "px";
@@ -656,200 +1099,333 @@ function createShareCard() {
         star.style.top =
             Math.random() * 1350 + "px";
 
-        card.appendChild(star);
+
+        card.appendChild(
+            star
+        );
     }
 
 
+    // -------------------------------------------------
     // Logo
-    const logo = document.createElement("div");
+    // -------------------------------------------------
 
-    logo.textContent = "UNIVERSE139";
-
-    logo.style.fontSize = "34px";
-    logo.style.fontWeight = "700";
-    logo.style.letterSpacing = "8px";
-
-    logo.style.marginBottom = "65px";
-
-    logo.style.opacity = "0.9";
-
-    card.appendChild(logo);
+    const logo =
+        document.createElement(
+            "div"
+        );
 
 
+    logo.textContent =
+        "UNIVERSE139";
+
+
+    logo.style.fontSize =
+        "34px";
+
+    logo.style.fontWeight =
+        "700";
+
+    logo.style.letterSpacing =
+        "8px";
+
+    logo.style.marginBottom =
+        "65px";
+
+    logo.style.opacity =
+        "0.9";
+
+
+    card.appendChild(
+        logo
+    );
+
+
+    // -------------------------------------------------
     // Title
+    // -------------------------------------------------
+
     const titleElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     titleElement.textContent =
-        languages[currentLanguage].title;
-
-    titleElement.style.fontSize = "48px";
-    titleElement.style.fontWeight = "600";
-    titleElement.style.textAlign = "center";
-
-    titleElement.style.marginBottom = "35px";
-
-    titleElement.style.maxWidth = "850px";
-
-    card.appendChild(titleElement);
+        languages[
+            currentLanguage
+        ].title;
 
 
+    titleElement.style.fontSize =
+        "48px";
+
+    titleElement.style.fontWeight =
+        "600";
+
+    titleElement.style.textAlign =
+        "center";
+
+    titleElement.style.marginBottom =
+        "35px";
+
+    titleElement.style.maxWidth =
+        "850px";
+
+
+    card.appendChild(
+        titleElement
+    );
+
+
+    // -------------------------------------------------
     // Month
+    // -------------------------------------------------
+
     const monthElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     const localeMap = {
+
         en: "en-US",
         es: "es-ES",
         zh: "zh-CN",
         ru: "ru-RU",
         hi: "hi-IN",
         th: "th-TH"
+
     };
+
 
     monthElement.textContent =
         new Intl.DateTimeFormat(
-            localeMap[currentLanguage] || "en-US",
+
+            localeMap[
+                currentLanguage
+            ] || "en-US",
+
             {
                 month: "long",
                 year: "numeric"
             }
-        ).format(new Date());
 
-    monthElement.style.fontSize = "27px";
-    monthElement.style.opacity = "0.75";
-
-    monthElement.style.marginBottom = "60px";
-
-    card.appendChild(monthElement);
+        ).format(
+            new Date()
+        );
 
 
+    monthElement.style.fontSize =
+        "27px";
+
+    monthElement.style.opacity =
+        "0.75";
+
+    monthElement.style.marginBottom =
+        "60px";
+
+
+    card.appendChild(
+        monthElement
+    );
+
+
+    // -------------------------------------------------
     // Message
+    // -------------------------------------------------
+
     const messageElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     messageElement.textContent =
         currentMessage;
 
-    messageElement.style.fontSize = "52px";
-    messageElement.style.lineHeight = "1.35";
 
-    messageElement.style.fontWeight = "500";
+    messageElement.style.fontSize =
+        "52px";
 
-    messageElement.style.textAlign = "center";
+    messageElement.style.lineHeight =
+        "1.35";
 
-    messageElement.style.maxWidth = "850px";
+    messageElement.style.fontWeight =
+        "500";
+
+    messageElement.style.textAlign =
+        "center";
+
+    messageElement.style.maxWidth =
+        "850px";
 
     messageElement.style.textShadow =
         "0 3px 25px rgba(255,255,255,0.25)";
 
-    card.appendChild(messageElement);
+
+    card.appendChild(
+        messageElement
+    );
 
 
+    // -------------------------------------------------
     // Small text
+    // -------------------------------------------------
+
     const smallElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     smallElement.textContent =
-        languages[currentLanguage].small;
-
-    smallElement.style.fontSize = "26px";
-
-    smallElement.style.opacity = "0.65";
-
-    smallElement.style.textAlign = "center";
-
-    smallElement.style.marginTop = "65px";
-
-    smallElement.style.maxWidth = "700px";
-
-    card.appendChild(smallElement);
+        languages[
+            currentLanguage
+        ].small;
 
 
-    // Brand bottom
+    smallElement.style.fontSize =
+        "26px";
+
+    smallElement.style.opacity =
+        "0.65";
+
+    smallElement.style.textAlign =
+        "center";
+
+    smallElement.style.marginTop =
+        "65px";
+
+    smallElement.style.maxWidth =
+        "700px";
+
+
+    card.appendChild(
+        smallElement
+    );
+
+
+    // -------------------------------------------------
+    // Brand
+    // -------------------------------------------------
+
     const brand =
-        document.createElement("div");
-
-    brand.textContent = "universe139";
-
-    brand.style.position = "absolute";
-
-    brand.style.bottom = "55px";
-
-    brand.style.fontSize = "25px";
-
-    brand.style.opacity = "0.6";
-
-    brand.style.letterSpacing = "4px";
-
-    card.appendChild(brand);
+        document.createElement(
+            "div"
+        );
 
 
-    document.body.appendChild(card);
+    brand.textContent =
+        "universe139";
+
+
+    brand.style.position =
+        "absolute";
+
+    brand.style.bottom =
+        "55px";
+
+    brand.style.fontSize =
+        "25px";
+
+    brand.style.opacity =
+        "0.6";
+
+    brand.style.letterSpacing =
+        "4px";
+
+
+    card.appendChild(
+        brand
+    );
+
+
+    document.body.appendChild(
+        card
+    );
+
 
     return card;
 }
 
 
-// -----------------------------------------------------
-// CAPTURE MESSAGE IMAGE
-// -----------------------------------------------------
+// =====================================================
+// CAPTURE IMAGE
+// =====================================================
 
 async function captureMessageImage() {
 
     const html2canvas =
         await loadHtml2Canvas();
 
+
     const card =
         createShareCard();
 
+
     try {
 
-        if (document.fonts &&
-            document.fonts.ready) {
+        if (
+            document.fonts &&
+            document.fonts.ready
+        ) {
 
             await document.fonts.ready;
         }
 
+
         const canvas =
-            await html2canvas(card, {
-                width: 1080,
-                height: 1350,
-                scale: 1,
-                backgroundColor: null,
-                useCORS: true,
-                logging: false
-            });
+            await html2canvas(
+                card,
+                {
+                    width: 1080,
+                    height: 1350,
+                    scale: 1,
+                    backgroundColor: null,
+                    useCORS: true,
+                    logging: false
+                }
+            );
+
 
         return canvas;
 
+
     } finally {
 
-        if (card &&
-            card.parentNode) {
+        if (
+            card &&
+            card.parentNode
+        ) {
 
-            card.parentNode.removeChild(card);
+            card.parentNode.removeChild(
+                card
+            );
         }
     }
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // CREATE IMAGE FILE
-// -----------------------------------------------------
+// =====================================================
 
 async function createMessageImageFile() {
 
     const canvas =
         await captureMessageImage();
 
+
     return new Promise(
-        (resolve, reject) => {
+        function (resolve, reject) {
 
             canvas.toBlob(
                 function (blob) {
 
                     if (!blob) {
+
                         reject(
                             new Error(
                                 "Could not create image."
@@ -858,6 +1434,7 @@ async function createMessageImageFile() {
 
                         return;
                     }
+
 
                     const file =
                         new File(
@@ -868,98 +1445,142 @@ async function createMessageImageFile() {
                             }
                         );
 
-                    resolve(file);
+
+                    resolve(
+                        file
+                    );
                 },
                 "image/png"
             );
+
         }
     );
 }
 
 
-// -----------------------------------------------------
-// NATIVE SHARE PICTURE
-// -----------------------------------------------------
+// =====================================================
+// SHARE PICTURE
+// =====================================================
 
 async function sharePictureNative() {
 
     if (!currentMessage) {
+
         alert(
-            languages[currentLanguage].reveal
+            languages[
+                currentLanguage
+            ].reveal
         );
 
         return;
     }
+
 
     try {
 
         const file =
             await createMessageImageFile();
 
+
         if (
             navigator.share &&
             navigator.canShare
         ) {
 
-            let canShareFiles = false;
+            let canShareFiles =
+                false;
+
 
             try {
 
                 canShareFiles =
-                    navigator.canShare({
-                        files: [file]
-                    });
+                    navigator.canShare(
+                        {
+                            files: [file]
+                        }
+                    );
 
             } catch (error) {
 
-                canShareFiles = false;
+                canShareFiles =
+                    false;
             }
+
 
             if (canShareFiles) {
 
-                await navigator.share({
-                    title:
-                        languages[currentLanguage].title,
+                await navigator.share(
+                    {
+                        title:
+                            languages[
+                                currentLanguage
+                            ].title,
 
-                    text:
-                        getShareText(),
+                        text:
+                            getShareText(),
 
-                    files: [file],
+                        files:
+                            [file],
 
-                    url: getShareURL()
-                });
+                        url:
+                            getShareURL()
+                    }
+                );
+
 
                 return;
             }
         }
 
 
-        // Fallback: download image
+        // Desktop fallback
+
         const url =
-            URL.createObjectURL(file);
+            URL.createObjectURL(
+                file
+            );
+
 
         const a =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
 
-        a.href = url;
+
+        a.href =
+            url;
 
         a.download =
             "universe139-message.png";
 
-        document.body.appendChild(a);
+
+        document.body.appendChild(
+            a
+        );
+
 
         a.click();
 
+
         a.remove();
 
+
         setTimeout(
-            () => URL.revokeObjectURL(url),
+            function () {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
             1000
         );
+
 
         alert(
             "Your Universe139 picture is ready."
         );
+
 
     } catch (error) {
 
@@ -968,13 +1589,16 @@ async function sharePictureNative() {
             error
         );
 
-        // User cancelled sharing — don't show an error.
+
         if (
             error &&
-            error.name === "AbortError"
+            error.name ===
+            "AbortError"
         ) {
+
             return;
         }
+
 
         alert(
             "Could not create the picture. Please try again."
@@ -983,57 +1607,79 @@ async function sharePictureNative() {
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // SHARE PANEL
-// -----------------------------------------------------
+// =====================================================
 
 function showSharePanel() {
 
     if (!currentMessage) {
+
         return;
     }
+
 
     const oldPanel =
         document.getElementById(
             "universe139-share-panel"
         );
 
+
     if (oldPanel) {
+
         oldPanel.remove();
     }
 
 
     const panel =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     panel.id =
         "universe139-share-panel";
 
 
-    panel.style.position = "fixed";
-    panel.style.inset = "0";
+    panel.style.position =
+        "fixed";
 
-    panel.style.zIndex = "99999";
+    panel.style.inset =
+        "0";
+
+    panel.style.zIndex =
+        "99999";
 
     panel.style.background =
         "rgba(0,0,0,0.82)";
 
-    panel.style.display = "flex";
+    panel.style.display =
+        "flex";
 
-    panel.style.alignItems = "center";
-    panel.style.justifyContent = "center";
+    panel.style.alignItems =
+        "center";
 
-    panel.style.padding = "20px";
+    panel.style.justifyContent =
+        "center";
+
+    panel.style.padding =
+        "20px";
 
 
     const box =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    box.style.width = "min(500px, 100%)";
 
-    box.style.maxHeight = "90vh";
+    box.style.width =
+        "min(500px, 100%)";
 
-    box.style.overflowY = "auto";
+    box.style.maxHeight =
+        "90vh";
+
+    box.style.overflowY =
+        "auto";
 
     box.style.background =
         "radial-gradient(circle at top, #45146b, #100519)";
@@ -1041,31 +1687,52 @@ function showSharePanel() {
     box.style.border =
         "1px solid rgba(255,255,255,0.2)";
 
-    box.style.borderRadius = "24px";
+    box.style.borderRadius =
+        "24px";
 
-    box.style.padding = "28px";
+    box.style.padding =
+        "28px";
 
-    box.style.color = "white";
+    box.style.color =
+        "white";
 
-    box.style.textAlign = "center";
+    box.style.textAlign =
+        "center";
 
+
+    // Heading
 
     const heading =
-        document.createElement("h2");
+        document.createElement(
+            "h2"
+        );
+
 
     heading.textContent =
-        languages[currentLanguage].share;
+        languages[
+            currentLanguage
+        ].share;
 
-    heading.style.marginTop = "0";
 
-    box.appendChild(heading);
+    heading.style.marginTop =
+        "0";
+
+
+    box.appendChild(
+        heading
+    );
 
 
     // Preview
-    const preview =
-        document.createElement("div");
 
-    preview.style.padding = "30px 20px";
+    const preview =
+        document.createElement(
+            "div"
+        );
+
+
+    preview.style.padding =
+        "30px 20px";
 
     preview.style.margin =
         "20px 0";
@@ -1076,49 +1743,74 @@ function showSharePanel() {
     preview.style.background =
         "rgba(255,255,255,0.08)";
 
-    preview.style.fontSize = "20px";
+    preview.style.fontSize =
+        "20px";
 
-    preview.style.lineHeight = "1.5";
+    preview.style.lineHeight =
+        "1.5";
 
     preview.textContent =
         currentMessage;
 
-    box.appendChild(preview);
+
+    box.appendChild(
+        preview
+    );
 
 
-    // REAL clickable URL
+    // -------------------------------------------------
+    // REAL CURRENT URL
+    // -------------------------------------------------
+
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
+
 
     link.href =
         getShareURL();
 
-    link.target = "_blank";
+    link.target =
+        "_blank";
 
-    link.rel = "noopener noreferrer";
+    link.rel =
+        "noopener noreferrer";
 
     link.textContent =
         getShareURL();
 
-    link.style.display = "block";
+    link.style.display =
+        "block";
 
-    link.style.margin = "15px 0 25px";
+    link.style.margin =
+        "15px 0 25px";
 
-    link.style.color = "#ffffff";
+    link.style.color =
+        "#ffffff";
 
-    link.style.textDecoration = "underline";
+    link.style.textDecoration =
+        "underline";
 
-    link.style.wordBreak = "break-all";
+    link.style.wordBreak =
+        "break-all";
 
-    box.appendChild(link);
+
+    box.appendChild(
+        link
+    );
 
 
-    // Buttons
+    // -------------------------------------------------
+    // SHARE BUTTONS
+    // -------------------------------------------------
+
     const buttons = [
 
         {
             name: "WhatsApp",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "https://wa.me/?text=" +
@@ -1128,6 +1820,7 @@ function showSharePanel() {
                         getShareURL()
                     );
 
+
                 window.open(
                     url,
                     "_blank",
@@ -1136,9 +1829,11 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Facebook",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "https://www.facebook.com/sharer/sharer.php?u=" +
@@ -1150,6 +1845,7 @@ function showSharePanel() {
                         getShareText()
                     );
 
+
                 window.open(
                     url,
                     "_blank",
@@ -1158,9 +1854,11 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Telegram",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "https://t.me/share/url?url=" +
@@ -1172,6 +1870,7 @@ function showSharePanel() {
                         getShareText()
                     );
 
+
                 window.open(
                     url,
                     "_blank",
@@ -1180,44 +1879,61 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Email",
-            action: () => {
+
+            action: function () {
 
                 const subject =
-                    languages[currentLanguage].title;
+                    languages[
+                        currentLanguage
+                    ].title;
+
 
                 const body =
                     getShareText() +
                     "\n\n" +
                     getShareURL();
+
 
                 window.location.href =
                     "mailto:?subject=" +
-                    encodeURIComponent(subject) +
+                    encodeURIComponent(
+                        subject
+                    ) +
                     "&body=" +
-                    encodeURIComponent(body);
+                    encodeURIComponent(
+                        body
+                    );
             }
         },
 
+
         {
             name: "SMS",
-            action: () => {
+
+            action: function () {
 
                 const body =
                     getShareText() +
                     "\n\n" +
                     getShareURL();
 
+
                 window.location.href =
                     "sms:?body=" +
-                    encodeURIComponent(body);
+                    encodeURIComponent(
+                        body
+                    );
             }
         },
 
+
         {
             name: "LinkedIn",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "https://www.linkedin.com/sharing/share-offsite/?url=" +
@@ -1225,6 +1941,7 @@ function showSharePanel() {
                         getShareURL()
                     );
 
+
                 window.open(
                     url,
                     "_blank",
@@ -1233,9 +1950,11 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Reddit",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "https://www.reddit.com/submit?url=" +
@@ -1247,6 +1966,7 @@ function showSharePanel() {
                         getShareText()
                     );
 
+
                 window.open(
                     url,
                     "_blank",
@@ -1255,9 +1975,11 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Viber",
-            action: () => {
+
+            action: function () {
 
                 const url =
                     "viber://forward?text=" +
@@ -1267,19 +1989,24 @@ function showSharePanel() {
                         getShareURL()
                     );
 
-                window.location.href = url;
+
+                window.location.href =
+                    url;
             }
         },
 
+
         {
             name: "Copy Link",
-            action: async () => {
+
+            action: async function () {
 
                 try {
 
                     await navigator.clipboard.writeText(
                         getShareURL()
                     );
+
 
                     alert(
                         "Link copied!"
@@ -1295,9 +2022,11 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Open Link",
-            action: () => {
+
+            action: function () {
 
                 window.open(
                     getShareURL(),
@@ -1307,17 +2036,21 @@ function showSharePanel() {
             }
         },
 
+
         {
             name: "Share Picture",
-            action: () => {
+
+            action: function () {
 
                 sharePictureNative();
             }
         },
 
+
         {
             name: "More",
-            action: async () => {
+
+            action: async function () {
 
                 if (
                     navigator.share
@@ -1325,16 +2058,20 @@ function showSharePanel() {
 
                     try {
 
-                        await navigator.share({
-                            title:
-                                languages[currentLanguage].title,
+                        await navigator.share(
+                            {
+                                title:
+                                    languages[
+                                        currentLanguage
+                                    ].title,
 
-                            text:
-                                getShareText(),
+                                text:
+                                    getShareText(),
 
-                            url:
-                                getShareURL()
-                        });
+                                url:
+                                    getShareURL()
+                            }
+                        );
 
                     } catch (error) {
 
@@ -1342,7 +2079,10 @@ function showSharePanel() {
                             error.name !==
                             "AbortError"
                         ) {
-                            console.error(error);
+
+                            console.error(
+                                error
+                            );
                         }
                     }
 
@@ -1354,11 +2094,15 @@ function showSharePanel() {
                 }
             }
         }
+
     ];
 
 
     const buttonContainer =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     buttonContainer.style.display =
         "grid";
@@ -1370,46 +2114,57 @@ function showSharePanel() {
         "10px";
 
 
-    buttons.forEach(item => {
+    buttons.forEach(
+        function (item) {
 
-        const button =
-            document.createElement("button");
+            const button =
+                document.createElement(
+                    "button"
+                );
 
-        button.type = "button";
 
-        button.textContent =
-            item.name;
+            button.type =
+                "button";
 
-        button.style.padding =
-            "13px 10px";
 
-        button.style.borderRadius =
-            "12px";
+            button.textContent =
+                item.name;
 
-        button.style.border =
-            "1px solid rgba(255,255,255,0.2)";
 
-        button.style.background =
-            "rgba(255,255,255,0.08)";
+            button.style.padding =
+                "13px 10px";
 
-        button.style.color =
-            "white";
+            button.style.borderRadius =
+                "12px";
 
-        button.style.cursor =
-            "pointer";
+            button.style.border =
+                "1px solid rgba(255,255,255,0.2)";
 
-        button.style.fontSize =
-            "14px";
+            button.style.background =
+                "rgba(255,255,255,0.08)";
 
-        button.addEventListener(
-            "click",
-            item.action
-        );
+            button.style.color =
+                "white";
 
-        buttonContainer.appendChild(
-            button
-        );
-    });
+            button.style.cursor =
+                "pointer";
+
+            button.style.fontSize =
+                "14px";
+
+
+            button.addEventListener(
+                "click",
+                item.action
+            );
+
+
+            buttonContainer.appendChild(
+                button
+            );
+
+        }
+    );
 
 
     box.appendChild(
@@ -1417,13 +2172,21 @@ function showSharePanel() {
     );
 
 
-    // Close
+    // Close button
+
     const close =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
-    close.type = "button";
 
-    close.textContent = "Close";
+    close.type =
+        "button";
+
+
+    close.textContent =
+        "Close";
+
 
     close.style.marginTop =
         "20px";
@@ -1440,24 +2203,40 @@ function showSharePanel() {
     close.style.cursor =
         "pointer";
 
+
     close.addEventListener(
         "click",
-        () => panel.remove()
+        function () {
+
+            panel.remove();
+        }
     );
 
-    box.appendChild(close);
+
+    box.appendChild(
+        close
+    );
 
 
-    panel.appendChild(box);
+    panel.appendChild(
+        box
+    );
 
-    document.body.appendChild(panel);
+
+    document.body.appendChild(
+        panel
+    );
 
 
     panel.addEventListener(
         "click",
         function (event) {
 
-            if (event.target === panel) {
+            if (
+                event.target ===
+                panel
+            ) {
+
                 panel.remove();
             }
         }
@@ -1465,9 +2244,9 @@ function showSharePanel() {
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // COSMIC TORNADO
-// -----------------------------------------------------
+// =====================================================
 
 function createCosmicTornado() {
 
@@ -1476,14 +2255,20 @@ function createCosmicTornado() {
             "universe139-cosmic-tornado"
         )
     ) {
+
         return;
     }
 
+
     const tornado =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     tornado.id =
         "universe139-cosmic-tornado";
+
 
     tornado.style.position =
         "fixed";
@@ -1501,13 +2286,21 @@ function createCosmicTornado() {
         "hidden";
 
 
-    for (let i = 0; i < 70; i++) {
+    for (
+        let i = 0;
+        i < 70;
+        i++
+    ) {
 
         const star =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
+
 
         const size =
             Math.random() * 3 + 1;
+
 
         star.style.position =
             "absolute";
@@ -1533,60 +2326,81 @@ function createCosmicTornado() {
         star.style.top =
             Math.random() * 100 + "%";
 
+
         star.style.animation =
             "universe139StarFloat " +
             (Math.random() * 8 + 5) +
             "s ease-in-out infinite";
 
+
         star.style.animationDelay =
             Math.random() * 5 + "s";
 
-        tornado.appendChild(star);
+
+        tornado.appendChild(
+            star
+        );
     }
 
 
     const style =
-        document.createElement("style");
+        document.createElement(
+            "style"
+        );
+
 
     style.textContent = `
 
         @keyframes universe139StarFloat {
 
             0% {
-                transform: translate3d(0,0,0)
-                           scale(1);
+                transform:
+                    translate3d(0,0,0)
+                    scale(1);
+
                 opacity: .2;
             }
 
             50% {
-                transform: translate3d(
-                    ${Math.random() * 30 - 15}px,
-                    ${Math.random() * 30 - 15}px,
-                    0
-                )
-                scale(1.4);
+
+                transform:
+                    translate3d(
+                        ${Math.random() * 30 - 15}px,
+                        ${Math.random() * 30 - 15}px,
+                        0
+                    )
+                    scale(1.4);
 
                 opacity: .9;
             }
 
             100% {
-                transform: translate3d(0,0,0)
-                           scale(1);
+
+                transform:
+                    translate3d(0,0,0)
+                    scale(1);
 
                 opacity: .2;
             }
         }
+
     `;
 
-    document.head.appendChild(style);
 
-    document.body.appendChild(tornado);
+    document.head.appendChild(
+        style
+    );
+
+
+    document.body.appendChild(
+        tornado
+    );
 }
 
 
-// -----------------------------------------------------
-// LANGUAGE BUTTONS
-// -----------------------------------------------------
+// =====================================================
+// LANGUAGE BUTTONS — IMPORTANT FIX
+// =====================================================
 
 function initializeLanguageButtons() {
 
@@ -1595,62 +2409,115 @@ function initializeLanguageButtons() {
             "[data-language]"
         );
 
+
     console.log(
-        "Universe139 language buttons:",
+        "Universe139 found language buttons:",
         buttons.length
     );
 
-    buttons.forEach(button => {
 
-        // Avoid duplicate handlers
-        if (
-            button.dataset.universe139Bound ===
-            "true"
-        ) {
-            return;
-        }
+    buttons.forEach(
+        function (button) {
 
-        button.dataset.universe139Bound =
-            "true";
+            button.addEventListener(
+                "click",
+                function (event) {
 
-        button.addEventListener(
-            "click",
-            function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                event.preventDefault();
-                event.stopPropagation();
 
-                const lang =
-                    this.getAttribute(
-                        "data-language"
-                    );
+                    const lang =
+                        button.getAttribute(
+                            "data-language"
+                        );
 
-                console.log(
-                    "Universe139 language clicked:",
-                    lang
-                );
 
-                if (
-                    lang &&
-                    languages[lang]
-                ) {
-                    setLanguage(lang);
-                } else {
-
-                    console.error(
-                        "Invalid language button:",
+                    console.log(
+                        "Universe139 language clicked:",
                         lang
                     );
+
+
+                    if (
+                        lang &&
+                        languages[lang]
+                    ) {
+
+                        setLanguage(
+                            lang
+                        );
+
+                    } else {
+
+                        console.error(
+                            "Universe139 invalid language:",
+                            lang
+                        );
+                    }
+
                 }
-            }
-        );
-    });
+            );
+
+        }
+    );
 }
 
 
-// -----------------------------------------------------
+// =====================================================
+// EXTRA LANGUAGE EVENT DELEGATION
+// =====================================================
+// This catches language buttons even if another script
+// or HTML structure interferes with the normal listener.
+// =====================================================
+
+function initializeLanguageDelegation() {
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const button =
+                event.target.closest(
+                    "[data-language]"
+                );
+
+
+            if (!button) {
+                return;
+            }
+
+
+            const lang =
+                button.getAttribute(
+                    "data-language"
+                );
+
+
+            if (
+                lang &&
+                languages[lang]
+            ) {
+
+                console.log(
+                    "Universe139 delegated language:",
+                    lang
+                );
+
+                setLanguage(
+                    lang
+                );
+            }
+
+        },
+        true
+    );
+}
+
+
+// =====================================================
 // MAIN BUTTONS
-// -----------------------------------------------------
+// =====================================================
 
 function initializeMainButtons() {
 
@@ -1697,11 +2564,21 @@ function initializeMainButtons() {
 }
 
 
-// -----------------------------------------------------
-// INITIALIZATION
-// -----------------------------------------------------
+// =====================================================
+// INITIALIZE
+// =====================================================
 
 function initUniverse139() {
+
+    if (initialized) {
+
+        return;
+    }
+
+
+    initialized =
+        true;
+
 
     console.log(
         "===================================="
@@ -1718,13 +2595,32 @@ function initUniverse139() {
 
     initializeDOM();
 
+
+    // Language buttons
+
     initializeLanguageButtons();
+
+    initializeLanguageDelegation();
+
+
+    // Main buttons
 
     initializeMainButtons();
 
-    setLanguage("en");
+
+    // Default language
+
+    setLanguage(
+        "en"
+    );
+
+
+    // Cosmic animation
 
     createCosmicTornado();
+
+
+    // Current working URL
 
     window.UNIVERSE139_URL =
         getShareURL();
@@ -1735,15 +2631,22 @@ function initUniverse139() {
         getShareURL()
     );
 
+
     console.log(
         "Universe139 READY"
     );
 }
 
 
-// -----------------------------------------------------
+// =====================================================
 // MAKE FUNCTIONS AVAILABLE TO HTML
-// -----------------------------------------------------
+// =====================================================
+
+window.languages =
+    languages;
+
+window.messages =
+    messages;
 
 window.setLanguage =
     setLanguage;
@@ -1757,10 +2660,13 @@ window.showSharePanel =
 window.sharePictureNative =
     sharePictureNative;
 
+window.getShareURL =
+    getShareURL;
 
-// -----------------------------------------------------
+
+// =====================================================
 // START
-// -----------------------------------------------------
+// =====================================================
 
 if (
     document.readyState ===
