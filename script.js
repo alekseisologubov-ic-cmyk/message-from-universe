@@ -49,7 +49,8 @@ const translations = {
     copyLink: "Copiar enlace",
     more: "Más...",
     copied: "¡Copiado!",
-    shareInstructions: "Elige dónde quieres compartir tu mensaje.",
+    shareInstructions:
+      "Elige dónde quieres compartir tu mensaje.",
 
     shareLink:
       "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy"
@@ -71,7 +72,8 @@ const translations = {
     copyLink: "复制链接",
     more: "更多...",
     copied: "已复制！",
-    shareInstructions: "选择你想分享讯息的方式。",
+    shareInstructions:
+      "选择你想分享讯息的方式。",
 
     shareLink:
       "👆 Universe139 — 点击这里查看你今天的宇宙讯息"
@@ -93,7 +95,8 @@ const translations = {
     copyLink: "Копировать ссылку",
     more: "Ещё...",
     copied: "Скопировано!",
-    shareInstructions: "Выберите, где вы хотите поделиться своим посланием.",
+    shareInstructions:
+      "Выберите, где вы хотите поделиться своим посланием.",
 
     shareLink:
       "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня"
@@ -115,7 +118,8 @@ const translations = {
     copyLink: "लिंक कॉपी करें",
     more: "और...",
     copied: "कॉपी हो गया!",
-    shareInstructions: "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
+    shareInstructions:
+      "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
 
     shareLink:
       "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं"
@@ -137,7 +141,8 @@ const translations = {
     copyLink: "คัดลอกลิงก์",
     more: "เพิ่มเติม...",
     copied: "คัดลอกแล้ว!",
-    shareInstructions: "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
+    shareInstructions:
+      "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
 
     shareLink:
       "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้"
@@ -147,7 +152,7 @@ const translations = {
 
 
 // ==========================================
-// MESSAGES
+// MESSAGE DATABASE
 // ==========================================
 
 const messageTemplates = {
@@ -303,51 +308,26 @@ let isRevealing = false;
 
 
 // ==========================================
-// DOM ELEMENTS
+// DOM
 // ==========================================
 
-const languageBox =
-  document.getElementById("languageBox");
-
-const chooseLanguage =
-  document.getElementById("chooseLanguage");
-
-const title =
-  document.getElementById("title");
-
-const subtitle =
-  document.getElementById("subtitle");
-
-const revealBtn =
-  document.getElementById("revealBtn");
-
-const loading =
-  document.getElementById("loading");
-
-const loadingText =
-  document.getElementById("loadingText");
-
-const messageBox =
-  document.getElementById("messageBox");
-
-const month =
-  document.getElementById("month");
-
-const message =
-  document.getElementById("message");
-
-const smallText =
-  document.getElementById("smallText");
-
-const againBtn =
-  document.getElementById("againBtn");
-
-const shareBtn =
-  document.getElementById("shareBtn");
+const languageBox = document.getElementById("languageBox");
+const chooseLanguage = document.getElementById("chooseLanguage");
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
+const revealBtn = document.getElementById("revealBtn");
+const loading = document.getElementById("loading");
+const loadingText = document.getElementById("loadingText");
+const messageBox = document.getElementById("messageBox");
+const month = document.getElementById("month");
+const message = document.getElementById("message");
+const smallText = document.getElementById("smallText");
+const againBtn = document.getElementById("againBtn");
+const shareBtn = document.getElementById("shareBtn");
 
 
 // ==========================================
-// LANGUAGE SELECTION
+// LANGUAGE
 // ==========================================
 
 function selectLanguage(language) {
@@ -358,46 +338,24 @@ function selectLanguage(language) {
 
   currentLanguage = language;
 
-  const t =
-    translations[language];
+  const t = translations[language];
 
-  chooseLanguage.textContent =
-    t.chooseLanguage;
+  chooseLanguage.textContent = t.chooseLanguage;
+  title.textContent = t.title;
+  subtitle.textContent = t.subtitle;
+  revealBtn.textContent = t.reveal;
+  loadingText.textContent = t.loading;
+  month.textContent = t.month;
+  againBtn.textContent = t.again;
+  shareBtn.textContent = t.share;
 
-  title.textContent =
-    t.title;
+  languageBox.classList.add("hidden");
 
-  subtitle.textContent =
-    t.subtitle;
-
-  revealBtn.textContent =
-    t.reveal;
-
-  loadingText.textContent =
-    t.loading;
-
-  month.textContent =
-    t.month;
-
-  againBtn.textContent =
-    t.again;
-
-  shareBtn.textContent =
-    t.share;
-
-  languageBox.classList.add(
-    "hidden"
-  );
-
-  revealBtn.classList.remove(
-    "hidden"
-  );
+  revealBtn.classList.remove("hidden");
 
   setTimeout(() => {
-
     revealMessage();
-
-  }, 500);
+  }, 400);
 }
 
 
@@ -407,13 +365,9 @@ function selectLanguage(language) {
 
 function getRandomMessage() {
 
-  const messages =
-    messageTemplates[currentLanguage];
+  const messages = messageTemplates[currentLanguage];
 
-  if (
-    !messages ||
-    messages.length === 0
-  ) {
+  if (!messages || messages.length === 0) {
     return "";
   }
 
@@ -422,86 +376,104 @@ function getRandomMessage() {
   do {
 
     const randomIndex =
-      Math.floor(
-        Math.random() *
-        messages.length
-      );
+      Math.floor(Math.random() * messages.length);
 
-    newMessage =
-      messages[randomIndex];
+    newMessage = messages[randomIndex];
 
   } while (
     messages.length > 1 &&
     newMessage === lastMessage
   );
 
-  lastMessage =
-    newMessage;
+  lastMessage = newMessage;
 
   return newMessage;
 }
 
 
 // ==========================================
-// COSMIC HURRICANE EFFECT
+// COSMIC TORNADO
 // ==========================================
 
 function createWindEffect() {
 
-  const oldWind =
-    document.getElementById(
-      "universeWind"
-    );
+  const oldEffect =
+    document.getElementById("universeWind");
 
-  if (oldWind) {
-    oldWind.remove();
+  if (oldEffect) {
+    oldEffect.remove();
   }
 
-  const wind =
+  const tornado =
     document.createElement("div");
 
-  wind.id =
-    "universeWind";
+  tornado.id = "universeWind";
 
-  wind.innerHTML = `
+  tornado.innerHTML = `
 
-    <div class="cosmicGlow"></div>
+    <div class="tornadoUniverseGlow"></div>
 
-    <div class="wind wind1"></div>
-    <div class="wind wind2"></div>
-    <div class="wind wind3"></div>
-    <div class="wind wind4"></div>
-    <div class="wind wind5"></div>
-    <div class="wind wind6"></div>
+    <div class="tornadoCore">
 
-    <div class="cosmicParticle p1"></div>
-    <div class="cosmicParticle p2"></div>
-    <div class="cosmicParticle p3"></div>
-    <div class="cosmicParticle p4"></div>
-    <div class="cosmicParticle p5"></div>
-    <div class="cosmicParticle p6"></div>
-    <div class="cosmicParticle p7"></div>
-    <div class="cosmicParticle p8"></div>
-    <div class="cosmicParticle p9"></div>
-    <div class="cosmicParticle p10"></div>
+      <div class="tornadoRing ring1"></div>
+      <div class="tornadoRing ring2"></div>
+      <div class="tornadoRing ring3"></div>
+      <div class="tornadoRing ring4"></div>
+      <div class="tornadoRing ring5"></div>
+      <div class="tornadoRing ring6"></div>
+      <div class="tornadoRing ring7"></div>
+      <div class="tornadoRing ring8"></div>
+      <div class="tornadoRing ring9"></div>
+      <div class="tornadoRing ring10"></div>
+
+      <div class="tornadoEye"></div>
+
+    </div>
+
+    <div class="tornadoDust">
+
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </div>
+
+    <div class="tornadoMist mist1"></div>
+    <div class="tornadoMist mist2"></div>
+    <div class="tornadoMist mist3"></div>
 
   `;
 
-  document.body.appendChild(
-    wind
-  );
+  document.body.appendChild(tornado);
 
-  if (
-    !document.getElementById(
-      "universe139WindStyle"
-    )
-  ) {
 
-    const style =
-      document.createElement("style");
+  // ==========================================
+  // TORNADO CSS
+  // ==========================================
 
-    style.id =
-      "universe139WindStyle";
+  if (!document.getElementById("universe139TornadoCSS")) {
+
+    const style = document.createElement("style");
+
+    style.id = "universe139TornadoCSS";
 
     style.textContent = `
 
@@ -511,301 +483,507 @@ function createWindEffect() {
 
         inset: 0;
 
-        pointer-events: none;
-
         z-index: 9999;
+
+        pointer-events: none;
 
         overflow: hidden;
 
-        perspective: 900px;
+        perspective: 1200px;
+
+        background:
+          radial-gradient(
+            circle at center,
+            rgba(100,50,190,.18),
+            rgba(30,10,70,.08) 40%,
+            transparent 75%
+          );
+
+        animation:
+          tornadoFade 2.9s ease-out forwards;
 
       }
 
 
-      .cosmicGlow {
+      /* ======================================
+         UNIVERSE GLOW
+      ====================================== */
+
+      .tornadoUniverseGlow {
 
         position: absolute;
-
-        width: 55vw;
-
-        height: 55vw;
-
-        max-width: 650px;
-
-        max-height: 650px;
 
         left: 50%;
 
         top: 50%;
 
-        transform:
-          translate(-50%, -50%);
+        width: 10vw;
+
+        height: 10vw;
+
+        min-width: 100px;
+
+        min-height: 100px;
 
         border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%)
+          scale(.1);
 
         background:
           radial-gradient(
             circle,
-            rgba(210,160,255,.18) 0%,
-            rgba(150,80,255,.10) 30%,
-            rgba(80,40,180,.04) 55%,
-            transparent 72%
+            rgba(255,255,255,1) 0%,
+            rgba(205,160,255,.8) 12%,
+            rgba(130,60,255,.45) 32%,
+            rgba(70,20,160,.15) 55%,
+            transparent 75%
           );
 
+        box-shadow:
+
+          0 0 35px
+          rgba(255,255,255,.9),
+
+          0 0 100px
+          rgba(180,100,255,.9),
+
+          0 0 220px
+          rgba(100,40,255,.6);
+
         animation:
-          cosmicPulse 1.8s ease-out
+          universeCoreExplosion 2.6s
+          ease-out
           forwards;
 
       }
 
 
-      .wind {
+      /* ======================================
+         MAIN TORNADO
+      ====================================== */
+
+      .tornadoCore {
 
         position: absolute;
 
-        width: 220vw;
+        left: 50%;
 
-        height: 3px;
+        top: 50%;
 
-        left: -230vw;
+        width: 100vw;
 
-        opacity: 0;
+        height: 100vh;
+
+        transform:
+          translate(-50%, -50%)
+          scale(.08);
+
+        transform-style:
+          preserve-3d;
+
+        animation:
+          tornadoExpand 2.7s
+          cubic-bezier(.12,.65,.15,1)
+          forwards;
+
+      }
+
+
+      /* ======================================
+         SPIRAL RINGS
+      ====================================== */
+
+      .tornadoRing {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 15vw;
+
+        height: 15vw;
+
+        min-width: 120px;
+
+        min-height: 120px;
 
         border-radius: 50%;
 
-        background:
-          linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255,255,255,.05) 15%,
-            rgba(210,170,255,.35) 40%,
-            rgba(255,255,255,.95) 50%,
-            rgba(210,170,255,.35) 60%,
-            rgba(255,255,255,.05) 85%,
-            transparent 100%
-          );
+        transform-style:
+          preserve-3d;
+
+        border:
+          3px solid
+          rgba(220,180,255,.42);
+
+        box-shadow:
+
+          0 0 15px
+          rgba(200,140,255,.55),
+
+          0 0 40px
+          rgba(130,60,255,.35),
+
+          inset 0 0 20px
+          rgba(255,255,255,.1);
+
+        opacity: 0;
 
         filter:
-          blur(1px)
-          drop-shadow(
-            0 0 8px
-            rgba(200,150,255,.7)
-          );
-
-        transform-origin:
-          center center;
+          blur(.7px);
 
       }
 
 
-      .wind1 {
-
-        top: 18%;
-
+      .ring1 {
         animation:
-          universeWind1 1.8s
-          cubic-bezier(.15,.7,.2,1)
-          forwards;
-
+          ringSpin1 2.5s linear forwards;
       }
 
-
-      .wind2 {
-
-        top: 29%;
-
+      .ring2 {
         animation:
-          universeWind2 1.5s
-          cubic-bezier(.15,.7,.2,1)
-          .08s
-          forwards;
-
+          ringSpin2 2.4s linear .04s forwards;
       }
 
-
-      .wind3 {
-
-        top: 40%;
-
-        height: 5px;
-
+      .ring3 {
         animation:
-          universeWind1 1.65s
-          cubic-bezier(.15,.7,.2,1)
-          .16s
-          forwards;
-
+          ringSpin1 2.3s linear .08s forwards;
       }
 
-
-      .wind4 {
-
-        top: 52%;
-
-        height: 6px;
-
+      .ring4 {
         animation:
-          universeWind2 1.55s
-          cubic-bezier(.15,.7,.2,1)
-          .22s
-          forwards;
-
+          ringSpin2 2.2s linear .12s forwards;
       }
 
-
-      .wind5 {
-
-        top: 65%;
-
+      .ring5 {
         animation:
-          universeWind1 1.7s
-          cubic-bezier(.15,.7,.2,1)
-          .3s
-          forwards;
-
+          ringSpin1 2.1s linear .16s forwards;
       }
 
-
-      .wind6 {
-
-        top: 78%;
-
+      .ring6 {
         animation:
-          universeWind2 1.5s
-          cubic-bezier(.15,.7,.2,1)
-          .38s
-          forwards;
+          ringSpin2 2s linear .2s forwards;
+      }
 
+      .ring7 {
+        animation:
+          ringSpin1 1.9s linear .24s forwards;
+      }
+
+      .ring8 {
+        animation:
+          ringSpin2 1.8s linear .28s forwards;
+      }
+
+      .ring9 {
+        animation:
+          ringSpin1 1.7s linear .32s forwards;
+      }
+
+      .ring10 {
+        animation:
+          ringSpin2 1.6s linear .36s forwards;
       }
 
 
-      @keyframes universeWind1 {
+      @keyframes ringSpin1 {
 
         0% {
 
-          transform:
-            translateX(0)
-            translateY(0)
-            rotate(-5deg)
-            scaleX(.7);
-
           opacity: 0;
 
-        }
-
-        12% {
-
-          opacity: .4;
-
-        }
-
-        38% {
-
-          opacity: .95;
+          width: 8vw;
+          height: 3vw;
 
           transform:
-            translateX(65vw)
-            translateY(-18px)
-            rotate(-2deg)
-            scaleX(1);
-
-        }
-
-        62% {
-
-          opacity: .85;
-
-          transform:
-            translateX(135vw)
-            translateY(22px)
-            rotate(3deg)
-            scaleX(1.1);
-
-        }
-
-        82% {
-
-          opacity: .45;
-
-        }
-
-        100% {
-
-          transform:
-            translateX(260vw)
-            translateY(-12px)
-            rotate(6deg)
-            scaleX(.8);
-
-          opacity: 0;
-
-        }
-
-      }
-
-
-      @keyframes universeWind2 {
-
-        0% {
-
-          transform:
-            translateX(0)
-            translateY(0)
-            rotate(5deg)
-            scaleX(.6);
-
-          opacity: 0;
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(0deg)
+            scale(.2);
 
         }
 
         15% {
 
-          opacity: .35;
-
-        }
-
-        42% {
-
-          opacity: .9;
-
-          transform:
-            translateX(80vw)
-            translateY(25px)
-            rotate(2deg)
-            scaleX(1);
-
-        }
-
-        68% {
-
           opacity: .75;
 
-          transform:
-            translateX(150vw)
-            translateY(-20px)
-            rotate(-4deg)
-            scaleX(1.15);
+        }
+
+        45% {
+
+          opacity: .95;
+
+        }
+
+        75% {
+
+          opacity: .65;
 
         }
 
         100% {
 
-          transform:
-            translateX(260vw)
-            translateY(15px)
-            rotate(-7deg)
-            scaleX(.75);
-
           opacity: 0;
+
+          width: 110vw;
+          height: 30vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(1080deg)
+            scale(1);
 
         }
 
       }
 
 
-      .cosmicParticle {
+      @keyframes ringSpin2 {
+
+        0% {
+
+          opacity: 0;
+
+          width: 8vw;
+          height: 3vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(180deg)
+            scale(.2);
+
+        }
+
+        15% {
+
+          opacity: .7;
+
+        }
+
+        45% {
+
+          opacity: .9;
+
+        }
+
+        75% {
+
+          opacity: .6;
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          width: 120vw;
+          height: 32vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(-900deg)
+            scale(1);
+
+        }
+
+      }
+
+
+      /* ======================================
+         TORNADO EXPANSION
+      ====================================== */
+
+      @keyframes tornadoExpand {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.05)
+            rotate(0deg);
+
+        }
+
+        12% {
+
+          opacity: 1;
+
+        }
+
+        35% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.35)
+            rotate(90deg);
+
+        }
+
+        58% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.8)
+            rotate(260deg);
+
+        }
+
+        78% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.5)
+            rotate(540deg);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(3.8)
+            rotate(900deg);
+
+        }
+
+      }
+
+
+      /* ======================================
+         TORNADO EYE
+      ====================================== */
+
+      .tornadoEye {
 
         position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 18vw;
+
+        height: 18vw;
+
+        min-width: 130px;
+
+        min-height: 130px;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(255,255,255,.98) 0%,
+            rgba(210,170,255,.8) 8%,
+            rgba(140,70,255,.4) 25%,
+            rgba(50,10,120,.12) 50%,
+            transparent 70%
+          );
+
+        box-shadow:
+
+          0 0 30px
+          rgba(255,255,255,.9),
+
+          0 0 80px
+          rgba(190,110,255,.8),
+
+          0 0 160px
+          rgba(100,30,255,.6);
+
+        animation:
+          eyePulse 2.5s
+          ease-out
+          forwards;
+
+      }
+
+
+      @keyframes eyePulse {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.1);
+
+        }
+
+        18% {
+
+          opacity: 1;
+
+        }
+
+        45% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.8);
+
+        }
+
+        70% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.4);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(4);
+
+        }
+
+      }
+
+
+      /* ======================================
+         PARTICLES
+      ====================================== */
+
+      .tornadoDust {
+
+        position: absolute;
+
+        inset: 0;
+
+        transform-style:
+          preserve-3d;
+
+      }
+
+
+      .tornadoDust span {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
 
         width: 5px;
 
@@ -813,134 +991,806 @@ function createWindEffect() {
 
         border-radius: 50%;
 
-        background:
-          rgba(255,255,255,.95);
+        background: white;
 
         box-shadow:
-          0 0 12px
-          rgba(220,180,255,.9);
+          0 0 10px
+          rgba(220,180,255,.95);
 
         opacity: 0;
 
+      }
+
+
+      .tornadoDust span:nth-child(1) {
+        animation: dust1 2.3s linear forwards;
+      }
+
+      .tornadoDust span:nth-child(2) {
+        animation: dust2 2.1s linear .08s forwards;
+      }
+
+      .tornadoDust span:nth-child(3) {
+        animation: dust3 2.4s linear .16s forwards;
+      }
+
+      .tornadoDust span:nth-child(4) {
+        animation: dust4 2.2s linear .24s forwards;
+      }
+
+      .tornadoDust span:nth-child(5) {
+        animation: dust5 2.5s linear .32s forwards;
+      }
+
+      .tornadoDust span:nth-child(6) {
+        animation: dust6 2.2s linear .4s forwards;
+      }
+
+      .tornadoDust span:nth-child(7) {
+        animation: dust7 2.4s linear .48s forwards;
+      }
+
+      .tornadoDust span:nth-child(8) {
+        animation: dust8 2.1s linear .56s forwards;
+      }
+
+      .tornadoDust span:nth-child(9) {
+        animation: dust9 2.5s linear .64s forwards;
+      }
+
+      .tornadoDust span:nth-child(10) {
+        animation: dust10 2.2s linear .72s forwards;
+      }
+
+      .tornadoDust span:nth-child(11) {
+        animation: dust11 2.4s linear .8s forwards;
+      }
+
+      .tornadoDust span:nth-child(12) {
+        animation: dust12 2.1s linear .88s forwards;
+      }
+
+      .tornadoDust span:nth-child(13) {
+        animation: dust13 2.5s linear .96s forwards;
+      }
+
+      .tornadoDust span:nth-child(14) {
+        animation: dust14 2.2s linear 1.04s forwards;
+      }
+
+      .tornadoDust span:nth-child(15) {
+        animation: dust15 2.4s linear 1.12s forwards;
+      }
+
+      .tornadoDust span:nth-child(16) {
+        animation: dust16 2.1s linear 1.2s forwards;
+      }
+
+      .tornadoDust span:nth-child(17) {
+        animation: dust17 2.5s linear 1.28s forwards;
+      }
+
+      .tornadoDust span:nth-child(18) {
+        animation: dust18 2.2s linear 1.36s forwards;
+      }
+
+      .tornadoDust span:nth-child(19) {
+        animation: dust19 2.4s linear 1.44s forwards;
+      }
+
+      .tornadoDust span:nth-child(20) {
+        animation: dust20 2.1s linear 1.52s forwards;
+      }
+
+
+      /* ======================================
+         PARTICLE MOTION
+      ====================================== */
+
+      @keyframes dust1 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(0deg)
+            translateX(650px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(420deg)
+            translateX(130px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust2 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(45deg)
+            translateX(700px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(500deg)
+            translateX(150px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1100deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust3 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(90deg)
+            translateX(620px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(560deg)
+            translateX(120px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1200deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust4 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(135deg)
+            translateX(680px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(470deg)
+            translateX(140px)
+            scale(1.3);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust5 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(180deg)
+            translateX(720px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(620deg)
+            translateX(160px)
+            scale(1.6);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1250deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust6 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(225deg)
+            translateX(630px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(530deg)
+            translateX(130px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1100deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust7 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(270deg)
+            translateX(690px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(680deg)
+            translateX(150px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1300deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust8 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(315deg)
+            translateX(610px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(580deg)
+            translateX(120px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1150deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust9 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(20deg)
+            translateX(730px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(600deg)
+            translateX(145px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1200deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust10 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(65deg)
+            translateX(640px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(510deg)
+            translateX(130px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1080deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust11 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(110deg)
+            translateX(700px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(640deg)
+            translateX(150px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1280deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust12 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(155deg)
+            translateX(620px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(490deg)
+            translateX(125px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1050deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust13 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(200deg)
+            translateX(710px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(590deg)
+            translateX(155px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1180deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust14 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(245deg)
+            translateX(650px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(530deg)
+            translateX(135px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1120deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust15 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(290deg)
+            translateX(730px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(650deg)
+            translateX(160px)
+            scale(1.6);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1300deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust16 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(335deg)
+            translateX(610px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(470deg)
+            translateX(125px)
+            scale(1.3);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust17 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(15deg)
+            translateX(680px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(610deg)
+            translateX(145px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1250deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust18 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(75deg)
+            translateX(660px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(550deg)
+            translateX(135px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1150deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust19 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(150deg)
+            translateX(720px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(670deg)
+            translateX(155px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1350deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust20 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(250deg)
+            translateX(690px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(520deg)
+            translateX(140px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1080deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      /* ======================================
+         COSMIC MIST
+      ====================================== */
+
+      .tornadoMist {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        filter:
+          blur(30px);
+
+        background:
+          radial-gradient(
+            ellipse,
+            rgba(180,110,255,.22),
+            rgba(100,40,200,.08),
+            transparent 70%
+          );
+
+        opacity: 0;
+
+      }
+
+
+      .mist1 {
+
+        width: 75vw;
+
+        height: 20vw;
+
         animation:
-          particleSpin 1.8s
+          mistRotation 2.5s
           ease-out
           forwards;
 
       }
 
 
-      .p1 {
-        left: 12%;
-        top: 25%;
-        animation-delay: .05s;
-      }
+      .mist2 {
 
-      .p2 {
-        left: 23%;
-        top: 68%;
-        animation-delay: .12s;
-      }
+        width: 55vw;
 
-      .p3 {
-        left: 35%;
-        top: 18%;
-        animation-delay: .18s;
-      }
+        height: 15vw;
 
-      .p4 {
-        left: 45%;
-        top: 82%;
-        animation-delay: .24s;
-      }
+        animation:
+          mistRotation 2.2s
+          ease-out
+          .15s
+          forwards;
 
-      .p5 {
-        left: 57%;
-        top: 30%;
-        animation-delay: .3s;
-      }
-
-      .p6 {
-        left: 68%;
-        top: 72%;
-        animation-delay: .36s;
-      }
-
-      .p7 {
-        left: 77%;
-        top: 20%;
-        animation-delay: .42s;
-      }
-
-      .p8 {
-        left: 84%;
-        top: 58%;
-        animation-delay: .48s;
-      }
-
-      .p9 {
-        left: 30%;
-        top: 48%;
-        animation-delay: .54s;
-      }
-
-      .p10 {
-        left: 70%;
-        top: 45%;
-        animation-delay: .6s;
       }
 
 
-      @keyframes particleSpin {
+      .mist3 {
+
+        width: 38vw;
+
+        height: 11vw;
+
+        animation:
+          mistRotation 2s
+          ease-out
+          .3s
+          forwards;
+
+      }
+
+
+      @keyframes mistRotation {
 
         0% {
 
           opacity: 0;
 
           transform:
-            translate3d(
-              0,
-              0,
-              0
-            )
-            scale(.2)
-            rotate(0deg);
+            translate(-50%, -50%)
+            rotate(0deg)
+            scale(.1);
 
         }
 
         20% {
 
-          opacity: 1;
+          opacity: .8;
 
         }
 
-        50% {
+        60% {
 
-          opacity: 1;
-
-          transform:
-            translate3d(
-              100px,
-              -80px,
-              100px
-            )
-            scale(1.5)
-            rotate(180deg);
-
-        }
-
-        80% {
-
-          opacity: .7;
+          opacity: .55;
 
           transform:
-            translate3d(
-              240px,
-              80px,
-              0
-            )
-            scale(.8)
-            rotate(360deg);
+            translate(-50%, -50%)
+            rotate(600deg)
+            scale(1.5);
 
         }
 
@@ -949,20 +1799,20 @@ function createWindEffect() {
           opacity: 0;
 
           transform:
-            translate3d(
-              420px,
-              -20px,
-              -100px
-            )
-            scale(.1)
-            rotate(600deg);
+            translate(-50%, -50%)
+            rotate(1200deg)
+            scale(3);
 
         }
 
       }
 
 
-      @keyframes cosmicPulse {
+      /* ======================================
+         CORE EXPLOSION
+      ====================================== */
+
+      @keyframes universeCoreExplosion {
 
         0% {
 
@@ -970,23 +1820,29 @@ function createWindEffect() {
 
           transform:
             translate(-50%, -50%)
-            scale(.4);
+            scale(.05);
 
         }
 
-        25% {
+        18% {
 
           opacity: 1;
 
         }
 
-        65% {
-
-          opacity: .8;
+        48% {
 
           transform:
             translate(-50%, -50%)
-            scale(1.1);
+            scale(1);
+
+        }
+
+        75% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(2);
 
         }
 
@@ -996,7 +1852,36 @@ function createWindEffect() {
 
           transform:
             translate(-50%, -50%)
-            scale(1.5);
+            scale(5);
+
+        }
+
+      }
+
+
+      @keyframes tornadoFade {
+
+        0% {
+
+          opacity: 0;
+
+        }
+
+        10% {
+
+          opacity: 1;
+
+        }
+
+        72% {
+
+          opacity: 1;
+
+        }
+
+        100% {
+
+          opacity: 0;
 
         }
 
@@ -1004,16 +1889,15 @@ function createWindEffect() {
 
     `;
 
-    document.head.appendChild(
-      style
-    );
+    document.head.appendChild(style);
   }
+
 
   setTimeout(() => {
 
-    wind.remove();
+    tornado.remove();
 
-  }, 2300);
+  }, 3000);
 }
 
 
@@ -1029,42 +1913,39 @@ function showMessage() {
   message.textContent =
     newMessage;
 
-  messageBox.classList.remove(
-    "hidden"
-  );
+  messageBox.classList.remove("hidden");
 
-  messageBox.style.display =
-    "block";
+  messageBox.style.display = "block";
 
-  messageBox.style.opacity =
-    "1";
+  messageBox.style.opacity = "0";
 
-  message.style.opacity =
-    "1";
+  loading.classList.add("hidden");
 
-  message.style.visibility =
-    "visible";
+  revealBtn.classList.add("hidden");
 
-  loading.classList.add(
-    "hidden"
-  );
+  againBtn.classList.remove("hidden");
 
-  revealBtn.classList.add(
-    "hidden"
-  );
+  shareBtn.classList.remove("hidden");
 
-  againBtn.classList.remove(
-    "hidden"
-  );
 
-  shareBtn.classList.remove(
-    "hidden"
-  );
+  // Smooth message appearance
+
+  setTimeout(() => {
+
+    messageBox.style.transition =
+      "opacity .8s ease, transform .8s ease";
+
+    messageBox.style.opacity = "1";
+
+    messageBox.style.transform =
+      "translateY(0) scale(1)";
+
+  }, 80);
 }
 
 
 // ==========================================
-// FIRST MESSAGE REVEAL
+// FIRST REVEAL
 // ==========================================
 
 function revealMessage() {
@@ -1075,50 +1956,37 @@ function revealMessage() {
 
   isRevealing = true;
 
-  messageBox.classList.add(
-    "hidden"
-  );
+  messageBox.classList.add("hidden");
 
-  messageBox.style.opacity =
-    "0";
+  loading.classList.remove("hidden");
 
-  loading.classList.remove(
-    "hidden"
-  );
+  revealBtn.classList.add("hidden");
 
-  revealBtn.classList.add(
-    "hidden"
-  );
+  againBtn.classList.add("hidden");
 
-  againBtn.classList.add(
-    "hidden"
-  );
-
-  shareBtn.classList.add(
-    "hidden"
-  );
+  shareBtn.classList.add("hidden");
 
   loadingText.textContent =
-    translations[currentLanguage]
-      .loading;
+    translations[currentLanguage].loading;
 
-  // 🌪️ START COSMIC HURRICANE
+
+  // 🌪️ COSMIC TORNADO
   createWindEffect();
 
-  // Message appears after the
-  // cosmic movement has started.
+
+  // Wait for tornado to build
   setTimeout(() => {
 
     showMessage();
 
     isRevealing = false;
 
-  }, 1800);
+  }, 2400);
 }
 
 
 // ==========================================
-// RECEIVE ANOTHER MESSAGE
+// ANOTHER MESSAGE
 // ==========================================
 
 function receiveAnotherMessage() {
@@ -1129,39 +1997,39 @@ function receiveAnotherMessage() {
 
   isRevealing = true;
 
-  // Hide current message
-  messageBox.style.opacity =
-    "0";
+  messageBox.style.opacity = "0";
 
-  // Start cosmic hurricane
+  messageBox.style.transform =
+    "scale(.95)";
+
+  againBtn.classList.add("hidden");
+
+  shareBtn.classList.add("hidden");
+
+
+  // 🌪️ NEW COSMIC TORNADO
   createWindEffect();
+
 
   setTimeout(() => {
 
-    messageBox.classList.add(
-      "hidden"
-    );
+    messageBox.classList.add("hidden");
 
-    loading.classList.remove(
-      "hidden"
-    );
+    loading.classList.remove("hidden");
 
     loadingText.textContent =
-      translations[currentLanguage]
-        .loading;
+      translations[currentLanguage].loading;
 
-  }, 300);
+  }, 350);
+
 
   setTimeout(() => {
 
     showMessage();
 
-    messageBox.style.opacity =
-      "1";
-
     isRevealing = false;
 
-  }, 1800);
+  }, 2400);
 }
 
 
@@ -1185,68 +2053,52 @@ ${UNIVERSE139_URL}`;
 
 
 // ==========================================
-// COPY TEXT
+// COPY
 // ==========================================
 
 async function copyText(text) {
 
   try {
 
-    await navigator.clipboard.writeText(
-      text
-    );
+    await navigator.clipboard.writeText(text);
 
     showShareToast(
-      translations[currentLanguage]
-        .copied
+      translations[currentLanguage].copied
     );
 
   } catch (error) {
 
     const textarea =
-      document.createElement(
-        "textarea"
-      );
+      document.createElement("textarea");
 
-    textarea.value =
-      text;
+    textarea.value = text;
 
-    textarea.style.position =
-      "fixed";
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
 
-    textarea.style.left =
-      "-9999px";
-
-    document.body.appendChild(
-      textarea
-    );
+    document.body.appendChild(textarea);
 
     textarea.select();
 
-    document.execCommand(
-      "copy"
-    );
+    document.execCommand("copy");
 
     textarea.remove();
 
     showShareToast(
-      translations[currentLanguage]
-        .copied
+      translations[currentLanguage].copied
     );
   }
 }
 
 
 // ==========================================
-// WHATSAPP
+// SHARE FUNCTIONS
 // ==========================================
 
 function shareWhatsApp() {
 
   const text =
-    encodeURIComponent(
-      getShareText()
-    );
+    encodeURIComponent(getShareText());
 
   window.open(
     `https://wa.me/?text=${text}`,
@@ -1255,22 +2107,14 @@ function shareWhatsApp() {
 }
 
 
-// ==========================================
-// FACEBOOK
-// ==========================================
-
 async function shareFacebook() {
 
-  await copyText(
-    getShareText()
-  );
+  await copyText(getShareText());
 
   setTimeout(() => {
 
     const url =
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
+      encodeURIComponent(UNIVERSE139_URL);
 
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -1282,21 +2126,13 @@ async function shareFacebook() {
 }
 
 
-// ==========================================
-// TELEGRAM
-// ==========================================
-
 function shareTelegram() {
 
   const text =
-    encodeURIComponent(
-      getShareText()
-    );
+    encodeURIComponent(getShareText());
 
   const url =
-    encodeURIComponent(
-      UNIVERSE139_URL
-    );
+    encodeURIComponent(UNIVERSE139_URL);
 
   window.open(
     `https://t.me/share/url?url=${url}&text=${text}`,
@@ -1304,89 +2140,6 @@ function shareTelegram() {
   );
 }
 
-
-// ==========================================
-// LINKEDIN
-// ==========================================
-
-async function shareLinkedIn() {
-
-  await copyText(
-    getShareText()
-  );
-
-  setTimeout(() => {
-
-    const url =
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-      "_blank",
-      "width=600,height=600"
-    );
-
-  }, 500);
-}
-
-
-// ==========================================
-// REDDIT
-// ==========================================
-
-async function shareReddit() {
-
-  await copyText(
-    getShareText()
-  );
-
-  setTimeout(() => {
-
-    const title =
-      encodeURIComponent(
-        "✨ A Message From The Universe ✨"
-      );
-
-    const url =
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.open(
-      `https://www.reddit.com/submit?url=${url}&title=${title}`,
-      "_blank"
-    );
-
-  }, 500);
-}
-
-
-// ==========================================
-// EMAIL
-// ==========================================
-
-function shareEmail() {
-
-  const subject =
-    encodeURIComponent(
-      "✨ A Message From The Universe"
-    );
-
-  const body =
-    encodeURIComponent(
-      getShareText()
-    );
-
-  window.location.href =
-    `mailto:?subject=${subject}&body=${body}`;
-}
-
-
-// ==========================================
-// GMAIL
-// ==========================================
 
 function shareGmail() {
 
@@ -1407,9 +2160,22 @@ function shareGmail() {
 }
 
 
-// ==========================================
-// SMS
-// ==========================================
+function shareEmail() {
+
+  const subject =
+    encodeURIComponent(
+      "✨ A Message From The Universe"
+    );
+
+  const body =
+    encodeURIComponent(
+      getShareText()
+    );
+
+  window.location.href =
+    `mailto:?subject=${subject}&body=${body}`;
+}
+
 
 function shareSMS() {
 
@@ -1423,26 +2189,66 @@ function shareSMS() {
 }
 
 
-// ==========================================
-// VIBER
-// ==========================================
+async function shareLinkedIn() {
 
-async function shareViber() {
+  await copyText(getShareText());
 
-  await copyText(
-    getShareText()
-  );
+  setTimeout(() => {
 
-  window.location.href =
-    `viber://forward?text=${encodeURIComponent(
-      getShareText()
-    )}`;
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      "_blank"
+    );
+
+  }, 500);
 }
 
 
-// ==========================================
-// TIKTOK
-// ==========================================
+async function shareReddit() {
+
+  await copyText(getShareText());
+
+  setTimeout(() => {
+
+    const title =
+      encodeURIComponent(
+        "A Message From The Universe"
+      );
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.reddit.com/submit?url=${url}&title=${title}`,
+      "_blank"
+    );
+
+  }, 500);
+}
+
+
+async function shareViber() {
+
+  const text =
+    getShareText();
+
+  await copyText(text);
+
+  setTimeout(() => {
+
+    window.location.href =
+      `viber://forward?text=${encodeURIComponent(text)}`;
+
+  }, 300);
+}
+
 
 async function shareTikTok() {
 
@@ -1461,10 +2267,6 @@ async function shareTikTok() {
 }
 
 
-// ==========================================
-// INSTAGRAM
-// ==========================================
-
 async function shareInstagram() {
 
   await copyText(
@@ -1482,10 +2284,6 @@ async function shareInstagram() {
 }
 
 
-// ==========================================
-// SNAPCHAT
-// ==========================================
-
 async function shareSnapchat() {
 
   await copyText(
@@ -1502,10 +2300,6 @@ async function shareSnapchat() {
   }, 700);
 }
 
-
-// ==========================================
-// PINTEREST
-// ==========================================
 
 function sharePinterest() {
 
@@ -1526,18 +2320,12 @@ function sharePinterest() {
 }
 
 
-// ==========================================
-// NATIVE MORE SHARE
-// ==========================================
-
 async function shareMore() {
 
   const text =
     getShareText();
 
-  if (
-    navigator.share
-  ) {
+  if (navigator.share) {
 
     try {
 
@@ -1553,13 +2341,10 @@ async function shareMore() {
 
     } catch (error) {
 
-      if (
-        error.name !==
-        "AbortError"
-      ) {
+      if (error.name !== "AbortError") {
 
         console.error(
-          "Native share error:",
+          "Share error:",
           error
         );
 
@@ -1569,9 +2354,7 @@ async function shareMore() {
 
   } else {
 
-    await copyText(
-      text
-    );
+    await copyText(text);
 
   }
 }
@@ -1593,9 +2376,7 @@ function showShareToast(text) {
   }
 
   const toast =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   toast.id =
     "universe139Toast";
@@ -1603,23 +2384,17 @@ function showShareToast(text) {
   toast.textContent =
     text;
 
-  document.body.appendChild(
-    toast
-  );
+  document.body.appendChild(toast);
 
   setTimeout(() => {
 
-    toast.classList.add(
-      "show"
-    );
+    toast.classList.add("show");
 
   }, 20);
 
   setTimeout(() => {
 
-    toast.classList.remove(
-      "show"
-    );
+    toast.classList.remove("show");
 
     setTimeout(() => {
 
@@ -1632,7 +2407,7 @@ function showShareToast(text) {
 
 
 // ==========================================
-// CREATE SHARE PANEL
+// SHARE PANEL
 // ==========================================
 
 function createSharePanel() {
@@ -1650,12 +2425,11 @@ function createSharePanel() {
     translations[currentLanguage];
 
   const panel =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   panel.id =
     "universe139SharePanel";
+
 
   panel.innerHTML = `
 
@@ -1666,14 +2440,9 @@ function createSharePanel() {
       <button
         class="shareClose"
         id="shareClose"
-        aria-label="${t.close}"
       >
         ×
       </button>
-
-      <div class="shareUniverseLogo">
-        ✨
-      </div>
 
       <h2>
         ${t.shareTitle}
@@ -1683,10 +2452,11 @@ function createSharePanel() {
         ${t.shareInstructions}
       </p>
 
+
       <div class="sharePreview">
 
         <div class="sharePreviewTitle">
-          ✨ A Message From The Universe ✨
+          A Message From The Universe
         </div>
 
         <div class="sharePreviewMessage">
@@ -1694,10 +2464,11 @@ function createSharePanel() {
         </div>
 
         <div class="sharePreviewLink">
-          👆 Universe139
+          Universe139
         </div>
 
       </div>
+
 
       <div class="shareGrid">
 
@@ -1705,150 +2476,130 @@ function createSharePanel() {
           class="shareOption"
           id="shareWhatsApp"
         >
-          <span>💬</span>
-          <small>WhatsApp</small>
+          WhatsApp
         </button>
 
         <button
           class="shareOption"
           id="shareFacebook"
         >
-          <span>📘</span>
-          <small>Facebook</small>
+          Facebook
         </button>
 
         <button
           class="shareOption"
           id="shareTelegram"
         >
-          <span>✈️</span>
-          <small>Telegram</small>
+          Telegram
         </button>
 
         <button
           class="shareOption"
           id="shareGmail"
         >
-          <span>📧</span>
-          <small>Gmail</small>
+          Gmail
         </button>
 
         <button
           class="shareOption"
           id="shareEmail"
         >
-          <span>✉️</span>
-          <small>Email</small>
+          Email
         </button>
 
         <button
           class="shareOption"
           id="shareSMS"
         >
-          <span>💬</span>
-          <small>SMS</small>
+          SMS
         </button>
 
         <button
           class="shareOption"
           id="shareLinkedIn"
         >
-          <span>💼</span>
-          <small>LinkedIn</small>
+          LinkedIn
         </button>
 
         <button
           class="shareOption"
           id="shareReddit"
         >
-          <span>🟠</span>
-          <small>Reddit</small>
+          Reddit
         </button>
 
         <button
           class="shareOption"
           id="shareViber"
         >
-          <span>📱</span>
-          <small>Viber</small>
+          Viber
         </button>
 
         <button
           class="shareOption"
           id="shareTikTok"
         >
-          <span>🎵</span>
-          <small>TikTok</small>
+          TikTok
         </button>
 
         <button
           class="shareOption"
           id="shareInstagram"
         >
-          <span>📸</span>
-          <small>Instagram</small>
+          Instagram
         </button>
 
         <button
           class="shareOption"
           id="shareSnapchat"
         >
-          <span>👻</span>
-          <small>Snapchat</small>
+          Snapchat
         </button>
 
         <button
           class="shareOption"
           id="sharePinterest"
         >
-          <span>📌</span>
-          <small>Pinterest</small>
+          Pinterest
         </button>
 
         <button
           class="shareOption"
           id="copyMessage"
         >
-          <span>📋</span>
-          <small>${t.copyMessage}</small>
+          ${t.copyMessage}
         </button>
 
         <button
           class="shareOption"
           id="copyLink"
         >
-          <span>🔗</span>
-          <small>${t.copyLink}</small>
+          ${t.copyLink}
         </button>
 
         <button
           class="shareOption"
           id="shareMore"
         >
-          <span>📤</span>
-          <small>${t.more}</small>
+          ${t.more}
         </button>
 
       </div>
 
     </div>
+
   `;
 
-  document.body.appendChild(
-    panel
-  );
+  document.body.appendChild(panel);
+
 
   addSharePanelStyles();
 
 
-  // ----------------------------------------
-  // CLOSE
-  // ----------------------------------------
+  // Close
 
   document
-    .getElementById(
-      "shareClose"
-    )
+    .getElementById("shareClose")
     .addEventListener(
       "click",
       closeSharePanel
@@ -1865,14 +2616,10 @@ function createSharePanel() {
     );
 
 
-  // ----------------------------------------
-  // SHARE BUTTONS
-  // ----------------------------------------
+  // Platforms
 
   document
-    .getElementById(
-      "shareWhatsApp"
-    )
+    .getElementById("shareWhatsApp")
     .addEventListener(
       "click",
       shareWhatsApp
@@ -1880,9 +2627,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareFacebook"
-    )
+    .getElementById("shareFacebook")
     .addEventListener(
       "click",
       shareFacebook
@@ -1890,9 +2635,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareTelegram"
-    )
+    .getElementById("shareTelegram")
     .addEventListener(
       "click",
       shareTelegram
@@ -1900,9 +2643,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareGmail"
-    )
+    .getElementById("shareGmail")
     .addEventListener(
       "click",
       shareGmail
@@ -1910,9 +2651,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareEmail"
-    )
+    .getElementById("shareEmail")
     .addEventListener(
       "click",
       shareEmail
@@ -1920,9 +2659,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareSMS"
-    )
+    .getElementById("shareSMS")
     .addEventListener(
       "click",
       shareSMS
@@ -1930,9 +2667,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareLinkedIn"
-    )
+    .getElementById("shareLinkedIn")
     .addEventListener(
       "click",
       shareLinkedIn
@@ -1940,9 +2675,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareReddit"
-    )
+    .getElementById("shareReddit")
     .addEventListener(
       "click",
       shareReddit
@@ -1950,9 +2683,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareViber"
-    )
+    .getElementById("shareViber")
     .addEventListener(
       "click",
       shareViber
@@ -1960,9 +2691,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareTikTok"
-    )
+    .getElementById("shareTikTok")
     .addEventListener(
       "click",
       shareTikTok
@@ -1970,9 +2699,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareInstagram"
-    )
+    .getElementById("shareInstagram")
     .addEventListener(
       "click",
       shareInstagram
@@ -1980,9 +2707,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "shareSnapchat"
-    )
+    .getElementById("shareSnapchat")
     .addEventListener(
       "click",
       shareSnapchat
@@ -1990,9 +2715,7 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "sharePinterest"
-    )
+    .getElementById("sharePinterest")
     .addEventListener(
       "click",
       sharePinterest
@@ -2000,41 +2723,27 @@ function createSharePanel() {
 
 
   document
-    .getElementById(
-      "copyMessage"
-    )
+    .getElementById("copyMessage")
     .addEventListener(
       "click",
       () => {
-
-        copyText(
-          getShareText()
-        );
-
+        copyText(getShareText());
       }
     );
 
 
   document
-    .getElementById(
-      "copyLink"
-    )
+    .getElementById("copyLink")
     .addEventListener(
       "click",
       () => {
-
-        copyText(
-          UNIVERSE139_URL
-        );
-
+        copyText(UNIVERSE139_URL);
       }
     );
 
 
   document
-    .getElementById(
-      "shareMore"
-    )
+    .getElementById("shareMore")
     .addEventListener(
       "click",
       shareMore
@@ -2057,20 +2766,20 @@ function closeSharePanel() {
     return;
   }
 
-  panel.classList.add(
-    "closing"
-  );
+  panel.classList.add("closing");
 
   setTimeout(() => {
 
     panel.remove();
 
-  }, 200);
+  }, 220);
 }
 
 
 // ==========================================
-// SHARE PANEL STYLES
+// SHARE PANEL DESIGN
+// NO ICONS
+// NO ANIMATED ICONS
 // ==========================================
 
 function addSharePanelStyles() {
@@ -2084,9 +2793,7 @@ function addSharePanelStyles() {
   }
 
   const style =
-    document.createElement(
-      "style"
-    );
+    document.createElement("style");
 
   style.id =
     "universe139ShareStyles";
@@ -2122,10 +2829,10 @@ function addSharePanelStyles() {
       inset: 0;
 
       background:
-        rgba(5,2,20,.9);
+        rgba(5,2,20,.92);
 
       backdrop-filter:
-        blur(12px);
+        blur(14px);
 
     }
 
@@ -2144,25 +2851,25 @@ function addSharePanelStyles() {
         auto;
 
       padding:
-        28px;
+        30px;
 
       border-radius:
-        28px;
+        26px;
 
       background:
         linear-gradient(
           145deg,
           rgba(48,18,86,.98),
-          rgba(17,7,38,.98)
+          rgba(17,7,38,.99)
         );
 
       border:
         1px solid
-        rgba(255,255,255,.18);
+        rgba(255,255,255,.16);
 
       box-shadow:
         0 30px 100px
-        rgba(0,0,0,.65);
+        rgba(0,0,0,.7);
 
       text-align:
         center;
@@ -2173,56 +2880,19 @@ function addSharePanelStyles() {
     }
 
 
-    .shareUniverseLogo {
-
-      width:
-        58px;
-
-      height:
-        58px;
-
-      margin:
-        0 auto 12px;
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      border-radius:
-        50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(255,255,255,.25),
-          rgba(145,75,255,.2)
-        );
-
-      font-size:
-        28px;
-
-      box-shadow:
-        0 0 30px
-        rgba(180,100,255,.35);
-
-    }
-
-
     .shareModal h2 {
 
       margin:
-        5px 40px 8px;
+        5px 45px 10px;
 
       font-size:
         clamp(20px,5vw,28px);
 
       color:
         white;
+
+      font-weight:
+        600;
 
     }
 
@@ -2233,7 +2903,7 @@ function addSharePanelStyles() {
         0 0 20px;
 
       color:
-        rgba(255,255,255,.7);
+        rgba(255,255,255,.65);
 
       font-size:
         14px;
@@ -2247,22 +2917,22 @@ function addSharePanelStyles() {
         absolute;
 
       right:
-        16px;
+        15px;
 
       top:
         12px;
 
       width:
-        40px;
+        38px;
 
       height:
-        40px;
+        38px;
 
       border:
         none;
 
       background:
-        rgba(255,255,255,.08);
+        rgba(255,255,255,.07);
 
       color:
         white;
@@ -2271,13 +2941,16 @@ function addSharePanelStyles() {
         50%;
 
       font-size:
-        27px;
+        26px;
+
+      line-height:
+        38px;
 
       cursor:
         pointer;
 
       transition:
-        .2s ease;
+        background .2s ease;
 
     }
 
@@ -2285,10 +2958,7 @@ function addSharePanelStyles() {
     .shareClose:hover {
 
       background:
-        rgba(255,255,255,.18);
-
-      transform:
-        rotate(90deg);
+        rgba(255,255,255,.16);
 
     }
 
@@ -2305,7 +2975,7 @@ function addSharePanelStyles() {
         18px;
 
       background:
-        rgba(255,255,255,.06);
+        rgba(255,255,255,.05);
 
       border:
         1px solid
@@ -2316,14 +2986,14 @@ function addSharePanelStyles() {
 
     .sharePreviewTitle {
 
+      margin-bottom:
+        10px;
+
       font-size:
         13px;
 
       color:
-        rgba(255,255,255,.65);
-
-      margin-bottom:
-        10px;
+        rgba(255,255,255,.55);
 
     }
 
@@ -2337,7 +3007,7 @@ function addSharePanelStyles() {
         16px;
 
       line-height:
-        1.5;
+        1.55;
 
       margin-bottom:
         12px;
@@ -2348,16 +3018,20 @@ function addSharePanelStyles() {
     .sharePreviewLink {
 
       color:
-        #d9b6ff;
-
-      font-weight:
-        600;
+        #d7b1ff;
 
       font-size:
         14px;
 
+      font-weight:
+        600;
+
     }
 
+
+    /* ==================================
+       CLEAN TEXT BUTTONS
+       ================================== */
 
     .shareGrid {
 
@@ -2368,7 +3042,7 @@ function addSharePanelStyles() {
         repeat(4,1fr);
 
       gap:
-        12px;
+        10px;
 
     }
 
@@ -2376,17 +3050,20 @@ function addSharePanelStyles() {
     .shareOption {
 
       min-height:
-        82px;
+        54px;
+
+      padding:
+        10px 7px;
 
       border:
         1px solid
-        rgba(255,255,255,.1);
+        rgba(255,255,255,.12);
 
       border-radius:
-        18px;
+        14px;
 
       background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.045);
 
       color:
         white;
@@ -2394,62 +3071,33 @@ function addSharePanelStyles() {
       cursor:
         pointer;
 
-      display:
-        flex;
+      font-family:
+        inherit;
 
-      flex-direction:
-        column;
+      font-size:
+        13px;
 
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      gap:
-        7px;
+      font-weight:
+        500;
 
       transition:
-        transform .2s ease,
         background .2s ease,
-        border-color .2s ease;
-
-    }
-
-
-    .shareOption span {
-
-      font-size:
-        28px;
-
-      line-height:
-        1;
-
-    }
-
-
-    .shareOption small {
-
-      font-size:
-        11px;
-
-      color:
-        rgba(255,255,255,.85);
+        border-color .2s ease,
+        transform .2s ease;
 
     }
 
 
     .shareOption:hover {
 
-      transform:
-        translateY(-4px)
-        scale(1.03);
-
       background:
-        rgba(255,255,255,.12);
+        rgba(255,255,255,.11);
 
       border-color:
-        rgba(255,255,255,.3);
+        rgba(255,255,255,.28);
+
+      transform:
+        translateY(-2px);
 
     }
 
@@ -2457,10 +3105,14 @@ function addSharePanelStyles() {
     .shareOption:active {
 
       transform:
-        scale(.96);
+        scale(.97);
 
     }
 
+
+    /* ==================================
+       TOAST
+       ================================== */
 
     #universe139Toast {
 
@@ -2480,17 +3132,17 @@ function addSharePanelStyles() {
         11000;
 
       padding:
-        12px 22px;
+        11px 22px;
 
       border-radius:
         30px;
 
       background:
-        rgba(35,15,65,.96);
+        rgba(35,15,65,.97);
 
       border:
         1px solid
-        rgba(255,255,255,.2);
+        rgba(255,255,255,.18);
 
       color:
         white;
@@ -2498,15 +3150,12 @@ function addSharePanelStyles() {
       font-size:
         14px;
 
-      box-shadow:
-        0 10px 40px
-        rgba(0,0,0,.5);
-
       opacity:
         0;
 
       transition:
-        .3s ease;
+        opacity .3s ease,
+        transform .3s ease;
 
       pointer-events:
         none;
@@ -2528,7 +3177,7 @@ function addSharePanelStyles() {
     #universe139SharePanel.closing {
 
       animation:
-        shareFadeOut .2s ease
+        shareFadeOut .22s ease
         forwards;
 
     }
@@ -2567,8 +3216,8 @@ function addSharePanelStyles() {
         opacity: 0;
 
         transform:
-          translateY(30px)
-          scale(.94);
+          translateY(25px)
+          scale(.96);
 
       }
 
@@ -2585,15 +3234,19 @@ function addSharePanelStyles() {
     }
 
 
+    /* ==================================
+       MOBILE
+       ================================== */
+
     @media (max-width:600px) {
 
       .shareModal {
 
         padding:
-          22px 16px;
+          24px 15px;
 
         border-radius:
-          24px;
+          22px;
 
       }
 
@@ -2604,7 +3257,7 @@ function addSharePanelStyles() {
           repeat(3,1fr);
 
         gap:
-          9px;
+          8px;
 
       }
 
@@ -2612,26 +3265,10 @@ function addSharePanelStyles() {
       .shareOption {
 
         min-height:
-          76px;
-
-        border-radius:
-          15px;
-
-      }
-
-
-      .shareOption span {
+          52px;
 
         font-size:
-          25px;
-
-      }
-
-
-      .shareOption small {
-
-        font-size:
-          10px;
+          11px;
 
       }
 
@@ -2651,14 +3288,12 @@ function addSharePanelStyles() {
 
   `;
 
-  document.head.appendChild(
-    style
-  );
+  document.head.appendChild(style);
 }
 
 
 // ==========================================
-// OPEN SHARE PANEL
+// OPEN SHARE
 // ==========================================
 
 function shareMessage() {
@@ -2686,11 +3321,8 @@ document
       "click",
       () => {
 
-        const language =
-          button.dataset.language;
-
         selectLanguage(
-          language
+          button.dataset.language
         );
 
       }
@@ -2733,32 +3365,22 @@ if (shareBtn) {
 // INITIAL STATE
 // ==========================================
 
-messageBox.classList.add(
-  "hidden"
-);
+messageBox.classList.add("hidden");
 
-loading.classList.add(
-  "hidden"
-);
+loading.classList.add("hidden");
 
-revealBtn.classList.add(
-  "hidden"
-);
+revealBtn.classList.add("hidden");
 
-againBtn.classList.add(
-  "hidden"
-);
+againBtn.classList.add("hidden");
 
-shareBtn.classList.add(
-  "hidden"
-);
+shareBtn.classList.add("hidden");
 
 
 console.log(
-  "✨ Universe139 loaded successfully"
+  "Universe139 loaded successfully"
 );
 
 console.log(
-  "🌌 Universe139 URL:",
+  "Universe139 URL:",
   UNIVERSE139_URL
 );
