@@ -404,7 +404,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://api.shotstack.io/v1/render",
+  "https://api.shotstack.io/edit/v1/render",
       {
         method: "POST",
 
