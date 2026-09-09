@@ -1830,21 +1830,157 @@ function shareWhatsApp() {
 
 async function shareFacebook() {
 
-  await copyText(
-    getShareText()
-  );
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
 
-  const shareURL =
-    "https://www.facebook.com/sharer/sharer.php?u=" +
-    encodeURIComponent(
-      UNIVERSE139_URL
+  if (!currentMessage) {
+    console.warn(
+      "Universe139: no message to share on Facebook."
+    );
+    return;
+  }
+
+  try {
+
+    // Create the personalized PNG containing
+    // the actual revealed message.
+    const blob =
+      await createMessageImageBlob();
+
+    const file =
+      new File(
+        [blob],
+        "Universe139-message.png",
+        {
+          type: "image/png"
+        }
+      );
+
+    // ========================================
+    // MOBILE / NATIVE SHARE
+    // ========================================
+    // When supported, the browser can pass the
+    // generated PNG directly to Facebook.
+
+    const canNativeShareFile =
+      !!navigator.share &&
+      !!navigator.canShare &&
+      navigator.canShare({
+        files: [file]
+      });
+
+    if (canNativeShareFile) {
+
+      await navigator.share({
+
+        title:
+          "A Message From The Universe",
+
+        text:
+          getShareText(),
+
+        files:
+          [file]
+
+      });
+
+      return;
+    }
+
+    // ========================================
+    // DESKTOP / FALLBACK
+    // ========================================
+    // Facebook's normal web share dialog cannot
+    // receive a browser-generated PNG as an
+    // automatic file upload. Download the image,
+    // copy the personalized text, then open Facebook.
+
+    const objectURL =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href =
+      objectURL;
+
+    link.download =
+      "Universe139-message.png";
+
+    document.body.appendChild(
+      link
     );
 
-  window.open(
-    shareURL,
-    "_blank",
-    "width=700,height=650,noopener,noreferrer"
-  );
+    link.click();
+    link.remove();
+
+    window.setTimeout(() => {
+
+      URL.revokeObjectURL(
+        objectURL
+      );
+
+    }, 2000);
+
+    await copyText(
+      getShareText()
+    );
+
+    const shareURL =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.setTimeout(() => {
+
+      window.open(
+        shareURL,
+        "_blank",
+        "width=700,height=650,noopener,noreferrer"
+      );
+
+    }, 300);
+
+  } catch (error) {
+
+    // User cancelled the native share sheet.
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error(
+      "Universe139 Facebook share error:",
+      error
+    );
+
+    // Safe fallback to the original Facebook
+    // share behavior if PNG creation or native
+    // sharing is not available.
+    await copyText(
+      getShareText()
+    );
+
+    const shareURL =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      shareURL,
+      "_blank",
+      "width=700,height=650,noopener,noreferrer"
+    );
+
+  }
 
 }
 
@@ -2074,39 +2210,74 @@ async function createMessageImageBlob() {
 
 
   // ========================================
-  // COSMIC BACKGROUND
+  // BLUE SKY BACKGROUND
   // ========================================
 
   const background =
     ctx.createLinearGradient(
       0,
       0,
-      width,
+      0,
       height
     );
 
   background.addColorStop(
     0,
-    "#080512"
+    "#4aa3df"
   );
 
   background.addColorStop(
-    .35,
-    "#25113f"
-  );
-
-  background.addColorStop(
-    .7,
-    "#120827"
+    .45,
+    "#78c4ee"
   );
 
   background.addColorStop(
     1,
-    "#030207"
+    "#d9f3ff"
   );
 
   ctx.fillStyle =
     background;
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  // ========================================
+  // SOFT SKY LIGHT
+  // ========================================
+
+  const skyGlow =
+    ctx.createRadialGradient(
+      width * .5,
+      280,
+      30,
+      width * .5,
+      280,
+      620
+    );
+
+  skyGlow.addColorStop(
+    0,
+    "rgba(255,255,255,.34)"
+  );
+
+  skyGlow.addColorStop(
+    .45,
+    "rgba(255,255,255,.12)"
+  );
+
+  skyGlow.addColorStop(
+    1,
+    "rgba(255,255,255,0)"
+  );
+
+  ctx.fillStyle =
+    skyGlow;
 
   ctx.fillRect(
     0,
