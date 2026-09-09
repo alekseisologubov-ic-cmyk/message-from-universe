@@ -17,6 +17,25 @@ function getDisplayURL() {
 
 }
 
+// Detects Facebook's (and other apps') own in-app browser — the
+// webview that opens when someone taps a link *inside* the
+// Facebook/Instagram/Messenger app rather than a real browser tab.
+// These in-app browsers deliberately sandbox window.open(), the
+// Web Share API, and sometimes the clipboard for security reasons,
+// so sharing can silently fail there no matter how the code is
+// written. This lets us detect it and tell the person how to get
+// around it, instead of a share button that just does nothing.
+function isInAppBrowser() {
+
+  const ua =
+    navigator.userAgent || "";
+
+  return /FBAN|FBAV|FB_IAB|Instagram|Line\/|MicroMessenger/i.test(
+    ua
+  );
+
+}
+
 
 // ==========================================
 // TRANSLATIONS
@@ -42,6 +61,7 @@ const translations = {
     copied: "Copied!",
     copiedShare: "Message & link copied! Paste it in the app to share.",
     noMessage: "Reveal your message first.",
+    inAppBrowserNotice: "You're inside an app browser — tap ⋯ or ⋮ and choose \"Open in Browser\" for full sharing options.",
     shareInstructions:
       "Choose where you want to share your message.",
 
@@ -69,6 +89,7 @@ const translations = {
     copied: "¡Copiado!",
     copiedShare: "¡Mensaje y enlace copiados! Pégalo en la app para compartir.",
     noMessage: "Primero revela tu mensaje.",
+    inAppBrowserNotice: "Estás dentro del navegador de una app — toca ⋯ o ⋮ y elige \"Abrir en el navegador\" para todas las opciones de compartir.",
 
     shareInstructions:
       "Elige dónde quieres compartir tu mensaje.",
@@ -97,6 +118,7 @@ const translations = {
     copied: "已复制！",
     copiedShare: "讯息和链接已复制！请粘贴到应用中进行分享。",
     noMessage: "请先揭示你的讯息。",
+    inAppBrowserNotice: "你正在应用内浏览器中 — 点击 ⋯ 或 ⋮ 并选择「在浏览器中打开」以使用完整的分享功能。",
 
     shareInstructions:
       "选择你想分享讯息的方式。",
@@ -125,6 +147,7 @@ const translations = {
     copied: "Скопировано!",
     copiedShare: "Послание и ссылка скопированы! Вставьте их в приложении, чтобы поделиться.",
     noMessage: "Сначала откройте своё послание.",
+    inAppBrowserNotice: "Вы находитесь во встроенном браузере приложения — нажмите ⋯ или ⋮ и выберите «Открыть в браузере» для всех вариантов обмена.",
 
     shareInstructions:
       "Выберите, где вы хотите поделиться своим посланием.",
@@ -153,6 +176,7 @@ const translations = {
     copied: "कॉपी हो गया!",
     copiedShare: "संदेश और लिंक कॉपी हो गए! शेयर करने के लिए ऐप में पेस्ट करें।",
     noMessage: "पहले अपना संदेश देखें।",
+    inAppBrowserNotice: "आप ऐप के इन-बिल्ट ब्राउज़र में हैं — पूरी शेयरिंग सुविधाओं के लिए ⋯ या ⋮ दबाएं और \"ब्राउज़र में खोलें\" चुनें।",
 
     shareInstructions:
       "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
@@ -181,6 +205,7 @@ const translations = {
     copied: "คัดลอกแล้ว!",
     copiedShare: "คัดลอกข้อความและลิงก์แล้ว! วางในแอปเพื่อแชร์ได้เลย",
     noMessage: "กรุณาเปิดข้อความของคุณก่อน",
+    inAppBrowserNotice: "คุณกำลังอยู่ในเบราว์เซอร์ในแอป — แตะ ⋯ หรือ ⋮ แล้วเลือก \"เปิดในเบราว์เซอร์\" เพื่อใช้ตัวเลือกการแชร์ทั้งหมด",
 
     shareInstructions:
       "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
@@ -1883,6 +1908,33 @@ async function shareFacebook() {
 
   }
 
+  const shareURL =
+    "https://www.facebook.com/sharer/sharer.php?u=" +
+    encodeURIComponent(
+      UNIVERSE139_URL
+    );
+
+  // CRITICAL: window.open() must happen synchronously, in direct
+  // response to the click, or mobile browsers (especially Safari)
+  // silently block it as a popup — this is exactly why the Facebook
+  // tab wasn't appearing: it used to be called from inside a
+  // setTimeout AFTER the image was generated and the clipboard
+  // write finished, by which point the browser no longer considers
+  // it a direct result of the tap. So on any browser without the
+  // native share sheet, we open the (already fully-known) Facebook
+  // URL right here, first, before any async work at all.
+  let fallbackWindow = null;
+
+  if (!navigator.share) {
+
+    fallbackWindow = window.open(
+      shareURL,
+      "_blank",
+      "width=700,height=650,noopener,noreferrer"
+    );
+
+  }
+
   // Facebook's sharer.php dialog no longer honors any prefilled
   // post text (the old "quote" param is silently ignored now —
   // that's why the exact message wasn't showing up). The message
@@ -1930,9 +1982,42 @@ async function shareFacebook() {
 
     }
 
-    // Desktop fallback: download the image, copy the message +
-    // link to the clipboard, and open Facebook's share dialog so
-    // the person can attach the image and paste the caption in.
+    // navigator.share exists but doesn't support files on this
+    // browser — still try it with text/url before falling back
+    // to the popup window.
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share({
+          title: "Universe139",
+          text: getShareText(),
+          url: UNIVERSE139_URL
+        });
+
+        return;
+
+      } catch (error) {
+
+        if (
+          error &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error(
+          "Universe139 Facebook text share error:",
+          error
+        );
+
+      }
+
+    }
+
+    // Desktop fallback: the popup is already open (from above).
+    // Now download the image and copy the message + link so the
+    // person can attach the image and paste the caption in.
     const objectURL =
       URL.createObjectURL(
         blob
@@ -1965,13 +2050,9 @@ async function shareFacebook() {
 
     await copyShareTextWithNotice();
 
-    const shareURL =
-      "https://www.facebook.com/sharer/sharer.php?u=" +
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.setTimeout(() => {
+    // Safety net: if navigator.share existed but both attempts
+    // above failed, no popup was pre-opened — open it now.
+    if (!fallbackWindow || fallbackWindow.closed) {
 
       window.open(
         shareURL,
@@ -1979,7 +2060,7 @@ async function shareFacebook() {
         "width=700,height=650,noopener,noreferrer"
       );
 
-    }, 1200);
+    }
 
   } catch (error) {
 
@@ -1995,20 +2076,20 @@ async function shareFacebook() {
       error
     );
 
-    // Emergency fallback if image generation itself fails.
+    // Emergency fallback if image generation itself fails —
+    // the popup was already opened up front (if applicable), so
+    // just make sure the message + link are on the clipboard too.
     await copyShareTextWithNotice();
 
-    const shareURL =
-      "https://www.facebook.com/sharer/sharer.php?u=" +
-      encodeURIComponent(
-        UNIVERSE139_URL
+    if (!fallbackWindow || fallbackWindow.closed) {
+
+      window.open(
+        shareURL,
+        "_blank",
+        "width=700,height=650,noopener,noreferrer"
       );
 
-    window.open(
-      shareURL,
-      "_blank",
-      "width=700,height=650,noopener,noreferrer"
-    );
+    }
 
   }
 
@@ -2114,8 +2195,13 @@ async function shareLinkedIn() {
   // prefilled post text — it only takes a url. So we guarantee the
   // message + link are at least on the clipboard, with a toast that
   // tells the person to paste them into the post they're about to write.
-  await copyShareTextWithNotice();
-
+  //
+  // CRITICAL: open the window FIRST, synchronously, before the
+  // await below — once you await anything (even a quick clipboard
+  // write), mobile browsers no longer treat window.open() as a
+  // direct result of the tap and silently block it. That was the
+  // actual bug: the popup was being requested only after the
+  // clipboard copy had already finished.
   const url =
     encodeURIComponent(
       UNIVERSE139_URL
@@ -2126,6 +2212,8 @@ async function shareLinkedIn() {
     "_blank",
     "noopener,noreferrer"
   );
+
+  await copyShareTextWithNotice();
 
 }
 
@@ -2138,8 +2226,6 @@ async function shareReddit() {
 
   const text =
     getShareText();
-
-  await copyShareTextWithNotice();
 
   const title =
     encodeURIComponent(
@@ -2154,11 +2240,16 @@ async function shareReddit() {
       text
     );
 
+  // Same fix as Facebook/LinkedIn: open synchronously first, then
+  // copy to clipboard — awaiting the clipboard write before calling
+  // window.open() is what let the popup get silently blocked.
   window.open(
     `https://www.reddit.com/submit?selftext=true&title=${title}&text=${body}`,
     "_blank",
     "noopener,noreferrer"
   );
+
+  await copyShareTextWithNotice();
 
 }
 
@@ -3208,6 +3299,12 @@ function createSharePanel() {
         ${t.shareInstructions}
       </p>
 
+      ${
+        isInAppBrowser()
+          ? `<p class="shareInAppNotice">⚠️ ${escapeHTML(t.inAppBrowserNotice)}</p>`
+          : ""
+      }
+
       <div class="sharePreview">
 
         <div class="sharePreviewTitle">
@@ -3662,6 +3759,38 @@ function addSharePanelStyles() {
 
       font-size:
         14px;
+
+    }
+
+
+    .shareInAppNotice {
+
+      margin:
+        -8px 0 20px;
+
+      padding:
+        12px 14px;
+
+      border-radius:
+        14px;
+
+      background:
+        rgba(255,196,0,.12);
+
+      border:
+        1px solid rgba(255,196,0,.35);
+
+      color:
+        #ffd876;
+
+      font-size:
+        13px;
+
+      line-height:
+        1.5;
+
+      text-align:
+        left;
 
     }
 
