@@ -5,6 +5,13 @@
 
 
 /* =========================================================
+   APP URL
+   ========================================================= */
+
+const UNIVERSE139_URL = "https://universe139.vercel.app";
+
+
+/* =========================================================
    TRANSLATIONS
    ========================================================= */
 
@@ -21,7 +28,8 @@ const translations = {
     again: "🔮 RECEIVE ANOTHER MESSAGE",
     share: "✨ SHARE",
     wind: "THE WIND IS CARRYING YOUR MESSAGE...",
-    connected: "STAY CONNECTED TO THE UNIVERSE"
+    connected: "STAY CONNECTED TO THE UNIVERSE",
+    shareLink: "👆 Universe139 — Press here to see your message for today"
   },
 
   es: {
@@ -35,7 +43,8 @@ const translations = {
     again: "🔮 RECIBIR OTRO MENSAJE",
     share: "✨ COMPARTIR",
     wind: "EL VIENTO LLEVA TU MENSAJE...",
-    connected: "MANTENTE CONECTADO CON EL UNIVERSO"
+    connected: "MANTENTE CONECTADO CON EL UNIVERSO",
+    shareLink: "👆 Universe139 — Presiona aquí para ver tu mensaje de hoy"
   },
 
   zh: {
@@ -49,7 +58,8 @@ const translations = {
     again: "🔮 接收另一条讯息",
     share: "✨ 分享",
     wind: "风正在带来你的讯息...",
-    connected: "与宇宙保持连接"
+    connected: "与宇宙保持连接",
+    shareLink: "👆 Universe139 — 点击这里查看你今天的讯息"
   },
 
   ru: {
@@ -63,7 +73,8 @@ const translations = {
     again: "🔮 ПОЛУЧИТЬ ДРУГОЕ ПОСЛАНИЕ",
     share: "✨ ПОДЕЛИТЬСЯ",
     wind: "ВЕТЕР НЕСЁТ ТВОЁ ПОСЛАНИЕ...",
-    connected: "ОСТАВАЙСЯ НА СВЯЗИ СО ВСЕЛЕННОЙ"
+    connected: "ОСТАВАЙСЯ НА СВЯЗИ СО ВСЕЛЕННОЙ",
+    shareLink: "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня"
   },
 
   hi: {
@@ -77,7 +88,8 @@ const translations = {
     again: "🔮 एक और संदेश प्राप्त करें",
     share: "✨ साझा करें",
     wind: "हवा आपका संदेश ला रही है...",
-    connected: "ब्रह्मांड से जुड़े रहें"
+    connected: "ब्रह्मांड से जुड़े रहें",
+    shareLink: "👆 Universe139 — अपना आज का संदेश देखने के लिए यहां दबाएं"
   },
 
   th: {
@@ -91,7 +103,8 @@ const translations = {
     again: "🔮 รับข้อความอีกครั้ง",
     share: "✨ แชร์",
     wind: "สายลมกำลังนำข้อความมาหาคุณ...",
-    connected: "เชื่อมต่อกับจักรวาลต่อไป"
+    connected: "เชื่อมต่อกับจักรวาลต่อไป",
+    shareLink: "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณวันนี้"
   }
 
 };
@@ -254,7 +267,7 @@ let transitionRunning = false;
 
 
 /* =========================================================
-   DOM
+   DOM ELEMENTS
    ========================================================= */
 
 const languageBox = document.getElementById("languageBox");
@@ -280,16 +293,7 @@ const shareBtn = document.getElementById("shareBtn");
 
 
 /* =========================================================
-   SAFETY CHECK
-   ========================================================= */
-
-if (!messageBox || !message) {
-  console.error("Universe139: Message elements were not found.");
-}
-
-
-/* =========================================================
-   LANGUAGE
+   LANGUAGE SELECTION
    ========================================================= */
 
 function selectLanguage(lang) {
@@ -307,6 +311,7 @@ function selectLanguage(lang) {
   chooseLanguage.textContent = t.choose;
 
   revealBtn.textContent = t.reveal;
+
   loadingText.textContent = t.connecting;
 
   month.textContent = t.month;
@@ -319,10 +324,6 @@ function selectLanguage(lang) {
 
   revealBtn.classList.remove("hidden");
 
-  /*
-     Automatically reveal the first message.
-  */
-
   setTimeout(() => {
     revealFirstMessage();
   }, 400);
@@ -330,7 +331,7 @@ function selectLanguage(lang) {
 
 
 /* =========================================================
-   MESSAGE GENERATOR
+   RANDOM MESSAGE
    ========================================================= */
 
 function getRandomMessage() {
@@ -346,6 +347,7 @@ function getRandomMessage() {
   let newMessage;
 
   do {
+
     const index =
       Math.floor(Math.random() * list.length);
 
@@ -368,17 +370,16 @@ function getRandomMessage() {
 
 function showMessage(text) {
 
-  if (!messageBox || !message) return;
+  if (!messageBox || !message) {
+    console.error("Universe139 message elements not found.");
+    return;
+  }
 
   message.textContent = text;
 
   loading.classList.add("hidden");
 
   messageBox.classList.remove("hidden");
-
-  /*
-     Make absolutely sure the message is visible.
-  */
 
   messageBox.style.display = "block";
   messageBox.style.visibility = "visible";
@@ -388,11 +389,8 @@ function showMessage(text) {
   message.style.visibility = "visible";
   message.style.opacity = "1";
 
-  /*
-     Small entrance animation.
-  */
-
   message.style.transform = "translateY(10px)";
+
   message.style.transition =
     "opacity 0.8s ease, transform 0.8s ease";
 
@@ -412,6 +410,7 @@ function showMessage(text) {
 function revealFirstMessage() {
 
   revealBtn.classList.add("hidden");
+
   messageBox.classList.add("hidden");
 
   loading.classList.remove("hidden");
@@ -421,7 +420,8 @@ function revealFirstMessage() {
 
   setTimeout(() => {
 
-    const newMessage = getRandomMessage();
+    const newMessage =
+      getRandomMessage();
 
     showMessage(newMessage);
 
@@ -430,7 +430,7 @@ function revealFirstMessage() {
 
 
 /* =========================================================
-   HURRICANE CSS
+   CREATE HURRICANE
    ========================================================= */
 
 function createHurricane() {
@@ -445,7 +445,8 @@ function createHurricane() {
   const hurricane =
     document.createElement("div");
 
-  hurricane.id = "universeHurricane";
+  hurricane.id =
+    "universeHurricane";
 
   hurricane.innerHTML = `
 
@@ -479,10 +480,13 @@ function createHurricane() {
     </div>
   `;
 
+
   const style =
     document.createElement("style");
 
-  style.id = "hurricaneStyle";
+  style.id =
+    "hurricaneStyle";
+
 
   style.textContent = `
 
@@ -497,6 +501,7 @@ function createHurricane() {
       display: flex;
 
       align-items: center;
+
       justify-content: center;
 
       overflow: hidden;
@@ -522,6 +527,7 @@ function createHurricane() {
       position: absolute;
 
       width: 500px;
+
       height: 500px;
 
       border-radius: 50%;
@@ -545,6 +551,7 @@ function createHurricane() {
       position: absolute;
 
       width: 250px;
+
       height: 250px;
 
       border-radius: 50%;
@@ -557,9 +564,6 @@ function createHurricane() {
         0 0 30px rgba(170,100,255,0.20),
         inset 0 0 30px rgba(170,100,255,0.12);
 
-      transform:
-        rotate(0deg);
-
       animation:
         hurricaneSpin 2.5s linear infinite;
     }
@@ -570,9 +574,11 @@ function createHurricane() {
       width: 390px;
       height: 390px;
 
-      animation-duration: 3.5s;
+      animation-duration:
+        3.5s;
 
-      animation-direction: reverse;
+      animation-direction:
+        reverse;
 
       opacity: 0.55;
     }
@@ -583,7 +589,8 @@ function createHurricane() {
       width: 540px;
       height: 540px;
 
-      animation-duration: 5s;
+      animation-duration:
+        5s;
 
       opacity: 0.28;
     }
@@ -594,6 +601,7 @@ function createHurricane() {
       position: absolute;
 
       width: 320px;
+
       height: 2px;
 
       border-radius: 50%;
@@ -608,7 +616,8 @@ function createHurricane() {
 
       opacity: 0.35;
 
-      transform-origin: center;
+      transform-origin:
+        center;
 
       animation:
         windSpin 1.5s linear infinite;
@@ -616,32 +625,54 @@ function createHurricane() {
 
 
     .wind1 {
-      transform: rotate(12deg) translateX(180px);
+      transform:
+        rotate(12deg)
+        translateX(180px);
     }
 
     .wind2 {
-      transform: rotate(65deg) translateX(200px);
-      animation-duration: 1.9s;
+      transform:
+        rotate(65deg)
+        translateX(200px);
+
+      animation-duration:
+        1.9s;
     }
 
     .wind3 {
-      transform: rotate(120deg) translateX(190px);
-      animation-duration: 2.2s;
+      transform:
+        rotate(120deg)
+        translateX(190px);
+
+      animation-duration:
+        2.2s;
     }
 
     .wind4 {
-      transform: rotate(180deg) translateX(210px);
-      animation-duration: 1.7s;
+      transform:
+        rotate(180deg)
+        translateX(210px);
+
+      animation-duration:
+        1.7s;
     }
 
     .wind5 {
-      transform: rotate(240deg) translateX(180px);
-      animation-duration: 2.4s;
+      transform:
+        rotate(240deg)
+        translateX(180px);
+
+      animation-duration:
+        2.4s;
     }
 
     .wind6 {
-      transform: rotate(300deg) translateX(210px);
-      animation-duration: 1.8s;
+      transform:
+        rotate(300deg)
+        translateX(210px);
+
+      animation-duration:
+        1.8s;
     }
 
 
@@ -650,6 +681,7 @@ function createHurricane() {
       position: absolute;
 
       width: 115px;
+
       height: 115px;
 
       border-radius: 50%;
@@ -657,6 +689,7 @@ function createHurricane() {
       display: flex;
 
       align-items: center;
+
       justify-content: center;
 
       background:
@@ -683,6 +716,7 @@ function createHurricane() {
     .eyeCore {
 
       width: 30px;
+
       height: 30px;
 
       border-radius: 50%;
@@ -706,7 +740,8 @@ function createHurricane() {
 
       position: absolute;
 
-      top: calc(50% + 100px);
+      top:
+        calc(50% + 100px);
 
       width: 100%;
 
@@ -725,23 +760,30 @@ function createHurricane() {
       font-size:
         clamp(13px, 3vw, 19px);
 
-      letter-spacing: 3px;
+      letter-spacing:
+        3px;
 
-      font-weight: 700;
+      font-weight:
+        700;
 
-      opacity: 0.95;
+      opacity:
+        0.95;
     }
 
 
     .windSub {
 
-      margin-top: 12px;
+      margin-top:
+        12px;
 
-      font-size: 11px;
+      font-size:
+        11px;
 
-      letter-spacing: 2px;
+      letter-spacing:
+        2px;
 
-      opacity: 0.55;
+      opacity:
+        0.55;
     }
 
 
@@ -761,11 +803,13 @@ function createHurricane() {
     @keyframes hurricaneSpin {
 
       from {
-        transform: rotate(0deg);
+        transform:
+          rotate(0deg);
       }
 
       to {
-        transform: rotate(360deg);
+        transform:
+          rotate(360deg);
       }
 
     }
@@ -791,11 +835,13 @@ function createHurricane() {
     @keyframes eyePulse {
 
       0%, 100% {
-        transform: scale(0.95);
+        transform:
+          scale(0.95);
       }
 
       50% {
-        transform: scale(1.08);
+        transform:
+          scale(1.08);
       }
 
     }
@@ -804,13 +850,19 @@ function createHurricane() {
     @keyframes glowPulse {
 
       0%, 100% {
-        opacity: 0.55;
-        transform: scale(0.9);
+        opacity:
+          0.55;
+
+        transform:
+          scale(0.9);
       }
 
       50% {
-        opacity: 1;
-        transform: scale(1.12);
+        opacity:
+          1;
+
+        transform:
+          scale(1.12);
       }
 
     }
@@ -820,14 +872,17 @@ function createHurricane() {
 
       #universeHurricane *,
       #universeHurricane {
-        animation: none !important;
+        animation:
+          none !important;
       }
 
     }
 
   `;
 
+
   document.head.appendChild(style);
+
   document.body.appendChild(hurricane);
 
   return hurricane;
@@ -840,30 +895,23 @@ function createHurricane() {
 
 function receiveAnotherMessage() {
 
-  /*
-     Prevent double clicks while animation is running.
-  */
-
-  if (transitionRunning) return;
+  if (transitionRunning) {
+    return;
+  }
 
   transitionRunning = true;
 
   againBtn.disabled = true;
 
-  /*
-     Hide current message.
-  */
-
   messageBox.classList.add("hidden");
 
-  /*
-     Create hurricane.
-  */
+  const hurricane =
+    createHurricane();
 
-  const hurricane = createHurricane();
 
   /*
-     Keep the universe transition visible.
+     Hurricane stays visible
+     for 2.8 seconds.
   */
 
   setTimeout(() => {
@@ -873,15 +921,17 @@ function receiveAnotherMessage() {
       hurricane.style.transition =
         "opacity 0.8s ease";
 
-      hurricane.style.opacity = "0";
-
+      hurricane.style.opacity =
+        "0";
     }
+
 
     setTimeout(() => {
 
       if (hurricane) {
         hurricane.remove();
       }
+
 
       const newMessage =
         getRandomMessage();
@@ -899,28 +949,39 @@ function receiveAnotherMessage() {
 
 
 /* =========================================================
-   BUTTON EVENTS
+   LANGUAGE BUTTONS
    ========================================================= */
 
 languageButtons.forEach(button => {
 
-  button.addEventListener("click", () => {
+  button.addEventListener(
+    "click",
+    () => {
 
-    const language =
-      button.dataset.language;
+      const language =
+        button.dataset.language;
 
-    selectLanguage(language);
+      selectLanguage(language);
 
-  });
+    }
+  );
 
 });
 
+
+/* =========================================================
+   REVEAL BUTTON
+   ========================================================= */
 
 revealBtn.addEventListener(
   "click",
   revealFirstMessage
 );
 
+
+/* =========================================================
+   ANOTHER MESSAGE BUTTON
+   ========================================================= */
 
 againBtn.addEventListener(
   "click",
@@ -936,23 +997,58 @@ shareBtn.addEventListener(
   "click",
   async () => {
 
-    const text =
-      `${message.textContent}\n\n— Universe139`;
+    const currentMessage =
+      message.textContent.trim();
+
+    /*
+       This is the text people will receive.
+    */
+
+    const shareText =
+`${currentMessage}
+
+${translations[currentLanguage].shareLink}
+${UNIVERSE139_URL}`;
+
 
     try {
+
+      /*
+         Mobile phones:
+         WhatsApp, Messenger, Facebook,
+         Messages, etc. can use the
+         native sharing menu.
+      */
 
       if (navigator.share) {
 
         await navigator.share({
-          title: "Universe139",
-          text: text
+
+          title:
+            "Universe139",
+
+          text:
+            shareText,
+
+          url:
+            UNIVERSE139_URL
+
         });
 
-      } else {
+      }
 
-        await navigator.clipboard.writeText(text);
+      /*
+         Desktop / browsers without
+         Web Share API.
+      */
 
-        const original =
+      else {
+
+        await navigator.clipboard.writeText(
+          shareText
+        );
+
+        const originalText =
           shareBtn.textContent;
 
         shareBtn.textContent =
@@ -961,12 +1057,20 @@ shareBtn.addEventListener(
         setTimeout(() => {
 
           shareBtn.textContent =
-            original;
+            originalText;
 
         }, 1800);
+
       }
 
-    } catch (error) {
+    }
+
+    catch (error) {
+
+      /*
+         User cancelled the share window.
+         Nothing needs to happen.
+      */
 
       console.log(
         "Share cancelled or unavailable.",
@@ -987,15 +1091,17 @@ document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    /*
-       Make sure message starts hidden.
-    */
+    messageBox.classList.add(
+      "hidden"
+    );
 
-    messageBox.classList.add("hidden");
+    loading.classList.add(
+      "hidden"
+    );
 
-    loading.classList.add("hidden");
-
-    revealBtn.classList.add("hidden");
+    revealBtn.classList.add(
+      "hidden"
+    );
 
   }
 );
