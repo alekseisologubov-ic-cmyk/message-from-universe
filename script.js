@@ -1,277 +1,262 @@
-/* =========================================================
-   UNIVERSE139
-   Message From The Universe
-   ========================================================= */
+// ==========================================
+// UNIVERSE139 — MESSAGE FROM THE UNIVERSE
+// ==========================================
 
-
-/* =========================================================
-   APP URL
-   ========================================================= */
-
+// Your website
 const UNIVERSE139_URL = "https://universe139.vercel.app";
 
-
-/* =========================================================
-   TRANSLATIONS
-   ========================================================= */
+// ==========================================
+// TRANSLATIONS
+// ==========================================
 
 const translations = {
 
   en: {
-    title: "MESSAGE FROM<br>THE UNIVERSE",
-    subtitle: "You were guided here for a reason.",
-    choose: "Choose your language",
-    reveal: "✨ REVEAL MY MESSAGE",
-    connecting: "Connecting to the universe...",
-    month: "YOUR MESSAGE FOR TODAY",
-    small: "Keep this message close to your heart.",
-    again: "🔮 RECEIVE ANOTHER MESSAGE",
-    share: "✨ SHARE",
-    wind: "THE WIND IS CARRYING YOUR MESSAGE...",
-    connected: "STAY CONNECTED TO THE UNIVERSE",
-    shareLink: "👆 Universe139 — Press here to see your message for today"
+    chooseLanguage: "Choose your language",
+    title: "A Message From The Universe",
+    subtitle: "Your message is waiting...",
+    reveal: "Reveal My Message",
+    loading: "The Universe is preparing your message...",
+    month: "Your Message",
+    again: "Receive Another Message",
+    share: "Share My Message",
+    shareLink: "👆 Universe139 — Press here to see your message for today",
+    copied: "Your Universe139 message has been copied!"
   },
 
   es: {
-    title: "MENSAJE DEL<br>UNIVERSO",
-    subtitle: "Llegaste aquí por una razón.",
-    choose: "Elige tu idioma",
-    reveal: "✨ REVELAR MI MENSAJE",
-    connecting: "Conectando con el universo...",
-    month: "TU MENSAJE DE HOY",
-    small: "Guarda este mensaje cerca de tu corazón.",
-    again: "🔮 RECIBIR OTRO MENSAJE",
-    share: "✨ COMPARTIR",
-    wind: "EL VIENTO LLEVA TU MENSAJE...",
-    connected: "MANTENTE CONECTADO CON EL UNIVERSO",
-    shareLink: "👆 Universe139 — Presiona aquí para ver tu mensaje de hoy"
+    chooseLanguage: "Elige tu idioma",
+    title: "Un Mensaje del Universo",
+    subtitle: "Tu mensaje te está esperando...",
+    reveal: "Revelar Mi Mensaje",
+    loading: "El Universo está preparando tu mensaje...",
+    month: "Tu Mensaje",
+    again: "Recibir Otro Mensaje",
+    share: "Compartir Mi Mensaje",
+    shareLink: "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy",
+    copied: "¡Tu mensaje de Universe139 ha sido copiado!"
   },
 
   zh: {
-    title: "来自宇宙的<br>讯息",
-    subtitle: "你来到这里，是有原因的。",
-    choose: "选择你的语言",
-    reveal: "✨ 揭示我的讯息",
-    connecting: "正在连接宇宙...",
-    month: "你今天的讯息",
-    small: "把这份讯息放在心里。",
-    again: "🔮 接收另一条讯息",
-    share: "✨ 分享",
-    wind: "风正在带来你的讯息...",
-    connected: "与宇宙保持连接",
-    shareLink: "👆 Universe139 — 点击这里查看你今天的讯息"
+    chooseLanguage: "选择你的语言",
+    title: "来自宇宙的讯息",
+    subtitle: "你的讯息正在等待你...",
+    reveal: "揭示我的讯息",
+    loading: "宇宙正在为你准备讯息...",
+    month: "你的讯息",
+    again: "再收到一条讯息",
+    share: "分享我的讯息",
+    shareLink: "👆 Universe139 — 点击这里查看你今天的宇宙讯息",
+    copied: "你的 Universe139 讯息已复制！"
   },
 
   ru: {
-    title: "ПОСЛАНИЕ<br>ВСЕЛЕННОЙ",
-    subtitle: "Ты оказался здесь не случайно.",
-    choose: "Выберите язык",
-    reveal: "✨ ПОЛУЧИТЬ МОЁ ПОСЛАНИЕ",
-    connecting: "Соединяемся со Вселенной...",
-    month: "ТВОЁ ПОСЛАНИЕ НА СЕГОДНЯ",
-    small: "Сохрани это послание в своём сердце.",
-    again: "🔮 ПОЛУЧИТЬ ДРУГОЕ ПОСЛАНИЕ",
-    share: "✨ ПОДЕЛИТЬСЯ",
-    wind: "ВЕТЕР НЕСЁТ ТВОЁ ПОСЛАНИЕ...",
-    connected: "ОСТАВАЙСЯ НА СВЯЗИ СО ВСЕЛЕННОЙ",
-    shareLink: "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня"
+    chooseLanguage: "Выберите язык",
+    title: "Послание от Вселенной",
+    subtitle: "Ваше послание ждёт вас...",
+    reveal: "Открыть моё послание",
+    loading: "Вселенная готовит ваше послание...",
+    month: "Ваше послание",
+    again: "Получить другое послание",
+    share: "Поделиться моим посланием",
+    shareLink: "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня",
+    copied: "Ваше послание Universe139 скопировано!"
   },
 
   hi: {
-    title: "ब्रह्मांड का<br>संदेश",
-    subtitle: "आप यहां किसी कारण से पहुंचे हैं।",
-    choose: "अपनी भाषा चुनें",
-    reveal: "✨ मेरा संदेश देखें",
-    connecting: "ब्रह्मांड से जुड़ रहे हैं...",
-    month: "आज का आपका संदेश",
-    small: "इस संदेश को अपने दिल के करीब रखें।",
-    again: "🔮 एक और संदेश प्राप्त करें",
-    share: "✨ साझा करें",
-    wind: "हवा आपका संदेश ला रही है...",
-    connected: "ब्रह्मांड से जुड़े रहें",
-    shareLink: "👆 Universe139 — अपना आज का संदेश देखने के लिए यहां दबाएं"
+    chooseLanguage: "अपनी भाषा चुनें",
+    title: "ब्रह्मांड का एक संदेश",
+    subtitle: "आपका संदेश आपका इंतज़ार कर रहा है...",
+    reveal: "मेरा संदेश देखें",
+    loading: "ब्रह्मांड आपके लिए संदेश तैयार कर रहा है...",
+    month: "आपका संदेश",
+    again: "एक और संदेश प्राप्त करें",
+    share: "मेरा संदेश साझा करें",
+    shareLink: "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं",
+    copied: "आपका Universe139 संदेश कॉपी हो गया है!"
   },
 
   th: {
-    title: "ข้อความจาก<br>จักรวาล",
-    subtitle: "คุณมาที่นี่ด้วยเหตุผลบางอย่าง",
-    choose: "เลือกภาษาของคุณ",
-    reveal: "✨ เปิดเผยข้อความของฉัน",
-    connecting: "กำลังเชื่อมต่อกับจักรวาล...",
-    month: "ข้อความสำหรับคุณวันนี้",
-    small: "เก็บข้อความนี้ไว้ใกล้หัวใจ",
-    again: "🔮 รับข้อความอีกครั้ง",
-    share: "✨ แชร์",
-    wind: "สายลมกำลังนำข้อความมาหาคุณ...",
-    connected: "เชื่อมต่อกับจักรวาลต่อไป",
-    shareLink: "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณวันนี้"
+    chooseLanguage: "เลือกภาษาของคุณ",
+    title: "ข้อความจากจักรวาล",
+    subtitle: "ข้อความของคุณกำลังรอคุณอยู่...",
+    reveal: "เปิดข้อความของฉัน",
+    loading: "จักรวาลกำลังเตรียมข้อความสำหรับคุณ...",
+    month: "ข้อความของคุณ",
+    again: "รับข้อความใหม่",
+    share: "แชร์ข้อความของฉัน",
+    shareLink: "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้",
+    copied: "คัดลอกข้อความ Universe139 ของคุณแล้ว!"
   }
 
 };
 
 
-/* =========================================================
-   MESSAGE LIBRARY
-   ========================================================= */
+// ==========================================
+// MESSAGES
+// ==========================================
 
 const messageTemplates = {
 
   en: [
-    "Something you have been waiting for is beginning to move.",
     "Trust the feeling that keeps returning to your heart.",
-    "A new opportunity is closer than you think.",
-    "The answer you need will appear at the right moment.",
-    "You are entering a period of powerful change.",
-    "Someone is thinking about you with warmth.",
-    "Do not be afraid to begin again.",
-    "Your patience is about to be rewarded.",
-    "A financial opportunity may appear unexpectedly.",
-    "The path ahead is opening for you.",
+    "Something beautiful is beginning to unfold in your life.",
+    "You are closer to your dream than you realize.",
+    "A new opportunity will appear when you least expect it.",
     "Let go of what no longer belongs in your future.",
-    "Your intuition already knows the answer.",
-    "A positive surprise is approaching.",
-    "The universe is moving something into your favor.",
-    "Your next decision can change more than you realize.",
-    "A door that seemed closed may open again.",
-    "You are closer to your goal than you think.",
-    "Something beautiful is developing quietly.",
-    "Believe in the timing of your life.",
-    "Your energy is attracting a new beginning."
+    "Your patience is about to be rewarded.",
+    "The answer you are looking for is already within you.",
+    "A positive change is moving toward you.",
+    "Your energy is attracting something wonderful.",
+    "Do not be afraid to begin again.",
+    "Someone is thinking about you with kindness.",
+    "Your next chapter will be better than the last.",
+    "A financial opportunity may soon find you.",
+    "Trust the timing of your life.",
+    "You are exactly where you need to be.",
+    "Your intuition knows the way forward.",
+    "A surprise may bring you unexpected happiness.",
+    "Your hard work will not remain unnoticed.",
+    "Peace is coming after a period of uncertainty.",
+    "The universe is opening a new door for you."
   ],
 
   es: [
-    "Algo que has estado esperando comienza a moverse.",
-    "Confía en ese sentimiento que vuelve a tu corazón.",
-    "Una nueva oportunidad está más cerca de lo que crees.",
-    "La respuesta llegará en el momento adecuado.",
-    "Estás entrando en una etapa de grandes cambios.",
-    "Alguien piensa en ti con cariño.",
-    "No tengas miedo de comenzar de nuevo.",
-    "Tu paciencia pronto será recompensada.",
-    "Una oportunidad financiera puede aparecer inesperadamente.",
-    "El camino delante de ti se está abriendo.",
+    "Confía en ese sentimiento que sigue regresando a tu corazón.",
+    "Algo hermoso está comenzando a desarrollarse en tu vida.",
+    "Estás más cerca de tu sueño de lo que imaginas.",
+    "Una nueva oportunidad aparecerá cuando menos lo esperes.",
     "Deja ir lo que ya no pertenece a tu futuro.",
-    "Tu intuición ya conoce la respuesta.",
-    "Una sorpresa positiva se acerca.",
-    "El universo está moviendo algo a tu favor.",
-    "Tu próxima decisión puede cambiar mucho más de lo que imaginas.",
-    "Una puerta que parecía cerrada puede volver a abrirse.",
-    "Estás más cerca de tu objetivo de lo que crees.",
-    "Algo hermoso está creciendo en silencio.",
+    "Tu paciencia está a punto de ser recompensada.",
+    "La respuesta que buscas ya está dentro de ti.",
+    "Un cambio positivo se está acercando a ti.",
+    "Tu energía está atrayendo algo maravilloso.",
+    "No tengas miedo de comenzar de nuevo.",
+    "Alguien está pensando en ti con cariño.",
+    "Tu próximo capítulo será mejor que el anterior.",
+    "Una oportunidad financiera puede llegar pronto.",
     "Confía en el momento de tu vida.",
-    "Tu energía está atrayendo un nuevo comienzo."
+    "Estás exactamente donde necesitas estar.",
+    "Tu intuición conoce el camino.",
+    "Una sorpresa puede traer felicidad inesperada.",
+    "Tu esfuerzo no pasará desapercibido.",
+    "La paz llegará después de un período de incertidumbre.",
+    "El universo está abriendo una nueva puerta para ti."
   ],
 
   zh: [
-    "你一直等待的事情正在开始发生变化。",
     "相信那个不断回到你心里的感觉。",
-    "一个新的机会比你想象的更近。",
-    "你需要的答案会在正确的时刻出现。",
-    "你正在进入一个充满变化的阶段。",
-    "有人正在温暖地想着你。",
+    "美好的事情正在你的生活中慢慢展开。",
+    "你比想象中更接近自己的梦想。",
+    "一个新的机会会在你最意想不到的时候出现。",
+    "放下那些已经不属于你未来的事情。",
+    "你的耐心很快就会得到回报。",
+    "你寻找的答案其实一直都在你的心里。",
+    "一个积极的改变正在向你靠近。",
+    "你的能量正在吸引美好的事物。",
     "不要害怕重新开始。",
-    "你的耐心即将得到回报。",
-    "一个意想不到的财务机会可能出现。",
-    "前方的道路正在为你打开。",
-    "放下那些不再属于未来的事物。",
-    "你的直觉已经知道答案。",
-    "一个积极的惊喜正在靠近。",
-    "宇宙正在让事情向你有利的方向发展。",
-    "你的下一个决定可能改变很多事情。",
-    "一扇看似关闭的门可能再次打开。",
-    "你比想象中更接近目标。",
-    "美好的事情正在悄悄发生。",
+    "有人正在带着善意想念你。",
+    "你的下一章会比上一章更加美好。",
+    "一个财务上的机会可能很快出现。",
     "相信属于你的人生时机。",
-    "你的能量正在吸引新的开始。"
+    "你现在正处在应该在的位置。",
+    "你的直觉知道前进的方向。",
+    "一个惊喜可能会带给你意想不到的快乐。",
+    "你的努力不会被忽视。",
+    "经历不确定之后，平静正在到来。",
+    "宇宙正在为你打开一扇新的门。"
   ],
 
   ru: [
-    "То, чего ты давно ждёшь, начинает двигаться к тебе.",
-    "Доверься чувству, которое снова и снова возвращается в твоё сердце.",
-    "Новая возможность ближе, чем тебе кажется.",
-    "Ответ, который тебе нужен, появится в правильный момент.",
-    "Ты входишь в период сильных перемен.",
-    "Кто-то думает о тебе с теплом.",
-    "Не бойся начать всё сначала.",
-    "Твоё терпение скоро будет вознаграждено.",
-    "Неожиданно может появиться финансовая возможность.",
-    "Дорога впереди начинает открываться.",
+    "Доверься тому чувству, которое снова возвращается в твоё сердце.",
+    "Что-то прекрасное начинает происходить в твоей жизни.",
+    "Ты ближе к своей мечте, чем думаешь.",
+    "Новая возможность появится тогда, когда ты меньше всего её ожидаешь.",
     "Отпусти то, чему больше нет места в твоём будущем.",
-    "Твоя интуиция уже знает ответ.",
-    "Положительный сюрприз приближается.",
-    "Вселенная направляет события в твою пользу.",
-    "Твоё следующее решение может изменить больше, чем ты думаешь.",
-    "Дверь, которая казалась закрытой, может снова открыться.",
-    "Ты ближе к своей цели, чем тебе кажется.",
-    "Что-то прекрасное развивается прямо сейчас.",
+    "Твоё терпение скоро будет вознаграждено.",
+    "Ответ, который ты ищешь, уже находится внутри тебя.",
+    "Позитивные перемены движутся навстречу тебе.",
+    "Твоя энергия притягивает что-то прекрасное.",
+    "Не бойся начать всё сначала.",
+    "Кто-то думает о тебе с добротой.",
+    "Твоя следующая глава будет лучше предыдущей.",
+    "Скоро перед тобой может открыться финансовая возможность.",
     "Доверься времени своей жизни.",
-    "Твоя энергия притягивает новое начало."
+    "Ты находишься именно там, где должен быть.",
+    "Твоя интуиция знает правильный путь.",
+    "Неожиданный сюрприз может принести тебе счастье.",
+    "Твои усилия не останутся незамеченными.",
+    "После периода неопределённости приходит спокойствие.",
+    "Вселенная открывает перед тобой новую дверь."
   ],
 
   hi: [
-    "जिस चीज़ का आप इंतज़ार कर रहे हैं, वह अब आगे बढ़ रही है।",
-    "उस भावना पर भरोसा करें जो बार-बार आपके दिल में लौटती है।",
-    "एक नया अवसर आपकी सोच से अधिक करीब है।",
-    "जिस उत्तर की आपको जरूरत है, वह सही समय पर आएगा।",
-    "आप बदलाव के एक शक्तिशाली दौर में प्रवेश कर रहे हैं।",
-    "कोई आपको गर्मजोशी के साथ याद कर रहा है।",
-    "फिर से शुरुआत करने से मत डरिए।",
-    "आपका धैर्य जल्द ही फल देगा।",
-    "एक अप्रत्याशित वित्तीय अवसर सामने आ सकता है।",
-    "आपके सामने का रास्ता खुल रहा है।",
+    "उस एहसास पर भरोसा करें जो बार-बार आपके दिल में लौटता है।",
+    "आपके जीवन में कुछ सुंदर शुरू होने वाला है।",
+    "आप अपने सपने के जितना सोचते हैं उससे अधिक करीब हैं।",
+    "एक नया अवसर तब आएगा जब आप उसकी उम्मीद सबसे कम करेंगे।",
     "जो आपके भविष्य का हिस्सा नहीं है उसे जाने दें।",
-    "आपका अंतर्ज्ञान पहले से ही उत्तर जानता है।",
-    "एक सकारात्मक आश्चर्य आपके करीब आ रहा है।",
-    "ब्रह्मांड चीज़ों को आपके पक्ष में ला रहा है।",
-    "आपका अगला निर्णय आपकी कल्पना से अधिक बदल सकता है।",
-    "एक बंद दरवाज़ा फिर से खुल सकता है।",
-    "आप अपने लक्ष्य के बहुत करीब हैं।",
-    "कुछ सुंदर चीज़ चुपचाप विकसित हो रही है।",
+    "आपके धैर्य का फल जल्द मिलने वाला है।",
+    "जिस उत्तर की आप तलाश कर रहे हैं वह आपके भीतर ही है।",
+    "एक सकारात्मक बदलाव आपकी ओर बढ़ रहा है।",
+    "आपकी ऊर्जा किसी अद्भुत चीज़ को आकर्षित कर रही है।",
+    "फिर से शुरुआत करने से मत डरिए।",
+    "कोई आपके बारे में अच्छे भाव से सोच रहा है।",
+    "आपका अगला अध्याय पिछले अध्याय से बेहतर होगा।",
+    "जल्द ही आर्थिक अवसर आपके सामने आ सकता है।",
     "अपने जीवन के सही समय पर भरोसा करें।",
-    "आपकी ऊर्जा एक नई शुरुआत को आकर्षित कर रही है।"
+    "आप बिल्कुल वहीं हैं जहाँ आपको होना चाहिए।",
+    "आपकी अंतर्ज्ञान आपको सही दिशा दिखा रही है।",
+    "एक आश्चर्य आपको अप्रत्याशित खुशी दे सकता है।",
+    "आपकी मेहनत अनदेखी नहीं जाएगी।",
+    "अनिश्चितता के बाद शांति आने वाली है।",
+    "ब्रह्मांड आपके लिए एक नया दरवाज़ा खोल रहा है।"
   ],
 
   th: [
-    "สิ่งที่คุณรอคอยกำลังเริ่มเคลื่อนไหว",
-    "เชื่อในความรู้สึกที่กลับมาอยู่ในหัวใจของคุณเสมอ",
-    "โอกาสใหม่อยู่ใกล้กว่าที่คุณคิด",
-    "คำตอบที่คุณต้องการจะปรากฏในเวลาที่เหมาะสม",
-    "คุณกำลังเข้าสู่ช่วงเวลาแห่งการเปลี่ยนแปลงครั้งสำคัญ",
-    "มีใครบางคนกำลังคิดถึงคุณด้วยความอบอุ่น",
+    "เชื่อในความรู้สึกที่ยังคงกลับมาในหัวใจของคุณ",
+    "สิ่งสวยงามกำลังเริ่มเกิดขึ้นในชีวิตของคุณ",
+    "คุณใกล้ความฝันมากกว่าที่คุณคิด",
+    "โอกาสใหม่จะปรากฏขึ้นเมื่อคุณคาดไม่ถึง",
+    "ปล่อยสิ่งที่ไม่เหมาะกับอนาคตของคุณอีกต่อไป",
+    "ความอดทนของคุณกำลังจะได้รับรางวัล",
+    "คำตอบที่คุณกำลังมองหาอยู่ภายในตัวคุณแล้ว",
+    "การเปลี่ยนแปลงในทางที่ดีกำลังเข้ามาหาคุณ",
+    "พลังของคุณกำลังดึงดูดสิ่งมหัศจรรย์",
     "อย่ากลัวที่จะเริ่มต้นใหม่",
-    "ความอดทนของคุณกำลังจะได้รับผลตอบแทน",
-    "โอกาสทางการเงินอาจปรากฏขึ้นอย่างไม่คาดคิด",
-    "เส้นทางข้างหน้ากำลังเปิดออก",
-    "ปล่อยสิ่งที่ไม่เป็นส่วนหนึ่งของอนาคตคุณอีกต่อไป",
-    "สัญชาตญาณของคุณรู้คำตอบอยู่แล้ว",
-    "เรื่องน่าประหลาดใจในทางที่ดีกำลังเข้ามา",
-    "จักรวาลกำลังนำสิ่งต่าง ๆ ไปในทางที่เป็นประโยชน์ต่อคุณ",
-    "การตัดสินใจครั้งต่อไปอาจเปลี่ยนแปลงมากกว่าที่คุณคิด",
-    "ประตูที่ดูเหมือนปิดอาจเปิดขึ้นอีกครั้ง",
-    "คุณใกล้ถึงเป้าหมายมากกว่าที่คิด",
-    "สิ่งสวยงามกำลังเกิดขึ้นอย่างเงียบ ๆ",
-    "เชื่อมั่นในเวลาของชีวิตคุณ",
-    "พลังงานของคุณกำลังดึงดูดการเริ่มต้นใหม่"
+    "มีใครบางคนกำลังคิดถึงคุณด้วยความปรารถนาดี",
+    "บทต่อไปของชีวิตจะดีกว่าบทที่ผ่านมา",
+    "โอกาสทางการเงินอาจกำลังเข้ามาหาคุณ",
+    "เชื่อในจังหวะเวลาของชีวิต",
+    "คุณอยู่ในที่ที่คุณควรอยู่",
+    "สัญชาตญาณของคุณรู้ว่าควรเดินไปทางไหน",
+    "เซอร์ไพรส์บางอย่างอาจนำความสุขที่ไม่คาดคิดมาให้",
+    "ความพยายามของคุณจะไม่ถูกมองข้าม",
+    "ความสงบกำลังมาหลังจากช่วงเวลาแห่งความไม่แน่นอน",
+    "จักรวาลกำลังเปิดประตูบานใหม่ให้คุณ"
   ]
 
 };
 
 
-/* =========================================================
-   STATE
-   ========================================================= */
+// ==========================================
+// VARIABLES
+// ==========================================
 
 let currentLanguage = "en";
 let lastMessage = "";
-let transitionRunning = false;
+let isRevealing = false;
 
 
-/* =========================================================
-   DOM ELEMENTS
-   ========================================================= */
+// ==========================================
+// DOM ELEMENTS
+// ==========================================
 
 const languageBox = document.getElementById("languageBox");
-const languageButtons = document.querySelectorAll(".languageBtn");
+const chooseLanguage = document.getElementById("chooseLanguage");
+
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
 
 const revealBtn = document.getElementById("revealBtn");
 
@@ -279,43 +264,37 @@ const loading = document.getElementById("loading");
 const loadingText = document.getElementById("loadingText");
 
 const messageBox = document.getElementById("messageBox");
-const message = document.getElementById("message");
-
-const title = document.getElementById("title");
-const subtitle = document.getElementById("subtitle");
-const chooseLanguage = document.getElementById("chooseLanguage");
-
 const month = document.getElementById("month");
+const message = document.getElementById("message");
 const smallText = document.getElementById("smallText");
 
 const againBtn = document.getElementById("againBtn");
 const shareBtn = document.getElementById("shareBtn");
 
 
-/* =========================================================
-   LANGUAGE SELECTION
-   ========================================================= */
+// ==========================================
+// LANGUAGE SELECTION
+// ==========================================
 
-function selectLanguage(lang) {
+function selectLanguage(language) {
 
-  if (!translations[lang]) {
-    lang = "en";
+  if (!translations[language]) {
+    language = "en";
   }
 
-  currentLanguage = lang;
+  currentLanguage = language;
 
-  const t = translations[lang];
+  const t = translations[language];
 
-  title.innerHTML = t.title;
+  chooseLanguage.textContent = t.chooseLanguage;
+  title.textContent = t.title;
   subtitle.textContent = t.subtitle;
-  chooseLanguage.textContent = t.choose;
 
   revealBtn.textContent = t.reveal;
 
-  loadingText.textContent = t.connecting;
+  loadingText.textContent = t.loading;
 
   month.textContent = t.month;
-  smallText.textContent = t.small;
 
   againBtn.textContent = t.again;
   shareBtn.textContent = t.share;
@@ -325,38 +304,29 @@ function selectLanguage(lang) {
   revealBtn.classList.remove("hidden");
 
   setTimeout(() => {
-    revealFirstMessage();
-  }, 400);
+    revealMessage();
+  }, 500);
 }
 
 
-/* =========================================================
-   RANDOM MESSAGE
-   ========================================================= */
+// ==========================================
+// RANDOM MESSAGE
+// ==========================================
 
 function getRandomMessage() {
 
-  const list =
-    messageTemplates[currentLanguage] ||
-    messageTemplates.en;
+  const messages = messageTemplates[currentLanguage];
 
-  if (!list || list.length === 0) {
-    return "Your message is on its way.";
+  if (!messages || messages.length === 0) {
+    return "";
   }
 
   let newMessage;
 
   do {
-
-    const index =
-      Math.floor(Math.random() * list.length);
-
-    newMessage = list[index];
-
-  } while (
-    list.length > 1 &&
-    newMessage === lastMessage
-  );
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    newMessage = messages[randomIndex];
+  } while (messages.length > 1 && newMessage === lastMessage);
 
   lastMessage = newMessage;
 
@@ -364,744 +334,388 @@ function getRandomMessage() {
 }
 
 
-/* =========================================================
-   SHOW MESSAGE
-   ========================================================= */
+// ==========================================
+// HURRICANE / WIND EFFECT
+// ==========================================
 
-function showMessage(text) {
+function createWindEffect() {
 
-  if (!messageBox || !message) {
-    console.error("Universe139 message elements not found.");
-    return;
+  const oldWind = document.getElementById("universeWind");
+
+  if (oldWind) {
+    oldWind.remove();
   }
 
-  message.textContent = text;
+  const wind = document.createElement("div");
 
-  loading.classList.add("hidden");
+  wind.id = "universeWind";
 
-  messageBox.classList.remove("hidden");
-
-  messageBox.style.display = "block";
-  messageBox.style.visibility = "visible";
-  messageBox.style.opacity = "1";
-
-  message.style.display = "block";
-  message.style.visibility = "visible";
-  message.style.opacity = "1";
-
-  message.style.transform = "translateY(10px)";
-
-  message.style.transition =
-    "opacity 0.8s ease, transform 0.8s ease";
-
-  requestAnimationFrame(() => {
-
-    message.style.opacity = "1";
-    message.style.transform = "translateY(0)";
-
-  });
-}
-
-
-/* =========================================================
-   FIRST MESSAGE
-   ========================================================= */
-
-function revealFirstMessage() {
-
-  revealBtn.classList.add("hidden");
-
-  messageBox.classList.add("hidden");
-
-  loading.classList.remove("hidden");
-
-  loadingText.textContent =
-    translations[currentLanguage].connecting;
-
-  setTimeout(() => {
-
-    const newMessage =
-      getRandomMessage();
-
-    showMessage(newMessage);
-
-  }, 1600);
-}
-
-
-/* =========================================================
-   CREATE HURRICANE
-   ========================================================= */
-
-function createHurricane() {
-
-  const existing =
-    document.getElementById("universeHurricane");
-
-  if (existing) {
-    existing.remove();
-  }
-
-  const hurricane =
-    document.createElement("div");
-
-  hurricane.id =
-    "universeHurricane";
-
-  hurricane.innerHTML = `
-
-    <div class="hurricaneGlow"></div>
-
+  wind.innerHTML = `
     <div class="wind wind1"></div>
     <div class="wind wind2"></div>
     <div class="wind wind3"></div>
     <div class="wind wind4"></div>
     <div class="wind wind5"></div>
-    <div class="wind wind6"></div>
-
-    <div class="hurricaneRing ring1"></div>
-    <div class="hurricaneRing ring2"></div>
-    <div class="hurricaneRing ring3"></div>
-
-    <div class="hurricaneEye">
-      <div class="eyeCore"></div>
-    </div>
-
-    <div class="hurricaneText">
-
-      <div class="windMain">
-        ${translations[currentLanguage].wind}
-      </div>
-
-      <div class="windSub">
-        ${translations[currentLanguage].connected}
-      </div>
-
-    </div>
   `;
 
+  document.body.appendChild(wind);
 
-  const style =
-    document.createElement("style");
+  if (!document.getElementById("universeWindStyle")) {
 
-  style.id =
-    "hurricaneStyle";
+    const style = document.createElement("style");
 
+    style.id = "universeWindStyle";
 
-  style.textContent = `
+    style.textContent = `
 
-    #universeHurricane {
+      #universeWind {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      }
 
-      position: fixed;
-
-      inset: 0;
-
-      z-index: 9999;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      overflow: hidden;
-
-      background:
-        radial-gradient(
-          circle at center,
-          rgba(150,90,255,0.20),
-          rgba(5,3,9,0.96) 70%
-        );
-
-      opacity: 0;
-
-      animation:
-        hurricaneAppear 0.7s ease forwards;
-
-      pointer-events: all;
-    }
-
-
-    .hurricaneGlow {
-
-      position: absolute;
-
-      width: 500px;
-
-      height: 500px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(190,130,255,0.28),
-          transparent 70%
-        );
-
-      filter: blur(30px);
-
-      animation:
-        glowPulse 2s ease-in-out infinite;
-    }
-
-
-    .hurricaneRing {
-
-      position: absolute;
-
-      width: 250px;
-
-      height: 250px;
-
-      border-radius: 50%;
-
-      border:
-        1px solid
-        rgba(220,190,255,0.38);
-
-      box-shadow:
-        0 0 30px rgba(170,100,255,0.20),
-        inset 0 0 30px rgba(170,100,255,0.12);
-
-      animation:
-        hurricaneSpin 2.5s linear infinite;
-    }
-
-
-    .ring2 {
-
-      width: 390px;
-      height: 390px;
-
-      animation-duration:
-        3.5s;
-
-      animation-direction:
-        reverse;
-
-      opacity: 0.55;
-    }
-
-
-    .ring3 {
-
-      width: 540px;
-      height: 540px;
-
-      animation-duration:
-        5s;
-
-      opacity: 0.28;
-    }
-
-
-    .wind {
-
-      position: absolute;
-
-      width: 320px;
-
-      height: 2px;
-
-      border-radius: 50%;
-
-      background:
-        linear-gradient(
+      .wind {
+        position: absolute;
+        width: 200vw;
+        height: 4px;
+        left: -220vw;
+        opacity: 0;
+        border-radius: 50%;
+        background: linear-gradient(
           90deg,
           transparent,
-          rgba(255,255,255,0.7),
+          rgba(255,255,255,.15),
+          rgba(255,255,255,.8),
+          rgba(255,255,255,.15),
           transparent
         );
-
-      opacity: 0.35;
-
-      transform-origin:
-        center;
-
-      animation:
-        windSpin 1.5s linear infinite;
-    }
-
-
-    .wind1 {
-      transform:
-        rotate(12deg)
-        translateX(180px);
-    }
-
-    .wind2 {
-      transform:
-        rotate(65deg)
-        translateX(200px);
-
-      animation-duration:
-        1.9s;
-    }
-
-    .wind3 {
-      transform:
-        rotate(120deg)
-        translateX(190px);
-
-      animation-duration:
-        2.2s;
-    }
-
-    .wind4 {
-      transform:
-        rotate(180deg)
-        translateX(210px);
-
-      animation-duration:
-        1.7s;
-    }
-
-    .wind5 {
-      transform:
-        rotate(240deg)
-        translateX(180px);
-
-      animation-duration:
-        2.4s;
-    }
-
-    .wind6 {
-      transform:
-        rotate(300deg)
-        translateX(210px);
-
-      animation-duration:
-        1.8s;
-    }
-
-
-    .hurricaneEye {
-
-      position: absolute;
-
-      width: 115px;
-
-      height: 115px;
-
-      border-radius: 50%;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(220,190,255,0.22),
-          rgba(100,50,180,0.10) 55%,
-          transparent 70%
-        );
-
-      border:
-        1px solid
-        rgba(255,255,255,0.28);
-
-      box-shadow:
-        0 0 50px
-        rgba(180,110,255,0.35);
-
-      animation:
-        eyePulse 2s ease-in-out infinite;
-    }
-
-
-    .eyeCore {
-
-      width: 30px;
-
-      height: 30px;
-
-      border-radius: 50%;
-
-      background:
-        radial-gradient(
-          circle,
-          white 0%,
-          rgba(210,170,255,0.9) 25%,
-          rgba(150,80,255,0.3) 60%,
-          transparent 75%
-        );
-
-      box-shadow:
-        0 0 30px
-        rgba(220,190,255,0.9);
-    }
-
-
-    .hurricaneText {
-
-      position: absolute;
-
-      top:
-        calc(50% + 100px);
-
-      width: 100%;
-
-      text-align: center;
-
-      padding: 0 20px;
-
-      text-shadow:
-        0 0 20px
-        rgba(190,130,255,0.7);
-    }
-
-
-    .windMain {
-
-      font-size:
-        clamp(13px, 3vw, 19px);
-
-      letter-spacing:
-        3px;
-
-      font-weight:
-        700;
-
-      opacity:
-        0.95;
-    }
-
-
-    .windSub {
-
-      margin-top:
-        12px;
-
-      font-size:
-        11px;
-
-      letter-spacing:
-        2px;
-
-      opacity:
-        0.55;
-    }
-
-
-    @keyframes hurricaneAppear {
-
-      from {
-        opacity: 0;
+        filter: blur(1px);
       }
 
-      to {
-        opacity: 1;
+      .wind1 {
+        top: 20%;
+        animation: universeWind 1.4s linear;
       }
 
-    }
-
-
-    @keyframes hurricaneSpin {
-
-      from {
-        transform:
-          rotate(0deg);
+      .wind2 {
+        top: 35%;
+        animation: universeWind 1.1s linear .1s;
       }
 
-      to {
-        transform:
-          rotate(360deg);
+      .wind3 {
+        top: 50%;
+        animation: universeWind 1.3s linear .2s;
       }
 
-    }
-
-
-    @keyframes windSpin {
-
-      from {
-        transform:
-          rotate(0deg)
-          translateX(160px);
+      .wind4 {
+        top: 65%;
+        animation: universeWind 1s linear .3s;
       }
 
-      to {
-        transform:
-          rotate(360deg)
-          translateX(160px);
+      .wind5 {
+        top: 80%;
+        animation: universeWind 1.2s linear .4s;
       }
 
-    }
+      @keyframes universeWind {
 
+        0% {
+          transform: translateX(0) rotate(-2deg);
+          opacity: 0;
+        }
 
-    @keyframes eyePulse {
+        20% {
+          opacity: .7;
+        }
 
-      0%, 100% {
-        transform:
-          scale(0.95);
+        70% {
+          opacity: .9;
+        }
+
+        100% {
+          transform: translateX(260vw) rotate(2deg);
+          opacity: 0;
+        }
+
       }
 
-      50% {
-        transform:
-          scale(1.08);
-      }
+    `;
 
-    }
+    document.head.appendChild(style);
+  }
 
-
-    @keyframes glowPulse {
-
-      0%, 100% {
-        opacity:
-          0.55;
-
-        transform:
-          scale(0.9);
-      }
-
-      50% {
-        opacity:
-          1;
-
-        transform:
-          scale(1.12);
-      }
-
-    }
-
-
-    @media (prefers-reduced-motion: reduce) {
-
-      #universeHurricane *,
-      #universeHurricane {
-        animation:
-          none !important;
-      }
-
-    }
-
-  `;
-
-
-  document.head.appendChild(style);
-
-  document.body.appendChild(hurricane);
-
-  return hurricane;
+  setTimeout(() => {
+    wind.remove();
+  }, 1800);
 }
 
 
-/* =========================================================
-   RECEIVE ANOTHER MESSAGE
-   ========================================================= */
+// ==========================================
+// SHOW MESSAGE
+// ==========================================
 
-function receiveAnotherMessage() {
+function showMessage() {
 
-  if (transitionRunning) {
+  const newMessage = getRandomMessage();
+
+  message.textContent = newMessage;
+
+  messageBox.classList.remove("hidden");
+
+  messageBox.style.display = "block";
+
+  message.style.opacity = "1";
+
+  message.style.visibility = "visible";
+
+  loading.classList.add("hidden");
+
+  revealBtn.classList.add("hidden");
+
+  againBtn.classList.remove("hidden");
+
+  shareBtn.classList.remove("hidden");
+}
+
+
+// ==========================================
+// REVEAL MESSAGE
+// ==========================================
+
+function revealMessage() {
+
+  if (isRevealing) {
     return;
   }
 
-  transitionRunning = true;
-
-  againBtn.disabled = true;
+  isRevealing = true;
 
   messageBox.classList.add("hidden");
 
-  const hurricane =
-    createHurricane();
+  loading.classList.remove("hidden");
 
+  revealBtn.classList.add("hidden");
 
-  /*
-     Hurricane stays visible
-     for 2.8 seconds.
-  */
+  againBtn.classList.add("hidden");
+
+  shareBtn.classList.add("hidden");
+
+  loadingText.textContent =
+    translations[currentLanguage].loading;
 
   setTimeout(() => {
 
-    if (hurricane) {
+    showMessage();
 
-      hurricane.style.transition =
-        "opacity 0.8s ease";
+    isRevealing = false;
 
-      hurricane.style.opacity =
-        "0";
-    }
-
-
-    setTimeout(() => {
-
-      if (hurricane) {
-        hurricane.remove();
-      }
-
-
-      const newMessage =
-        getRandomMessage();
-
-      showMessage(newMessage);
-
-      transitionRunning = false;
-
-      againBtn.disabled = false;
-
-    }, 800);
-
-  }, 2800);
+  }, 2500);
 }
 
 
-/* =========================================================
-   LANGUAGE BUTTONS
-   ========================================================= */
+// ==========================================
+// RECEIVE ANOTHER MESSAGE
+// ==========================================
 
-languageButtons.forEach(button => {
+function receiveAnotherMessage() {
 
-  button.addEventListener(
-    "click",
-    () => {
+  if (isRevealing) {
+    return;
+  }
 
-      const language =
-        button.dataset.language;
+  isRevealing = true;
 
-      selectLanguage(language);
+  createWindEffect();
+
+  messageBox.style.opacity = "0";
+
+  setTimeout(() => {
+
+    messageBox.classList.add("hidden");
+
+    loading.classList.remove("hidden");
+
+    loadingText.textContent =
+      translations[currentLanguage].loading;
+
+  }, 300);
+
+  setTimeout(() => {
+
+    showMessage();
+
+    messageBox.style.opacity = "1";
+
+    isRevealing = false;
+
+  }, 2500);
+}
+
+
+// ==========================================
+// SHARE MESSAGE
+// ==========================================
+
+async function shareMessage() {
+
+  const currentMessage =
+    message.textContent.trim();
+
+  if (!currentMessage) {
+    return;
+  }
+
+  /*
+    IMPORTANT:
+
+    The actual current message is included first.
+
+    Then the Universe139 invitation.
+
+    Then the website address.
+
+    This means people don't receive only a URL.
+  */
+
+  const shareText =
+`✨ A Message From The Universe ✨
+
+“${currentMessage}”
+
+${translations[currentLanguage].shareLink}
+
+${UNIVERSE139_URL}`;
+
+
+  // ----------------------------------------
+  // PHONE / WHATSAPP / FACEBOOK / ETC.
+  // ----------------------------------------
+
+  if (navigator.share) {
+
+    try {
+
+      await navigator.share({
+        title: "Universe139",
+        text: shareText
+      });
+
+    } catch (error) {
+
+      // Ignore "user cancelled share"
+      if (error.name !== "AbortError") {
+        console.error("Share error:", error);
+      }
 
     }
-  );
+
+    return;
+  }
+
+
+  // ----------------------------------------
+  // DESKTOP FALLBACK — COPY
+  // ----------------------------------------
+
+  try {
+
+    await navigator.clipboard.writeText(shareText);
+
+    alert(
+      translations[currentLanguage].copied
+    );
+
+  } catch (error) {
+
+    // Older browser fallback
+
+    const textArea =
+      document.createElement("textarea");
+
+    textArea.value = shareText;
+
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+
+    document.body.appendChild(textArea);
+
+    textArea.select();
+
+    document.execCommand("copy");
+
+    textArea.remove();
+
+    alert(
+      translations[currentLanguage].copied
+    );
+  }
+}
+
+
+// ==========================================
+// BUTTON EVENTS
+// ==========================================
+
+document.querySelectorAll(".languageBtn").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const language =
+      button.dataset.language;
+
+    selectLanguage(language);
+
+  });
 
 });
 
 
-/* =========================================================
-   REVEAL BUTTON
-   ========================================================= */
+if (revealBtn) {
 
-revealBtn.addEventListener(
-  "click",
-  revealFirstMessage
+  revealBtn.addEventListener(
+    "click",
+    revealMessage
+  );
+
+}
+
+
+if (againBtn) {
+
+  againBtn.addEventListener(
+    "click",
+    receiveAnotherMessage
+  );
+
+}
+
+
+if (shareBtn) {
+
+  shareBtn.addEventListener(
+    "click",
+    shareMessage
+  );
+
+}
+
+
+// ==========================================
+// INITIAL STATE
+// ==========================================
+
+messageBox.classList.add("hidden");
+loading.classList.add("hidden");
+revealBtn.classList.add("hidden");
+againBtn.classList.add("hidden");
+shareBtn.classList.add("hidden");
+
+console.log(
+  "✨ Universe139 loaded successfully"
 );
-
-
-/* =========================================================
-   ANOTHER MESSAGE BUTTON
-   ========================================================= */
-
-againBtn.addEventListener(
-  "click",
-  receiveAnotherMessage
-);
-
-
-/* =========================================================
-   SHARE
-   ========================================================= */
-
-shareBtn.addEventListener(
-  "click",
-  async () => {
-
-    const currentMessage =
-      message.textContent.trim();
-
-    /*
-       This is the text people will receive.
-    */
-
-    const shareText =
-`${currentMessage}
-
-${translations[currentLanguage].shareLink}
-${UNIVERSE139_URL}`;
-
-
-    try {
-
-      /*
-         Mobile phones:
-         WhatsApp, Messenger, Facebook,
-         Messages, etc. can use the
-         native sharing menu.
-      */
-
-      if (navigator.share) {
-
-        await navigator.share({
-
-          title:
-            "Universe139",
-
-          text:
-            shareText,
-
-          url:
-            UNIVERSE139_URL
-
-        });
-
-      }
-
-      /*
-         Desktop / browsers without
-         Web Share API.
-      */
-
-      else {
-
-        await navigator.clipboard.writeText(
-          shareText
-        );
-
-        const originalText =
-          shareBtn.textContent;
-
-        shareBtn.textContent =
-          "✓ COPIED";
-
-        setTimeout(() => {
-
-          shareBtn.textContent =
-            originalText;
-
-        }, 1800);
-
-      }
-
-    }
-
-    catch (error) {
-
-      /*
-         User cancelled the share window.
-         Nothing needs to happen.
-      */
-
-      console.log(
-        "Share cancelled or unavailable.",
-        error
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   STARTUP
-   ========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    messageBox.classList.add(
-      "hidden"
-    );
-
-    loading.classList.add(
-      "hidden"
-    );
-
-    revealBtn.classList.add(
-      "hidden"
-    );
-
-  }
+console.log(
+  "🌌 Universe139 URL:",
+  UNIVERSE139_URL
 );
