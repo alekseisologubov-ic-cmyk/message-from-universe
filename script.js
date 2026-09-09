@@ -1,9 +1,15 @@
 /* =========================================================
    UNIVERSE139 — Message From The Universe
-   Full updated script
+   FULL CORRECTED VERSION
+   ========================================================= */
+
+
+/* =========================================================
+   LANGUAGES
    ========================================================= */
 
 const languages = {
+
     en: {
         name: "English",
         title: "MESSAGE FROM THE UNIVERSE",
@@ -258,16 +264,58 @@ let lastMessageIndex = -1;
 
 
 /* =========================================================
-   IMPORTANT:
-   USE THE ACTUAL URL OF THE CURRENT WORKING APP.
-   This fixes the old Vercel 404 problem.
+   DOM
+   ========================================================= */
+
+const languageBox =
+    document.getElementById("languageBox");
+
+const chooseLanguage =
+    document.getElementById("chooseLanguage");
+
+const title =
+    document.getElementById("title");
+
+const subtitle =
+    document.getElementById("subtitle");
+
+const revealBtn =
+    document.getElementById("revealBtn");
+
+const loading =
+    document.getElementById("loading");
+
+const loadingText =
+    document.getElementById("loadingText");
+
+const messageBox =
+    document.getElementById("messageBox");
+
+const month =
+    document.getElementById("month");
+
+const message =
+    document.getElementById("message");
+
+const smallText =
+    document.getElementById("smallText");
+
+const againBtn =
+    document.getElementById("againBtn");
+
+const shareBtn =
+    document.getElementById("shareBtn");
+
+
+/* =========================================================
+   GET REAL WORKING APP URL
    ========================================================= */
 
 function getShareURL() {
-    const url = new URL(window.location.href);
 
-    // Remove temporary parameters/hash so the shared URL
-    // always points to the actual application page.
+    const url =
+        new URL(window.location.href);
+
     url.search = "";
     url.hash = "";
 
@@ -276,63 +324,87 @@ function getShareURL() {
 
 
 /* =========================================================
-   DOM
-   ========================================================= */
-
-const languageBox = document.getElementById("languageBox");
-const chooseLanguage = document.getElementById("chooseLanguage");
-const title = document.getElementById("title");
-const subtitle = document.getElementById("subtitle");
-const revealBtn = document.getElementById("revealBtn");
-const loading = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
-const messageBox = document.getElementById("messageBox");
-const month = document.getElementById("month");
-const message = document.getElementById("message");
-const smallText = document.getElementById("smallText");
-const againBtn = document.getElementById("againBtn");
-const shareBtn = document.getElementById("shareBtn");
-
-
-/* =========================================================
    LANGUAGE
    ========================================================= */
 
 function setLanguage(lang) {
-    if (!languages[lang]) return;
+
+    if (!languages[lang]) {
+        return;
+    }
 
     currentLanguage = lang;
 
-    const t = languages[lang];
+    const t =
+        languages[lang];
 
-    if (title) title.textContent = t.title;
-    if (subtitle) subtitle.textContent = t.subtitle;
-    if (chooseLanguage) chooseLanguage.textContent = t.subtitle;
-    if (revealBtn) revealBtn.textContent = t.reveal;
-    if (loadingText) loadingText.textContent = t.loading;
-    if (againBtn) againBtn.textContent = t.another;
-    if (shareBtn) shareBtn.textContent = t.share;
 
-    document.documentElement.lang = lang;
+    if (title) {
+        title.textContent = t.title;
+    }
 
-    document.querySelectorAll("[data-language]").forEach(btn => {
-        btn.classList.toggle(
-            "active",
-            btn.dataset.language === lang
-        );
-    });
+    if (subtitle) {
+        subtitle.textContent = t.subtitle;
+    }
+
+    if (chooseLanguage) {
+        chooseLanguage.textContent =
+            t.subtitle;
+    }
+
+    if (revealBtn) {
+        revealBtn.textContent =
+            t.reveal;
+    }
+
+    if (loadingText) {
+        loadingText.textContent =
+            t.loading;
+    }
+
+    if (againBtn) {
+        againBtn.textContent =
+            t.another;
+    }
+
+    if (shareBtn) {
+        shareBtn.textContent =
+            t.share;
+    }
+
+
+    document.documentElement.lang =
+        lang;
+
+
+    /*
+       Support both:
+       data-language="ru"
+
+       AND:
+
+       onclick="setLanguage('ru')"
+    */
+
+    document
+        .querySelectorAll("[data-language]")
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                "active",
+                btn.dataset.language === lang
+            );
+
+        });
 }
 
 
 /* =========================================================
-   LANGUAGE BUTTONS
+   MAKE FUNCTIONS AVAILABLE TO HTML
    ========================================================= */
 
-document.querySelectorAll("[data-language]").forEach(btn => {
-    btn.addEventListener("click", () => {
-        setLanguage(btn.dataset.language);
-    });
-});
+window.setLanguage =
+    setLanguage;
 
 
 /* =========================================================
@@ -340,17 +412,32 @@ document.querySelectorAll("[data-language]").forEach(btn => {
    ========================================================= */
 
 function getRandomMessage() {
-    const list = messages[currentLanguage];
 
-    if (!list || !list.length) return "";
+    const list =
+        messages[currentLanguage];
+
+    if (!list || list.length === 0) {
+        return "";
+    }
 
     let index;
 
     do {
-        index = Math.floor(Math.random() * list.length);
-    } while (list.length > 1 && index === lastMessageIndex);
 
-    lastMessageIndex = index;
+        index =
+            Math.floor(
+                Math.random() * list.length
+            );
+
+    } while (
+        list.length > 1 &&
+        index === lastMessageIndex
+    );
+
+
+    lastMessageIndex =
+        index;
+
 
     return list[index];
 }
@@ -362,69 +449,183 @@ function getRandomMessage() {
 
 function revealMessage() {
 
+    console.log(
+        "Universe139: revealMessage()"
+    );
+
+
+    /*
+       Hide reveal button
+    */
+
     if (revealBtn) {
-        revealBtn.style.display = "none";
+
+        revealBtn.style.display =
+            "none";
     }
+
+
+    /*
+       Hide old message
+    */
 
     if (messageBox) {
-        messageBox.style.display = "none";
+
+        messageBox.style.display =
+            "none";
     }
 
+
+    /*
+       Show loading
+    */
+
     if (loading) {
-        loading.style.display = "block";
+
+        loading.style.display =
+            "block";
     }
+
+
+    /*
+       Generate message
+    */
 
     setTimeout(() => {
 
-        currentMessage = getRandomMessage();
+        currentMessage =
+            getRandomMessage();
+
+
+        console.log(
+            "Universe139 message:",
+            currentMessage
+        );
+
+
+        /*
+           Put message into HTML
+        */
 
         if (message) {
-            message.textContent = currentMessage;
+
+            message.textContent =
+                currentMessage;
         }
+
+
+        /*
+           Month
+        */
 
         if (month) {
-            const now = new Date();
 
-            month.textContent = now.toLocaleDateString(
-                currentLanguage === "zh"
-                    ? "zh-CN"
-                    : currentLanguage === "ru"
-                    ? "ru-RU"
-                    : currentLanguage === "es"
-                    ? "es-ES"
-                    : currentLanguage === "hi"
-                    ? "hi-IN"
-                    : currentLanguage === "th"
-                    ? "th-TH"
-                    : "en-US",
-                {
-                    month: "long",
-                    year: "numeric"
-                }
-            );
+            const now =
+                new Date();
+
+
+            let locale =
+                "en-US";
+
+
+            if (currentLanguage === "ru") {
+                locale = "ru-RU";
+            }
+
+            if (currentLanguage === "es") {
+                locale = "es-ES";
+            }
+
+            if (currentLanguage === "zh") {
+                locale = "zh-CN";
+            }
+
+            if (currentLanguage === "hi") {
+                locale = "hi-IN";
+            }
+
+            if (currentLanguage === "th") {
+                locale = "th-TH";
+            }
+
+
+            month.textContent =
+                now.toLocaleDateString(
+                    locale,
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
         }
+
+
+        /*
+           Small text
+        */
 
         if (smallText) {
+
             smallText.textContent =
-                languages[currentLanguage].messagePrefix;
+                languages[
+                    currentLanguage
+                ].messagePrefix;
         }
+
+
+        /*
+           Hide loading
+        */
 
         if (loading) {
-            loading.style.display = "none";
+
+            loading.style.display =
+                "none";
         }
+
+
+        /*
+           SHOW MESSAGE
+        */
 
         if (messageBox) {
-            messageBox.style.display = "block";
+
+            messageBox.style.display =
+                "block";
+
+            messageBox.style.visibility =
+                "visible";
+
+            messageBox.style.opacity =
+                "1";
         }
+
+
+        /*
+           Buttons
+        */
 
         if (againBtn) {
+
+            againBtn.style.display =
+                "";
+
             againBtn.textContent =
-                languages[currentLanguage].another;
+                languages[
+                    currentLanguage
+                ].another;
         }
 
+
         if (shareBtn) {
+
+            shareBtn.style.display =
+                "";
+
             shareBtn.textContent =
-                languages[currentLanguage].share;
+                languages[
+                    currentLanguage
+                ].share;
         }
 
     }, 1800);
@@ -432,16 +633,74 @@ function revealMessage() {
 
 
 /* =========================================================
+   MAKE REVEAL FUNCTION AVAILABLE TO HTML
+   ========================================================= */
+
+window.revealMessage =
+    revealMessage;
+
+
+/* =========================================================
    AGAIN
    ========================================================= */
 
-if (revealBtn) {
-    revealBtn.addEventListener("click", revealMessage);
+function receiveAnotherMessage() {
+
+    revealMessage();
+
 }
 
-if (againBtn) {
-    againBtn.addEventListener("click", revealMessage);
+
+window.receiveAnotherMessage =
+    receiveAnotherMessage;
+
+
+/* =========================================================
+   BUTTON EVENTS
+   ========================================================= */
+
+if (revealBtn) {
+
+    revealBtn.addEventListener(
+        "click",
+        revealMessage
+    );
 }
+
+
+if (againBtn) {
+
+    againBtn.addEventListener(
+        "click",
+        receiveAnotherMessage
+    );
+}
+
+
+/* =========================================================
+   SUPPORT LANGUAGE BUTTONS
+   ========================================================= */
+
+document
+    .querySelectorAll("[data-language]")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const lang =
+                    this.dataset.language;
+
+                if (lang) {
+
+                    setLanguage(lang);
+                }
+
+            }
+        );
+
+    });
 
 
 /* =========================================================
@@ -450,15 +709,21 @@ if (againBtn) {
 
 function getShareText() {
 
-    const t = languages[currentLanguage];
+    const t =
+        languages[currentLanguage];
 
-    return `${t.messagePrefix}
 
-"${currentMessage}"
-
-— UNIVERSE139
-
-${getShareURL()}`;
+    return (
+        t.messagePrefix +
+        "\n\n" +
+        '"' +
+        currentMessage +
+        '"' +
+        "\n\n" +
+        "— UNIVERSE139" +
+        "\n\n" +
+        getShareURL()
+    );
 }
 
 
@@ -483,51 +748,84 @@ function escapeHTML(value) {
 
 function loadHtml2Canvas() {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(
+        (resolve, reject) => {
 
-        if (window.html2canvas) {
-            resolve(window.html2canvas);
-            return;
+            if (window.html2canvas) {
+
+                resolve(
+                    window.html2canvas
+                );
+
+                return;
+            }
+
+
+            const existing =
+                document.querySelector(
+                    'script[src*="html2canvas"]'
+                );
+
+
+            if (existing) {
+
+                existing.addEventListener(
+                    "load",
+                    () => {
+
+                        resolve(
+                            window.html2canvas
+                        );
+
+                    }
+                );
+
+
+                existing.addEventListener(
+                    "error",
+                    reject
+                );
+
+
+                return;
+            }
+
+
+            const script =
+                document.createElement(
+                    "script"
+                );
+
+
+            script.src =
+                "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+
+
+            script.onload =
+                () => {
+
+                    resolve(
+                        window.html2canvas
+                    );
+
+                };
+
+
+            script.onerror =
+                reject;
+
+
+            document.head.appendChild(
+                script
+            );
+
         }
-
-        const existing =
-            document.querySelector(
-                'script[src*="html2canvas"]'
-            );
-
-        if (existing) {
-
-            existing.addEventListener(
-                "load",
-                () => resolve(window.html2canvas)
-            );
-
-            existing.addEventListener(
-                "error",
-                reject
-            );
-
-            return;
-        }
-
-        const script = document.createElement("script");
-
-        script.src =
-            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-        script.onload = () => {
-            resolve(window.html2canvas);
-        };
-
-        script.onerror = reject;
-
-        document.head.appendChild(script);
-    });
+    );
 }
 
 
 /* =========================================================
-   CREATE CLEAN PROFESSIONAL SHARE CARD
+   CREATE CLEAN SHARE IMAGE
    ========================================================= */
 
 function createShareCard() {
@@ -537,81 +835,94 @@ function createShareCard() {
             "universe139-share-card"
         );
 
+
     if (old) {
         old.remove();
     }
 
+
     const card =
         document.createElement("div");
+
 
     card.id =
         "universe139-share-card";
 
-    /*
-       IMPORTANT:
-       This is a separate capture card.
-
-       It DOES NOT contain:
-       - Receive Another Message
-       - Share My Message
-       - Share panel
-       - buttons
-       - icons
-    */
 
     card.innerHTML = `
-        <div class="u139-stars"></div>
 
-        <div class="u139-card-content">
+        <div class="u139-share-stars"></div>
 
-            <div class="u139-brand">
+        <div class="u139-share-glow"></div>
+
+        <div class="u139-share-content">
+
+            <div class="u139-share-brand">
                 UNIVERSE139
             </div>
 
-            <div class="u139-line"></div>
+            <div class="u139-share-divider"></div>
 
-            <div class="u139-small">
+            <div class="u139-share-prefix">
                 ${escapeHTML(
-                    languages[currentLanguage].messagePrefix
+                    languages[
+                        currentLanguage
+                    ].messagePrefix
                 )}
             </div>
 
-            <div class="u139-message">
-                “${escapeHTML(currentMessage)}”
+            <div class="u139-share-message">
+                “${escapeHTML(
+                    currentMessage
+                )}”
             </div>
 
-            <div class="u139-bottom">
+            <div class="u139-share-footer">
                 MESSAGE FROM THE UNIVERSE
             </div>
 
         </div>
     `;
 
+
     /*
-       Get the current app background automatically.
-       This means the share image follows the background
-       already used by your application.
+       Take the current app background.
     */
 
     const bodyStyle =
-        window.getComputedStyle(document.body);
+        getComputedStyle(
+            document.body
+        );
 
-    card.style.background =
+
+    let background =
         bodyStyle.background;
 
+
     if (
-        !card.style.background ||
-        card.style.background === "rgba(0, 0, 0, 0)"
+        !background ||
+        background ===
+        "rgba(0, 0, 0, 0)"
     ) {
-        card.style.background =
+
+        background =
             "radial-gradient(circle at 50% 30%, #3b176b 0%, #17082f 45%, #06020f 100%)";
     }
 
+
+    card.style.background =
+        background;
+
+
     const style =
-        document.createElement("style");
+        document.createElement(
+            "style"
+        );
+
 
     style.id =
         "u139-share-card-style";
+
 
     style.textContent = `
 
@@ -620,21 +931,16 @@ function createShareCard() {
             position: fixed;
 
             left: -20000px;
+
             top: 0;
 
             width: 1080px;
-            height: 1350px;
 
-            box-sizing: border-box;
+            height: 1350px;
 
             overflow: hidden;
 
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            color: white;
+            box-sizing: border-box;
 
             display: flex;
 
@@ -642,74 +948,77 @@ function createShareCard() {
 
             justify-content: center;
 
+            color: white;
+
             text-align: center;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
         }
 
 
-        #universe139-share-card::before {
-
-            content: "";
-
-            position: absolute;
-
-            inset: -20%;
-
-            background:
-                radial-gradient(
-                    circle at 50% 30%,
-                    rgba(160, 90, 255, 0.28),
-                    transparent 34%
-                ),
-                radial-gradient(
-                    circle at 15% 80%,
-                    rgba(90, 50, 180, 0.22),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 85% 75%,
-                    rgba(120, 50, 200, 0.18),
-                    transparent 35%
-                );
-
-            pointer-events: none;
-        }
-
-
-        #universe139-share-card .u139-stars {
+        #universe139-share-card
+        .u139-share-stars {
 
             position: absolute;
 
             inset: 0;
 
-            opacity: 0.65;
-
             background-image:
                 radial-gradient(
                     circle,
-                    rgba(255,255,255,0.85) 1px,
+                    rgba(255,255,255,.85)
+                    1px,
                     transparent 1.5px
                 );
 
             background-size:
-                75px 75px;
+                72px 72px;
 
-            background-position:
-                10px 20px;
-
-            pointer-events: none;
+            opacity: .5;
         }
 
 
         #universe139-share-card
-        .u139-card-content {
+        .u139-share-glow {
+
+            position: absolute;
+
+            width: 850px;
+
+            height: 850px;
+
+            left: 50%;
+
+            top: 45%;
+
+            transform:
+                translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(150,80,255,.22),
+                    transparent 65%
+                );
+
+            filter:
+                blur(25px);
+        }
+
+
+        #universe139-share-card
+        .u139-share-content {
 
             position: relative;
 
-            z-index: 2;
+            z-index: 3;
 
-            width: 82%;
-
-            min-height: 78%;
+            width: 84%;
 
             display: flex;
 
@@ -722,7 +1031,7 @@ function createShareCard() {
 
 
         #universe139-share-card
-        .u139-brand {
+        .u139-share-brand {
 
             font-size: 34px;
 
@@ -734,26 +1043,26 @@ function createShareCard() {
 
             text-shadow:
                 0 0 25px
-                rgba(190,120,255,0.8);
+                rgba(180,120,255,.8);
         }
 
 
         #universe139-share-card
-        .u139-line {
+        .u139-share-divider {
 
-            width: 180px;
+            width: 170px;
 
             height: 1px;
 
             background:
-                rgba(255,255,255,0.45);
+                rgba(255,255,255,.4);
 
-            margin-bottom: 60px;
+            margin-bottom: 55px;
         }
 
 
         #universe139-share-card
-        .u139-small {
+        .u139-share-prefix {
 
             font-size: 25px;
 
@@ -761,14 +1070,16 @@ function createShareCard() {
 
             text-transform: uppercase;
 
-            opacity: 0.72;
+            opacity: .7;
 
             margin-bottom: 55px;
         }
 
 
         #universe139-share-card
-        .u139-message {
+        .u139-share-message {
+
+            width: 100%;
 
             font-size: 58px;
 
@@ -776,103 +1087,116 @@ function createShareCard() {
 
             font-weight: 400;
 
-            max-width: 900px;
-
             text-shadow:
-                0 4px 25px
-                rgba(0,0,0,0.45);
+                0 5px 25px
+                rgba(0,0,0,.5);
         }
 
 
         #universe139-share-card
-        .u139-bottom {
+        .u139-share-footer {
 
-            margin-top: 80px;
+            margin-top: 85px;
 
-            font-size: 20px;
+            font-size: 19px;
 
             letter-spacing: 5px;
 
-            opacity: 0.48;
+            opacity: .45;
         }
 
     `;
 
-    const oldStyle =
-        document.getElementById(
-            "u139-share-card-style"
-        );
 
-    if (oldStyle) {
-        oldStyle.remove();
-    }
+    document.head.appendChild(
+        style
+    );
 
-    document.head.appendChild(style);
-    document.body.appendChild(card);
+
+    document.body.appendChild(
+        card
+    );
+
 
     return card;
 }
 
 
 /* =========================================================
-   CAPTURE SHARE CARD
+   CAPTURE IMAGE
    ========================================================= */
 
 async function captureMessageImage() {
 
     if (!currentMessage) {
+
         throw new Error(
-            "There is no message to share yet."
+            "No message available."
         );
     }
+
 
     const html2canvas =
         await loadHtml2Canvas();
 
+
     const card =
         createShareCard();
 
-    /*
-       Give browser time to render
-       fonts/background before capture.
-    */
 
-    await new Promise(resolve =>
-        setTimeout(resolve, 150)
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                200
+            )
     );
 
-    const canvas =
-        await html2canvas(card, {
 
-            width: 1080,
-            height: 1350,
+    try {
 
-            scale: 2,
+        const canvas =
+            await html2canvas(
+                card,
+                {
+                    width: 1080,
 
-            backgroundColor: null,
+                    height: 1350,
 
-            useCORS: true,
+                    scale: 2,
 
-            logging: false
-        });
+                    backgroundColor: null,
 
-    card.remove();
+                    useCORS: true,
 
-    const style =
-        document.getElementById(
-            "u139-share-card-style"
-        );
+                    logging: false
+                }
+            );
 
-    if (style) {
-        style.remove();
+
+        return canvas;
+
+    } finally {
+
+        card.remove();
+
+
+        const style =
+            document.getElementById(
+                "u139-share-card-style"
+            );
+
+
+        if (style) {
+            style.remove();
+        }
+
     }
-
-    return canvas;
 }
 
 
 /* =========================================================
-   CANVAS → FILE
+   CREATE PNG FILE
    ========================================================= */
 
 async function createMessageImageFile() {
@@ -880,46 +1204,56 @@ async function createMessageImageFile() {
     const canvas =
         await captureMessageImage();
 
-    return new Promise((resolve, reject) => {
 
-        canvas.toBlob(
-            blob => {
+    return new Promise(
+        (resolve, reject) => {
 
-                if (!blob) {
-                    reject(
-                        new Error(
-                            "Could not create image."
-                        )
-                    );
+            canvas.toBlob(
+                blob => {
 
-                    return;
-                }
+                    if (!blob) {
 
-                const file =
-                    new File(
-                        [blob],
-                        "Universe139-Message.png",
-                        {
-                            type: "image/png"
-                        }
-                    );
+                        reject(
+                            new Error(
+                                "Could not create image."
+                            )
+                        );
 
-                resolve(file);
-            },
-            "image/png",
-            1
-        );
-    });
+                        return;
+                    }
+
+
+                    const file =
+                        new File(
+                            [blob],
+                            "Universe139-Message.png",
+                            {
+                                type:
+                                    "image/png"
+                            }
+                        );
+
+
+                    resolve(file);
+
+                },
+                "image/png",
+                1
+            );
+
+        }
+    );
 }
 
 
 /* =========================================================
-   NATIVE SHARE — ACTUAL PICTURE
+   SHARE ACTUAL PICTURE
    ========================================================= */
 
 async function sharePictureNative() {
 
     if (!currentMessage) {
+
         alert(
             "Please reveal your message first."
         );
@@ -927,12 +1261,15 @@ async function sharePictureNative() {
         return;
     }
 
+
     try {
 
         const file =
             await createMessageImageFile();
 
+
         const shareData = {
+
             title:
                 "Universe139 — Message From The Universe",
 
@@ -943,9 +1280,10 @@ async function sharePictureNative() {
                 getShareURL()
         };
 
+
         /*
-           If the device/browser supports file sharing,
-           share the actual generated picture.
+           PHONE / TABLET:
+           Share actual image.
         */
 
         if (
@@ -957,62 +1295,90 @@ async function sharePictureNative() {
         ) {
 
             await navigator.share({
+
                 ...shareData,
+
                 files: [file]
+
             });
+
 
             return;
         }
 
 
         /*
-           Some desktop browsers don't support
-           sharing files.
-
-           Download/open fallback.
+           DESKTOP FALLBACK:
+           Download image.
         */
 
         const imageURL =
-            URL.createObjectURL(file);
+            URL.createObjectURL(
+                file
+            );
 
-        const a =
-            document.createElement("a");
 
-        a.href = imageURL;
+        const link =
+            document.createElement(
+                "a"
+            );
 
-        a.download =
+
+        link.href =
+            imageURL;
+
+
+        link.download =
             "Universe139-Message.png";
 
-        document.body.appendChild(a);
 
-        a.click();
+        document.body.appendChild(
+            link
+        );
 
-        a.remove();
 
-        setTimeout(() => {
-            URL.revokeObjectURL(imageURL);
-        }, 5000);
+        link.click();
+
+
+        link.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    imageURL
+                );
+
+            },
+            5000
+        );
+
 
         alert(
-            "Your message picture has been created. You can now share the image."
+            "Your Universe139 message picture is ready."
         );
 
     } catch (error) {
 
         console.error(
-            "Picture sharing error:",
+            "Universe139 sharing error:",
             error
         );
 
+
         if (
             error &&
-            error.name === "AbortError"
+            error.name ===
+            "AbortError"
         ) {
+
             return;
         }
 
+
         alert(
-            "Unable to create the picture. Please try again."
+            "Unable to create the message picture. Please try again."
         );
     }
 }
@@ -1025,6 +1391,7 @@ async function sharePictureNative() {
 function showSharePanel() {
 
     if (!currentMessage) {
+
         alert(
             "Please reveal your message first."
         );
@@ -1032,10 +1399,12 @@ function showSharePanel() {
         return;
     }
 
+
     const old =
         document.getElementById(
             "universe139-share-panel"
         );
+
 
     if (old) {
         old.remove();
@@ -1045,12 +1414,16 @@ function showSharePanel() {
     const shareURL =
         getShareURL();
 
+
     const t =
         languages[currentLanguage];
 
 
     const panel =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     panel.id =
         "universe139-share-panel";
@@ -1064,22 +1437,25 @@ function showSharePanel() {
 
                 <button
                     class="u139-share-close"
-                    id="u139ShareClose"
                     type="button"
+                    id="u139ShareClose"
                 >
                     ×
                 </button>
 
-
                 <div class="u139-share-title">
-                    ${escapeHTML(t.shareTitle)}
+                    ${escapeHTML(
+                        t.shareTitle
+                    )}
                 </div>
 
 
                 <div class="u139-share-preview">
 
                     <div class="u139-preview-message">
-                        “${escapeHTML(currentMessage)}”
+                        “${escapeHTML(
+                            currentMessage
+                        )}”
                     </div>
 
                     <div class="u139-preview-brand">
@@ -1089,14 +1465,20 @@ function showSharePanel() {
                 </div>
 
 
+                <!-- REAL CLICKABLE LINK -->
+
                 <div class="u139-share-link">
 
                     <a
-                        href="${escapeHTML(shareURL)}"
+                        href="${escapeHTML(
+                            shareURL
+                        )}"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        ${escapeHTML(shareURL)}
+                        ${escapeHTML(
+                            shareURL
+                        )}
                     </a>
 
                 </div>
@@ -1108,7 +1490,9 @@ function showSharePanel() {
                         type="button"
                         data-share="picture"
                     >
-                        ${escapeHTML(t.sharePicture)}
+                        ${escapeHTML(
+                            t.sharePicture
+                        )}
                     </button>
 
                     <button
@@ -1171,14 +1555,18 @@ function showSharePanel() {
                         type="button"
                         data-share="copy"
                     >
-                        ${escapeHTML(t.copy)}
+                        ${escapeHTML(
+                            t.copy
+                        )}
                     </button>
 
                     <button
                         type="button"
                         data-share="open"
                     >
-                        ${escapeHTML(t.open)}
+                        ${escapeHTML(
+                            t.open
+                        )}
                     </button>
 
                     <button
@@ -1197,7 +1585,10 @@ function showSharePanel() {
 
 
     const style =
-        document.createElement("style");
+        document.createElement(
+            "style"
+        );
+
 
     style.id =
         "u139-share-panel-style";
@@ -1223,7 +1614,7 @@ function showSharePanel() {
             padding: 20px;
 
             background:
-                rgba(5, 1, 15, 0.86);
+                rgba(5,1,15,.88);
 
             backdrop-filter:
                 blur(12px);
@@ -1235,7 +1626,7 @@ function showSharePanel() {
 
             position: relative;
 
-            width: min(620px, 94vw);
+            width: min(620px,94vw);
 
             max-height: 92vh;
 
@@ -1248,7 +1639,7 @@ function showSharePanel() {
             background:
                 radial-gradient(
                     circle at 50% 0%,
-                    rgba(120,70,210,0.30),
+                    rgba(120,70,210,.3),
                     transparent 42%
                 ),
                 linear-gradient(
@@ -1259,11 +1650,11 @@ function showSharePanel() {
 
             border:
                 1px solid
-                rgba(255,255,255,0.16);
+                rgba(255,255,255,.16);
 
             box-shadow:
                 0 30px 100px
-                rgba(0,0,0,0.65);
+                rgba(0,0,0,.65);
 
             color: white;
 
@@ -1281,7 +1672,7 @@ function showSharePanel() {
 
             right: 18px;
 
-            top: 12px;
+            top: 10px;
 
             border: none;
 
@@ -1293,7 +1684,7 @@ function showSharePanel() {
 
             cursor: pointer;
 
-            opacity: 0.75;
+            opacity: .75;
         }
 
 
@@ -1320,16 +1711,11 @@ function showSharePanel() {
             text-align: center;
 
             background:
-                radial-gradient(
-                    circle at 50% 20%,
-                    rgba(130,70,220,0.28),
-                    transparent 50%
-                ),
-                rgba(255,255,255,0.055);
+                rgba(255,255,255,.055);
 
             border:
                 1px solid
-                rgba(255,255,255,0.10);
+                rgba(255,255,255,.1);
 
             margin-bottom: 18px;
         }
@@ -1353,7 +1739,7 @@ function showSharePanel() {
 
             letter-spacing: 4px;
 
-            opacity: 0.55;
+            opacity: .55;
         }
 
 
@@ -1385,7 +1771,7 @@ function showSharePanel() {
             display: grid;
 
             grid-template-columns:
-                repeat(2, 1fr);
+                repeat(2,1fr);
 
             gap: 10px;
         }
@@ -1400,66 +1786,73 @@ function showSharePanel() {
 
             border:
                 1px solid
-                rgba(255,255,255,0.13);
+                rgba(255,255,255,.13);
 
             background:
-                rgba(255,255,255,0.065);
+                rgba(255,255,255,.065);
 
             color: white;
 
             cursor: pointer;
 
             font-size: 14px;
-
-            transition:
-                transform 0.15s ease,
-                background 0.15s ease;
         }
 
 
         #universe139-share-panel
         .u139-share-options button:hover {
 
-            transform:
-                translateY(-2px);
-
             background:
-                rgba(255,255,255,0.13);
+                rgba(255,255,255,.13);
         }
 
 
-        @media (max-width: 500px) {
+        @media(max-width:500px) {
 
             #universe139-share-panel
             .u139-share-options {
 
-                grid-template-columns: 1fr;
+                grid-template-columns:1fr;
             }
 
             #universe139-share-panel
             .u139-share-window {
 
-                padding: 22px;
+                padding:22px;
             }
         }
 
     `;
 
 
-    document.head.appendChild(style);
-    document.body.appendChild(panel);
+    document.head.appendChild(
+        style
+    );
+
+
+    document.body.appendChild(
+        panel
+    );
 
 
     document
-        .getElementById("u139ShareClose")
+        .getElementById(
+            "u139ShareClose"
+        )
         .addEventListener(
             "click",
-            () => panel.remove()
+            () => {
+
+                panel.remove();
+
+            }
         );
 
 
     panel
-        .querySelector(".u139-share-overlay")
+        .querySelector(
+            ".u139-share-overlay"
+        )
         .addEventListener(
             "click",
             event => {
@@ -1469,8 +1862,11 @@ function showSharePanel() {
                         "u139-share-overlay"
                     )
                 ) {
+
                     panel.remove();
+
                 }
+
             }
         );
 
@@ -1488,8 +1884,10 @@ function showSharePanel() {
                     handleShareAction(
                         button.dataset.share
                     );
+
                 }
             );
+
         });
 }
 
@@ -1503,10 +1901,13 @@ async function handleShareAction(type) {
     const shareURL =
         getShareURL();
 
+
     const shareText =
         getShareText();
 
+
     switch (type) {
+
 
         case "picture":
 
@@ -1523,10 +1924,10 @@ async function handleShareAction(type) {
                     shareText
                 );
 
+
             window.open(
                 url,
-                "_blank",
-                "noopener,noreferrer"
+                "_blank"
             );
 
             break;
@@ -1534,15 +1935,6 @@ async function handleShareAction(type) {
 
 
         case "facebook": {
-
-            /*
-               Facebook accepts:
-               - URL
-               - quote/message
-
-               The actual generated picture is
-               handled by "Share Picture".
-            */
 
             const url =
                 "https://www.facebook.com/sharer/sharer.php" +
@@ -1552,8 +1944,11 @@ async function handleShareAction(type) {
                 ) +
                 "&quote=" +
                 encodeURIComponent(
-                    `"${currentMessage}" — UNIVERSE139`
+                    '"' +
+                    currentMessage +
+                    '" — UNIVERSE139'
                 );
+
 
             window.open(
                 url,
@@ -1575,13 +1970,15 @@ async function handleShareAction(type) {
                 ) +
                 "&text=" +
                 encodeURIComponent(
-                    `"${currentMessage}" — UNIVERSE139`
+                    '"' +
+                    currentMessage +
+                    '" — UNIVERSE139'
                 );
+
 
             window.open(
                 url,
-                "_blank",
-                "noopener,noreferrer"
+                "_blank"
             );
 
             break;
@@ -1593,18 +1990,15 @@ async function handleShareAction(type) {
             const subject =
                 "My Message From The Universe";
 
-            const body =
-                shareText;
 
             window.location.href =
-                "mailto:" +
-                "?subject=" +
+                "mailto:?subject=" +
                 encodeURIComponent(
                     subject
                 ) +
                 "&body=" +
                 encodeURIComponent(
-                    body
+                    shareText
                 );
 
             break;
@@ -1613,14 +2007,11 @@ async function handleShareAction(type) {
 
         case "sms": {
 
-            const smsURL =
+            window.location.href =
                 "sms:?body=" +
                 encodeURIComponent(
                     shareText
                 );
-
-            window.location.href =
-                smsURL;
 
             break;
         }
@@ -1634,10 +2025,10 @@ async function handleShareAction(type) {
                     shareURL
                 );
 
+
             window.open(
                 url,
-                "_blank",
-                "noopener,noreferrer"
+                "_blank"
             );
 
             break;
@@ -1654,13 +2045,14 @@ async function handleShareAction(type) {
                 ) +
                 "&title=" +
                 encodeURIComponent(
-                    `"${currentMessage}" — UNIVERSE139`
+                    currentMessage +
+                    " — UNIVERSE139"
                 );
+
 
             window.open(
                 url,
-                "_blank",
-                "noopener,noreferrer"
+                "_blank"
             );
 
             break;
@@ -1669,15 +2061,11 @@ async function handleShareAction(type) {
 
         case "viber": {
 
-            const url =
-                "viber://forward" +
-                "?text=" +
+            window.location.href =
+                "viber://forward?text=" +
                 encodeURIComponent(
                     shareText
                 );
-
-            window.location.href =
-                url;
 
             break;
         }
@@ -1691,11 +2079,7 @@ async function handleShareAction(type) {
                     shareText
                 );
 
-                alert(
-                    languages[currentLanguage].copied
-                );
-
-            } catch (error) {
+            } catch {
 
                 const textarea =
                     document.createElement(
@@ -1716,11 +2100,14 @@ async function handleShareAction(type) {
                 );
 
                 textarea.remove();
-
-                alert(
-                    languages[currentLanguage].copied
-                );
             }
+
+
+            alert(
+                languages[
+                    currentLanguage
+                ].copied
+            );
 
             break;
         }
@@ -1728,15 +2115,9 @@ async function handleShareAction(type) {
 
         case "open":
 
-            /*
-               This opens the SAME working URL
-               instead of the old Vercel URL.
-            */
-
             window.open(
                 shareURL,
-                "_blank",
-                "noopener,noreferrer"
+                "_blank"
             );
 
             break;
@@ -1751,6 +2132,7 @@ async function handleShareAction(type) {
                 try {
 
                     await navigator.share({
+
                         title:
                             "Universe139 — Message From The Universe",
 
@@ -1759,6 +2141,7 @@ async function handleShareAction(type) {
 
                         url:
                             shareURL
+
                     });
 
                 } catch (error) {
@@ -1767,13 +2150,19 @@ async function handleShareAction(type) {
                         error.name !==
                         "AbortError"
                     ) {
-                        console.error(error);
+
+                        console.error(
+                            error
+                        );
+
                     }
+
                 }
 
             } else {
 
                 await sharePictureNative();
+
             }
 
             break;
@@ -1795,6 +2184,17 @@ if (shareBtn) {
 
 
 /* =========================================================
+   MAKE SHARE FUNCTION AVAILABLE TO HTML
+   ========================================================= */
+
+window.showSharePanel =
+    showSharePanel;
+
+window.sharePictureNative =
+    sharePictureNative;
+
+
+/* =========================================================
    COSMIC TORNADO
    ========================================================= */
 
@@ -1805,20 +2205,27 @@ function createCosmicTornado() {
             "cosmic-tornado"
         );
 
+
     if (existing) {
         existing.remove();
     }
 
 
     const tornado =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     tornado.id =
         "cosmic-tornado";
 
 
     const style =
-        document.createElement("style");
+        document.createElement(
+            "style"
+        );
+
 
     style.id =
         "cosmic-tornado-style";
@@ -1838,41 +2245,40 @@ function createCosmicTornado() {
 
             overflow: hidden;
 
-            opacity: 0.45;
+            opacity: .45;
         }
 
 
         #cosmic-tornado::before {
 
-            content: "";
+            content:"";
 
-            position: absolute;
+            position:absolute;
 
-            width: 75vw;
+            width:75vw;
 
-            height: 75vw;
+            height:75vw;
 
-            left: 50%;
+            left:50%;
 
-            top: 45%;
+            top:45%;
 
             transform:
-                translate(-50%, -50%);
+                translate(-50%,-50%);
 
-            border-radius: 50%;
+            border-radius:50%;
 
             background:
                 conic-gradient(
                     from 0deg,
                     transparent,
-                    rgba(150,80,255,0.22),
+                    rgba(150,80,255,.22),
                     transparent,
-                    rgba(100,50,220,0.18),
+                    rgba(100,50,220,.18),
                     transparent
                 );
 
-            filter:
-                blur(30px);
+            filter:blur(30px);
 
             animation:
                 u139Spin 18s linear infinite;
@@ -1881,30 +2287,30 @@ function createCosmicTornado() {
 
         #cosmic-tornado::after {
 
-            content: "";
+            content:"";
 
-            position: absolute;
+            position:absolute;
 
-            width: 35vw;
+            width:35vw;
 
-            height: 35vw;
+            height:35vw;
 
-            left: 50%;
+            left:50%;
 
-            top: 55%;
+            top:55%;
 
             transform:
-                translate(-50%, -50%);
+                translate(-50%,-50%);
 
-            border-radius: 50%;
+            border-radius:50%;
 
             border:
                 2px solid
-                rgba(190,130,255,0.18);
+                rgba(190,130,255,.18);
 
             box-shadow:
                 0 0 80px
-                rgba(140,80,255,0.22);
+                rgba(140,80,255,.22);
 
             animation:
                 u139Pulse 5s ease-in-out infinite;
@@ -1914,48 +2320,63 @@ function createCosmicTornado() {
         @keyframes u139Spin {
 
             from {
+
                 transform:
-                    translate(-50%, -50%)
+                    translate(-50%,-50%)
                     rotate(0deg)
                     scale(1);
+
             }
 
             to {
+
                 transform:
-                    translate(-50%, -50%)
+                    translate(-50%,-50%)
                     rotate(360deg)
                     scale(1.15);
+
             }
         }
 
 
         @keyframes u139Pulse {
 
-            0%, 100% {
+            0%,100% {
+
                 transform:
-                    translate(-50%, -50%)
-                    scale(0.85);
-                opacity: 0.3;
+                    translate(-50%,-50%)
+                    scale(.85);
+
+                opacity:.3;
             }
 
+
             50% {
+
                 transform:
-                    translate(-50%, -50%)
+                    translate(-50%,-50%)
                     scale(1.12);
-                opacity: 0.7;
+
+                opacity:.7;
             }
         }
 
     `;
 
 
-    document.head.appendChild(style);
-    document.body.appendChild(tornado);
+    document.head.appendChild(
+        style
+    );
+
+
+    document.body.appendChild(
+        tornado
+    );
 }
 
 
 /* =========================================================
-   START
+   START APPLICATION
    ========================================================= */
 
 setLanguage("en");
@@ -1964,14 +2385,41 @@ createCosmicTornado();
 
 
 /* =========================================================
-   PREVENT BROKEN OLD URL REFERENCES
+   GLOBAL URL
    ========================================================= */
 
 window.UNIVERSE139_URL =
     getShareURL();
 
 
+/* =========================================================
+   DEBUG
+   ========================================================= */
+
 console.log(
-    "Universe139 active URL:",
+    "================================="
+);
+
+console.log(
+    "UNIVERSE139 STARTED"
+);
+
+console.log(
+    "Current language:",
+    currentLanguage
+);
+
+console.log(
+    "Working app URL:",
     getShareURL()
+);
+
+console.log(
+    "Message system ready:",
+    messages.en.length,
+    "messages per language"
+);
+
+console.log(
+    "================================="
 );
