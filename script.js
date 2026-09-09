@@ -7,6 +7,16 @@
 const UNIVERSE139_URL =
   "https://message-from-universe.vercel.app/";
 
+// Human-friendly version of the link (no protocol, no trailing slash)
+// used anywhere we display the URL as text instead of a real <a href>.
+function getDisplayURL() {
+
+  return UNIVERSE139_URL
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
+
+}
+
 
 // ==========================================
 // TRANSLATIONS
@@ -30,6 +40,8 @@ const translations = {
     copyLink: "Copy Link",
     more: "More...",
     copied: "Copied!",
+    copiedShare: "Message & link copied! Paste it in the app to share.",
+    noMessage: "Reveal your message first.",
     shareInstructions:
       "Choose where you want to share your message.",
 
@@ -55,6 +67,8 @@ const translations = {
     copyLink: "Copiar enlace",
     more: "Más...",
     copied: "¡Copiado!",
+    copiedShare: "¡Mensaje y enlace copiados! Pégalo en la app para compartir.",
+    noMessage: "Primero revela tu mensaje.",
 
     shareInstructions:
       "Elige dónde quieres compartir tu mensaje.",
@@ -81,6 +95,8 @@ const translations = {
     copyLink: "复制链接",
     more: "更多...",
     copied: "已复制！",
+    copiedShare: "讯息和链接已复制！请粘贴到应用中进行分享。",
+    noMessage: "请先揭示你的讯息。",
 
     shareInstructions:
       "选择你想分享讯息的方式。",
@@ -107,6 +123,8 @@ const translations = {
     copyLink: "Копировать ссылку",
     more: "Ещё...",
     copied: "Скопировано!",
+    copiedShare: "Послание и ссылка скопированы! Вставьте их в приложении, чтобы поделиться.",
+    noMessage: "Сначала откройте своё послание.",
 
     shareInstructions:
       "Выберите, где вы хотите поделиться своим посланием.",
@@ -133,6 +151,8 @@ const translations = {
     copyLink: "लिंक कॉपी करें",
     more: "और...",
     copied: "कॉपी हो गया!",
+    copiedShare: "संदेश और लिंक कॉपी हो गए! शेयर करने के लिए ऐप में पेस्ट करें।",
+    noMessage: "पहले अपना संदेश देखें।",
 
     shareInstructions:
       "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
@@ -159,6 +179,8 @@ const translations = {
     copyLink: "คัดลอกลิงก์",
     more: "เพิ่มเติม...",
     copied: "คัดลอกแล้ว!",
+    copiedShare: "คัดลอกข้อความและลิงก์แล้ว! วางในแอปเพื่อแชร์ได้เลย",
+    noMessage: "กรุณาเปิดข้อความของคุณก่อน",
 
     shareInstructions:
       "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
@@ -1735,7 +1757,7 @@ ${UNIVERSE139_URL}`;
 // COPY
 // ==========================================
 
-async function copyText(text) {
+async function copyText(text, toastMessage) {
 
   if (!text) {
     return false;
@@ -1785,7 +1807,8 @@ async function copyText(text) {
     }
 
     showShareToast(
-      translations[currentLanguage].copied
+      toastMessage ||
+        translations[currentLanguage].copied
     );
 
     return true;
@@ -1800,6 +1823,21 @@ async function copyText(text) {
     return false;
 
   }
+
+}
+
+// Copies the full share text (message + link) and shows a toast that
+// makes it explicit that BOTH the message and the link were copied,
+// for platforms whose share URLs can't be pre-filled with text.
+async function copyShareTextWithNotice() {
+
+  const t =
+    translations[currentLanguage];
+
+  return copyText(
+    getShareText(),
+    t.copiedShare
+  );
 
 }
 
@@ -1830,157 +1868,30 @@ function shareWhatsApp() {
 
 async function shareFacebook() {
 
-  const currentMessage =
-    message
-      ? message.textContent.trim()
-      : "";
+  const text =
+    getShareText();
 
-  if (!currentMessage) {
-    console.warn(
-      "Universe139: no message to share on Facebook."
-    );
-    return;
-  }
+  // Facebook's dialog only reliably renders the link preview,
+  // but it does still accept a "quote" param to prefill the
+  // post text — pass the full message + link through that too,
+  // and back it up with a clipboard copy just in case.
+  await copyShareTextWithNotice();
 
-  try {
-
-    // Create the personalized PNG containing
-    // the actual revealed message.
-    const blob =
-      await createMessageImageBlob();
-
-    const file =
-      new File(
-        [blob],
-        "Universe139-message.png",
-        {
-          type: "image/png"
-        }
-      );
-
-    // ========================================
-    // MOBILE / NATIVE SHARE
-    // ========================================
-    // When supported, the browser can pass the
-    // generated PNG directly to Facebook.
-
-    const canNativeShareFile =
-      !!navigator.share &&
-      !!navigator.canShare &&
-      navigator.canShare({
-        files: [file]
-      });
-
-    if (canNativeShareFile) {
-
-      await navigator.share({
-
-        title:
-          "A Message From The Universe",
-
-        text:
-          getShareText(),
-
-        files:
-          [file]
-
-      });
-
-      return;
-    }
-
-    // ========================================
-    // DESKTOP / FALLBACK
-    // ========================================
-    // Facebook's normal web share dialog cannot
-    // receive a browser-generated PNG as an
-    // automatic file upload. Download the image,
-    // copy the personalized text, then open Facebook.
-
-    const objectURL =
-      URL.createObjectURL(
-        blob
-      );
-
-    const link =
-      document.createElement("a");
-
-    link.href =
-      objectURL;
-
-    link.download =
-      "Universe139-message.png";
-
-    document.body.appendChild(
-      link
+  const shareURL =
+    "https://www.facebook.com/sharer/sharer.php?u=" +
+    encodeURIComponent(
+      UNIVERSE139_URL
+    ) +
+    "&quote=" +
+    encodeURIComponent(
+      text
     );
 
-    link.click();
-    link.remove();
-
-    window.setTimeout(() => {
-
-      URL.revokeObjectURL(
-        objectURL
-      );
-
-    }, 2000);
-
-    await copyText(
-      getShareText()
-    );
-
-    const shareURL =
-      "https://www.facebook.com/sharer/sharer.php?u=" +
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.setTimeout(() => {
-
-      window.open(
-        shareURL,
-        "_blank",
-        "width=700,height=650,noopener,noreferrer"
-      );
-
-    }, 300);
-
-  } catch (error) {
-
-    // User cancelled the native share sheet.
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-      return;
-    }
-
-    console.error(
-      "Universe139 Facebook share error:",
-      error
-    );
-
-    // Safe fallback to the original Facebook
-    // share behavior if PNG creation or native
-    // sharing is not available.
-    await copyText(
-      getShareText()
-    );
-
-    const shareURL =
-      "https://www.facebook.com/sharer/sharer.php?u=" +
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.open(
-      shareURL,
-      "_blank",
-      "width=700,height=650,noopener,noreferrer"
-    );
-
-  }
+  window.open(
+    shareURL,
+    "_blank",
+    "width=700,height=650,noopener,noreferrer"
+  );
 
 }
 
@@ -2080,9 +1991,11 @@ function shareSMS() {
 
 async function shareLinkedIn() {
 
-  await copyText(
-    getShareText()
-  );
+  // LinkedIn's share-offsite endpoint intentionally ignores any
+  // prefilled post text — it only takes a url. So we guarantee the
+  // message + link are at least on the clipboard, with a toast that
+  // tells the person to paste them into the post they're about to write.
+  await copyShareTextWithNotice();
 
   const url =
     encodeURIComponent(
@@ -2104,22 +2017,26 @@ async function shareLinkedIn() {
 
 async function shareReddit() {
 
-  await copyText(
-    getShareText()
-  );
+  const text =
+    getShareText();
+
+  await copyShareTextWithNotice();
 
   const title =
     encodeURIComponent(
       "A Message From The Universe"
     );
 
-  const url =
+  // Reddit link-posts (url=) don't render any text alongside them.
+  // Using a self text-post (selftext=true&text=) instead puts the
+  // message AND the link together in the post body.
+  const body =
     encodeURIComponent(
-      UNIVERSE139_URL
+      text
     );
 
   window.open(
-    `https://www.reddit.com/submit?url=${url}&title=${title}`,
+    `https://www.reddit.com/submit?selftext=true&title=${title}&text=${body}`,
     "_blank",
     "noopener,noreferrer"
   );
@@ -2154,15 +2071,167 @@ async function shareViber() {
 
 async function shareTikTok() {
 
-  await copyText(
-    getShareText()
-  );
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
 
-  window.open(
-    "https://www.tiktok.com/",
-    "_blank",
-    "noopener,noreferrer"
-  );
+  if (!currentMessage) {
+
+    showShareToast(
+      translations[currentLanguage].noMessage
+    );
+
+    return;
+
+  }
+
+  try {
+
+    // TikTok doesn't accept a prefilled caption/link the way
+    // WhatsApp or Telegram do — but its app DOES readily accept a
+    // shared image to start a post or Story with. So we generate
+    // the same branded message image Instagram uses, and share
+    // that image straight to the TikTok app via the OS share sheet.
+    const blob =
+      await createMessageImageBlob();
+
+    const file =
+      new File(
+        [blob],
+        "Universe139-message.png",
+        {
+          type: "image/png"
+        }
+      );
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file]
+      })
+    ) {
+
+      await navigator.share({
+
+        title:
+          "Universe139",
+
+        text:
+          getShareText(),
+
+        files:
+          [file]
+
+      });
+
+      return;
+
+    }
+
+    // Some mobile browsers support navigator.share with text/url
+    // but not files — still worth trying before falling back further.
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share({
+          title: "Universe139",
+          text: getShareText(),
+          url: UNIVERSE139_URL
+        });
+
+        return;
+
+      } catch (error) {
+
+        if (
+          error &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error(
+          "Universe139 TikTok text share error:",
+          error
+        );
+
+      }
+
+    }
+
+    // Desktop fallback: there is no TikTok web-compose URL, so we
+    // download the ready-made image, copy the message + link, and
+    // send the person straight to TikTok's upload page to post it.
+    const objectURL =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href =
+      objectURL;
+
+    link.download =
+      "Universe139-message.png";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    link.remove();
+
+    window.setTimeout(() => {
+
+      URL.revokeObjectURL(
+        objectURL
+      );
+
+    }, 2000);
+
+    await copyShareTextWithNotice();
+
+    window.setTimeout(() => {
+
+      window.open(
+        "https://www.tiktok.com/upload",
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }, 1200);
+
+  } catch (error) {
+
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error(
+      "Universe139 TikTok share error:",
+      error
+    );
+
+    // Emergency fallback if image generation itself fails —
+    // still guarantee the message + link reach the clipboard.
+    await copyShareTextWithNotice();
+
+    window.open(
+      "https://www.tiktok.com/",
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
 
 }
 
@@ -2210,74 +2279,39 @@ async function createMessageImageBlob() {
 
 
   // ========================================
-  // BLUE SKY BACKGROUND
+  // COSMIC BACKGROUND
   // ========================================
 
   const background =
     ctx.createLinearGradient(
       0,
       0,
-      0,
+      width,
       height
     );
 
   background.addColorStop(
     0,
-    "#4aa3df"
+    "#080512"
   );
 
   background.addColorStop(
-    .45,
-    "#78c4ee"
+    .35,
+    "#25113f"
+  );
+
+  background.addColorStop(
+    .7,
+    "#120827"
   );
 
   background.addColorStop(
     1,
-    "#d9f3ff"
+    "#030207"
   );
 
   ctx.fillStyle =
     background;
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  // ========================================
-  // SOFT SKY LIGHT
-  // ========================================
-
-  const skyGlow =
-    ctx.createRadialGradient(
-      width * .5,
-      280,
-      30,
-      width * .5,
-      280,
-      620
-    );
-
-  skyGlow.addColorStop(
-    0,
-    "rgba(255,255,255,.34)"
-  );
-
-  skyGlow.addColorStop(
-    .45,
-    "rgba(255,255,255,.12)"
-  );
-
-  skyGlow.addColorStop(
-    1,
-    "rgba(255,255,255,0)"
-  );
-
-  ctx.fillStyle =
-    skyGlow;
 
   ctx.fillRect(
     0,
@@ -2583,7 +2617,7 @@ async function createMessageImageBlob() {
     "700 28px Arial, sans-serif";
 
   ctx.fillText(
-    "message-from-universe.vercel.app",
+    getDisplayURL(),
     width / 2,
     1130
   );
@@ -2701,7 +2735,7 @@ async function shareInstagram() {
   if (!currentMessage) {
 
     showShareToast(
-      translations[currentLanguage].month
+      translations[currentLanguage].noMessage
     );
 
     return;
@@ -2808,13 +2842,7 @@ async function shareInstagram() {
       error
     );
 
-    await copyText(
-      getShareText()
-    );
-
-    showShareToast(
-      "Message copied"
-    );
+    await copyShareTextWithNotice();
 
   }
 
@@ -2827,9 +2855,42 @@ async function shareInstagram() {
 
 async function shareSnapchat() {
 
-  await copyText(
-    getShareText()
-  );
+  const text =
+    getShareText();
+
+  // Same idea as TikTok: prefer the native share sheet on mobile
+  // so Snapchat receives the message + link directly.
+  if (navigator.share) {
+
+    try {
+
+      await navigator.share({
+        title: "Universe139",
+        text: text,
+        url: UNIVERSE139_URL
+      });
+
+      return;
+
+    } catch (error) {
+
+      if (
+        error &&
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+
+      console.error(
+        "Universe139 Snapchat share error:",
+        error
+      );
+
+    }
+
+  }
+
+  await copyShareTextWithNotice();
 
   window.open(
     "https://www.snapchat.com/",
@@ -3039,7 +3100,7 @@ function createSharePanel() {
         </div>
 
         <div class="sharePreviewLink">
-          message-from-universe.vercel.app
+          ${escapeHTML(getDisplayURL())}
         </div>
 
       </div>
@@ -3865,6 +3926,10 @@ function shareMessage() {
 
     console.warn(
       "Universe139: no message to share."
+    );
+
+    showShareToast(
+      translations[currentLanguage].noMessage
     );
 
     return;
