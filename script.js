@@ -1,2684 +1,3386 @@
-// =====================================================
-// UNIVERSE139 — COMPLETE CORRECTED SCRIPT
-// =====================================================
+// ==========================================
+// UNIVERSE139 — MESSAGE FROM THE UNIVERSE
+// ==========================================
 
-"use strict";
-
-
-// =====================================================
-// LANGUAGES
-// =====================================================
-
-const languages = {
-
-    en: {
-        title: "A Message From The Universe",
-        subtitle: "Choose your language and receive your message",
-        reveal: "RECEIVE MY MESSAGE",
-        loading: "The Universe is preparing your message...",
-        again: "RECEIVE ANOTHER MESSAGE",
-        share: "SHARE MY MESSAGE",
-        small: "Your message has found you for a reason."
-    },
-
-    es: {
-        title: "Un Mensaje del Universo",
-        subtitle: "Elige tu idioma y recibe tu mensaje",
-        reveal: "RECIBIR MI MENSAJE",
-        loading: "El Universo está preparando tu mensaje...",
-        again: "RECIBIR OTRO MENSAJE",
-        share: "COMPARTIR MI MENSAJE",
-        small: "Tu mensaje te ha encontrado por una razón."
-    },
-
-    zh: {
-        title: "来自宇宙的讯息",
-        subtitle: "选择你的语言，接收属于你的讯息",
-        reveal: "接收我的讯息",
-        loading: "宇宙正在为你准备讯息……",
-        again: "再接收一条讯息",
-        share: "分享我的讯息",
-        small: "这条讯息找到你，是有原因的。"
-    },
-
-    ru: {
-        title: "Послание от Вселенной",
-        subtitle: "Выберите язык и получите своё послание",
-        reveal: "ПОЛУЧИТЬ МОЁ ПОСЛАНИЕ",
-        loading: "Вселенная готовит для вас послание...",
-        again: "ПОЛУЧИТЬ ЕЩЁ ОДНО ПОСЛАНИЕ",
-        share: "ПОДЕЛИТЬСЯ МОИМ ПОСЛАНИЕМ",
-        small: "Это послание нашло вас не случайно."
-    },
-
-    hi: {
-        title: "ब्रह्मांड का एक संदेश",
-        subtitle: "अपनी भाषा चुनें और अपना संदेश प्राप्त करें",
-        reveal: "मेरा संदेश प्राप्त करें",
-        loading: "ब्रह्मांड आपके लिए संदेश तैयार कर रहा है...",
-        again: "एक और संदेश प्राप्त करें",
-        share: "मेरा संदेश साझा करें",
-        small: "यह संदेश आप तक किसी कारण से पहुँचा है।"
-    },
-
-    th: {
-        title: "ข้อความจากจักรวาล",
-        subtitle: "เลือกภาษาของคุณและรับข้อความของคุณ",
-        reveal: "รับข้อความของฉัน",
-        loading: "จักรวาลกำลังเตรียมข้อความสำหรับคุณ...",
-        again: "รับข้อความอีกครั้ง",
-        share: "แชร์ข้อความของฉัน",
-        small: "ข้อความนี้มาถึงคุณด้วยเหตุผลบางอย่าง"
-    }
-
-};
+const UNIVERSE139_URL = "https://universe139.vercel.app";
 
 
-// =====================================================
-// MESSAGES
-// =====================================================
+// ==========================================
+// TRANSLATIONS
+// ==========================================
 
-const messages = {
+const translations = {
 
-    en: [
-        "Something you have been waiting for is moving closer to you.",
-        "Trust the path. You are exactly where you need to be.",
-        "A new opportunity will appear when you least expect it.",
-        "Let go of what no longer belongs in your life.",
-        "Your patience is about to be rewarded.",
-        "Someone is thinking about you with warmth in their heart.",
-        "The answer you seek will come through an unexpected sign.",
-        "Your energy is changing, and so is your future.",
-        "Do not be afraid to begin again.",
-        "A financial opportunity is moving toward you.",
-        "The Universe is opening a door you could not see before.",
-        "Your intuition already knows the answer.",
-        "A beautiful surprise is closer than you think.",
-        "What feels like a delay may actually be protection.",
-        "You are entering a period of greater abundance.",
-        "Someone will bring unexpected joy into your life.",
-        "Your next chapter will be very different from your last one.",
-        "Believe in yourself even when nobody else can see your vision.",
-        "A long-awaited change is beginning.",
-        "Your life is preparing to become lighter and happier."
-    ],
+  en: {
+    chooseLanguage: "Choose your language",
+    title: "A Message From The Universe",
+    subtitle: "Your message is waiting...",
+    reveal: "Reveal My Message",
+    loading: "The Universe is preparing your message...",
+    month: "Your Message",
+    again: "Receive Another Message",
+    share: "Share My Message",
 
-    es: [
-        "Algo que has estado esperando se está acercando a ti.",
-        "Confía en el camino. Estás exactamente donde necesitas estar.",
-        "Una nueva oportunidad aparecerá cuando menos lo esperes.",
-        "Deja ir lo que ya no pertenece a tu vida.",
-        "Tu paciencia está a punto de ser recompensada.",
-        "Alguien piensa en ti con cariño en su corazón.",
-        "La respuesta que buscas llegará a través de una señal inesperada.",
-        "Tu energía está cambiando, y también tu futuro.",
-        "No tengas miedo de comenzar de nuevo.",
-        "Una oportunidad financiera se está acercando a ti.",
-        "El Universo está abriendo una puerta que antes no podías ver.",
-        "Tu intuición ya conoce la respuesta.",
-        "Una hermosa sorpresa está más cerca de lo que piensas.",
-        "Lo que parece un retraso puede ser protección.",
-        "Estás entrando en un período de mayor abundancia.",
-        "Alguien traerá una alegría inesperada a tu vida.",
-        "Tu próximo capítulo será muy diferente al anterior.",
-        "Cree en ti incluso cuando nadie más pueda ver tu visión.",
-        "Un cambio esperado durante mucho tiempo está comenzando.",
-        "Tu vida se está preparando para ser más ligera y feliz."
-    ],
+    shareTitle: "Share Your Universe139 Message",
+    close: "Close",
+    copyMessage: "Copy Message",
+    copyLink: "Copy Link",
+    more: "More...",
+    copied: "Copied!",
+    shareInstructions: "Choose where you want to share your message.",
 
-    zh: [
-        "你一直等待的事情正在慢慢靠近你。",
-        "相信这条路，你正处在应该在的位置。",
-        "一个新的机会会在你意想不到的时候出现。",
-        "放下那些已经不再属于你生活的事物。",
-        "你的耐心即将得到回报。",
-        "有人正带着温暖的心想着你。",
-        "你寻找的答案会通过一个意想不到的信号出现。",
-        "你的能量正在改变，你的未来也正在改变。",
-        "不要害怕重新开始。",
-        "一个与财富有关的机会正在向你靠近。",
-        "宇宙正在为你打开一扇曾经看不见的门。",
-        "你的直觉已经知道答案。",
-        "一个美好的惊喜比你想象的更近。",
-        "看似延迟的事情，也许其实是在保护你。",
-        "你正在进入一个更加丰盛的阶段。",
-        "有人会给你的生活带来意想不到的快乐。",
-        "你的下一章会与上一章完全不同。",
-        "即使别人看不到你的梦想，也要相信自己。",
-        "一个期待已久的改变正在开始。",
-        "你的生活正在变得更加轻松和幸福。"
-    ],
+    shareLink:
+      "👆 Universe139 — Press here to see your message for today"
+  },
 
-    ru: [
-        "То, чего вы давно ждёте, уже приближается к вам.",
-        "Доверьтесь своему пути. Вы именно там, где должны быть.",
-        "Новая возможность появится тогда, когда вы меньше всего её ожидаете.",
-        "Отпустите то, чему больше нет места в вашей жизни.",
-        "Ваше терпение скоро будет вознаграждено.",
-        "Кто-то думает о вас с теплом в сердце.",
-        "Ответ, который вы ищете, придёт через неожиданный знак.",
-        "Ваша энергия меняется, и вместе с ней меняется ваше будущее.",
-        "Не бойтесь начать всё сначала.",
-        "Финансовая возможность уже движется в вашу сторону.",
-        "Вселенная открывает перед вами дверь, которую вы раньше не замечали.",
-        "Ваша интуиция уже знает ответ.",
-        "Прекрасный сюрприз ближе, чем вы думаете.",
-        "То, что кажется задержкой, возможно, на самом деле является защитой.",
-        "Вы входите в период большего изобилия.",
-        "Кто-то принесёт неожиданную радость в вашу жизнь.",
-        "Следующая глава вашей жизни будет совершенно другой.",
-        "Верьте в себя, даже если другие пока не видят вашу мечту.",
-        "Долгожданные перемены уже начинаются.",
-        "Ваша жизнь готовится стать легче и счастливее."
-    ],
+  es: {
+    chooseLanguage: "Elige tu idioma",
+    title: "Un Mensaje del Universo",
+    subtitle: "Tu mensaje te está esperando...",
+    reveal: "Revelar Mi Mensaje",
+    loading: "El Universo está preparando tu mensaje...",
+    month: "Tu Mensaje",
+    again: "Recibir Otro Mensaje",
+    share: "Compartir Mi Mensaje",
 
-    hi: [
-        "जिस चीज़ का आप इंतज़ार कर रहे हैं, वह आपकी ओर बढ़ रही है।",
-        "अपने रास्ते पर भरोसा रखें। आप वहीं हैं जहाँ आपको होना चाहिए।",
-        "एक नया अवसर तब आएगा जब आपको इसकी सबसे कम उम्मीद होगी।",
-        "जो अब आपके जीवन का हिस्सा नहीं है, उसे जाने दें।",
-        "आपके धैर्य का फल मिलने वाला है।",
-        "कोई आपके बारे में अपने दिल में गर्मजोशी के साथ सोच रहा है।",
-        "जिस उत्तर की आप तलाश कर रहे हैं, वह एक अप्रत्याशित संकेत के माध्यम से आएगा।",
-        "आपकी ऊर्जा बदल रही है और आपका भविष्य भी बदल रहा है।",
-        "फिर से शुरुआत करने से मत डरें।",
-        "एक आर्थिक अवसर आपकी ओर बढ़ रहा है।",
-        "ब्रह्मांड आपके लिए एक ऐसा दरवाज़ा खोल रहा है जिसे आप पहले नहीं देख पाए थे।",
-        "आपका अंतर्ज्ञान पहले से ही उत्तर जानता है।",
-        "एक सुंदर आश्चर्य आपकी सोच से भी करीब है।",
-        "जो देरी लग रही है, वह शायद आपकी सुरक्षा है।",
-        "आप अधिक समृद्धि के दौर में प्रवेश कर रहे हैं।",
-        "कोई आपके जीवन में अप्रत्याशित खुशी लेकर आएगा।",
-        "आपका अगला अध्याय पिछले अध्याय से बहुत अलग होगा।",
-        "खुद पर विश्वास रखें, भले ही दूसरे आपकी दृष्टि को न समझें।",
-        "एक लंबे समय से प्रतीक्षित बदलाव शुरू हो रहा है।",
-        "आपका जीवन अधिक हल्का और खुशहाल होने वाला है।"
-    ],
+    shareTitle: "Comparte tu mensaje de Universe139",
+    close: "Cerrar",
+    copyMessage: "Copiar mensaje",
+    copyLink: "Copiar enlace",
+    more: "Más...",
+    copied: "¡Copiado!",
+    shareInstructions:
+      "Elige dónde quieres compartir tu mensaje.",
 
-    th: [
-        "สิ่งที่คุณรอคอยกำลังเดินทางเข้ามาหาคุณ",
-        "เชื่อมั่นในเส้นทางของคุณ คุณอยู่ในที่ที่ควรอยู่",
-        "โอกาสใหม่จะปรากฏขึ้นเมื่อคุณคาดไม่ถึง",
-        "ปล่อยสิ่งที่ไม่เหมาะกับชีวิตของคุณอีกต่อไป",
-        "ความอดทนของคุณกำลังจะได้รับรางวัล",
-        "มีใครบางคนกำลังคิดถึงคุณด้วยความอบอุ่นในหัวใจ",
-        "คำตอบที่คุณกำลังค้นหาจะมาพร้อมกับสัญญาณที่ไม่คาดคิด",
-        "พลังงานของคุณกำลังเปลี่ยนแปลง และอนาคตของคุณก็เช่นกัน",
-        "อย่ากลัวที่จะเริ่มต้นใหม่",
-        "โอกาสทางการเงินกำลังเข้ามาหาคุณ",
-        "จักรวาลกำลังเปิดประตูที่คุณไม่เคยมองเห็นมาก่อน",
-        "สัญชาตญาณของคุณรู้คำตอบอยู่แล้ว",
-        "เซอร์ไพรส์ที่สวยงามอยู่ใกล้กว่าที่คุณคิด",
-        "สิ่งที่ดูเหมือนความล่าช้าอาจเป็นการปกป้องคุณ",
-        "คุณกำลังเข้าสู่ช่วงเวลาที่มีความอุดมสมบูรณ์มากขึ้น",
-        "ใครบางคนจะนำความสุขที่ไม่คาดคิดเข้ามาในชีวิตคุณ",
-        "บทต่อไปของชีวิตคุณจะแตกต่างจากบทที่ผ่านมาอย่างมาก",
-        "เชื่อมั่นในตัวเองแม้คนอื่นจะยังมองไม่เห็นความฝันของคุณ",
-        "การเปลี่ยนแปลงที่รอคอยมานานกำลังเริ่มต้น",
-        "ชีวิตของคุณกำลังเตรียมพร้อมที่จะเบาและมีความสุขมากขึ้น"
-    ]
+    shareLink:
+      "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy"
+  },
+
+  zh: {
+    chooseLanguage: "选择你的语言",
+    title: "来自宇宙的讯息",
+    subtitle: "你的讯息正在等待你...",
+    reveal: "揭示我的讯息",
+    loading: "宇宙正在为你准备讯息...",
+    month: "你的讯息",
+    again: "再收到一条讯息",
+    share: "分享我的讯息",
+
+    shareTitle: "分享你的 Universe139 讯息",
+    close: "关闭",
+    copyMessage: "复制讯息",
+    copyLink: "复制链接",
+    more: "更多...",
+    copied: "已复制！",
+    shareInstructions:
+      "选择你想分享讯息的方式。",
+
+    shareLink:
+      "👆 Universe139 — 点击这里查看你今天的宇宙讯息"
+  },
+
+  ru: {
+    chooseLanguage: "Выберите язык",
+    title: "Послание от Вселенной",
+    subtitle: "Ваше послание ждёт вас...",
+    reveal: "Открыть моё послание",
+    loading: "Вселенная готовит ваше послание...",
+    month: "Ваше послание",
+    again: "Получить другое послание",
+    share: "Поделиться моим посланием",
+
+    shareTitle: "Поделитесь своим посланием Universe139",
+    close: "Закрыть",
+    copyMessage: "Копировать послание",
+    copyLink: "Копировать ссылку",
+    more: "Ещё...",
+    copied: "Скопировано!",
+    shareInstructions:
+      "Выберите, где вы хотите поделиться своим посланием.",
+
+    shareLink:
+      "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня"
+  },
+
+  hi: {
+    chooseLanguage: "अपनी भाषा चुनें",
+    title: "ब्रह्मांड का एक संदेश",
+    subtitle: "आपका संदेश आपका इंतज़ार कर रहा है...",
+    reveal: "मेरा संदेश देखें",
+    loading: "ब्रह्मांड आपके लिए संदेश तैयार कर रहा है...",
+    month: "आपका संदेश",
+    again: "एक और संदेश प्राप्त करें",
+    share: "मेरा संदेश साझा करें",
+
+    shareTitle: "अपना Universe139 संदेश साझा करें",
+    close: "बंद करें",
+    copyMessage: "संदेश कॉपी करें",
+    copyLink: "लिंक कॉपी करें",
+    more: "और...",
+    copied: "कॉपी हो गया!",
+    shareInstructions:
+      "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
+
+    shareLink:
+      "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं"
+  },
+
+  th: {
+    chooseLanguage: "เลือกภาษาของคุณ",
+    title: "ข้อความจากจักรวาล",
+    subtitle: "ข้อความของคุณกำลังรอคุณอยู่...",
+    reveal: "เปิดข้อความของฉัน",
+    loading: "จักรวาลกำลังเตรียมข้อความสำหรับคุณ...",
+    month: "ข้อความของคุณ",
+    again: "รับข้อความใหม่",
+    share: "แชร์ข้อความของฉัน",
+
+    shareTitle: "แชร์ข้อความ Universe139 ของคุณ",
+    close: "ปิด",
+    copyMessage: "คัดลอกข้อความ",
+    copyLink: "คัดลอกลิงก์",
+    more: "เพิ่มเติม...",
+    copied: "คัดลอกแล้ว!",
+    shareInstructions:
+      "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
+
+    shareLink:
+      "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้"
+  }
 
 };
 
 
-// =====================================================
-// STATE
-// =====================================================
+// ==========================================
+// MESSAGE DATABASE
+// ==========================================
+
+const messageTemplates = {
+
+  en: [
+    "Trust the feeling that keeps returning to your heart.",
+    "Something beautiful is beginning to unfold in your life.",
+    "You are closer to your dream than you realize.",
+    "A new opportunity will appear when you least expect it.",
+    "Let go of what no longer belongs in your future.",
+    "Your patience is about to be rewarded.",
+    "The answer you are looking for is already within you.",
+    "A positive change is moving toward you.",
+    "Your energy is attracting something wonderful.",
+    "Do not be afraid to begin again.",
+    "Someone is thinking about you with kindness.",
+    "Your next chapter will be better than the last.",
+    "A financial opportunity may soon find you.",
+    "Trust the timing of your life.",
+    "You are exactly where you need to be.",
+    "Your intuition knows the way forward.",
+    "A surprise may bring you unexpected happiness.",
+    "Your hard work will not remain unnoticed.",
+    "Peace is coming after a period of uncertainty.",
+    "The universe is opening a new door for you."
+  ],
+
+  es: [
+    "Confía en ese sentimiento que sigue regresando a tu corazón.",
+    "Algo hermoso está comenzando a desarrollarse en tu vida.",
+    "Estás más cerca de tu sueño de lo que imaginas.",
+    "Una nueva oportunidad aparecerá cuando menos lo esperes.",
+    "Deja ir lo que ya no pertenece a tu futuro.",
+    "Tu paciencia está a punto de ser recompensada.",
+    "La respuesta que buscas ya está dentro de ti.",
+    "Un cambio positivo se está acercando a ti.",
+    "Tu energía está atrayendo algo maravilloso.",
+    "No tengas miedo de comenzar de nuevo.",
+    "Alguien está pensando en ti con cariño.",
+    "Tu próximo capítulo será mejor que el anterior.",
+    "Una oportunidad financiera puede llegar pronto.",
+    "Confía en el momento de tu vida.",
+    "Estás exactamente donde necesitas estar.",
+    "Tu intuición conoce el camino.",
+    "Una sorpresa puede traer felicidad inesperada.",
+    "Tu esfuerzo no pasará desapercibido.",
+    "La paz llegará después de un período de incertidumbre.",
+    "El universo está abriendo una nueva puerta para ti."
+  ],
+
+  zh: [
+    "相信那个不断回到你心里的感觉。",
+    "美好的事情正在你的生活中慢慢展开。",
+    "你比想象中更接近自己的梦想。",
+    "一个新的机会会在你最意想不到的时候出现。",
+    "放下那些已经不属于你未来的事情。",
+    "你的耐心很快就会得到回报。",
+    "你寻找的答案其实一直都在你的心里。",
+    "一个积极的改变正在向你靠近。",
+    "你的能量正在吸引美好的事物。",
+    "不要害怕重新开始。",
+    "有人正在带着善意想念你。",
+    "你的下一章会比上一章更加美好。",
+    "一个财务上的机会可能很快出现。",
+    "相信属于你的人生时机。",
+    "你现在正处在应该在的位置。",
+    "你的直觉知道前进的方向。",
+    "一个惊喜可能会带给你意想不到的快乐。",
+    "你的努力不会被忽视。",
+    "经历不确定之后，平静正在到来。",
+    "宇宙正在为你打开一扇新的门。"
+  ],
+
+  ru: [
+    "Доверься тому чувству, которое снова возвращается в твоё сердце.",
+    "Что-то прекрасное начинает происходить в твоей жизни.",
+    "Ты ближе к своей мечте, чем думаешь.",
+    "Новая возможность появится тогда, когда ты меньше всего её ожидаешь.",
+    "Отпусти то, чему больше нет места в твоём будущем.",
+    "Твоё терпение скоро будет вознаграждено.",
+    "Ответ, который ты ищешь, уже находится внутри тебя.",
+    "Позитивные перемены движутся навстречу тебе.",
+    "Твоя энергия притягивает что-то прекрасное.",
+    "Не бойся начать всё сначала.",
+    "Кто-то думает о тебе с добротой.",
+    "Твоя следующая глава будет лучше предыдущей.",
+    "Скоро перед тобой может открыться финансовая возможность.",
+    "Доверься времени своей жизни.",
+    "Ты находишься именно там, где должен быть.",
+    "Твоя интуиция знает правильный путь.",
+    "Неожиданный сюрприз может принести тебе счастье.",
+    "Твои усилия не останутся незамеченными.",
+    "После периода неопределённости приходит спокойствие.",
+    "Вселенная открывает перед тобой новую дверь."
+  ],
+
+  hi: [
+    "उस एहसास पर भरोसा करें जो बार-बार आपके दिल में लौटता है।",
+    "आपके जीवन में कुछ सुंदर शुरू होने वाला है।",
+    "आप अपने सपने के जितना सोचते हैं उससे अधिक करीब हैं।",
+    "एक नया अवसर तब आएगा जब आप उसकी उम्मीद सबसे कम करेंगे।",
+    "जो आपके भविष्य का हिस्सा नहीं है उसे जाने दें।",
+    "आपके धैर्य का फल जल्द मिलने वाला है।",
+    "जिस उत्तर की आप तलाश कर रहे हैं वह आपके भीतर ही है।",
+    "एक सकारात्मक बदलाव आपकी ओर बढ़ रहा है।",
+    "आपकी ऊर्जा किसी अद्भुत चीज़ को आकर्षित कर रही है।",
+    "फिर से शुरुआत करने से मत डरिए।",
+    "कोई आपके बारे में अच्छे भाव से सोच रहा है।",
+    "आपका अगला अध्याय पिछले अध्याय से बेहतर होगा।",
+    "जल्द ही आर्थिक अवसर आपके सामने आ सकता है।",
+    "अपने जीवन के सही समय पर भरोसा करें।",
+    "आप बिल्कुल वहीं हैं जहाँ आपको होना चाहिए।",
+    "आपकी अंतर्ज्ञान आपको सही दिशा दिखा रही है।",
+    "एक आश्चर्य आपको अप्रत्याशित खुशी दे सकता है।",
+    "आपकी मेहनत अनदेखी नहीं जाएगी।",
+    "अनिश्चितता के बाद शांति आने वाली है।",
+    "ब्रह्मांड आपके लिए एक नया दरवाज़ा खोल रहा है।"
+  ],
+
+  th: [
+    "เชื่อในความรู้สึกที่ยังคงกลับมาในหัวใจของคุณ",
+    "สิ่งสวยงามกำลังเริ่มเกิดขึ้นในชีวิตของคุณ",
+    "คุณใกล้ความฝันมากกว่าที่คุณคิด",
+    "โอกาสใหม่จะปรากฏขึ้นเมื่อคุณคาดไม่ถึง",
+    "ปล่อยสิ่งที่ไม่เหมาะกับอนาคตของคุณอีกต่อไป",
+    "ความอดทนของคุณกำลังจะได้รับรางวัล",
+    "คำตอบที่คุณกำลังมองหาอยู่ภายในตัวคุณแล้ว",
+    "การเปลี่ยนแปลงในทางที่ดีกำลังเข้ามาหาคุณ",
+    "พลังของคุณกำลังดึงดูดสิ่งมหัศจรรย์",
+    "อย่ากลัวที่จะเริ่มต้นใหม่",
+    "มีใครบางคนกำลังคิดถึงคุณด้วยความปรารถนาดี",
+    "บทต่อไปของชีวิตจะดีกว่าบทที่ผ่านมา",
+    "โอกาสทางการเงินอาจกำลังเข้ามาหาคุณ",
+    "เชื่อในจังหวะเวลาของชีวิต",
+    "คุณอยู่ในที่ที่คุณควรอยู่",
+    "สัญชาตญาณของคุณรู้ว่าควรเดินไปทางไหน",
+    "เซอร์ไพรส์บางอย่างอาจนำความสุขที่ไม่คาดคิดมาให้",
+    "ความพยายามของคุณจะไม่ถูกมองข้าม",
+    "ความสงบกำลังมาหลังจากช่วงเวลาแห่งความไม่แน่นอน",
+    "จักรวาลกำลังเปิดประตูบานใหม่ให้คุณ"
+  ]
+
+};
+
+
+// ==========================================
+// VARIABLES
+// ==========================================
 
 let currentLanguage = "en";
-let currentMessage = "";
-let lastMessageIndex = -1;
-let revealTimer = null;
-let initialized = false;
+let lastMessage = "";
+let isRevealing = false;
 
 
-// =====================================================
-// DOM VARIABLES
-// =====================================================
+// ==========================================
+// DOM
+// ==========================================
 
-let languageBox;
-let chooseLanguage;
-let title;
-let subtitle;
-let revealBtn;
-let loading;
-let loadingText;
-let messageBox;
-let month;
-let message;
-let smallText;
-let againBtn;
-let shareBtn;
+const languageBox = document.getElementById("languageBox");
+const chooseLanguage = document.getElementById("chooseLanguage");
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
+const revealBtn = document.getElementById("revealBtn");
+const loading = document.getElementById("loading");
+const loadingText = document.getElementById("loadingText");
+const messageBox = document.getElementById("messageBox");
+const month = document.getElementById("month");
+const message = document.getElementById("message");
+const smallText = document.getElementById("smallText");
+const againBtn = document.getElementById("againBtn");
+const shareBtn = document.getElementById("shareBtn");
 
 
-// =====================================================
-// SHARE URL
-// =====================================================
+// ==========================================
+// LANGUAGE
+// ==========================================
 
-function getShareURL() {
+function selectLanguage(language) {
 
-    try {
+  if (!translations[language]) {
+    language = "en";
+  }
 
-        const url =
-            new URL(window.location.href);
+  currentLanguage = language;
 
-        url.search = "";
-        url.hash = "";
+  const t = translations[language];
 
-        return url.toString();
+  chooseLanguage.textContent = t.chooseLanguage;
+  title.textContent = t.title;
+  subtitle.textContent = t.subtitle;
+  revealBtn.textContent = t.reveal;
+  loadingText.textContent = t.loading;
+  month.textContent = t.month;
+  againBtn.textContent = t.again;
+  shareBtn.textContent = t.share;
 
-    } catch (error) {
+  languageBox.classList.add("hidden");
 
-        return window.location.href;
-    }
+  revealBtn.classList.remove("hidden");
+
+  setTimeout(() => {
+    revealMessage();
+  }, 400);
 }
 
 
-// =====================================================
-// INITIALIZE DOM
-// =====================================================
-
-function initializeDOM() {
-
-    languageBox =
-        document.getElementById("languageBox");
-
-    chooseLanguage =
-        document.getElementById("chooseLanguage");
-
-    title =
-        document.getElementById("title");
-
-    subtitle =
-        document.getElementById("subtitle");
-
-    revealBtn =
-        document.getElementById("revealBtn");
-
-    loading =
-        document.getElementById("loading");
-
-    loadingText =
-        document.getElementById("loadingText");
-
-    messageBox =
-        document.getElementById("messageBox");
-
-    month =
-        document.getElementById("month");
-
-    message =
-        document.getElementById("message");
-
-    smallText =
-        document.getElementById("smallText");
-
-    againBtn =
-        document.getElementById("againBtn");
-
-    shareBtn =
-        document.getElementById("shareBtn");
-
-
-    console.log(
-        "Universe139 DOM loaded."
-    );
-
-    console.log(
-        "Language buttons:",
-        document.querySelectorAll("[data-language]").length
-    );
-
-    console.log(
-        "Reveal button:",
-        !!revealBtn
-    );
-
-    console.log(
-        "Message element:",
-        !!message
-    );
-}
-
-
-// =====================================================
-// SET LANGUAGE
-// =====================================================
-
-function setLanguage(lang) {
-
-    console.log(
-        "Universe139 setLanguage:",
-        lang
-    );
-
-
-    if (!languages[lang]) {
-
-        console.error(
-            "Universe139: language does not exist:",
-            lang
-        );
-
-        return;
-    }
-
-
-    currentLanguage = lang;
-
-    const data =
-        languages[lang];
-
-
-    // Cancel previous loading
-    if (revealTimer) {
-
-        clearTimeout(
-            revealTimer
-        );
-
-        revealTimer = null;
-    }
-
-
-    // Update text
-
-    if (title) {
-        title.textContent =
-            data.title;
-    }
-
-    if (subtitle) {
-        subtitle.textContent =
-            data.subtitle;
-    }
-
-    if (revealBtn) {
-        revealBtn.textContent =
-            data.reveal;
-    }
-
-    if (loadingText) {
-        loadingText.textContent =
-            data.loading;
-    }
-
-    if (againBtn) {
-        againBtn.textContent =
-            data.again;
-    }
-
-    if (shareBtn) {
-        shareBtn.textContent =
-            data.share;
-    }
-
-    if (smallText) {
-        smallText.textContent =
-            data.small;
-    }
-
-
-    // Reset current message
-
-    currentMessage = "";
-
-    lastMessageIndex = -1;
-
-
-    // Hide message
-
-    if (messageBox) {
-
-        messageBox.style.display =
-            "none";
-    }
-
-
-    // Hide loading
-
-    if (loading) {
-
-        loading.style.display =
-            "none";
-    }
-
-
-    // Show reveal button
-
-    if (revealBtn) {
-
-        revealBtn.style.display =
-            "inline-block";
-
-        revealBtn.disabled =
-            false;
-    }
-
-
-    // Update selected language
-
-    document
-        .querySelectorAll("[data-language]")
-        .forEach(button => {
-
-            const buttonLanguage =
-                button.getAttribute(
-                    "data-language"
-                );
-
-            if (
-                buttonLanguage ===
-                lang
-            ) {
-
-                button.classList.add(
-                    "active"
-                );
-
-                button.setAttribute(
-                    "aria-selected",
-                    "true"
-                );
-
-            } else {
-
-                button.classList.remove(
-                    "active"
-                );
-
-                button.setAttribute(
-                    "aria-selected",
-                    "false"
-                );
-            }
-        });
-
-
-    console.log(
-        "Universe139 language changed to:",
-        currentLanguage
-    );
-}
-
-
-// =====================================================
+// ==========================================
 // RANDOM MESSAGE
-// =====================================================
+// ==========================================
 
 function getRandomMessage() {
 
-    const list =
-        messages[currentLanguage];
+  const messages = messageTemplates[currentLanguage];
 
+  if (!messages || messages.length === 0) {
+    return "";
+  }
 
-    if (
-        !list ||
-        list.length === 0
-    ) {
+  let newMessage;
 
-        console.error(
-            "Universe139: no messages for:",
-            currentLanguage
-        );
+  do {
 
-        return "";
-    }
+    const randomIndex =
+      Math.floor(Math.random() * messages.length);
 
+    newMessage = messages[randomIndex];
 
-    let index;
+  } while (
+    messages.length > 1 &&
+    newMessage === lastMessage
+  );
 
+  lastMessage = newMessage;
 
-    if (list.length === 1) {
-
-        index = 0;
-
-    } else {
-
-        do {
-
-            index =
-                Math.floor(
-                    Math.random() *
-                    list.length
-                );
-
-        } while (
-            index ===
-            lastMessageIndex
-        );
-    }
-
-
-    lastMessageIndex =
-        index;
-
-
-    return list[index];
+  return newMessage;
 }
 
 
-// =====================================================
-// REVEAL MESSAGE
-// =====================================================
-
-function revealMessage() {
-
-    console.log(
-        "Universe139: revealMessage()"
-    );
-
-
-    // Re-find elements in case HTML changed
-
-    if (!revealBtn) {
-        revealBtn =
-            document.getElementById(
-                "revealBtn"
-            );
-    }
-
-    if (!loading) {
-        loading =
-            document.getElementById(
-                "loading"
-            );
-    }
-
-    if (!loadingText) {
-        loadingText =
-            document.getElementById(
-                "loadingText"
-            );
-    }
-
-    if (!messageBox) {
-        messageBox =
-            document.getElementById(
-                "messageBox"
-            );
-    }
-
-    if (!message) {
-        message =
-            document.getElementById(
-                "message"
-            );
-    }
-
-
-    if (!message) {
-
-        console.error(
-            "Universe139: #message was not found."
-        );
-
-        return;
-    }
-
-
-    // Cancel existing timer
-
-    if (revealTimer) {
-
-        clearTimeout(
-            revealTimer
-        );
-    }
-
-
-    // Hide reveal button
-
-    if (revealBtn) {
-
-        revealBtn.style.display =
-            "none";
-
-        revealBtn.disabled =
-            true;
-    }
-
-
-    // Hide previous message
-
-    if (messageBox) {
-
-        messageBox.style.display =
-            "none";
-    }
-
-
-    // Show loading
-
-    if (loading) {
-
-        loading.style.display =
-            "block";
-    }
-
-
-    if (loadingText) {
-
-        loadingText.textContent =
-            languages[
-                currentLanguage
-            ].loading;
-    }
-
-
-    // Wait 1.8 seconds
-
-    revealTimer =
-        setTimeout(
-            function () {
-
-                try {
-
-                    currentMessage =
-                        getRandomMessage();
-
-
-                    if (!currentMessage) {
-
-                        throw new Error(
-                            "No message generated."
-                        );
-                    }
-
-
-                    // Put message on page
-
-                    message.textContent =
-                        currentMessage;
-
-
-                    // Month
-
-                    if (month) {
-
-                        const localeMap = {
-
-                            en: "en-US",
-                            es: "es-ES",
-                            zh: "zh-CN",
-                            ru: "ru-RU",
-                            hi: "hi-IN",
-                            th: "th-TH"
-
-                        };
-
-
-                        month.textContent =
-                            new Intl.DateTimeFormat(
-
-                                localeMap[
-                                    currentLanguage
-                                ] || "en-US",
-
-                                {
-                                    month: "long",
-                                    year: "numeric"
-                                }
-
-                            ).format(
-                                new Date()
-                            );
-                    }
-
-
-                    // Small text
-
-                    if (smallText) {
-
-                        smallText.textContent =
-                            languages[
-                                currentLanguage
-                            ].small;
-                    }
-
-
-                    // Hide loading
-
-                    if (loading) {
-
-                        loading.style.display =
-                            "none";
-                    }
-
-
-                    // Show message
-
-                    if (messageBox) {
-
-                        messageBox.style.display =
-                            "block";
-                    }
-
-
-                    // Show again button
-
-                    if (againBtn) {
-
-                        againBtn.style.display =
-                            "inline-block";
-
-                        againBtn.disabled =
-                            false;
-                    }
-
-
-                    console.log(
-                        "Universe139 message:",
-                        currentMessage
-                    );
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Universe139 reveal error:",
-                        error
-                    );
-
-
-                    if (loading) {
-
-                        loading.style.display =
-                            "none";
-                    }
-
-
-                    if (revealBtn) {
-
-                        revealBtn.style.display =
-                            "inline-block";
-
-                        revealBtn.disabled =
-                            false;
-                    }
-
-                }
-
-
-            },
-            1800
-        );
-}
-
-
-// =====================================================
-// ESCAPE HTML
-// =====================================================
-
-function escapeHTML(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent =
-        text;
-
-    return div.innerHTML;
-}
-
-
-// =====================================================
-// SHARE TEXT
-// =====================================================
-
-function getShareText() {
-
-    if (!currentMessage) {
-
-        return languages[
-            currentLanguage
-        ].title;
-    }
-
-
-    return (
-
-        languages[
-            currentLanguage
-        ].title +
-
-        "\n\n" +
-
-        currentMessage +
-
-        "\n\n" +
-
-        languages[
-            currentLanguage
-        ].small
-
-    );
-}
-
-
-// =====================================================
-// HTML2CANVAS
-// =====================================================
-
-function loadHtml2Canvas() {
-
-    return new Promise(
-        function (resolve, reject) {
-
-            if (window.html2canvas) {
-
-                resolve(
-                    window.html2canvas
-                );
-
-                return;
-            }
-
-
-            const existing =
-                document.querySelector(
-                    "script[data-universe139-html2canvas]"
-                );
-
-
-            if (existing) {
-
-                existing.addEventListener(
-                    "load",
-                    function () {
-
-                        if (
-                            window.html2canvas
-                        ) {
-
-                            resolve(
-                                window.html2canvas
-                            );
-
-                        } else {
-
-                            reject(
-                                new Error(
-                                    "html2canvas unavailable."
-                                )
-                            );
-                        }
-                    }
-                );
-
-
-                existing.addEventListener(
-                    "error",
-                    reject
-                );
-
-
-                return;
-            }
-
-
-            const script =
-                document.createElement(
-                    "script"
-                );
-
-
-            script.src =
-                "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-
-            script.async = true;
-
-
-            script.dataset.universe139Html2canvas =
-                "true";
-
-
-            script.onload =
-                function () {
-
-                    if (
-                        window.html2canvas
-                    ) {
-
-                        resolve(
-                            window.html2canvas
-                        );
-
-                    } else {
-
-                        reject(
-                            new Error(
-                                "html2canvas loaded but unavailable."
-                            )
-                        );
-                    }
-                };
-
-
-            script.onerror =
-                function () {
-
-                    reject(
-                        new Error(
-                            "Could not load html2canvas."
-                        )
-                    );
-                };
-
-
-            document.head.appendChild(
-                script
-            );
-
-        }
-    );
-}
-
-
-// =====================================================
-// CREATE SHARE CARD
-// =====================================================
-
-function createShareCard() {
-
-    if (!currentMessage) {
-
-        throw new Error(
-            "There is no message to share."
-        );
-    }
-
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.id =
-        "universe139-share-card";
-
-
-    card.style.position =
-        "fixed";
-
-    card.style.left =
-        "-10000px";
-
-    card.style.top =
-        "0";
-
-    card.style.width =
-        "1080px";
-
-    card.style.height =
-        "1350px";
-
-    card.style.boxSizing =
-        "border-box";
-
-    card.style.overflow =
-        "hidden";
-
-
-    card.style.background =
-        "radial-gradient(circle at 50% 35%, #4a176d 0%, #19072c 42%, #07020e 100%)";
-
-
-    card.style.color =
-        "#ffffff";
-
-
-    card.style.fontFamily =
-        "Arial, Helvetica, sans-serif";
-
-
-    card.style.display =
-        "flex";
-
-    card.style.flexDirection =
-        "column";
-
-    card.style.alignItems =
-        "center";
-
-    card.style.justifyContent =
-        "center";
-
-
-    card.style.padding =
-        "100px";
-
-
-    // -------------------------------------------------
-    // Stars
-    // -------------------------------------------------
-
-    for (
-        let i = 0;
-        i < 100;
-        i++
-    ) {
-
-        const star =
-            document.createElement(
-                "div"
-            );
-
-
-        const size =
-            Math.random() * 4 + 2;
-
-
-        star.style.position =
-            "absolute";
-
-        star.style.width =
-            size + "px";
-
-        star.style.height =
-            size + "px";
-
-        star.style.borderRadius =
-            "50%";
-
-        star.style.background =
-            "white";
-
-        star.style.opacity =
-            String(
-                Math.random() * 0.8 + 0.2
-            );
-
-        star.style.left =
-            Math.random() * 1080 + "px";
-
-        star.style.top =
-            Math.random() * 1350 + "px";
-
-
-        card.appendChild(
-            star
-        );
-    }
-
-
-    // -------------------------------------------------
-    // Logo
-    // -------------------------------------------------
-
-    const logo =
-        document.createElement(
-            "div"
-        );
-
-
-    logo.textContent =
-        "UNIVERSE139";
-
-
-    logo.style.fontSize =
-        "34px";
-
-    logo.style.fontWeight =
-        "700";
-
-    logo.style.letterSpacing =
-        "8px";
-
-    logo.style.marginBottom =
-        "65px";
-
-    logo.style.opacity =
-        "0.9";
-
-
-    card.appendChild(
-        logo
-    );
-
-
-    // -------------------------------------------------
-    // Title
-    // -------------------------------------------------
-
-    const titleElement =
-        document.createElement(
-            "div"
-        );
-
-
-    titleElement.textContent =
-        languages[
-            currentLanguage
-        ].title;
-
-
-    titleElement.style.fontSize =
-        "48px";
-
-    titleElement.style.fontWeight =
-        "600";
-
-    titleElement.style.textAlign =
-        "center";
-
-    titleElement.style.marginBottom =
-        "35px";
-
-    titleElement.style.maxWidth =
-        "850px";
-
-
-    card.appendChild(
-        titleElement
-    );
-
-
-    // -------------------------------------------------
-    // Month
-    // -------------------------------------------------
-
-    const monthElement =
-        document.createElement(
-            "div"
-        );
-
-
-    const localeMap = {
-
-        en: "en-US",
-        es: "es-ES",
-        zh: "zh-CN",
-        ru: "ru-RU",
-        hi: "hi-IN",
-        th: "th-TH"
-
-    };
-
-
-    monthElement.textContent =
-        new Intl.DateTimeFormat(
-
-            localeMap[
-                currentLanguage
-            ] || "en-US",
-
-            {
-                month: "long",
-                year: "numeric"
-            }
-
-        ).format(
-            new Date()
-        );
-
-
-    monthElement.style.fontSize =
-        "27px";
-
-    monthElement.style.opacity =
-        "0.75";
-
-    monthElement.style.marginBottom =
-        "60px";
-
-
-    card.appendChild(
-        monthElement
-    );
-
-
-    // -------------------------------------------------
-    // Message
-    // -------------------------------------------------
-
-    const messageElement =
-        document.createElement(
-            "div"
-        );
-
-
-    messageElement.textContent =
-        currentMessage;
-
-
-    messageElement.style.fontSize =
-        "52px";
-
-    messageElement.style.lineHeight =
-        "1.35";
-
-    messageElement.style.fontWeight =
-        "500";
-
-    messageElement.style.textAlign =
-        "center";
-
-    messageElement.style.maxWidth =
-        "850px";
-
-    messageElement.style.textShadow =
-        "0 3px 25px rgba(255,255,255,0.25)";
-
-
-    card.appendChild(
-        messageElement
-    );
-
-
-    // -------------------------------------------------
-    // Small text
-    // -------------------------------------------------
-
-    const smallElement =
-        document.createElement(
-            "div"
-        );
-
-
-    smallElement.textContent =
-        languages[
-            currentLanguage
-        ].small;
-
-
-    smallElement.style.fontSize =
-        "26px";
-
-    smallElement.style.opacity =
-        "0.65";
-
-    smallElement.style.textAlign =
-        "center";
-
-    smallElement.style.marginTop =
-        "65px";
-
-    smallElement.style.maxWidth =
-        "700px";
-
-
-    card.appendChild(
-        smallElement
-    );
-
-
-    // -------------------------------------------------
-    // Brand
-    // -------------------------------------------------
-
-    const brand =
-        document.createElement(
-            "div"
-        );
-
-
-    brand.textContent =
-        "universe139";
-
-
-    brand.style.position =
-        "absolute";
-
-    brand.style.bottom =
-        "55px";
-
-    brand.style.fontSize =
-        "25px";
-
-    brand.style.opacity =
-        "0.6";
-
-    brand.style.letterSpacing =
-        "4px";
-
-
-    card.appendChild(
-        brand
-    );
-
-
-    document.body.appendChild(
-        card
-    );
-
-
-    return card;
-}
-
-
-// =====================================================
-// CAPTURE IMAGE
-// =====================================================
-
-async function captureMessageImage() {
-
-    const html2canvas =
-        await loadHtml2Canvas();
-
-
-    const card =
-        createShareCard();
-
-
-    try {
-
-        if (
-            document.fonts &&
-            document.fonts.ready
-        ) {
-
-            await document.fonts.ready;
-        }
-
-
-        const canvas =
-            await html2canvas(
-                card,
-                {
-                    width: 1080,
-                    height: 1350,
-                    scale: 1,
-                    backgroundColor: null,
-                    useCORS: true,
-                    logging: false
-                }
-            );
-
-
-        return canvas;
-
-
-    } finally {
-
-        if (
-            card &&
-            card.parentNode
-        ) {
-
-            card.parentNode.removeChild(
-                card
-            );
-        }
-    }
-}
-
-
-// =====================================================
-// CREATE IMAGE FILE
-// =====================================================
-
-async function createMessageImageFile() {
-
-    const canvas =
-        await captureMessageImage();
-
-
-    return new Promise(
-        function (resolve, reject) {
-
-            canvas.toBlob(
-                function (blob) {
-
-                    if (!blob) {
-
-                        reject(
-                            new Error(
-                                "Could not create image."
-                            )
-                        );
-
-                        return;
-                    }
-
-
-                    const file =
-                        new File(
-                            [blob],
-                            "universe139-message.png",
-                            {
-                                type: "image/png"
-                            }
-                        );
-
-
-                    resolve(
-                        file
-                    );
-                },
-                "image/png"
-            );
-
-        }
-    );
-}
-
-
-// =====================================================
-// SHARE PICTURE
-// =====================================================
-
-async function sharePictureNative() {
-
-    if (!currentMessage) {
-
-        alert(
-            languages[
-                currentLanguage
-            ].reveal
-        );
-
-        return;
-    }
-
-
-    try {
-
-        const file =
-            await createMessageImageFile();
-
-
-        if (
-            navigator.share &&
-            navigator.canShare
-        ) {
-
-            let canShareFiles =
-                false;
-
-
-            try {
-
-                canShareFiles =
-                    navigator.canShare(
-                        {
-                            files: [file]
-                        }
-                    );
-
-            } catch (error) {
-
-                canShareFiles =
-                    false;
-            }
-
-
-            if (canShareFiles) {
-
-                await navigator.share(
-                    {
-                        title:
-                            languages[
-                                currentLanguage
-                            ].title,
-
-                        text:
-                            getShareText(),
-
-                        files:
-                            [file],
-
-                        url:
-                            getShareURL()
-                    }
-                );
-
-
-                return;
-            }
-        }
-
-
-        // Desktop fallback
-
-        const url =
-            URL.createObjectURL(
-                file
-            );
-
-
-        const a =
-            document.createElement(
-                "a"
-            );
-
-
-        a.href =
-            url;
-
-        a.download =
-            "universe139-message.png";
-
-
-        document.body.appendChild(
-            a
-        );
-
-
-        a.click();
-
-
-        a.remove();
-
-
-        setTimeout(
-            function () {
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-            },
-            1000
-        );
-
-
-        alert(
-            "Your Universe139 picture is ready."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Universe139 share picture error:",
-            error
-        );
-
-
-        if (
-            error &&
-            error.name ===
-            "AbortError"
-        ) {
-
-            return;
-        }
-
-
-        alert(
-            "Could not create the picture. Please try again."
-        );
-    }
-}
-
-
-// =====================================================
-// SHARE PANEL
-// =====================================================
-
-function showSharePanel() {
-
-    if (!currentMessage) {
-
-        return;
-    }
-
-
-    const oldPanel =
-        document.getElementById(
-            "universe139-share-panel"
-        );
-
-
-    if (oldPanel) {
-
-        oldPanel.remove();
-    }
-
-
-    const panel =
-        document.createElement(
-            "div"
-        );
-
-
-    panel.id =
-        "universe139-share-panel";
-
-
-    panel.style.position =
-        "fixed";
-
-    panel.style.inset =
-        "0";
-
-    panel.style.zIndex =
-        "99999";
-
-    panel.style.background =
-        "rgba(0,0,0,0.82)";
-
-    panel.style.display =
-        "flex";
-
-    panel.style.alignItems =
-        "center";
-
-    panel.style.justifyContent =
-        "center";
-
-    panel.style.padding =
-        "20px";
-
-
-    const box =
-        document.createElement(
-            "div"
-        );
-
-
-    box.style.width =
-        "min(500px, 100%)";
-
-    box.style.maxHeight =
-        "90vh";
-
-    box.style.overflowY =
-        "auto";
-
-    box.style.background =
-        "radial-gradient(circle at top, #45146b, #100519)";
-
-    box.style.border =
-        "1px solid rgba(255,255,255,0.2)";
-
-    box.style.borderRadius =
-        "24px";
-
-    box.style.padding =
-        "28px";
-
-    box.style.color =
-        "white";
-
-    box.style.textAlign =
-        "center";
-
-
-    // Heading
-
-    const heading =
-        document.createElement(
-            "h2"
-        );
-
-
-    heading.textContent =
-        languages[
-            currentLanguage
-        ].share;
-
-
-    heading.style.marginTop =
-        "0";
-
-
-    box.appendChild(
-        heading
-    );
-
-
-    // Preview
-
-    const preview =
-        document.createElement(
-            "div"
-        );
-
-
-    preview.style.padding =
-        "30px 20px";
-
-    preview.style.margin =
-        "20px 0";
-
-    preview.style.borderRadius =
-        "18px";
-
-    preview.style.background =
-        "rgba(255,255,255,0.08)";
-
-    preview.style.fontSize =
-        "20px";
-
-    preview.style.lineHeight =
-        "1.5";
-
-    preview.textContent =
-        currentMessage;
-
-
-    box.appendChild(
-        preview
-    );
-
-
-    // -------------------------------------------------
-    // REAL CURRENT URL
-    // -------------------------------------------------
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-
-    link.href =
-        getShareURL();
-
-    link.target =
-        "_blank";
-
-    link.rel =
-        "noopener noreferrer";
-
-    link.textContent =
-        getShareURL();
-
-    link.style.display =
-        "block";
-
-    link.style.margin =
-        "15px 0 25px";
-
-    link.style.color =
-        "#ffffff";
-
-    link.style.textDecoration =
-        "underline";
-
-    link.style.wordBreak =
-        "break-all";
-
-
-    box.appendChild(
-        link
-    );
-
-
-    // -------------------------------------------------
-    // SHARE BUTTONS
-    // -------------------------------------------------
-
-    const buttons = [
-
-        {
-            name: "WhatsApp",
-
-            action: function () {
-
-                const url =
-                    "https://wa.me/?text=" +
-                    encodeURIComponent(
-                        getShareText() +
-                        "\n\n" +
-                        getShareURL()
-                    );
-
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Facebook",
-
-            action: function () {
-
-                const url =
-                    "https://www.facebook.com/sharer/sharer.php?u=" +
-                    encodeURIComponent(
-                        getShareURL()
-                    ) +
-                    "&quote=" +
-                    encodeURIComponent(
-                        getShareText()
-                    );
-
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Telegram",
-
-            action: function () {
-
-                const url =
-                    "https://t.me/share/url?url=" +
-                    encodeURIComponent(
-                        getShareURL()
-                    ) +
-                    "&text=" +
-                    encodeURIComponent(
-                        getShareText()
-                    );
-
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Email",
-
-            action: function () {
-
-                const subject =
-                    languages[
-                        currentLanguage
-                    ].title;
-
-
-                const body =
-                    getShareText() +
-                    "\n\n" +
-                    getShareURL();
-
-
-                window.location.href =
-                    "mailto:?subject=" +
-                    encodeURIComponent(
-                        subject
-                    ) +
-                    "&body=" +
-                    encodeURIComponent(
-                        body
-                    );
-            }
-        },
-
-
-        {
-            name: "SMS",
-
-            action: function () {
-
-                const body =
-                    getShareText() +
-                    "\n\n" +
-                    getShareURL();
-
-
-                window.location.href =
-                    "sms:?body=" +
-                    encodeURIComponent(
-                        body
-                    );
-            }
-        },
-
-
-        {
-            name: "LinkedIn",
-
-            action: function () {
-
-                const url =
-                    "https://www.linkedin.com/sharing/share-offsite/?url=" +
-                    encodeURIComponent(
-                        getShareURL()
-                    );
-
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Reddit",
-
-            action: function () {
-
-                const url =
-                    "https://www.reddit.com/submit?url=" +
-                    encodeURIComponent(
-                        getShareURL()
-                    ) +
-                    "&title=" +
-                    encodeURIComponent(
-                        getShareText()
-                    );
-
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Viber",
-
-            action: function () {
-
-                const url =
-                    "viber://forward?text=" +
-                    encodeURIComponent(
-                        getShareText() +
-                        "\n\n" +
-                        getShareURL()
-                    );
-
-
-                window.location.href =
-                    url;
-            }
-        },
-
-
-        {
-            name: "Copy Link",
-
-            action: async function () {
-
-                try {
-
-                    await navigator.clipboard.writeText(
-                        getShareURL()
-                    );
-
-
-                    alert(
-                        "Link copied!"
-                    );
-
-                } catch (error) {
-
-                    prompt(
-                        "Copy this link:",
-                        getShareURL()
-                    );
-                }
-            }
-        },
-
-
-        {
-            name: "Open Link",
-
-            action: function () {
-
-                window.open(
-                    getShareURL(),
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        },
-
-
-        {
-            name: "Share Picture",
-
-            action: function () {
-
-                sharePictureNative();
-            }
-        },
-
-
-        {
-            name: "More",
-
-            action: async function () {
-
-                if (
-                    navigator.share
-                ) {
-
-                    try {
-
-                        await navigator.share(
-                            {
-                                title:
-                                    languages[
-                                        currentLanguage
-                                    ].title,
-
-                                text:
-                                    getShareText(),
-
-                                url:
-                                    getShareURL()
-                            }
-                        );
-
-                    } catch (error) {
-
-                        if (
-                            error.name !==
-                            "AbortError"
-                        ) {
-
-                            console.error(
-                                error
-                            );
-                        }
-                    }
-
-                } else {
-
-                    alert(
-                        "More sharing options are not available in this browser."
-                    );
-                }
-            }
-        }
-
-    ];
-
-
-    const buttonContainer =
-        document.createElement(
-            "div"
-        );
-
-
-    buttonContainer.style.display =
-        "grid";
-
-    buttonContainer.style.gridTemplateColumns =
-        "repeat(2, 1fr)";
-
-    buttonContainer.style.gap =
-        "10px";
-
-
-    buttons.forEach(
-        function (item) {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-
-            button.type =
-                "button";
-
-
-            button.textContent =
-                item.name;
-
-
-            button.style.padding =
-                "13px 10px";
-
-            button.style.borderRadius =
-                "12px";
-
-            button.style.border =
-                "1px solid rgba(255,255,255,0.2)";
-
-            button.style.background =
-                "rgba(255,255,255,0.08)";
-
-            button.style.color =
-                "white";
-
-            button.style.cursor =
-                "pointer";
-
-            button.style.fontSize =
-                "14px";
-
-
-            button.addEventListener(
-                "click",
-                item.action
-            );
-
-
-            buttonContainer.appendChild(
-                button
-            );
-
-        }
-    );
-
-
-    box.appendChild(
-        buttonContainer
-    );
-
-
-    // Close button
-
-    const close =
-        document.createElement(
-            "button"
-        );
-
-
-    close.type =
-        "button";
-
-
-    close.textContent =
-        "Close";
-
-
-    close.style.marginTop =
-        "20px";
-
-    close.style.padding =
-        "12px 30px";
-
-    close.style.borderRadius =
-        "12px";
-
-    close.style.border =
-        "none";
-
-    close.style.cursor =
-        "pointer";
-
-
-    close.addEventListener(
-        "click",
-        function () {
-
-            panel.remove();
-        }
-    );
-
-
-    box.appendChild(
-        close
-    );
-
-
-    panel.appendChild(
-        box
-    );
-
-
-    document.body.appendChild(
-        panel
-    );
-
-
-    panel.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                event.target ===
-                panel
-            ) {
-
-                panel.remove();
-            }
-        }
-    );
-}
-
-
-// =====================================================
+// ==========================================
 // COSMIC TORNADO
-// =====================================================
+// ==========================================
 
-function createCosmicTornado() {
+function createWindEffect() {
 
-    if (
-        document.getElementById(
-            "universe139-cosmic-tornado"
-        )
-    ) {
+  const oldEffect =
+    document.getElementById("universeWind");
 
-        return;
-    }
+  if (oldEffect) {
+    oldEffect.remove();
+  }
 
+  const tornado =
+    document.createElement("div");
 
-    const tornado =
-        document.createElement(
-            "div"
-        );
+  tornado.id = "universeWind";
 
+  tornado.innerHTML = `
 
-    tornado.id =
-        "universe139-cosmic-tornado";
+    <div class="tornadoUniverseGlow"></div>
 
+    <div class="tornadoCore">
 
-    tornado.style.position =
-        "fixed";
+      <div class="tornadoRing ring1"></div>
+      <div class="tornadoRing ring2"></div>
+      <div class="tornadoRing ring3"></div>
+      <div class="tornadoRing ring4"></div>
+      <div class="tornadoRing ring5"></div>
+      <div class="tornadoRing ring6"></div>
+      <div class="tornadoRing ring7"></div>
+      <div class="tornadoRing ring8"></div>
+      <div class="tornadoRing ring9"></div>
+      <div class="tornadoRing ring10"></div>
 
-    tornado.style.inset =
-        "0";
+      <div class="tornadoEye"></div>
 
-    tornado.style.pointerEvents =
-        "none";
+    </div>
 
-    tornado.style.zIndex =
-        "-1";
+    <div class="tornadoDust">
 
-    tornado.style.overflow =
-        "hidden";
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
 
+    </div>
 
-    for (
-        let i = 0;
-        i < 70;
-        i++
-    ) {
+    <div class="tornadoMist mist1"></div>
+    <div class="tornadoMist mist2"></div>
+    <div class="tornadoMist mist3"></div>
 
-        const star =
-            document.createElement(
-                "span"
-            );
+  `;
 
-
-        const size =
-            Math.random() * 3 + 1;
-
-
-        star.style.position =
-            "absolute";
-
-        star.style.width =
-            size + "px";
-
-        star.style.height =
-            size + "px";
-
-        star.style.borderRadius =
-            "50%";
-
-        star.style.background =
-            "white";
-
-        star.style.opacity =
-            Math.random() * 0.7 + 0.2;
-
-        star.style.left =
-            Math.random() * 100 + "%";
-
-        star.style.top =
-            Math.random() * 100 + "%";
+  document.body.appendChild(tornado);
 
 
-        star.style.animation =
-            "universe139StarFloat " +
-            (Math.random() * 8 + 5) +
-            "s ease-in-out infinite";
+  // ==========================================
+  // TORNADO CSS
+  // ==========================================
 
+  if (!document.getElementById("universe139TornadoCSS")) {
 
-        star.style.animationDelay =
-            Math.random() * 5 + "s";
+    const style = document.createElement("style");
 
-
-        tornado.appendChild(
-            star
-        );
-    }
-
-
-    const style =
-        document.createElement(
-            "style"
-        );
-
+    style.id = "universe139TornadoCSS";
 
     style.textContent = `
 
-        @keyframes universe139StarFloat {
+      #universeWind {
 
-            0% {
-                transform:
-                    translate3d(0,0,0)
-                    scale(1);
+        position: fixed;
 
-                opacity: .2;
-            }
+        inset: 0;
 
-            50% {
+        z-index: 9999;
 
-                transform:
-                    translate3d(
-                        ${Math.random() * 30 - 15}px,
-                        ${Math.random() * 30 - 15}px,
-                        0
-                    )
-                    scale(1.4);
+        pointer-events: none;
 
-                opacity: .9;
-            }
+        overflow: hidden;
 
-            100% {
+        perspective: 1200px;
 
-                transform:
-                    translate3d(0,0,0)
-                    scale(1);
+        background:
+          radial-gradient(
+            circle at center,
+            rgba(100,50,190,.18),
+            rgba(30,10,70,.08) 40%,
+            transparent 75%
+          );
 
-                opacity: .2;
-            }
+        animation:
+          tornadoFade 2.9s ease-out forwards;
+
+      }
+
+
+      /* ======================================
+         UNIVERSE GLOW
+      ====================================== */
+
+      .tornadoUniverseGlow {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 10vw;
+
+        height: 10vw;
+
+        min-width: 100px;
+
+        min-height: 100px;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%)
+          scale(.1);
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(255,255,255,1) 0%,
+            rgba(205,160,255,.8) 12%,
+            rgba(130,60,255,.45) 32%,
+            rgba(70,20,160,.15) 55%,
+            transparent 75%
+          );
+
+        box-shadow:
+
+          0 0 35px
+          rgba(255,255,255,.9),
+
+          0 0 100px
+          rgba(180,100,255,.9),
+
+          0 0 220px
+          rgba(100,40,255,.6);
+
+        animation:
+          universeCoreExplosion 2.6s
+          ease-out
+          forwards;
+
+      }
+
+
+      /* ======================================
+         MAIN TORNADO
+      ====================================== */
+
+      .tornadoCore {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 100vw;
+
+        height: 100vh;
+
+        transform:
+          translate(-50%, -50%)
+          scale(.08);
+
+        transform-style:
+          preserve-3d;
+
+        animation:
+          tornadoExpand 2.7s
+          cubic-bezier(.12,.65,.15,1)
+          forwards;
+
+      }
+
+
+      /* ======================================
+         SPIRAL RINGS
+      ====================================== */
+
+      .tornadoRing {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 15vw;
+
+        height: 15vw;
+
+        min-width: 120px;
+
+        min-height: 120px;
+
+        border-radius: 50%;
+
+        transform-style:
+          preserve-3d;
+
+        border:
+          3px solid
+          rgba(220,180,255,.42);
+
+        box-shadow:
+
+          0 0 15px
+          rgba(200,140,255,.55),
+
+          0 0 40px
+          rgba(130,60,255,.35),
+
+          inset 0 0 20px
+          rgba(255,255,255,.1);
+
+        opacity: 0;
+
+        filter:
+          blur(.7px);
+
+      }
+
+
+      .ring1 {
+        animation:
+          ringSpin1 2.5s linear forwards;
+      }
+
+      .ring2 {
+        animation:
+          ringSpin2 2.4s linear .04s forwards;
+      }
+
+      .ring3 {
+        animation:
+          ringSpin1 2.3s linear .08s forwards;
+      }
+
+      .ring4 {
+        animation:
+          ringSpin2 2.2s linear .12s forwards;
+      }
+
+      .ring5 {
+        animation:
+          ringSpin1 2.1s linear .16s forwards;
+      }
+
+      .ring6 {
+        animation:
+          ringSpin2 2s linear .2s forwards;
+      }
+
+      .ring7 {
+        animation:
+          ringSpin1 1.9s linear .24s forwards;
+      }
+
+      .ring8 {
+        animation:
+          ringSpin2 1.8s linear .28s forwards;
+      }
+
+      .ring9 {
+        animation:
+          ringSpin1 1.7s linear .32s forwards;
+      }
+
+      .ring10 {
+        animation:
+          ringSpin2 1.6s linear .36s forwards;
+      }
+
+
+      @keyframes ringSpin1 {
+
+        0% {
+
+          opacity: 0;
+
+          width: 8vw;
+          height: 3vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(0deg)
+            scale(.2);
+
         }
+
+        15% {
+
+          opacity: .75;
+
+        }
+
+        45% {
+
+          opacity: .95;
+
+        }
+
+        75% {
+
+          opacity: .65;
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          width: 110vw;
+          height: 30vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(1080deg)
+            scale(1);
+
+        }
+
+      }
+
+
+      @keyframes ringSpin2 {
+
+        0% {
+
+          opacity: 0;
+
+          width: 8vw;
+          height: 3vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(180deg)
+            scale(.2);
+
+        }
+
+        15% {
+
+          opacity: .7;
+
+        }
+
+        45% {
+
+          opacity: .9;
+
+        }
+
+        75% {
+
+          opacity: .6;
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          width: 120vw;
+          height: 32vw;
+
+          transform:
+            translate(-50%, -50%)
+            rotateX(68deg)
+            rotateZ(-900deg)
+            scale(1);
+
+        }
+
+      }
+
+
+      /* ======================================
+         TORNADO EXPANSION
+      ====================================== */
+
+      @keyframes tornadoExpand {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.05)
+            rotate(0deg);
+
+        }
+
+        12% {
+
+          opacity: 1;
+
+        }
+
+        35% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.35)
+            rotate(90deg);
+
+        }
+
+        58% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.8)
+            rotate(260deg);
+
+        }
+
+        78% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.5)
+            rotate(540deg);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(3.8)
+            rotate(900deg);
+
+        }
+
+      }
+
+
+      /* ======================================
+         TORNADO EYE
+      ====================================== */
+
+      .tornadoEye {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 18vw;
+
+        height: 18vw;
+
+        min-width: 130px;
+
+        min-height: 130px;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(255,255,255,.98) 0%,
+            rgba(210,170,255,.8) 8%,
+            rgba(140,70,255,.4) 25%,
+            rgba(50,10,120,.12) 50%,
+            transparent 70%
+          );
+
+        box-shadow:
+
+          0 0 30px
+          rgba(255,255,255,.9),
+
+          0 0 80px
+          rgba(190,110,255,.8),
+
+          0 0 160px
+          rgba(100,30,255,.6);
+
+        animation:
+          eyePulse 2.5s
+          ease-out
+          forwards;
+
+      }
+
+
+      @keyframes eyePulse {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.1);
+
+        }
+
+        18% {
+
+          opacity: 1;
+
+        }
+
+        45% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(.8);
+
+        }
+
+        70% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.4);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(4);
+
+        }
+
+      }
+
+
+      /* ======================================
+         PARTICLES
+      ====================================== */
+
+      .tornadoDust {
+
+        position: absolute;
+
+        inset: 0;
+
+        transform-style:
+          preserve-3d;
+
+      }
+
+
+      .tornadoDust span {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        width: 5px;
+
+        height: 5px;
+
+        border-radius: 50%;
+
+        background: white;
+
+        box-shadow:
+          0 0 10px
+          rgba(220,180,255,.95);
+
+        opacity: 0;
+
+      }
+
+
+      .tornadoDust span:nth-child(1) {
+        animation: dust1 2.3s linear forwards;
+      }
+
+      .tornadoDust span:nth-child(2) {
+        animation: dust2 2.1s linear .08s forwards;
+      }
+
+      .tornadoDust span:nth-child(3) {
+        animation: dust3 2.4s linear .16s forwards;
+      }
+
+      .tornadoDust span:nth-child(4) {
+        animation: dust4 2.2s linear .24s forwards;
+      }
+
+      .tornadoDust span:nth-child(5) {
+        animation: dust5 2.5s linear .32s forwards;
+      }
+
+      .tornadoDust span:nth-child(6) {
+        animation: dust6 2.2s linear .4s forwards;
+      }
+
+      .tornadoDust span:nth-child(7) {
+        animation: dust7 2.4s linear .48s forwards;
+      }
+
+      .tornadoDust span:nth-child(8) {
+        animation: dust8 2.1s linear .56s forwards;
+      }
+
+      .tornadoDust span:nth-child(9) {
+        animation: dust9 2.5s linear .64s forwards;
+      }
+
+      .tornadoDust span:nth-child(10) {
+        animation: dust10 2.2s linear .72s forwards;
+      }
+
+      .tornadoDust span:nth-child(11) {
+        animation: dust11 2.4s linear .8s forwards;
+      }
+
+      .tornadoDust span:nth-child(12) {
+        animation: dust12 2.1s linear .88s forwards;
+      }
+
+      .tornadoDust span:nth-child(13) {
+        animation: dust13 2.5s linear .96s forwards;
+      }
+
+      .tornadoDust span:nth-child(14) {
+        animation: dust14 2.2s linear 1.04s forwards;
+      }
+
+      .tornadoDust span:nth-child(15) {
+        animation: dust15 2.4s linear 1.12s forwards;
+      }
+
+      .tornadoDust span:nth-child(16) {
+        animation: dust16 2.1s linear 1.2s forwards;
+      }
+
+      .tornadoDust span:nth-child(17) {
+        animation: dust17 2.5s linear 1.28s forwards;
+      }
+
+      .tornadoDust span:nth-child(18) {
+        animation: dust18 2.2s linear 1.36s forwards;
+      }
+
+      .tornadoDust span:nth-child(19) {
+        animation: dust19 2.4s linear 1.44s forwards;
+      }
+
+      .tornadoDust span:nth-child(20) {
+        animation: dust20 2.1s linear 1.52s forwards;
+      }
+
+
+      /* ======================================
+         PARTICLE MOTION
+      ====================================== */
+
+      @keyframes dust1 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(0deg)
+            translateX(650px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(420deg)
+            translateX(130px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust2 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(45deg)
+            translateX(700px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(500deg)
+            translateX(150px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1100deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust3 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(90deg)
+            translateX(620px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(560deg)
+            translateX(120px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1200deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust4 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(135deg)
+            translateX(680px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(470deg)
+            translateX(140px)
+            scale(1.3);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust5 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(180deg)
+            translateX(720px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(620deg)
+            translateX(160px)
+            scale(1.6);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1250deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust6 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(225deg)
+            translateX(630px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(530deg)
+            translateX(130px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1100deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust7 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(270deg)
+            translateX(690px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(680deg)
+            translateX(150px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1300deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust8 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(315deg)
+            translateX(610px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(580deg)
+            translateX(120px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1150deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust9 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(20deg)
+            translateX(730px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(600deg)
+            translateX(145px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1200deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust10 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(65deg)
+            translateX(640px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(510deg)
+            translateX(130px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1080deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust11 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(110deg)
+            translateX(700px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(640deg)
+            translateX(150px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1280deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust12 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(155deg)
+            translateX(620px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(490deg)
+            translateX(125px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1050deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust13 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(200deg)
+            translateX(710px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(590deg)
+            translateX(155px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1180deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust14 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(245deg)
+            translateX(650px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(530deg)
+            translateX(135px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1120deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust15 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(290deg)
+            translateX(730px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(650deg)
+            translateX(160px)
+            scale(1.6);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1300deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust16 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(335deg)
+            translateX(610px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(470deg)
+            translateX(125px)
+            scale(1.3);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1000deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust17 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(15deg)
+            translateX(680px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(610deg)
+            translateX(145px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1250deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust18 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(75deg)
+            translateX(660px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(550deg)
+            translateX(135px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1150deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust19 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(150deg)
+            translateX(720px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(670deg)
+            translateX(155px)
+            scale(1.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1350deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      @keyframes dust20 {
+
+        0% {
+          opacity: 0;
+          transform:
+            rotate(250deg)
+            translateX(690px)
+            scale(.2);
+        }
+
+        20% { opacity: 1; }
+
+        65% {
+          transform:
+            rotate(520deg)
+            translateX(140px)
+            scale(1.4);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            rotate(1080deg)
+            translateX(5px)
+            scale(.05);
+        }
+
+      }
+
+
+      /* ======================================
+         COSMIC MIST
+      ====================================== */
+
+      .tornadoMist {
+
+        position: absolute;
+
+        left: 50%;
+
+        top: 50%;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        filter:
+          blur(30px);
+
+        background:
+          radial-gradient(
+            ellipse,
+            rgba(180,110,255,.22),
+            rgba(100,40,200,.08),
+            transparent 70%
+          );
+
+        opacity: 0;
+
+      }
+
+
+      .mist1 {
+
+        width: 75vw;
+
+        height: 20vw;
+
+        animation:
+          mistRotation 2.5s
+          ease-out
+          forwards;
+
+      }
+
+
+      .mist2 {
+
+        width: 55vw;
+
+        height: 15vw;
+
+        animation:
+          mistRotation 2.2s
+          ease-out
+          .15s
+          forwards;
+
+      }
+
+
+      .mist3 {
+
+        width: 38vw;
+
+        height: 11vw;
+
+        animation:
+          mistRotation 2s
+          ease-out
+          .3s
+          forwards;
+
+      }
+
+
+      @keyframes mistRotation {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            rotate(0deg)
+            scale(.1);
+
+        }
+
+        20% {
+
+          opacity: .8;
+
+        }
+
+        60% {
+
+          opacity: .55;
+
+          transform:
+            translate(-50%, -50%)
+            rotate(600deg)
+            scale(1.5);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            rotate(1200deg)
+            scale(3);
+
+        }
+
+      }
+
+
+      /* ======================================
+         CORE EXPLOSION
+      ====================================== */
+
+      @keyframes universeCoreExplosion {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.05);
+
+        }
+
+        18% {
+
+          opacity: 1;
+
+        }
+
+        48% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(1);
+
+        }
+
+        75% {
+
+          transform:
+            translate(-50%, -50%)
+            scale(2);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(5);
+
+        }
+
+      }
+
+
+      @keyframes tornadoFade {
+
+        0% {
+
+          opacity: 0;
+
+        }
+
+        10% {
+
+          opacity: 1;
+
+        }
+
+        72% {
+
+          opacity: 1;
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+        }
+
+      }
 
     `;
 
-
-    document.head.appendChild(
-        style
-    );
+    document.head.appendChild(style);
+  }
 
 
-    document.body.appendChild(
-        tornado
-    );
+  setTimeout(() => {
+
+    tornado.remove();
+
+  }, 3000);
 }
 
 
-// =====================================================
-// LANGUAGE BUTTONS — IMPORTANT FIX
-// =====================================================
+// ==========================================
+// SHOW MESSAGE
+// ==========================================
 
-function initializeLanguageButtons() {
+function showMessage() {
 
-    const buttons =
-        document.querySelectorAll(
-            "[data-language]"
+  const newMessage =
+    getRandomMessage();
+
+  message.textContent =
+    newMessage;
+
+  messageBox.classList.remove("hidden");
+
+  messageBox.style.display = "block";
+
+  messageBox.style.opacity = "0";
+
+  loading.classList.add("hidden");
+
+  revealBtn.classList.add("hidden");
+
+  againBtn.classList.remove("hidden");
+
+  shareBtn.classList.remove("hidden");
+
+
+  // Smooth message appearance
+
+  setTimeout(() => {
+
+    messageBox.style.transition =
+      "opacity .8s ease, transform .8s ease";
+
+    messageBox.style.opacity = "1";
+
+    messageBox.style.transform =
+      "translateY(0) scale(1)";
+
+  }, 80);
+}
+
+
+// ==========================================
+// FIRST REVEAL
+// ==========================================
+
+function revealMessage() {
+
+  if (isRevealing) {
+    return;
+  }
+
+  isRevealing = true;
+
+  messageBox.classList.add("hidden");
+
+  loading.classList.remove("hidden");
+
+  revealBtn.classList.add("hidden");
+
+  againBtn.classList.add("hidden");
+
+  shareBtn.classList.add("hidden");
+
+  loadingText.textContent =
+    translations[currentLanguage].loading;
+
+
+  // 🌪️ COSMIC TORNADO
+  createWindEffect();
+
+
+  // Wait for tornado to build
+  setTimeout(() => {
+
+    showMessage();
+
+    isRevealing = false;
+
+  }, 2400);
+}
+
+
+// ==========================================
+// ANOTHER MESSAGE
+// ==========================================
+
+function receiveAnotherMessage() {
+
+  if (isRevealing) {
+    return;
+  }
+
+  isRevealing = true;
+
+  messageBox.style.opacity = "0";
+
+  messageBox.style.transform =
+    "scale(.95)";
+
+  againBtn.classList.add("hidden");
+
+  shareBtn.classList.add("hidden");
+
+
+  // 🌪️ NEW COSMIC TORNADO
+  createWindEffect();
+
+
+  setTimeout(() => {
+
+    messageBox.classList.add("hidden");
+
+    loading.classList.remove("hidden");
+
+    loadingText.textContent =
+      translations[currentLanguage].loading;
+
+  }, 350);
+
+
+  setTimeout(() => {
+
+    showMessage();
+
+    isRevealing = false;
+
+  }, 2400);
+}
+
+
+// ==========================================
+// SHARE TEXT
+// ==========================================
+
+function getShareText() {
+
+  const currentMessage =
+    message.textContent.trim();
+
+  return `✨ A Message From The Universe ✨
+
+“${currentMessage}”
+
+${translations[currentLanguage].shareLink}
+
+${UNIVERSE139_URL}`;
+}
+
+
+// ==========================================
+// COPY
+// ==========================================
+
+async function copyText(text) {
+
+  try {
+
+    await navigator.clipboard.writeText(text);
+
+    showShareToast(
+      translations[currentLanguage].copied
+    );
+
+  } catch (error) {
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.value = text;
+
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    document.execCommand("copy");
+
+    textarea.remove();
+
+    showShareToast(
+      translations[currentLanguage].copied
+    );
+  }
+}
+
+
+// ==========================================
+// SHARE FUNCTIONS
+// ==========================================
+
+function shareWhatsApp() {
+
+  const text =
+    encodeURIComponent(getShareText());
+
+  window.open(
+    `https://wa.me/?text=${text}`,
+    "_blank"
+  );
+}
+
+
+async function shareFacebook() {
+
+  await copyText(getShareText());
+
+  setTimeout(() => {
+
+    const url =
+      encodeURIComponent(UNIVERSE139_URL);
+
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      "_blank",
+      "width=600,height=500"
+    );
+
+  }, 500);
+}
+
+
+function shareTelegram() {
+
+  const text =
+    encodeURIComponent(getShareText());
+
+  const url =
+    encodeURIComponent(UNIVERSE139_URL);
+
+  window.open(
+    `https://t.me/share/url?url=${url}&text=${text}`,
+    "_blank"
+  );
+}
+
+
+function shareGmail() {
+
+  const subject =
+    encodeURIComponent(
+      "✨ A Message From The Universe"
+    );
+
+  const body =
+    encodeURIComponent(
+      getShareText()
+    );
+
+  window.open(
+    `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`,
+    "_blank"
+  );
+}
+
+
+function shareEmail() {
+
+  const subject =
+    encodeURIComponent(
+      "✨ A Message From The Universe"
+    );
+
+  const body =
+    encodeURIComponent(
+      getShareText()
+    );
+
+  window.location.href =
+    `mailto:?subject=${subject}&body=${body}`;
+}
+
+
+function shareSMS() {
+
+  const text =
+    encodeURIComponent(
+      getShareText()
+    );
+
+  window.location.href =
+    `sms:?body=${text}`;
+}
+
+
+async function shareLinkedIn() {
+
+  await copyText(getShareText());
+
+  setTimeout(() => {
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      "_blank"
+    );
+
+  }, 500);
+}
+
+
+async function shareReddit() {
+
+  await copyText(getShareText());
+
+  setTimeout(() => {
+
+    const title =
+      encodeURIComponent(
+        "A Message From The Universe"
+      );
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.reddit.com/submit?url=${url}&title=${title}`,
+      "_blank"
+    );
+
+  }, 500);
+}
+
+
+async function shareViber() {
+
+  const text =
+    getShareText();
+
+  await copyText(text);
+
+  setTimeout(() => {
+
+    window.location.href =
+      `viber://forward?text=${encodeURIComponent(text)}`;
+
+  }, 300);
+}
+
+
+async function shareTikTok() {
+
+  await copyText(
+    getShareText()
+  );
+
+  setTimeout(() => {
+
+    window.open(
+      "https://www.tiktok.com/",
+      "_blank"
+    );
+
+  }, 700);
+}
+
+
+async function shareInstagram() {
+
+  await copyText(
+    getShareText()
+  );
+
+  setTimeout(() => {
+
+    window.open(
+      "https://www.instagram.com/",
+      "_blank"
+    );
+
+  }, 700);
+}
+
+
+async function shareSnapchat() {
+
+  await copyText(
+    getShareText()
+  );
+
+  setTimeout(() => {
+
+    window.open(
+      "https://www.snapchat.com/",
+      "_blank"
+    );
+
+  }, 700);
+}
+
+
+function sharePinterest() {
+
+  const url =
+    encodeURIComponent(
+      UNIVERSE139_URL
+    );
+
+  const description =
+    encodeURIComponent(
+      getShareText()
+    );
+
+  window.open(
+    `https://pinterest.com/pin/create/button/?url=${url}&description=${description}`,
+    "_blank"
+  );
+}
+
+
+async function shareMore() {
+
+  const text =
+    getShareText();
+
+  if (navigator.share) {
+
+    try {
+
+      await navigator.share({
+
+        title:
+          "Universe139",
+
+        text:
+          text
+
+      });
+
+    } catch (error) {
+
+      if (error.name !== "AbortError") {
+
+        console.error(
+          "Share error:",
+          error
         );
 
+      }
 
-    console.log(
-        "Universe139 found language buttons:",
-        buttons.length
+    }
+
+  } else {
+
+    await copyText(text);
+
+  }
+}
+
+
+// ==========================================
+// SHARE TOAST
+// ==========================================
+
+function showShareToast(text) {
+
+  const oldToast =
+    document.getElementById(
+      "universe139Toast"
+    );
+
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast =
+    document.createElement("div");
+
+  toast.id =
+    "universe139Toast";
+
+  toast.textContent =
+    text;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+
+    toast.classList.add("show");
+
+  }, 20);
+
+  setTimeout(() => {
+
+    toast.classList.remove("show");
+
+    setTimeout(() => {
+
+      toast.remove();
+
+    }, 300);
+
+  }, 1800);
+}
+
+
+// ==========================================
+// SHARE PANEL
+// ==========================================
+
+function createSharePanel() {
+
+  const oldPanel =
+    document.getElementById(
+      "universe139SharePanel"
+    );
+
+  if (oldPanel) {
+    oldPanel.remove();
+  }
+
+  const t =
+    translations[currentLanguage];
+
+  const panel =
+    document.createElement("div");
+
+  panel.id =
+    "universe139SharePanel";
+
+
+  panel.innerHTML = `
+
+    <div class="shareOverlay"></div>
+
+    <div class="shareModal">
+
+      <button
+        class="shareClose"
+        id="shareClose"
+      >
+        ×
+      </button>
+
+      <h2>
+        ${t.shareTitle}
+      </h2>
+
+      <p class="shareDescription">
+        ${t.shareInstructions}
+      </p>
+
+
+      <div class="sharePreview">
+
+        <div class="sharePreviewTitle">
+          A Message From The Universe
+        </div>
+
+        <div class="sharePreviewMessage">
+          “${message.textContent.trim()}”
+        </div>
+
+        <div class="sharePreviewLink">
+          Universe139
+        </div>
+
+      </div>
+
+
+      <div class="shareGrid">
+
+        <button
+          class="shareOption"
+          id="shareWhatsApp"
+        >
+          WhatsApp
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareFacebook"
+        >
+          Facebook
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareTelegram"
+        >
+          Telegram
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareGmail"
+        >
+          Gmail
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareEmail"
+        >
+          Email
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareSMS"
+        >
+          SMS
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareLinkedIn"
+        >
+          LinkedIn
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareReddit"
+        >
+          Reddit
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareViber"
+        >
+          Viber
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareTikTok"
+        >
+          TikTok
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareInstagram"
+        >
+          Instagram
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareSnapchat"
+        >
+          Snapchat
+        </button>
+
+        <button
+          class="shareOption"
+          id="sharePinterest"
+        >
+          Pinterest
+        </button>
+
+        <button
+          class="shareOption"
+          id="copyMessage"
+        >
+          ${t.copyMessage}
+        </button>
+
+        <button
+          class="shareOption"
+          id="copyLink"
+        >
+          ${t.copyLink}
+        </button>
+
+        <button
+          class="shareOption"
+          id="shareMore"
+        >
+          ${t.more}
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(panel);
+
+
+  addSharePanelStyles();
+
+
+  // Close
+
+  document
+    .getElementById("shareClose")
+    .addEventListener(
+      "click",
+      closeSharePanel
     );
 
 
-    buttons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-
-                    const lang =
-                        button.getAttribute(
-                            "data-language"
-                        );
+  document
+    .querySelector(
+      "#universe139SharePanel .shareOverlay"
+    )
+    .addEventListener(
+      "click",
+      closeSharePanel
+    );
 
 
-                    console.log(
-                        "Universe139 language clicked:",
-                        lang
-                    );
+  // Platforms
+
+  document
+    .getElementById("shareWhatsApp")
+    .addEventListener(
+      "click",
+      shareWhatsApp
+    );
 
 
-                    if (
-                        lang &&
-                        languages[lang]
-                    ) {
+  document
+    .getElementById("shareFacebook")
+    .addEventListener(
+      "click",
+      shareFacebook
+    );
 
-                        setLanguage(
-                            lang
-                        );
 
-                    } else {
+  document
+    .getElementById("shareTelegram")
+    .addEventListener(
+      "click",
+      shareTelegram
+    );
 
-                        console.error(
-                            "Universe139 invalid language:",
-                            lang
-                        );
-                    }
 
-                }
-            );
+  document
+    .getElementById("shareGmail")
+    .addEventListener(
+      "click",
+      shareGmail
+    );
 
-        }
+
+  document
+    .getElementById("shareEmail")
+    .addEventListener(
+      "click",
+      shareEmail
+    );
+
+
+  document
+    .getElementById("shareSMS")
+    .addEventListener(
+      "click",
+      shareSMS
+    );
+
+
+  document
+    .getElementById("shareLinkedIn")
+    .addEventListener(
+      "click",
+      shareLinkedIn
+    );
+
+
+  document
+    .getElementById("shareReddit")
+    .addEventListener(
+      "click",
+      shareReddit
+    );
+
+
+  document
+    .getElementById("shareViber")
+    .addEventListener(
+      "click",
+      shareViber
+    );
+
+
+  document
+    .getElementById("shareTikTok")
+    .addEventListener(
+      "click",
+      shareTikTok
+    );
+
+
+  document
+    .getElementById("shareInstagram")
+    .addEventListener(
+      "click",
+      shareInstagram
+    );
+
+
+  document
+    .getElementById("shareSnapchat")
+    .addEventListener(
+      "click",
+      shareSnapchat
+    );
+
+
+  document
+    .getElementById("sharePinterest")
+    .addEventListener(
+      "click",
+      sharePinterest
+    );
+
+
+  document
+    .getElementById("copyMessage")
+    .addEventListener(
+      "click",
+      () => {
+        copyText(getShareText());
+      }
+    );
+
+
+  document
+    .getElementById("copyLink")
+    .addEventListener(
+      "click",
+      () => {
+        copyText(UNIVERSE139_URL);
+      }
+    );
+
+
+  document
+    .getElementById("shareMore")
+    .addEventListener(
+      "click",
+      shareMore
     );
 }
 
 
-// =====================================================
-// EXTRA LANGUAGE EVENT DELEGATION
-// =====================================================
-// This catches language buttons even if another script
-// or HTML structure interferes with the normal listener.
-// =====================================================
+// ==========================================
+// CLOSE SHARE PANEL
+// ==========================================
 
-function initializeLanguageDelegation() {
+function closeSharePanel() {
 
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            const button =
-                event.target.closest(
-                    "[data-language]"
-                );
-
-
-            if (!button) {
-                return;
-            }
-
-
-            const lang =
-                button.getAttribute(
-                    "data-language"
-                );
-
-
-            if (
-                lang &&
-                languages[lang]
-            ) {
-
-                console.log(
-                    "Universe139 delegated language:",
-                    lang
-                );
-
-                setLanguage(
-                    lang
-                );
-            }
-
-        },
-        true
+  const panel =
+    document.getElementById(
+      "universe139SharePanel"
     );
+
+  if (!panel) {
+    return;
+  }
+
+  panel.classList.add("closing");
+
+  setTimeout(() => {
+
+    panel.remove();
+
+  }, 220);
 }
 
 
-// =====================================================
-// MAIN BUTTONS
-// =====================================================
+// ==========================================
+// SHARE PANEL DESIGN
+// NO ICONS
+// NO ANIMATED ICONS
+// ==========================================
 
-function initializeMainButtons() {
+function addSharePanelStyles() {
 
-    if (revealBtn) {
+  if (
+    document.getElementById(
+      "universe139ShareStyles"
+    )
+  ) {
+    return;
+  }
 
-        revealBtn.addEventListener(
-            "click",
-            function (event) {
+  const style =
+    document.createElement("style");
 
-                event.preventDefault();
+  style.id =
+    "universe139ShareStyles";
 
-                revealMessage();
-            }
-        );
+  style.textContent = `
+
+    #universe139SharePanel {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 10000;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+
+      animation:
+        shareFadeIn .25s ease;
+
     }
 
 
-    if (againBtn) {
+    .shareOverlay {
 
-        againBtn.addEventListener(
-            "click",
-            function (event) {
+      position: absolute;
 
-                event.preventDefault();
+      inset: 0;
 
-                revealMessage();
-            }
+      background:
+        rgba(5,2,20,.92);
+
+      backdrop-filter:
+        blur(14px);
+
+    }
+
+
+    .shareModal {
+
+      position: relative;
+
+      width:
+        min(620px,100%);
+
+      max-height:
+        90vh;
+
+      overflow-y:
+        auto;
+
+      padding:
+        30px;
+
+      border-radius:
+        26px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(48,18,86,.98),
+          rgba(17,7,38,.99)
         );
+
+      border:
+        1px solid
+        rgba(255,255,255,.16);
+
+      box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.7);
+
+      text-align:
+        center;
+
+      animation:
+        shareModalIn .3s ease;
+
     }
 
 
-    if (shareBtn) {
+    .shareModal h2 {
 
-        shareBtn.addEventListener(
-            "click",
-            function (event) {
+      margin:
+        5px 45px 10px;
 
-                event.preventDefault();
+      font-size:
+        clamp(20px,5vw,28px);
 
-                showSharePanel();
-            }
+      color:
+        white;
+
+      font-weight:
+        600;
+
+    }
+
+
+    .shareDescription {
+
+      margin:
+        0 0 20px;
+
+      color:
+        rgba(255,255,255,.65);
+
+      font-size:
+        14px;
+
+    }
+
+
+    .shareClose {
+
+      position:
+        absolute;
+
+      right:
+        15px;
+
+      top:
+        12px;
+
+      width:
+        38px;
+
+      height:
+        38px;
+
+      border:
+        none;
+
+      background:
+        rgba(255,255,255,.07);
+
+      color:
+        white;
+
+      border-radius:
+        50%;
+
+      font-size:
+        26px;
+
+      line-height:
+        38px;
+
+      cursor:
+        pointer;
+
+      transition:
+        background .2s ease;
+
+    }
+
+
+    .shareClose:hover {
+
+      background:
+        rgba(255,255,255,.16);
+
+    }
+
+
+    .sharePreview {
+
+      margin-bottom:
+        22px;
+
+      padding:
+        18px;
+
+      border-radius:
+        18px;
+
+      background:
+        rgba(255,255,255,.05);
+
+      border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    }
+
+
+    .sharePreviewTitle {
+
+      margin-bottom:
+        10px;
+
+      font-size:
+        13px;
+
+      color:
+        rgba(255,255,255,.55);
+
+    }
+
+
+    .sharePreviewMessage {
+
+      color:
+        white;
+
+      font-size:
+        16px;
+
+      line-height:
+        1.55;
+
+      margin-bottom:
+        12px;
+
+    }
+
+
+    .sharePreviewLink {
+
+      color:
+        #d7b1ff;
+
+      font-size:
+        14px;
+
+      font-weight:
+        600;
+
+    }
+
+
+    /* ==================================
+       CLEAN TEXT BUTTONS
+       ================================== */
+
+    .shareGrid {
+
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(4,1fr);
+
+      gap:
+        10px;
+
+    }
+
+
+    .shareOption {
+
+      min-height:
+        54px;
+
+      padding:
+        10px 7px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
+      border-radius:
+        14px;
+
+      background:
+        rgba(255,255,255,.045);
+
+      color:
+        white;
+
+      cursor:
+        pointer;
+
+      font-family:
+        inherit;
+
+      font-size:
+        13px;
+
+      font-weight:
+        500;
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
+    }
+
+
+    .shareOption:hover {
+
+      background:
+        rgba(255,255,255,.11);
+
+      border-color:
+        rgba(255,255,255,.28);
+
+      transform:
+        translateY(-2px);
+
+    }
+
+
+    .shareOption:active {
+
+      transform:
+        scale(.97);
+
+    }
+
+
+    /* ==================================
+       TOAST
+       ================================== */
+
+    #universe139Toast {
+
+      position:
+        fixed;
+
+      left:
+        50%;
+
+      bottom:
+        30px;
+
+      transform:
+        translate(-50%,20px);
+
+      z-index:
+        11000;
+
+      padding:
+        11px 22px;
+
+      border-radius:
+        30px;
+
+      background:
+        rgba(35,15,65,.97);
+
+      border:
+        1px solid
+        rgba(255,255,255,.18);
+
+      color:
+        white;
+
+      font-size:
+        14px;
+
+      opacity:
+        0;
+
+      transition:
+        opacity .3s ease,
+        transform .3s ease;
+
+      pointer-events:
+        none;
+
+    }
+
+
+    #universe139Toast.show {
+
+      opacity:
+        1;
+
+      transform:
+        translate(-50%,0);
+
+    }
+
+
+    #universe139SharePanel.closing {
+
+      animation:
+        shareFadeOut .22s ease
+        forwards;
+
+    }
+
+
+    @keyframes shareFadeIn {
+
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+
+    }
+
+
+    @keyframes shareFadeOut {
+
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+
+    }
+
+
+    @keyframes shareModalIn {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(25px)
+          scale(.96);
+
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+
+      }
+
+    }
+
+
+    /* ==================================
+       MOBILE
+       ================================== */
+
+    @media (max-width:600px) {
+
+      .shareModal {
+
+        padding:
+          24px 15px;
+
+        border-radius:
+          22px;
+
+      }
+
+
+      .shareGrid {
+
+        grid-template-columns:
+          repeat(3,1fr);
+
+        gap:
+          8px;
+
+      }
+
+
+      .shareOption {
+
+        min-height:
+          52px;
+
+        font-size:
+          11px;
+
+      }
+
+    }
+
+
+    @media (max-width:380px) {
+
+      .shareGrid {
+
+        grid-template-columns:
+          repeat(2,1fr);
+
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+}
+
+
+// ==========================================
+// OPEN SHARE
+// ==========================================
+
+function shareMessage() {
+
+  const currentMessage =
+    message.textContent.trim();
+
+  if (!currentMessage) {
+    return;
+  }
+
+  createSharePanel();
+}
+
+
+// ==========================================
+// BUTTON EVENTS
+// ==========================================
+
+document
+  .querySelectorAll(".languageBtn")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        selectLanguage(
+          button.dataset.language
         );
-    }
+
+      }
+    );
+
+  });
+
+
+if (revealBtn) {
+
+  revealBtn.addEventListener(
+    "click",
+    revealMessage
+  );
+
 }
 
 
-// =====================================================
-// INITIALIZE
-// =====================================================
+if (againBtn) {
 
-function initUniverse139() {
+  againBtn.addEventListener(
+    "click",
+    receiveAnotherMessage
+  );
 
-    if (initialized) {
-
-        return;
-    }
-
-
-    initialized =
-        true;
-
-
-    console.log(
-        "===================================="
-    );
-
-    console.log(
-        "UNIVERSE139 STARTING"
-    );
-
-    console.log(
-        "===================================="
-    );
-
-
-    initializeDOM();
-
-
-    // Language buttons
-
-    initializeLanguageButtons();
-
-    initializeLanguageDelegation();
-
-
-    // Main buttons
-
-    initializeMainButtons();
-
-
-    // Default language
-
-    setLanguage(
-        "en"
-    );
-
-
-    // Cosmic animation
-
-    createCosmicTornado();
-
-
-    // Current working URL
-
-    window.UNIVERSE139_URL =
-        getShareURL();
-
-
-    console.log(
-        "Universe139 active URL:",
-        getShareURL()
-    );
-
-
-    console.log(
-        "Universe139 READY"
-    );
 }
 
 
-// =====================================================
-// MAKE FUNCTIONS AVAILABLE TO HTML
-// =====================================================
+if (shareBtn) {
 
-window.languages =
-    languages;
+  shareBtn.addEventListener(
+    "click",
+    shareMessage
+  );
 
-window.messages =
-    messages;
-
-window.setLanguage =
-    setLanguage;
-
-window.revealMessage =
-    revealMessage;
-
-window.showSharePanel =
-    showSharePanel;
-
-window.sharePictureNative =
-    sharePictureNative;
-
-window.getShareURL =
-    getShareURL;
-
-
-// =====================================================
-// START
-// =====================================================
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initUniverse139
-    );
-
-} else {
-
-    initUniverse139();
 }
+
+
+// ==========================================
+// INITIAL STATE
+// ==========================================
+
+messageBox.classList.add("hidden");
+
+loading.classList.add("hidden");
+
+revealBtn.classList.add("hidden");
+
+againBtn.classList.add("hidden");
+
+shareBtn.classList.add("hidden");
+
+
+console.log(
+  "Universe139 loaded successfully"
+);
+
+console.log(
+  "Universe139 URL:",
+  UNIVERSE139_URL
+);
