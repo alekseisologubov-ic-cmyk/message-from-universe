@@ -1871,18 +1871,190 @@ async function copyShareTextWithNotice() {
 // WHATSAPP
 // ==========================================
 
-function shareWhatsApp() {
+async function shareWhatsApp() {
 
-  const text =
-    encodeURIComponent(
-      getShareText()
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
+
+  if (!currentMessage) {
+
+    showShareToast(
+      translations[currentLanguage].noMessage
     );
 
-  window.open(
-    `https://wa.me/?text=${text}`,
-    "_blank",
-    "noopener,noreferrer"
-  );
+    return;
+
+  }
+
+  const waURL =
+    `https://wa.me/?text=${encodeURIComponent(getShareText())}`;
+
+  // Same rule as Facebook/LinkedIn/Reddit: window.open() must be
+  // called synchronously, before any async work, or mobile browsers
+  // silently block it as not being a direct result of the tap.
+  // wa.me already prefills the message + link as text just fine on
+  // its own, so that's the safe, always-open fallback here.
+  let fallbackWindow = null;
+
+  if (!navigator.share) {
+
+    fallbackWindow = window.open(
+      waURL,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+  try {
+
+    // Prefer sharing the same branded image Facebook/Instagram/
+    // TikTok use — WhatsApp accepts a shared image directly via
+    // the OS share sheet, with the message + link baked right
+    // into the picture, which reads much better in a chat than a
+    // bare text bubble.
+    const blob =
+      await createMessageImageBlob();
+
+    const file =
+      new File(
+        [blob],
+        "Universe139-message.png",
+        {
+          type: "image/png"
+        }
+      );
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file]
+      })
+    ) {
+
+      await navigator.share({
+
+        title:
+          "Universe139",
+
+        text:
+          getShareText(),
+
+        files:
+          [file]
+
+      });
+
+      return;
+
+    }
+
+    // navigator.share exists but this browser doesn't support
+    // sharing files — fall back to text/url through the same API,
+    // which still carries the full message + link.
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share({
+          title: "Universe139",
+          text: getShareText(),
+          url: UNIVERSE139_URL
+        });
+
+        return;
+
+      } catch (error) {
+
+        if (
+          error &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error(
+          "Universe139 WhatsApp text share error:",
+          error
+        );
+
+      }
+
+    }
+
+    // Desktop fallback: the wa.me popup is already open (from
+    // above) with the message + link prefilled as text. Also
+    // download the image so it can be attached to the chat manually.
+    const objectURL =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href =
+      objectURL;
+
+    link.download =
+      "Universe139-message.png";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    link.remove();
+
+    window.setTimeout(() => {
+
+      URL.revokeObjectURL(
+        objectURL
+      );
+
+    }, 2000);
+
+    if (!fallbackWindow || fallbackWindow.closed) {
+
+      window.open(
+        waURL,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }
+
+  } catch (error) {
+
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error(
+      "Universe139 WhatsApp share error:",
+      error
+    );
+
+    // Emergency fallback if image generation itself fails — the
+    // text-prefilled popup was already opened up front if needed.
+    if (!fallbackWindow || fallbackWindow.closed) {
+
+      window.open(
+        waURL,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }
+
+  }
 
 }
 
