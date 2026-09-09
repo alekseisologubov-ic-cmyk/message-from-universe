@@ -306,28 +306,48 @@ let isRevealing = false;
 // DOM ELEMENTS
 // ==========================================
 
-const languageBox = document.getElementById("languageBox");
-const chooseLanguage = document.getElementById("chooseLanguage");
+const languageBox =
+  document.getElementById("languageBox");
 
-const title = document.getElementById("title");
-const subtitle = document.getElementById("subtitle");
+const chooseLanguage =
+  document.getElementById("chooseLanguage");
 
-const revealBtn = document.getElementById("revealBtn");
+const title =
+  document.getElementById("title");
 
-const loading = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
+const subtitle =
+  document.getElementById("subtitle");
 
-const messageBox = document.getElementById("messageBox");
-const month = document.getElementById("month");
-const message = document.getElementById("message");
-const smallText = document.getElementById("smallText");
+const revealBtn =
+  document.getElementById("revealBtn");
 
-const againBtn = document.getElementById("againBtn");
-const shareBtn = document.getElementById("shareBtn");
+const loading =
+  document.getElementById("loading");
+
+const loadingText =
+  document.getElementById("loadingText");
+
+const messageBox =
+  document.getElementById("messageBox");
+
+const month =
+  document.getElementById("month");
+
+const message =
+  document.getElementById("message");
+
+const smallText =
+  document.getElementById("smallText");
+
+const againBtn =
+  document.getElementById("againBtn");
+
+const shareBtn =
+  document.getElementById("shareBtn");
 
 
 // ==========================================
-// LANGUAGE
+// LANGUAGE SELECTION
 // ==========================================
 
 function selectLanguage(language) {
@@ -338,26 +358,45 @@ function selectLanguage(language) {
 
   currentLanguage = language;
 
-  const t = translations[language];
+  const t =
+    translations[language];
 
-  chooseLanguage.textContent = t.chooseLanguage;
-  title.textContent = t.title;
-  subtitle.textContent = t.subtitle;
+  chooseLanguage.textContent =
+    t.chooseLanguage;
 
-  revealBtn.textContent = t.reveal;
-  loadingText.textContent = t.loading;
+  title.textContent =
+    t.title;
 
-  month.textContent = t.month;
+  subtitle.textContent =
+    t.subtitle;
 
-  againBtn.textContent = t.again;
-  shareBtn.textContent = t.share;
+  revealBtn.textContent =
+    t.reveal;
 
-  languageBox.classList.add("hidden");
+  loadingText.textContent =
+    t.loading;
 
-  revealBtn.classList.remove("hidden");
+  month.textContent =
+    t.month;
+
+  againBtn.textContent =
+    t.again;
+
+  shareBtn.textContent =
+    t.share;
+
+  languageBox.classList.add(
+    "hidden"
+  );
+
+  revealBtn.classList.remove(
+    "hidden"
+  );
 
   setTimeout(() => {
+
     revealMessage();
+
   }, 500);
 }
 
@@ -368,9 +407,13 @@ function selectLanguage(language) {
 
 function getRandomMessage() {
 
-  const messages = messageTemplates[currentLanguage];
+  const messages =
+    messageTemplates[currentLanguage];
 
-  if (!messages || messages.length === 0) {
+  if (
+    !messages ||
+    messages.length === 0
+  ) {
     return "";
   }
 
@@ -379,29 +422,36 @@ function getRandomMessage() {
   do {
 
     const randomIndex =
-      Math.floor(Math.random() * messages.length);
+      Math.floor(
+        Math.random() *
+        messages.length
+      );
 
-    newMessage = messages[randomIndex];
+    newMessage =
+      messages[randomIndex];
 
   } while (
     messages.length > 1 &&
     newMessage === lastMessage
   );
 
-  lastMessage = newMessage;
+  lastMessage =
+    newMessage;
 
   return newMessage;
 }
 
 
 // ==========================================
-// WIND EFFECT
+// COSMIC HURRICANE EFFECT
 // ==========================================
 
 function createWindEffect() {
 
   const oldWind =
-    document.getElementById("universeWind");
+    document.getElementById(
+      "universeWind"
+    );
 
   if (oldWind) {
     oldWind.remove();
@@ -410,19 +460,42 @@ function createWindEffect() {
   const wind =
     document.createElement("div");
 
-  wind.id = "universeWind";
+  wind.id =
+    "universeWind";
 
   wind.innerHTML = `
+
+    <div class="cosmicGlow"></div>
+
     <div class="wind wind1"></div>
     <div class="wind wind2"></div>
     <div class="wind wind3"></div>
     <div class="wind wind4"></div>
     <div class="wind wind5"></div>
+    <div class="wind wind6"></div>
+
+    <div class="cosmicParticle p1"></div>
+    <div class="cosmicParticle p2"></div>
+    <div class="cosmicParticle p3"></div>
+    <div class="cosmicParticle p4"></div>
+    <div class="cosmicParticle p5"></div>
+    <div class="cosmicParticle p6"></div>
+    <div class="cosmicParticle p7"></div>
+    <div class="cosmicParticle p8"></div>
+    <div class="cosmicParticle p9"></div>
+    <div class="cosmicParticle p10"></div>
+
   `;
 
-  document.body.appendChild(wind);
+  document.body.appendChild(
+    wind
+  );
 
-  if (!document.getElementById("universe139WindStyle")) {
+  if (
+    !document.getElementById(
+      "universe139WindStyle"
+    )
+  ) {
 
     const style =
       document.createElement("style");
@@ -433,93 +506,514 @@ function createWindEffect() {
     style.textContent = `
 
       #universeWind {
+
         position: fixed;
+
         inset: 0;
+
         pointer-events: none;
+
         z-index: 9999;
+
         overflow: hidden;
+
+        perspective: 900px;
+
       }
 
-      .wind {
+
+      .cosmicGlow {
+
         position: absolute;
-        width: 200vw;
-        height: 4px;
-        left: -220vw;
+
+        width: 55vw;
+
+        height: 55vw;
+
+        max-width: 650px;
+
+        max-height: 650px;
+
+        left: 50%;
+
+        top: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        border-radius: 50%;
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(210,160,255,.18) 0%,
+            rgba(150,80,255,.10) 30%,
+            rgba(80,40,180,.04) 55%,
+            transparent 72%
+          );
+
+        animation:
+          cosmicPulse 1.8s ease-out
+          forwards;
+
+      }
+
+
+      .wind {
+
+        position: absolute;
+
+        width: 220vw;
+
+        height: 3px;
+
+        left: -230vw;
+
         opacity: 0;
+
         border-radius: 50%;
 
         background:
           linear-gradient(
             90deg,
-            transparent,
-            rgba(255,255,255,.15),
-            rgba(255,255,255,.8),
-            rgba(255,255,255,.15),
-            transparent
+            transparent 0%,
+            rgba(255,255,255,.05) 15%,
+            rgba(210,170,255,.35) 40%,
+            rgba(255,255,255,.95) 50%,
+            rgba(210,170,255,.35) 60%,
+            rgba(255,255,255,.05) 85%,
+            transparent 100%
           );
 
-        filter: blur(1px);
+        filter:
+          blur(1px)
+          drop-shadow(
+            0 0 8px
+            rgba(200,150,255,.7)
+          );
+
+        transform-origin:
+          center center;
+
       }
+
 
       .wind1 {
-        top: 20%;
-        animation: universeWind 1.4s linear;
+
+        top: 18%;
+
+        animation:
+          universeWind1 1.8s
+          cubic-bezier(.15,.7,.2,1)
+          forwards;
+
       }
+
 
       .wind2 {
-        top: 35%;
-        animation: universeWind 1.1s linear .1s;
+
+        top: 29%;
+
+        animation:
+          universeWind2 1.5s
+          cubic-bezier(.15,.7,.2,1)
+          .08s
+          forwards;
+
       }
+
 
       .wind3 {
-        top: 50%;
-        animation: universeWind 1.3s linear .2s;
+
+        top: 40%;
+
+        height: 5px;
+
+        animation:
+          universeWind1 1.65s
+          cubic-bezier(.15,.7,.2,1)
+          .16s
+          forwards;
+
       }
+
 
       .wind4 {
-        top: 65%;
-        animation: universeWind 1s linear .3s;
+
+        top: 52%;
+
+        height: 6px;
+
+        animation:
+          universeWind2 1.55s
+          cubic-bezier(.15,.7,.2,1)
+          .22s
+          forwards;
+
       }
+
 
       .wind5 {
-        top: 80%;
-        animation: universeWind 1.2s linear .4s;
+
+        top: 65%;
+
+        animation:
+          universeWind1 1.7s
+          cubic-bezier(.15,.7,.2,1)
+          .3s
+          forwards;
+
       }
 
-      @keyframes universeWind {
+
+      .wind6 {
+
+        top: 78%;
+
+        animation:
+          universeWind2 1.5s
+          cubic-bezier(.15,.7,.2,1)
+          .38s
+          forwards;
+
+      }
+
+
+      @keyframes universeWind1 {
 
         0% {
+
           transform:
             translateX(0)
-            rotate(-2deg);
+            translateY(0)
+            rotate(-5deg)
+            scaleX(.7);
+
           opacity: 0;
+
         }
 
-        20% {
-          opacity: .7;
+        12% {
+
+          opacity: .4;
+
         }
 
-        70% {
-          opacity: .9;
+        38% {
+
+          opacity: .95;
+
+          transform:
+            translateX(65vw)
+            translateY(-18px)
+            rotate(-2deg)
+            scaleX(1);
+
+        }
+
+        62% {
+
+          opacity: .85;
+
+          transform:
+            translateX(135vw)
+            translateY(22px)
+            rotate(3deg)
+            scaleX(1.1);
+
+        }
+
+        82% {
+
+          opacity: .45;
+
         }
 
         100% {
+
           transform:
             translateX(260vw)
-            rotate(2deg);
+            translateY(-12px)
+            rotate(6deg)
+            scaleX(.8);
+
           opacity: 0;
+
+        }
+
+      }
+
+
+      @keyframes universeWind2 {
+
+        0% {
+
+          transform:
+            translateX(0)
+            translateY(0)
+            rotate(5deg)
+            scaleX(.6);
+
+          opacity: 0;
+
+        }
+
+        15% {
+
+          opacity: .35;
+
+        }
+
+        42% {
+
+          opacity: .9;
+
+          transform:
+            translateX(80vw)
+            translateY(25px)
+            rotate(2deg)
+            scaleX(1);
+
+        }
+
+        68% {
+
+          opacity: .75;
+
+          transform:
+            translateX(150vw)
+            translateY(-20px)
+            rotate(-4deg)
+            scaleX(1.15);
+
+        }
+
+        100% {
+
+          transform:
+            translateX(260vw)
+            translateY(15px)
+            rotate(-7deg)
+            scaleX(.75);
+
+          opacity: 0;
+
+        }
+
+      }
+
+
+      .cosmicParticle {
+
+        position: absolute;
+
+        width: 5px;
+
+        height: 5px;
+
+        border-radius: 50%;
+
+        background:
+          rgba(255,255,255,.95);
+
+        box-shadow:
+          0 0 12px
+          rgba(220,180,255,.9);
+
+        opacity: 0;
+
+        animation:
+          particleSpin 1.8s
+          ease-out
+          forwards;
+
+      }
+
+
+      .p1 {
+        left: 12%;
+        top: 25%;
+        animation-delay: .05s;
+      }
+
+      .p2 {
+        left: 23%;
+        top: 68%;
+        animation-delay: .12s;
+      }
+
+      .p3 {
+        left: 35%;
+        top: 18%;
+        animation-delay: .18s;
+      }
+
+      .p4 {
+        left: 45%;
+        top: 82%;
+        animation-delay: .24s;
+      }
+
+      .p5 {
+        left: 57%;
+        top: 30%;
+        animation-delay: .3s;
+      }
+
+      .p6 {
+        left: 68%;
+        top: 72%;
+        animation-delay: .36s;
+      }
+
+      .p7 {
+        left: 77%;
+        top: 20%;
+        animation-delay: .42s;
+      }
+
+      .p8 {
+        left: 84%;
+        top: 58%;
+        animation-delay: .48s;
+      }
+
+      .p9 {
+        left: 30%;
+        top: 48%;
+        animation-delay: .54s;
+      }
+
+      .p10 {
+        left: 70%;
+        top: 45%;
+        animation-delay: .6s;
+      }
+
+
+      @keyframes particleSpin {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate3d(
+              0,
+              0,
+              0
+            )
+            scale(.2)
+            rotate(0deg);
+
+        }
+
+        20% {
+
+          opacity: 1;
+
+        }
+
+        50% {
+
+          opacity: 1;
+
+          transform:
+            translate3d(
+              100px,
+              -80px,
+              100px
+            )
+            scale(1.5)
+            rotate(180deg);
+
+        }
+
+        80% {
+
+          opacity: .7;
+
+          transform:
+            translate3d(
+              240px,
+              80px,
+              0
+            )
+            scale(.8)
+            rotate(360deg);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate3d(
+              420px,
+              -20px,
+              -100px
+            )
+            scale(.1)
+            rotate(600deg);
+
+        }
+
+      }
+
+
+      @keyframes cosmicPulse {
+
+        0% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(.4);
+
+        }
+
+        25% {
+
+          opacity: 1;
+
+        }
+
+        65% {
+
+          opacity: .8;
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.1);
+
+        }
+
+        100% {
+
+          opacity: 0;
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.5);
+
         }
 
       }
 
     `;
 
-    document.head.appendChild(style);
+    document.head.appendChild(
+      style
+    );
   }
 
   setTimeout(() => {
+
     wind.remove();
-  }, 1800);
+
+  }, 2300);
 }
 
 
@@ -535,10 +1029,15 @@ function showMessage() {
   message.textContent =
     newMessage;
 
-  messageBox.classList.remove("hidden");
+  messageBox.classList.remove(
+    "hidden"
+  );
 
   messageBox.style.display =
     "block";
+
+  messageBox.style.opacity =
+    "1";
 
   message.style.opacity =
     "1";
@@ -546,18 +1045,26 @@ function showMessage() {
   message.style.visibility =
     "visible";
 
-  loading.classList.add("hidden");
+  loading.classList.add(
+    "hidden"
+  );
 
-  revealBtn.classList.add("hidden");
+  revealBtn.classList.add(
+    "hidden"
+  );
 
-  againBtn.classList.remove("hidden");
+  againBtn.classList.remove(
+    "hidden"
+  );
 
-  shareBtn.classList.remove("hidden");
+  shareBtn.classList.remove(
+    "hidden"
+  );
 }
 
 
 // ==========================================
-// REVEAL MESSAGE
+// FIRST MESSAGE REVEAL
 // ==========================================
 
 function revealMessage() {
@@ -568,31 +1075,50 @@ function revealMessage() {
 
   isRevealing = true;
 
-  messageBox.classList.add("hidden");
+  messageBox.classList.add(
+    "hidden"
+  );
 
-  loading.classList.remove("hidden");
+  messageBox.style.opacity =
+    "0";
 
-  revealBtn.classList.add("hidden");
+  loading.classList.remove(
+    "hidden"
+  );
 
-  againBtn.classList.add("hidden");
+  revealBtn.classList.add(
+    "hidden"
+  );
 
-  shareBtn.classList.add("hidden");
+  againBtn.classList.add(
+    "hidden"
+  );
+
+  shareBtn.classList.add(
+    "hidden"
+  );
 
   loadingText.textContent =
-    translations[currentLanguage].loading;
+    translations[currentLanguage]
+      .loading;
 
+  // 🌪️ START COSMIC HURRICANE
+  createWindEffect();
+
+  // Message appears after the
+  // cosmic movement has started.
   setTimeout(() => {
 
     showMessage();
 
     isRevealing = false;
 
-  }, 2500);
+  }, 1800);
 }
 
 
 // ==========================================
-// ANOTHER MESSAGE
+// RECEIVE ANOTHER MESSAGE
 // ==========================================
 
 function receiveAnotherMessage() {
@@ -603,19 +1129,26 @@ function receiveAnotherMessage() {
 
   isRevealing = true;
 
-  createWindEffect();
-
+  // Hide current message
   messageBox.style.opacity =
     "0";
 
+  // Start cosmic hurricane
+  createWindEffect();
+
   setTimeout(() => {
 
-    messageBox.classList.add("hidden");
+    messageBox.classList.add(
+      "hidden"
+    );
 
-    loading.classList.remove("hidden");
+    loading.classList.remove(
+      "hidden"
+    );
 
     loadingText.textContent =
-      translations[currentLanguage].loading;
+      translations[currentLanguage]
+        .loading;
 
   }, 300);
 
@@ -628,12 +1161,12 @@ function receiveAnotherMessage() {
 
     isRevealing = false;
 
-  }, 2500);
+  }, 1800);
 }
 
 
 // ==========================================
-// BUILD SHARE TEXT
+// SHARE TEXT
 // ==========================================
 
 function getShareText() {
@@ -652,25 +1185,31 @@ ${UNIVERSE139_URL}`;
 
 
 // ==========================================
-// COPY TO CLIPBOARD
+// COPY TEXT
 // ==========================================
 
 async function copyText(text) {
 
   try {
 
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(
+      text
+    );
 
     showShareToast(
-      translations[currentLanguage].copied
+      translations[currentLanguage]
+        .copied
     );
 
   } catch (error) {
 
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
-    textarea.value = text;
+    textarea.value =
+      text;
 
     textarea.style.position =
       "fixed";
@@ -678,23 +1217,28 @@ async function copyText(text) {
     textarea.style.left =
       "-9999px";
 
-    document.body.appendChild(textarea);
+    document.body.appendChild(
+      textarea
+    );
 
     textarea.select();
 
-    document.execCommand("copy");
+    document.execCommand(
+      "copy"
+    );
 
     textarea.remove();
 
     showShareToast(
-      translations[currentLanguage].copied
+      translations[currentLanguage]
+        .copied
     );
   }
 }
 
 
 // ==========================================
-// SHARE TO WHATSAPP
+// WHATSAPP
 // ==========================================
 
 function shareWhatsApp() {
@@ -712,26 +1256,34 @@ function shareWhatsApp() {
 
 
 // ==========================================
-// SHARE TO FACEBOOK
+// FACEBOOK
 // ==========================================
 
-function shareFacebook() {
+async function shareFacebook() {
 
-  const url =
-    encodeURIComponent(
-      UNIVERSE139_URL
+  await copyText(
+    getShareText()
+  );
+
+  setTimeout(() => {
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      "_blank",
+      "width=600,height=500"
     );
 
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-    "_blank",
-    "width=600,height=500"
-  );
+  }, 500);
 }
 
 
 // ==========================================
-// SHARE TO TELEGRAM
+// TELEGRAM
 // ==========================================
 
 function shareTelegram() {
@@ -754,49 +1306,65 @@ function shareTelegram() {
 
 
 // ==========================================
-// SHARE TO LINKEDIN
+// LINKEDIN
 // ==========================================
 
-function shareLinkedIn() {
+async function shareLinkedIn() {
 
-  const url =
-    encodeURIComponent(
-      UNIVERSE139_URL
+  await copyText(
+    getShareText()
+  );
+
+  setTimeout(() => {
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      "_blank",
+      "width=600,height=600"
     );
 
-  window.open(
-    `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-    "_blank",
-    "width=600,height=600"
-  );
+  }, 500);
 }
 
 
 // ==========================================
-// SHARE TO REDDIT
+// REDDIT
 // ==========================================
 
-function shareReddit() {
+async function shareReddit() {
 
-  const title =
-    encodeURIComponent(
-      "✨ A Message From The Universe ✨"
-    );
-
-  const url =
-    encodeURIComponent(
-      UNIVERSE139_URL
-    );
-
-  window.open(
-    `https://www.reddit.com/submit?url=${url}&title=${title}`,
-    "_blank"
+  await copyText(
+    getShareText()
   );
+
+  setTimeout(() => {
+
+    const title =
+      encodeURIComponent(
+        "✨ A Message From The Universe ✨"
+      );
+
+    const url =
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
+
+    window.open(
+      `https://www.reddit.com/submit?url=${url}&title=${title}`,
+      "_blank"
+    );
+
+  }, 500);
 }
 
 
 // ==========================================
-// SHARE BY EMAIL
+// EMAIL
 // ==========================================
 
 function shareEmail() {
@@ -817,7 +1385,7 @@ function shareEmail() {
 
 
 // ==========================================
-// SHARE BY GMAIL
+// GMAIL
 // ==========================================
 
 function shareGmail() {
@@ -840,7 +1408,7 @@ function shareGmail() {
 
 
 // ==========================================
-// SHARE BY SMS
+// SMS
 // ==========================================
 
 function shareSMS() {
@@ -856,18 +1424,19 @@ function shareSMS() {
 
 
 // ==========================================
-// SHARE TO VIBER
+// VIBER
 // ==========================================
 
-function shareViber() {
+async function shareViber() {
 
-  const text =
-    encodeURIComponent(
-      getShareText()
-    );
+  await copyText(
+    getShareText()
+  );
 
   window.location.href =
-    `viber://forward?text=${text}`;
+    `viber://forward?text=${encodeURIComponent(
+      getShareText()
+    )}`;
 }
 
 
@@ -966,54 +1535,104 @@ async function shareMore() {
   const text =
     getShareText();
 
-  if (navigator.share) {
+  if (
+    navigator.share
+  ) {
 
     try {
 
       await navigator.share({
-        title: "Universe139",
-        text: text
+
+        title:
+          "Universe139",
+
+        text:
+          text
+
       });
 
     } catch (error) {
 
-      if (error.name !== "AbortError") {
+      if (
+        error.name !==
+        "AbortError"
+      ) {
+
         console.error(
           "Native share error:",
           error
         );
+
       }
 
     }
 
   } else {
 
-    await copyText(text);
+    await copyText(
+      text
+    );
 
   }
 }
 
 
 // ==========================================
-// SHARE TO FACEBOOK WITH MESSAGE
+// SHARE TOAST
 // ==========================================
 
-async function shareFacebookMessage() {
+function showShareToast(text) {
 
-  await copyText(
-    getShareText()
+  const oldToast =
+    document.getElementById(
+      "universe139Toast"
+    );
+
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast =
+    document.createElement(
+      "div"
+    );
+
+  toast.id =
+    "universe139Toast";
+
+  toast.textContent =
+    text;
+
+  document.body.appendChild(
+    toast
   );
 
   setTimeout(() => {
 
-    shareFacebook();
+    toast.classList.add(
+      "show"
+    );
 
-  }, 700);
+  }, 20);
+
+  setTimeout(() => {
+
+    toast.classList.remove(
+      "show"
+    );
+
+    setTimeout(() => {
+
+      toast.remove();
+
+    }, 300);
+
+  }, 1800);
 }
 
 
 // ==========================================
-// SHARE PANEL
+// CREATE SHARE PANEL
 // ==========================================
 
 function createSharePanel() {
@@ -1031,7 +1650,9 @@ function createSharePanel() {
     translations[currentLanguage];
 
   const panel =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   panel.id =
     "universe139SharePanel";
@@ -1054,7 +1675,9 @@ function createSharePanel() {
         ✨
       </div>
 
-      <h2>${t.shareTitle}</h2>
+      <h2>
+        ${t.shareTitle}
+      </h2>
 
       <p class="shareDescription">
         ${t.shareInstructions}
@@ -1079,7 +1702,7 @@ function createSharePanel() {
       <div class="shareGrid">
 
         <button
-          class="shareOption whatsapp"
+          class="shareOption"
           id="shareWhatsApp"
         >
           <span>💬</span>
@@ -1087,7 +1710,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption facebook"
+          class="shareOption"
           id="shareFacebook"
         >
           <span>📘</span>
@@ -1095,7 +1718,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption telegram"
+          class="shareOption"
           id="shareTelegram"
         >
           <span>✈️</span>
@@ -1103,7 +1726,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption gmail"
+          class="shareOption"
           id="shareGmail"
         >
           <span>📧</span>
@@ -1111,7 +1734,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption email"
+          class="shareOption"
           id="shareEmail"
         >
           <span>✉️</span>
@@ -1119,7 +1742,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption sms"
+          class="shareOption"
           id="shareSMS"
         >
           <span>💬</span>
@@ -1127,7 +1750,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption linkedin"
+          class="shareOption"
           id="shareLinkedIn"
         >
           <span>💼</span>
@@ -1135,7 +1758,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption reddit"
+          class="shareOption"
           id="shareReddit"
         >
           <span>🟠</span>
@@ -1143,7 +1766,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption viber"
+          class="shareOption"
           id="shareViber"
         >
           <span>📱</span>
@@ -1151,7 +1774,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption tiktok"
+          class="shareOption"
           id="shareTikTok"
         >
           <span>🎵</span>
@@ -1159,7 +1782,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption instagram"
+          class="shareOption"
           id="shareInstagram"
         >
           <span>📸</span>
@@ -1167,7 +1790,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption snapchat"
+          class="shareOption"
           id="shareSnapchat"
         >
           <span>👻</span>
@@ -1175,7 +1798,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption pinterest"
+          class="shareOption"
           id="sharePinterest"
         >
           <span>📌</span>
@@ -1183,7 +1806,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption copy"
+          class="shareOption"
           id="copyMessage"
         >
           <span>📋</span>
@@ -1191,7 +1814,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption link"
+          class="shareOption"
           id="copyLink"
         >
           <span>🔗</span>
@@ -1199,7 +1822,7 @@ function createSharePanel() {
         </button>
 
         <button
-          class="shareOption more"
+          class="shareOption"
           id="shareMore"
         >
           <span>📤</span>
@@ -1211,157 +1834,211 @@ function createSharePanel() {
     </div>
   `;
 
-  document.body.appendChild(panel);
+  document.body.appendChild(
+    panel
+  );
 
   addSharePanelStyles();
 
-  // Close
+
+  // ----------------------------------------
+  // CLOSE
+  // ----------------------------------------
+
   document
-    .getElementById("shareClose")
+    .getElementById(
+      "shareClose"
+    )
     .addEventListener(
       "click",
       closeSharePanel
     );
 
+
   document
-    .querySelector(".shareOverlay")
+    .querySelector(
+      "#universe139SharePanel .shareOverlay"
+    )
     .addEventListener(
       "click",
       closeSharePanel
     );
 
-  // WhatsApp
+
+  // ----------------------------------------
+  // SHARE BUTTONS
+  // ----------------------------------------
+
   document
-    .getElementById("shareWhatsApp")
+    .getElementById(
+      "shareWhatsApp"
+    )
     .addEventListener(
       "click",
       shareWhatsApp
     );
 
-  // Facebook
+
   document
-    .getElementById("shareFacebook")
+    .getElementById(
+      "shareFacebook"
+    )
     .addEventListener(
       "click",
-      shareFacebookMessage
+      shareFacebook
     );
 
-  // Telegram
+
   document
-    .getElementById("shareTelegram")
+    .getElementById(
+      "shareTelegram"
+    )
     .addEventListener(
       "click",
       shareTelegram
     );
 
-  // Gmail
+
   document
-    .getElementById("shareGmail")
+    .getElementById(
+      "shareGmail"
+    )
     .addEventListener(
       "click",
       shareGmail
     );
 
-  // Email
+
   document
-    .getElementById("shareEmail")
+    .getElementById(
+      "shareEmail"
+    )
     .addEventListener(
       "click",
       shareEmail
     );
 
-  // SMS
+
   document
-    .getElementById("shareSMS")
+    .getElementById(
+      "shareSMS"
+    )
     .addEventListener(
       "click",
       shareSMS
     );
 
-  // LinkedIn
+
   document
-    .getElementById("shareLinkedIn")
+    .getElementById(
+      "shareLinkedIn"
+    )
     .addEventListener(
       "click",
       shareLinkedIn
     );
 
-  // Reddit
+
   document
-    .getElementById("shareReddit")
+    .getElementById(
+      "shareReddit"
+    )
     .addEventListener(
       "click",
       shareReddit
     );
 
-  // Viber
+
   document
-    .getElementById("shareViber")
+    .getElementById(
+      "shareViber"
+    )
     .addEventListener(
       "click",
       shareViber
     );
 
-  // TikTok
+
   document
-    .getElementById("shareTikTok")
+    .getElementById(
+      "shareTikTok"
+    )
     .addEventListener(
       "click",
       shareTikTok
     );
 
-  // Instagram
+
   document
-    .getElementById("shareInstagram")
+    .getElementById(
+      "shareInstagram"
+    )
     .addEventListener(
       "click",
       shareInstagram
     );
 
-  // Snapchat
+
   document
-    .getElementById("shareSnapchat")
+    .getElementById(
+      "shareSnapchat"
+    )
     .addEventListener(
       "click",
       shareSnapchat
     );
 
-  // Pinterest
+
   document
-    .getElementById("sharePinterest")
+    .getElementById(
+      "sharePinterest"
+    )
     .addEventListener(
       "click",
       sharePinterest
     );
 
-  // Copy message
+
   document
-    .getElementById("copyMessage")
+    .getElementById(
+      "copyMessage"
+    )
     .addEventListener(
       "click",
       () => {
-        copyText(getShareText());
+
+        copyText(
+          getShareText()
+        );
+
       }
     );
 
-  // Copy link
+
   document
-    .getElementById("copyLink")
+    .getElementById(
+      "copyLink"
+    )
     .addEventListener(
       "click",
       () => {
-        copyText(UNIVERSE139_URL);
+
+        copyText(
+          UNIVERSE139_URL
+        );
+
       }
     );
 
-  // More
+
   document
-    .getElementById("shareMore")
+    .getElementById(
+      "shareMore"
+    )
     .addEventListener(
       "click",
       shareMore
     );
-
 }
 
 
@@ -1376,70 +2053,24 @@ function closeSharePanel() {
       "universe139SharePanel"
     );
 
-  if (panel) {
-
-    panel.classList.add(
-      "closing"
-    );
-
-    setTimeout(() => {
-      panel.remove();
-    }, 200);
-
+  if (!panel) {
+    return;
   }
+
+  panel.classList.add(
+    "closing"
+  );
+
+  setTimeout(() => {
+
+    panel.remove();
+
+  }, 200);
 }
 
 
 // ==========================================
-// SHARE TOAST
-// ==========================================
-
-function showShareToast(text) {
-
-  const oldToast =
-    document.getElementById(
-      "universe139Toast"
-    );
-
-  if (oldToast) {
-    oldToast.remove();
-  }
-
-  const toast =
-    document.createElement("div");
-
-  toast.id =
-    "universe139Toast";
-
-  toast.textContent =
-    text;
-
-  document.body.appendChild(toast);
-
-  setTimeout(() => {
-
-    toast.classList.add(
-      "show"
-    );
-
-  }, 20);
-
-  setTimeout(() => {
-
-    toast.classList.remove(
-      "show"
-    );
-
-    setTimeout(() => {
-      toast.remove();
-    }, 300);
-
-  }, 1800);
-}
-
-
-// ==========================================
-// SHARE PANEL CSS
+// SHARE PANEL STYLES
 // ==========================================
 
 function addSharePanelStyles() {
@@ -1453,7 +2084,9 @@ function addSharePanelStyles() {
   }
 
   const style =
-    document.createElement("style");
+    document.createElement(
+      "style"
+    );
 
   style.id =
     "universe139ShareStyles";
@@ -1463,12 +2096,15 @@ function addSharePanelStyles() {
     #universe139SharePanel {
 
       position: fixed;
+
       inset: 0;
 
       z-index: 10000;
 
       display: flex;
+
       align-items: center;
+
       justify-content: center;
 
       padding: 20px;
@@ -1482,13 +2118,14 @@ function addSharePanelStyles() {
     .shareOverlay {
 
       position: absolute;
+
       inset: 0;
 
       background:
-        rgba(5, 2, 20, .88);
+        rgba(5,2,20,.9);
 
       backdrop-filter:
-        blur(10px);
+        blur(12px);
 
     }
 
@@ -1497,24 +2134,26 @@ function addSharePanelStyles() {
 
       position: relative;
 
-      width: min(
-        620px,
-        100%
-      );
+      width:
+        min(620px,100%);
 
-      max-height: 90vh;
+      max-height:
+        90vh;
 
-      overflow-y: auto;
+      overflow-y:
+        auto;
 
-      padding: 28px;
+      padding:
+        28px;
 
-      border-radius: 28px;
+      border-radius:
+        28px;
 
       background:
         linear-gradient(
           145deg,
-          rgba(48, 18, 86, .98),
-          rgba(17, 7, 38, .98)
+          rgba(48,18,86,.98),
+          rgba(17,7,38,.98)
         );
 
       border:
@@ -1525,7 +2164,8 @@ function addSharePanelStyles() {
         0 30px 100px
         rgba(0,0,0,.65);
 
-      text-align: center;
+      text-align:
+        center;
 
       animation:
         shareModalIn .3s ease;
@@ -1535,17 +2175,26 @@ function addSharePanelStyles() {
 
     .shareUniverseLogo {
 
-      width: 58px;
-      height: 58px;
+      width:
+        58px;
+
+      height:
+        58px;
 
       margin:
         0 auto 12px;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display:
+        flex;
 
-      border-radius: 50%;
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      border-radius:
+        50%;
 
       background:
         radial-gradient(
@@ -1554,7 +2203,8 @@ function addSharePanelStyles() {
           rgba(145,75,255,.2)
         );
 
-      font-size: 28px;
+      font-size:
+        28px;
 
       box-shadow:
         0 0 30px
@@ -1569,9 +2219,10 @@ function addSharePanelStyles() {
         5px 40px 8px;
 
       font-size:
-        clamp(20px, 5vw, 28px);
+        clamp(20px,5vw,28px);
 
-      color: white;
+      color:
+        white;
 
     }
 
@@ -1592,26 +2243,38 @@ function addSharePanelStyles() {
 
     .shareClose {
 
-      position: absolute;
+      position:
+        absolute;
 
-      right: 16px;
-      top: 12px;
+      right:
+        16px;
 
-      width: 40px;
-      height: 40px;
+      top:
+        12px;
 
-      border: none;
+      width:
+        40px;
+
+      height:
+        40px;
+
+      border:
+        none;
 
       background:
         rgba(255,255,255,.08);
 
-      color: white;
+      color:
+        white;
 
-      border-radius: 50%;
+      border-radius:
+        50%;
 
-      font-size: 27px;
+      font-size:
+        27px;
 
-      cursor: pointer;
+      cursor:
+        pointer;
 
       transition:
         .2s ease;
@@ -1632,11 +2295,14 @@ function addSharePanelStyles() {
 
     .sharePreview {
 
-      margin-bottom: 22px;
+      margin-bottom:
+        22px;
 
-      padding: 18px;
+      padding:
+        18px;
 
-      border-radius: 18px;
+      border-radius:
+        18px;
 
       background:
         rgba(255,255,255,.06);
@@ -1650,25 +2316,31 @@ function addSharePanelStyles() {
 
     .sharePreviewTitle {
 
-      font-size: 13px;
+      font-size:
+        13px;
 
       color:
         rgba(255,255,255,.65);
 
-      margin-bottom: 10px;
+      margin-bottom:
+        10px;
 
     }
 
 
     .sharePreviewMessage {
 
-      color: white;
+      color:
+        white;
 
-      font-size: 16px;
+      font-size:
+        16px;
 
-      line-height: 1.5;
+      line-height:
+        1.5;
 
-      margin-bottom: 12px;
+      margin-bottom:
+        12px;
 
     }
 
@@ -1678,50 +2350,64 @@ function addSharePanelStyles() {
       color:
         #d9b6ff;
 
-      font-weight: 600;
+      font-weight:
+        600;
 
-      font-size: 14px;
+      font-size:
+        14px;
 
     }
 
 
     .shareGrid {
 
-      display: grid;
+      display:
+        grid;
 
       grid-template-columns:
-        repeat(4, 1fr);
+        repeat(4,1fr);
 
-      gap: 12px;
+      gap:
+        12px;
 
     }
 
 
     .shareOption {
 
-      min-height: 82px;
+      min-height:
+        82px;
 
-      border: 1px solid
+      border:
+        1px solid
         rgba(255,255,255,.1);
 
-      border-radius: 18px;
+      border-radius:
+        18px;
 
       background:
         rgba(255,255,255,.055);
 
-      color: white;
+      color:
+        white;
 
-      cursor: pointer;
+      cursor:
+        pointer;
 
-      display: flex;
+      display:
+        flex;
 
-      flex-direction: column;
+      flex-direction:
+        column;
 
-      align-items: center;
+      align-items:
+        center;
 
-      justify-content: center;
+      justify-content:
+        center;
 
-      gap: 7px;
+      gap:
+        7px;
 
       transition:
         transform .2s ease,
@@ -1733,16 +2419,19 @@ function addSharePanelStyles() {
 
     .shareOption span {
 
-      font-size: 28px;
+      font-size:
+        28px;
 
-      line-height: 1;
+      line-height:
+        1;
 
     }
 
 
     .shareOption small {
 
-      font-size: 11px;
+      font-size:
+        11px;
 
       color:
         rgba(255,255,255,.85);
@@ -1773,49 +2462,28 @@ function addSharePanelStyles() {
     }
 
 
-    .shareOption.whatsapp:hover {
-      background:
-        rgba(37,211,102,.22);
-    }
-
-    .shareOption.facebook:hover {
-      background:
-        rgba(24,119,242,.22);
-    }
-
-    .shareOption.telegram:hover {
-      background:
-        rgba(0,136,204,.22);
-    }
-
-    .shareOption.tiktok:hover {
-      background:
-        rgba(0,0,0,.35);
-    }
-
-    .shareOption.instagram:hover {
-      background:
-        rgba(225,48,108,.22);
-    }
-
-
     #universe139Toast {
 
-      position: fixed;
+      position:
+        fixed;
 
-      left: 50%;
+      left:
+        50%;
 
-      bottom: 30px;
+      bottom:
+        30px;
 
       transform:
-        translate(-50%, 20px);
+        translate(-50%,20px);
 
-      z-index: 11000;
+      z-index:
+        11000;
 
       padding:
         12px 22px;
 
-      border-radius: 30px;
+      border-radius:
+        30px;
 
       background:
         rgba(35,15,65,.96);
@@ -1824,30 +2492,35 @@ function addSharePanelStyles() {
         1px solid
         rgba(255,255,255,.2);
 
-      color: white;
+      color:
+        white;
 
-      font-size: 14px;
+      font-size:
+        14px;
 
       box-shadow:
         0 10px 40px
         rgba(0,0,0,.5);
 
-      opacity: 0;
+      opacity:
+        0;
 
       transition:
         .3s ease;
 
-      pointer-events: none;
+      pointer-events:
+        none;
 
     }
 
 
     #universe139Toast.show {
 
-      opacity: 1;
+      opacity:
+        1;
 
       transform:
-        translate(-50%, 0);
+        translate(-50%,0);
 
     }
 
@@ -1912,7 +2585,7 @@ function addSharePanelStyles() {
     }
 
 
-    @media (max-width: 600px) {
+    @media (max-width:600px) {
 
       .shareModal {
 
@@ -1928,9 +2601,10 @@ function addSharePanelStyles() {
       .shareGrid {
 
         grid-template-columns:
-          repeat(3, 1fr);
+          repeat(3,1fr);
 
-        gap: 9px;
+        gap:
+          9px;
 
       }
 
@@ -1964,12 +2638,12 @@ function addSharePanelStyles() {
     }
 
 
-    @media (max-width: 380px) {
+    @media (max-width:380px) {
 
       .shareGrid {
 
         grid-template-columns:
-          repeat(2, 1fr);
+          repeat(2,1fr);
 
       }
 
@@ -1977,7 +2651,9 @@ function addSharePanelStyles() {
 
   `;
 
-  document.head.appendChild(style);
+  document.head.appendChild(
+    style
+  );
 }
 
 
