@@ -1,33 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta
     name="description"
     content="Universe139 — A message from the universe for today."
   >
 
-  <meta
-    name="theme-color"
-    content="#080512"
-  >
+  <meta name="theme-color" content="#080512">
 
   <title>Universe139 — Message From The Universe</title>
 
-
   <style>
-
-    /* =========================================
-       RESET
-       ========================================= */
 
     * {
       box-sizing: border-box;
@@ -35,20 +21,13 @@
       padding: 0;
     }
 
-
     html,
     body {
       width: 100%;
       min-height: 100%;
     }
 
-
-    /* =========================================
-       BODY
-       ========================================= */
-
     body {
-
       min-height: 100vh;
 
       font-family:
@@ -59,15 +38,12 @@
       color: white;
 
       display: flex;
-
       justify-content: center;
-
       align-items: center;
 
       overflow-x: hidden;
 
       background:
-
         radial-gradient(
           circle at 50% 10%,
           #4b3470 0%,
@@ -79,122 +55,99 @@
       position: relative;
     }
 
-
     /* =========================================
-       SPACE GLOW
+       BACKGROUND GLOW
        ========================================= */
 
     body::before {
-
       content: "";
 
       position: fixed;
 
-      width: 700px;
-      height: 700px;
+      width: 650px;
+      height: 650px;
 
-      top: -320px;
+      top: -300px;
       left: 50%;
 
-      transform:
-        translateX(-50%);
+      transform: translateX(-50%);
 
       background:
-
         radial-gradient(
           circle,
-          rgba(190,130,255,0.25),
+          rgba(190,130,255,0.20),
           transparent 68%
         );
 
-      filter: blur(35px);
+      filter: blur(25px);
 
       pointer-events: none;
     }
-
 
     /* =========================================
        STARS
        ========================================= */
 
     .stars {
-
       position: fixed;
-
       inset: 0;
 
       pointer-events: none;
 
-      opacity: 0.55;
+      opacity: 0.45;
 
       background-image:
-
         radial-gradient(
           circle,
-          rgba(255,255,255,0.85) 1px,
+          rgba(255,255,255,0.8) 1px,
           transparent 1.5px
         );
 
-      background-size:
-        70px 70px;
+      background-size: 75px 75px;
 
       animation:
-        starsMove 30s linear infinite;
+        starsMove 35s linear infinite;
     }
 
-
     @keyframes starsMove {
-
       from {
-        transform:
-          translateY(0);
+        transform: translateY(0);
       }
 
       to {
-        transform:
-          translateY(70px);
+        transform: translateY(75px);
       }
-
     }
-
 
     /* =========================================
        MAIN
        ========================================= */
 
     .container {
-
       width: 100%;
-
-      max-width: 720px;
+      max-width: 760px;
 
       min-height: 100vh;
 
-      padding:
-        35px 20px;
+      padding: 35px 20px;
 
       display: flex;
-
       flex-direction: column;
 
       justify-content: center;
-
       align-items: center;
 
       text-align: center;
 
       position: relative;
-
       z-index: 2;
     }
-
 
     /* =========================================
        LOGO
        ========================================= */
 
     .logo {
-
       font-size: 13px;
 
       letter-spacing: 7px;
@@ -207,16 +160,14 @@
 
       text-shadow:
         0 0 20px
-        rgba(210,160,255,0.7);
+        rgba(210,160,255,0.6);
     }
-
 
     /* =========================================
        TITLE
        ========================================= */
 
     #title {
-
       font-size:
         clamp(
           38px,
@@ -233,40 +184,34 @@
       margin-bottom: 18px;
 
       text-shadow:
-
         0 0 15px
-        rgba(255,255,255,0.35),
+        rgba(255,255,255,0.3),
 
         0 0 40px
-        rgba(170,100,255,0.45);
+        rgba(170,100,255,0.4);
     }
-
 
     /* =========================================
        SUBTITLE
        ========================================= */
 
     #subtitle {
-
       font-size: 18px;
 
       line-height: 1.5;
 
       opacity: 0.75;
 
-      margin-bottom: 38px;
+      margin-bottom: 35px;
     }
 
-
     /* =========================================
-       LANGUAGE AREA
+       LANGUAGE GRID
        ========================================= */
 
     #languageBox {
-
       width: 100%;
-
-      max-width: 620px;
+      max-width: 650px;
 
       display: grid;
 
@@ -274,25 +219,20 @@
         repeat(3, 1fr);
 
       justify-items: center;
-
       align-items: center;
 
-      column-gap: 25px;
+      column-gap: 35px;
+      row-gap: 35px;
 
-      row-gap: 28px;
-
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
-
     /* =========================================
-       LANGUAGE TITLE
+       CHOOSE LANGUAGE
        ========================================= */
 
     #chooseLanguage {
-
-      grid-column:
-        1 / -1;
+      grid-column: 1 / -1;
 
       font-size: 14px;
 
@@ -305,16 +245,13 @@
       margin-bottom: 5px;
     }
 
-
     /* =========================================
-       DIAMOND BUTTON
+       DIAMOND
        ========================================= */
 
     .languageBtn {
-
-      width: 145px;
-
-      height: 145px;
+      width: 140px;
+      height: 140px;
 
       border: none;
 
@@ -326,49 +263,42 @@
 
       display: flex;
 
-      flex-direction: column;
-
       justify-content: center;
-
       align-items: center;
 
-      text-align: center;
-
       background:
-
         linear-gradient(
           145deg,
-          rgba(255,255,255,0.25),
+          rgba(255,255,255,0.23),
           rgba(170,110,255,0.10) 45%,
-          rgba(255,255,255,0.04)
+          rgba(255,255,255,0.035)
         );
 
       border:
-
         1px solid
-        rgba(255,255,255,0.38);
+        rgba(255,255,255,0.35);
 
       backdrop-filter:
-        blur(14px);
+        blur(8px);
 
       -webkit-backdrop-filter:
-        blur(14px);
+        blur(8px);
 
       box-shadow:
 
         inset
         0 1px 4px
-        rgba(255,255,255,0.6),
+        rgba(255,255,255,0.55),
 
         inset
         0 -3px 8px
         rgba(0,0,0,0.25),
 
-        0 15px 40px
+        0 15px 35px
         rgba(0,0,0,0.35),
 
-        0 0 30px
-        rgba(160,90,255,0.15);
+        0 0 25px
+        rgba(160,90,255,0.14);
 
       transform:
         rotate(45deg);
@@ -376,72 +306,65 @@
       border-radius: 18px;
 
       transition:
-        transform 0.4s ease,
-        box-shadow 0.4s ease,
-        background 0.4s ease;
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        background 0.35s ease;
 
       animation:
-        diamondFloat 5s ease-in-out infinite;
+        diamondFloat 7s ease-in-out infinite;
 
       overflow: hidden;
+
+      -webkit-tap-highlight-color:
+        transparent;
     }
 
-
     /* =========================================
-       DIAMOND CONTENT
+       CONTENT INSIDE DIAMOND
        ========================================= */
 
-    .languageBtn .diamondContent {
-
+    .diamondContent {
       transform:
         rotate(-45deg);
+
+      width: 100%;
+      height: 100%;
 
       display: flex;
 
       flex-direction: column;
 
       justify-content: center;
-
       align-items: center;
-
-      width: 100%;
-
-      height: 100%;
 
       position: relative;
 
       z-index: 5;
     }
 
-
     /* =========================================
-       FLOATING ANIMATION
+       FLOAT
        ========================================= */
 
     @keyframes diamondFloat {
 
       0%,
       100% {
-
         transform:
           rotate(45deg)
           translateY(0);
-
       }
 
       50% {
-
         transform:
           rotate(45deg)
-          translateY(-12px);
-
+          translateY(-8px);
       }
 
     }
 
-
     /* =========================================
-       DIFFERENT FLOAT SPEEDS
+       DIFFERENT SPEEDS
        ========================================= */
 
     .languageBtn:nth-of-type(2) {
@@ -468,45 +391,39 @@
       animation-delay: -2.5s;
     }
 
-
     /* =========================================
-       CRYSTAL SHINE
+       SHINE
        ========================================= */
 
     .languageBtn::before {
-
       content: "";
 
       position: absolute;
 
-      width: 220%;
+      width: 200%;
+      height: 35px;
 
-      height: 45px;
-
-      left: -70%;
-
-      top: 35%;
+      left: -150%;
+      top: 40%;
 
       background:
-
         linear-gradient(
           90deg,
           transparent,
-          rgba(255,255,255,0.45),
+          rgba(255,255,255,0.38),
           transparent
         );
 
       transform:
         rotate(-45deg);
 
-      opacity: 0.35;
+      opacity: 0.3;
 
       animation:
-        crystalShine 5s ease-in-out infinite;
+        crystalShine 9s ease-in-out infinite;
 
       pointer-events: none;
     }
-
 
     @keyframes crystalShine {
 
@@ -514,7 +431,7 @@
         left: -160%;
       }
 
-      55% {
+      50% {
         left: 160%;
       }
 
@@ -524,13 +441,11 @@
 
     }
 
-
     /* =========================================
-       CRYSTAL HIGHLIGHT
+       HIGHLIGHT
        ========================================= */
 
     .languageBtn::after {
-
       content: "";
 
       position: absolute;
@@ -540,111 +455,98 @@
       border-radius: 15px;
 
       background:
-
         radial-gradient(
           circle at 25% 20%,
-          rgba(255,255,255,0.5),
+          rgba(255,255,255,0.42),
           transparent 25%
         );
 
-      opacity: 0.65;
+      opacity: 0.55;
 
       pointer-events: none;
     }
-
 
     /* =========================================
        FLAG
        ========================================= */
 
     .flag {
-
       display: block;
 
-      font-size: 31px;
+      font-size: 30px;
 
       margin-bottom: 7px;
 
       filter:
-
         drop-shadow(
-          0 3px 8px
+          0 3px 7px
           rgba(0,0,0,0.35)
         );
     }
-
 
     /* =========================================
        LANGUAGE NAME
        ========================================= */
 
     .languageName {
-
-      font-size: 16px;
+      font-size: 15px;
 
       font-weight: 600;
 
       text-shadow:
         0 2px 8px
-        rgba(0,0,0,0.45);
+        rgba(0,0,0,0.5);
     }
 
-
     /* =========================================
-       HOVER DIAMOND
+       HOVER
        ========================================= */
 
     .languageBtn:hover {
-
       transform:
         rotate(45deg)
-        translateY(-15px)
-        scale(1.08);
+        translateY(-12px)
+        scale(1.06);
 
       background:
-
         linear-gradient(
           145deg,
-          rgba(255,255,255,0.38),
-          rgba(180,110,255,0.20),
-          rgba(255,255,255,0.08)
+          rgba(255,255,255,0.34),
+          rgba(180,110,255,0.18),
+          rgba(255,255,255,0.06)
         );
 
       box-shadow:
 
         inset
         0 1px 5px
-        rgba(255,255,255,0.75),
+        rgba(255,255,255,0.7),
 
-        0 25px 55px
-        rgba(0,0,0,0.45),
+        0 20px 45px
+        rgba(0,0,0,0.4),
 
-        0 0 50px
-        rgba(185,110,255,0.5);
+        0 0 45px
+        rgba(185,110,255,0.45);
     }
-
 
     .languageBtn:active {
-
       transform:
         rotate(45deg)
-        translateY(-3px)
+        translateY(-2px)
         scale(1.02);
     }
-
 
     /* =========================================
        REVEAL BUTTON
        ========================================= */
 
     #revealBtn {
-
       border: none;
 
       border-radius: 50px;
 
       padding:
-        17px 32px;
+        16px 32px;
 
       font-size: 16px;
 
@@ -655,7 +557,6 @@
       cursor: pointer;
 
       background:
-
         linear-gradient(
           135deg,
           #b276ff,
@@ -663,41 +564,32 @@
         );
 
       box-shadow:
-
-        0 12px 35px
+        0 10px 30px
         rgba(120,60,255,0.4);
 
       transition:
-        0.3s ease;
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
     }
-
 
     #revealBtn:hover {
-
       transform:
-        translateY(-4px);
+        translateY(-3px);
 
       box-shadow:
-
-        0 18px 50px
-        rgba(150,80,255,0.55);
+        0 15px 40px
+        rgba(150,80,255,0.5);
     }
-
 
     /* =========================================
        LOADING
        ========================================= */
 
     #loading {
-
       margin-top: 25px;
-
-      text-align: center;
     }
 
-
     #loadingText {
-
       font-size: 18px;
 
       opacity: 0.8;
@@ -706,11 +598,10 @@
         pulse 1.5s infinite;
     }
 
-
     @keyframes pulse {
 
       0% {
-        opacity: 0.3;
+        opacity: 0.35;
       }
 
       50% {
@@ -718,21 +609,18 @@
       }
 
       100% {
-        opacity: 0.3;
+        opacity: 0.35;
       }
 
     }
-
 
     /* =========================================
        MESSAGE BOX
        ========================================= */
 
     #messageBox {
-
       width: 100%;
-
-      max-width: 600px;
+      max-width: 620px;
 
       padding:
         40px 28px;
@@ -740,44 +628,40 @@
       border-radius: 30px;
 
       background:
-
         linear-gradient(
           145deg,
-          rgba(255,255,255,0.14),
-          rgba(255,255,255,0.045)
+          rgba(255,255,255,0.13),
+          rgba(255,255,255,0.04)
         );
 
       border:
-
         1px solid
-        rgba(255,255,255,0.22);
+        rgba(255,255,255,0.2);
 
       backdrop-filter:
-        blur(22px);
+        blur(14px);
 
       -webkit-backdrop-filter:
-        blur(22px);
+        blur(14px);
 
       box-shadow:
 
         inset
         0 1px 3px
-        rgba(255,255,255,0.4),
+        rgba(255,255,255,0.35),
 
-        0 25px 70px
-        rgba(0,0,0,0.45),
+        0 20px 55px
+        rgba(0,0,0,0.4),
 
-        0 0 50px
-        rgba(150,90,255,0.18);
+        0 0 40px
+        rgba(150,90,255,0.15);
     }
 
-
     /* =========================================
-       TODAY LABEL
+       TODAY
        ========================================= */
 
     #month {
-
       font-size: 13px;
 
       letter-spacing: 2px;
@@ -787,13 +671,11 @@
       margin-bottom: 25px;
     }
 
-
     /* =========================================
        MESSAGE
        ========================================= */
 
     #message {
-
       font-size:
         clamp(
           24px,
@@ -812,13 +694,11 @@
         rgba(255,255,255,0.18);
     }
 
-
     /* =========================================
        SMALL TEXT
        ========================================= */
 
     #smallText {
-
       font-size: 14px;
 
       opacity: 0.52;
@@ -826,13 +706,11 @@
       margin-bottom: 25px;
     }
 
-
     /* =========================================
-       MESSAGE BUTTONS
+       BUTTONS
        ========================================= */
 
     .buttons {
-
       display: flex;
 
       flex-direction: column;
@@ -842,16 +720,14 @@
       align-items: center;
     }
 
-
     #againBtn,
     #shareBtn {
-
       border: none;
 
       border-radius: 50px;
 
       padding:
-        15px 28px;
+        14px 26px;
 
       font-size: 15px;
 
@@ -862,14 +738,11 @@
       cursor: pointer;
 
       transition:
-        0.3s ease;
+        transform 0.25s ease;
     }
 
-
     #againBtn {
-
       background:
-
         linear-gradient(
           135deg,
           #a968ff,
@@ -877,329 +750,234 @@
         );
 
       box-shadow:
-
-        0 10px 30px
+        0 8px 25px
         rgba(120,60,255,0.35);
     }
 
-
     #shareBtn {
-
       background:
-        rgba(255,255,255,0.10);
+        rgba(255,255,255,0.09);
 
       border:
         1px solid
-        rgba(255,255,255,0.20);
+        rgba(255,255,255,0.18);
     }
-
 
     #againBtn:hover,
     #shareBtn:hover {
-
       transform:
         translateY(-3px);
     }
-
 
     /* =========================================
        HIDDEN
        ========================================= */
 
     .hidden {
-
       display: none !important;
     }
-
 
     /* =========================================
        MOBILE
        ========================================= */
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
 
       .container {
-
         padding:
           30px 15px;
       }
 
-
       #title {
-
         font-size: 40px;
-
         letter-spacing: 2px;
       }
 
-
       #subtitle {
-
         font-size: 16px;
-
-        margin-bottom: 30px;
+        margin-bottom: 28px;
       }
 
-
       #languageBox {
-
         grid-template-columns:
           repeat(2, 1fr);
 
         column-gap: 10px;
-
         row-gap: 25px;
 
         max-width: 430px;
       }
 
-
       .languageBtn {
-
-        width: 125px;
-
-        height: 125px;
+        width: 120px;
+        height: 120px;
       }
-
 
       .flag {
-
-        font-size: 27px;
+        font-size: 26px;
       }
 
-
       .languageName {
-
         font-size: 14px;
       }
 
-
       #messageBox {
-
         padding:
           32px 18px;
       }
 
-
       #message {
-
         font-size: 24px;
       }
-
     }
-
 
     /* =========================================
        SMALL PHONES
        ========================================= */
 
-    @media (max-width: 350px) {
+    @media (max-width: 360px) {
 
       .languageBtn {
-
-        width: 110px;
-
-        height: 110px;
+        width: 105px;
+        height: 105px;
       }
 
       .flag {
-
-        font-size: 24px;
+        font-size: 23px;
       }
 
       .languageName {
-
         font-size: 13px;
       }
 
     }
 
-  </style>
+    /* =========================================
+       REDUCE MOTION
+       ========================================= */
 
+    @media (prefers-reduced-motion: reduce) {
+
+      .stars,
+      .languageBtn,
+      .languageBtn::before {
+        animation: none;
+      }
+
+      * {
+        scroll-behavior: auto !important;
+      }
+
+    }
+
+  </style>
 </head>
 
 
 <body>
 
-
   <div class="stars"></div>
 
-
   <main class="container">
-
 
     <div class="logo">
       Universe139
     </div>
-
 
     <h1 id="title">
       MESSAGE FROM<br>
       THE UNIVERSE
     </h1>
 
-
     <p id="subtitle">
       You were guided here for a reason.
     </p>
 
 
-    <!-- ======================================
-         FLOATING CRYSTAL LANGUAGES
-         ====================================== -->
+    <!-- LANGUAGE DIAMONDS -->
 
     <div id="languageBox">
-
 
       <div id="chooseLanguage">
         Choose your language
       </div>
 
 
-      <!-- ENGLISH -->
-
       <button
         class="languageBtn"
         data-language="en"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇺🇸
-          </span>
-
-          <span class="languageName">
-            English
-          </span>
-
+          <span class="flag">🇺🇸</span>
+          <span class="languageName">English</span>
         </div>
-
       </button>
 
-
-      <!-- SPANISH -->
 
       <button
         class="languageBtn"
         data-language="es"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇪🇸
-          </span>
-
-          <span class="languageName">
-            Español
-          </span>
-
+          <span class="flag">🇪🇸</span>
+          <span class="languageName">Español</span>
         </div>
-
       </button>
 
-
-      <!-- CHINESE -->
 
       <button
         class="languageBtn"
         data-language="zh"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇨🇳
-          </span>
-
-          <span class="languageName">
-            中文
-          </span>
-
+          <span class="flag">🇨🇳</span>
+          <span class="languageName">中文</span>
         </div>
-
       </button>
 
-
-      <!-- RUSSIAN -->
 
       <button
         class="languageBtn"
         data-language="ru"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇷🇺
-          </span>
-
-          <span class="languageName">
-            Русский
-          </span>
-
+          <span class="flag">🇷🇺</span>
+          <span class="languageName">Русский</span>
         </div>
-
       </button>
 
-
-      <!-- HINDI -->
 
       <button
         class="languageBtn"
         data-language="hi"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇮🇳
-          </span>
-
-          <span class="languageName">
-            हिन्दी
-          </span>
-
+          <span class="flag">🇮🇳</span>
+          <span class="languageName">हिन्दी</span>
         </div>
-
       </button>
 
-
-      <!-- THAI -->
 
       <button
         class="languageBtn"
         data-language="th"
         type="button"
       >
-
         <div class="diamondContent">
-
-          <span class="flag">
-            🇹🇭
-          </span>
-
-          <span class="languageName">
-            ไทย
-          </span>
-
+          <span class="flag">🇹🇭</span>
+          <span class="languageName">ไทย</span>
         </div>
-
       </button>
-
 
     </div>
 
 
-    <!-- ======================================
-         REVEAL
-         ====================================== -->
+    <!-- REVEAL -->
 
     <button
       id="revealBtn"
@@ -1210,25 +988,19 @@
     </button>
 
 
-    <!-- ======================================
-         LOADING
-         ====================================== -->
+    <!-- LOADING -->
 
     <div
       id="loading"
       class="hidden"
     >
-
       <div id="loadingText">
         Connecting to the universe...
       </div>
-
     </div>
 
 
-    <!-- ======================================
-         MESSAGE
-         ====================================== -->
+    <!-- MESSAGE -->
 
     <section
       id="messageBox"
@@ -1239,18 +1011,13 @@
         YOUR MESSAGE FOR TODAY
       </div>
 
-
-      <div id="message">
-      </div>
-
+      <div id="message"></div>
 
       <div id="smallText">
         Keep this message close to your heart.
       </div>
 
-
       <div class="buttons">
-
 
         <button
           id="againBtn"
@@ -1259,7 +1026,6 @@
           🔮 RECEIVE ANOTHER MESSAGE
         </button>
 
-
         <button
           id="shareBtn"
           type="button"
@@ -1267,11 +1033,9 @@
           ✨ SHARE
         </button>
 
-
       </div>
 
     </section>
-
 
   </main>
 
@@ -1279,5 +1043,4 @@
   <script src="script.js"></script>
 
 </body>
-
 </html>
