@@ -12,59 +12,89 @@ export default async function handler(req, res) {
   const channelId = process.env.BUFFER_TIKTOK_CHANNEL_ID;
 
   if (!bufferApiKey) {
+    console.error("BUFFER_API_KEY is missing");
+
     return res.status(500).json({
       success: false,
-      error: "BUFFER_API_KEY is missing."
+      error: "BUFFER_API_KEY is missing"
     });
   }
 
   if (!channelId) {
+    console.error("BUFFER_TIKTOK_CHANNEL_ID is missing");
+
     return res.status(500).json({
       success: false,
-      error: "BUFFER_TIKTOK_CHANNEL_ID is missing."
+      error: "BUFFER_TIKTOK_CHANNEL_ID is missing"
     });
   }
 
   const payload = req.body || {};
 
   console.log(
-    "Shotstack webhook received:",
+    "SHOTSTACK WEBHOOK:",
     JSON.stringify(payload, null, 2)
   );
 
-  // We only want completed renders.
-  if (payload.status !== "done") {
+  /*
+   * Shotstack can send different webhook events.
+   *
+   * We only want the completed EDIT render.
+   *
+   * type = edit
+   * status = done
+   */
+
+  const isCompletedEdit =
+    payload.type === "edit" &&
+    payload.status === "done" &&
+    payload.url;
+
+  /*
+   * Ignore other callbacks such as:
+   *
+   * type = serve
+   * action = copy
+   *
+   * because they can be sent separately.
+   */
+
+  if (!isCompletedEdit) {
     return res.status(200).json({
       success: true,
       ignored: true,
-      status: payload.status || "unknown"
+      type: payload.type || null,
+      status: payload.status || null,
+      action: payload.action || null
     });
   }
 
-  const videoUrl = payload.url;
+  const videoUrl = String(payload.url).trim();
 
-  if (!videoUrl) {
+  if (!videoUrl.startsWith("http")) {
     return res.status(400).json({
       success: false,
-      error: "Completed render has no video URL.",
-      payload
+      error: "Invalid video URL",
+      videoUrl
     });
   }
 
-  const message =
-    payload.customData?.message ||
-    "A message from the universe, just for you. ✨";
+  /*
+   * TikTok caption
+   */
 
-  const caption = `${message}
+  const caption =
+    "✨ A message from the universe, just for you.\n\n" +
+    "Today may bring a small sign that changes how you see everything.\n\n" +
+    "Discover your personal message:\n" +
+    "https://message-from-universe.vercel.app/\n\n" +
+    "#Universe139 #MessageFromTheUniverse #DailyMessage #Universe #Motivation #DailyInspiration";
 
-✨ A message from the universe, just for you.
+  /*
+   * Current Buffer GraphQL mutation.
+   */
 
-Discover your personal message:
-https://message-from-universe.vercel.app/
-
-#Universe139 #MessageFromTheUniverse #DailyMessage #Universe #Motivation #DailyInspiration`;
-
-  const mutation = `
+  const query = `
     mutation CreatePost {
       createPost(
         input: {
@@ -76,6 +106,9 @@ https://message-from-universe.vercel.app/
             {
               video: {
                 url: ${JSON.stringify(videoUrl)}
+                metadata: {
+                  thumbnailOffset: 3000
+                }
               }
             }
           ]
@@ -98,16 +131,28 @@ https://message-from-universe.vercel.app/
   `;
 
   try {
+    /*
+     * IMPORTANT:
+     * Build the Authorization header directly from the
+     * Vercel secret. Do not include the GraphQL query
+     * inside the header.
+     */
+
+    const authorization =
+      "Bearer " + String(bufferApiKey).trim();
+
     const response = await fetch(
       "https://api.buffer.com",
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${bufferApiKey}`
+          "Authorization": authorization
         },
+
         body: JSON.stringify({
-          query: mutation
+          query: query
         })
       }
     );
@@ -115,22 +160,18 @@ https://message-from-universe.vercel.app/
     const data = await response.json();
 
     console.log(
-      "Buffer response:",
+      "BUFFER RESPONSE:",
       JSON.stringify(data, null, 2)
     );
 
-    if (!response.ok) {
-      return res.status(500).json({
-        success: false,
-        error: "Buffer API request failed.",
-        details: data
-      });
-    }
+    /*
+     * GraphQL errors
+     */
 
     if (data.errors) {
       return res.status(500).json({
         success: false,
-        error: "Buffer GraphQL request failed.",
+        error: "Buffer GraphQL error",
         details: data.errors
       });
     }
@@ -140,10 +181,14 @@ https://message-from-universe.vercel.app/
     if (!result) {
       return res.status(500).json({
         success: false,
-        error: "Buffer returned no createPost result.",
+        error: "Buffer returned no createPost result",
         details: data
       });
     }
+
+    /*
+     * Buffer may return a typed MutationError.
+     */
 
     if (result.message) {
       return res.status(500).json({
@@ -152,16 +197,20 @@ https://message-from-universe.vercel.app/
       });
     }
 
+    /*
+     * SUCCESS
+     */
+
     return res.status(200).json({
       success: true,
-      message: "Video successfully added to Buffer.",
-      videoUrl,
+      message: "TikTok video added to Buffer queue",
+      videoUrl: videoUrl,
       post: result.post || null
     });
 
   } catch (error) {
     console.error(
-      "Webhook error:",
+      "BUFFER REQUEST ERROR:",
       error
     );
 
