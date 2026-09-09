@@ -1,8 +1,10 @@
 // ==========================================
 // UNIVERSE139 — MESSAGE FROM THE UNIVERSE
+// COMPLETE WORKING SCRIPT
 // ==========================================
 
-const UNIVERSE139_URL = "https://universe139.vercel.app";
+const UNIVERSE139_URL =
+  "https://message-from-universe.vercel.app/";
 
 
 // ==========================================
@@ -27,7 +29,8 @@ const translations = {
     copyLink: "Copy Link",
     more: "More...",
     copied: "Copied!",
-    shareInstructions: "Choose where you want to share your message.",
+    shareInstructions:
+      "Choose where you want to share your message.",
 
     shareLink:
       "👆 Universe139 — Press here to see your message for today"
@@ -43,12 +46,15 @@ const translations = {
     again: "Recibir Otro Mensaje",
     share: "Compartir Mi Mensaje",
 
-    shareTitle: "Comparte tu mensaje de Universe139",
+    shareTitle:
+      "Comparte tu mensaje de Universe139",
+
     close: "Cerrar",
     copyMessage: "Copiar mensaje",
     copyLink: "Copiar enlace",
     more: "Más...",
     copied: "¡Copiado!",
+
     shareInstructions:
       "Elige dónde quieres compartir tu mensaje.",
 
@@ -66,12 +72,15 @@ const translations = {
     again: "再收到一条讯息",
     share: "分享我的讯息",
 
-    shareTitle: "分享你的 Universe139 讯息",
+    shareTitle:
+      "分享你的 Universe139 讯息",
+
     close: "关闭",
     copyMessage: "复制讯息",
     copyLink: "复制链接",
     more: "更多...",
     copied: "已复制！",
+
     shareInstructions:
       "选择你想分享讯息的方式。",
 
@@ -89,12 +98,15 @@ const translations = {
     again: "Получить другое послание",
     share: "Поделиться моим посланием",
 
-    shareTitle: "Поделитесь своим посланием Universe139",
+    shareTitle:
+      "Поделитесь своим посланием Universe139",
+
     close: "Закрыть",
     copyMessage: "Копировать послание",
     copyLink: "Копировать ссылку",
     more: "Ещё...",
     copied: "Скопировано!",
+
     shareInstructions:
       "Выберите, где вы хотите поделиться своим посланием.",
 
@@ -112,12 +124,15 @@ const translations = {
     again: "एक और संदेश प्राप्त करें",
     share: "मेरा संदेश साझा करें",
 
-    shareTitle: "अपना Universe139 संदेश साझा करें",
+    shareTitle:
+      "अपना Universe139 संदेश साझा करें",
+
     close: "बंद करें",
     copyMessage: "संदेश कॉपी करें",
     copyLink: "लिंक कॉपी करें",
     more: "और...",
     copied: "कॉपी हो गया!",
+
     shareInstructions:
       "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
 
@@ -135,12 +150,15 @@ const translations = {
     again: "รับข้อความใหม่",
     share: "แชร์ข้อความของฉัน",
 
-    shareTitle: "แชร์ข้อความ Universe139 ของคุณ",
+    shareTitle:
+      "แชร์ข้อความ Universe139 ของคุณ",
+
     close: "ปิด",
     copyMessage: "คัดลอกข้อความ",
     copyLink: "คัดลอกลิงก์",
     more: "เพิ่มเติม...",
     copied: "คัดลอกแล้ว!",
+
     shareInstructions:
       "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
 
@@ -299,7 +317,7 @@ const messageTemplates = {
 
 
 // ==========================================
-// VARIABLES
+// APPLICATION STATE
 // ==========================================
 
 let currentLanguage = "en";
@@ -308,22 +326,92 @@ let isRevealing = false;
 
 
 // ==========================================
-// DOM
+// DOM REFERENCES
 // ==========================================
 
-const languageBox = document.getElementById("languageBox");
-const chooseLanguage = document.getElementById("chooseLanguage");
-const title = document.getElementById("title");
-const subtitle = document.getElementById("subtitle");
-const revealBtn = document.getElementById("revealBtn");
-const loading = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
-const messageBox = document.getElementById("messageBox");
-const month = document.getElementById("month");
-const message = document.getElementById("message");
-const smallText = document.getElementById("smallText");
-const againBtn = document.getElementById("againBtn");
-const shareBtn = document.getElementById("shareBtn");
+let languageBox;
+let chooseLanguage;
+let title;
+let subtitle;
+let revealBtn;
+let loading;
+let loadingText;
+let messageBox;
+let month;
+let message;
+let smallText;
+let againBtn;
+let shareBtn;
+
+
+// ==========================================
+// INITIALIZE DOM
+// ==========================================
+
+function initializeDOM() {
+
+  languageBox =
+    document.getElementById("languageBox");
+
+  chooseLanguage =
+    document.getElementById("chooseLanguage");
+
+  title =
+    document.getElementById("title");
+
+  subtitle =
+    document.getElementById("subtitle");
+
+  revealBtn =
+    document.getElementById("revealBtn");
+
+  loading =
+    document.getElementById("loading");
+
+  loadingText =
+    document.getElementById("loadingText");
+
+  messageBox =
+    document.getElementById("messageBox");
+
+  month =
+    document.getElementById("month");
+
+  message =
+    document.getElementById("message");
+
+  smallText =
+    document.getElementById("smallText");
+
+  againBtn =
+    document.getElementById("againBtn");
+
+  shareBtn =
+    document.getElementById("shareBtn");
+
+}
+
+
+// ==========================================
+// SAFE HIDDEN HELPERS
+// ==========================================
+
+function hideElement(element) {
+
+  if (element) {
+    element.classList.add("hidden");
+  }
+
+}
+
+
+function showElement(element) {
+
+  if (element) {
+    element.classList.remove("hidden");
+  }
+
+}
 
 
 // ==========================================
@@ -338,24 +426,64 @@ function selectLanguage(language) {
 
   currentLanguage = language;
 
-  const t = translations[language];
+  lastMessage = "";
 
-  chooseLanguage.textContent = t.chooseLanguage;
-  title.textContent = t.title;
-  subtitle.textContent = t.subtitle;
-  revealBtn.textContent = t.reveal;
-  loadingText.textContent = t.loading;
-  month.textContent = t.month;
-  againBtn.textContent = t.again;
-  shareBtn.textContent = t.share;
+  const t =
+    translations[currentLanguage];
 
-  languageBox.classList.add("hidden");
+  if (chooseLanguage) {
+    chooseLanguage.textContent =
+      t.chooseLanguage;
+  }
 
-  revealBtn.classList.remove("hidden");
+  if (title) {
+    title.textContent =
+      t.title;
+  }
 
-  setTimeout(() => {
+  if (subtitle) {
+    subtitle.textContent =
+      t.subtitle;
+  }
+
+  if (revealBtn) {
+    revealBtn.textContent =
+      t.reveal;
+  }
+
+  if (loadingText) {
+    loadingText.textContent =
+      t.loading;
+  }
+
+  if (month) {
+    month.textContent =
+      t.month;
+  }
+
+  if (againBtn) {
+    againBtn.textContent =
+      t.again;
+  }
+
+  if (shareBtn) {
+    shareBtn.textContent =
+      t.share;
+  }
+
+  hideElement(languageBox);
+  showElement(revealBtn);
+
+  /*
+    Start automatically after language selection.
+  */
+
+  window.setTimeout(() => {
+
     revealMessage();
+
   }, 400);
+
 }
 
 
@@ -365,27 +493,48 @@ function selectLanguage(language) {
 
 function getRandomMessage() {
 
-  const messages = messageTemplates[currentLanguage];
+  const messages =
+    messageTemplates[currentLanguage];
 
-  if (!messages || messages.length === 0) {
+  if (
+    !Array.isArray(messages) ||
+    messages.length === 0
+  ) {
     return "";
   }
 
-  let newMessage;
+  if (messages.length === 1) {
+
+    lastMessage =
+      messages[0];
+
+    return messages[0];
+
+  }
+
+  let newMessage = "";
+
+  let attempts = 0;
 
   do {
 
     const randomIndex =
-      Math.floor(Math.random() * messages.length);
+      Math.floor(
+        Math.random() * messages.length
+      );
 
-    newMessage = messages[randomIndex];
+    newMessage =
+      messages[randomIndex];
+
+    attempts++;
 
   } while (
-    messages.length > 1 &&
-    newMessage === lastMessage
+    newMessage === lastMessage &&
+    attempts < 20
   );
 
-  lastMessage = newMessage;
+  lastMessage =
+    newMessage;
 
   return newMessage;
 }
@@ -398,7 +547,9 @@ function getRandomMessage() {
 function createWindEffect() {
 
   const oldEffect =
-    document.getElementById("universeWind");
+    document.getElementById(
+      "universeWind"
+    );
 
   if (oldEffect) {
     oldEffect.remove();
@@ -407,7 +558,8 @@ function createWindEffect() {
   const tornado =
     document.createElement("div");
 
-  tornado.id = "universeWind";
+  tornado.id =
+    "universeWind";
 
   tornado.innerHTML = `
 
@@ -415,16 +567,11 @@ function createWindEffect() {
 
     <div class="tornadoCore">
 
-      <div class="tornadoRing ring1"></div>
-      <div class="tornadoRing ring2"></div>
-      <div class="tornadoRing ring3"></div>
-      <div class="tornadoRing ring4"></div>
-      <div class="tornadoRing ring5"></div>
-      <div class="tornadoRing ring6"></div>
-      <div class="tornadoRing ring7"></div>
-      <div class="tornadoRing ring8"></div>
-      <div class="tornadoRing ring9"></div>
-      <div class="tornadoRing ring10"></div>
+      ${Array.from(
+        { length: 10 },
+        (_, i) =>
+          `<div class="tornadoRing ring${i + 1}"></div>`
+      ).join("")}
 
       <div class="tornadoEye"></div>
 
@@ -432,27 +579,11 @@ function createWindEffect() {
 
     <div class="tornadoDust">
 
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      ${Array.from(
+        { length: 40 },
+        (_, i) =>
+          `<span class="dust${i + 1}"></span>`
+      ).join("")}
 
     </div>
 
@@ -465,22 +596,163 @@ function createWindEffect() {
   document.body.appendChild(tornado);
 
 
-  // ==========================================
-  // TORNADO CSS
-  // ==========================================
+  if (
+    !document.getElementById(
+      "universe139TornadoCSS"
+    )
+  ) {
 
-  if (!document.getElementById("universe139TornadoCSS")) {
+    const style =
+      document.createElement("style");
 
-    const style = document.createElement("style");
+    style.id =
+      "universe139TornadoCSS";
 
-    style.id = "universe139TornadoCSS";
+    let ringCSS = "";
+
+    for (let i = 1; i <= 10; i++) {
+
+      const direction =
+        i % 2 === 0
+          ? -1
+          : 1;
+
+      ringCSS += `
+
+        .ring${i} {
+
+          animation:
+            universeRing${i}
+            ${1.7 + i * 0.08}s
+            linear
+            forwards;
+
+        }
+
+        @keyframes universeRing${i} {
+
+          0% {
+
+            opacity: 0;
+
+            width: 8vw;
+            height: 3vw;
+
+            transform:
+              translate(-50%, -50%)
+              rotateX(68deg)
+              rotateZ(0deg)
+              scale(.15);
+
+          }
+
+          18% {
+            opacity: .85;
+          }
+
+          55% {
+            opacity: .7;
+          }
+
+          100% {
+
+            opacity: 0;
+
+            width: ${100 + i * 2}vw;
+            height: ${25 + i * .5}vw;
+
+            transform:
+              translate(-50%, -50%)
+              rotateX(68deg)
+              rotateZ(${direction * (850 + i * 55)}deg)
+              scale(1);
+
+          }
+
+        }
+
+      `;
+
+    }
+
+
+    let dustCSS = "";
+
+    for (let i = 1; i <= 40; i++) {
+
+      const angle =
+        i * 37;
+
+      const distance =
+        550 + (i % 7) * 35;
+
+      const rotation =
+        800 + (i % 9) * 80;
+
+      dustCSS += `
+
+        .dust${i} {
+
+          animation:
+            universeDust${i}
+            ${1.8 + (i % 7) * .12}s
+            linear
+            ${(i % 12) * .05}s
+            forwards;
+
+        }
+
+        @keyframes universeDust${i} {
+
+          0% {
+
+            opacity: 0;
+
+            transform:
+              rotate(${angle}deg)
+              translateX(${distance}px)
+              scale(.15);
+
+          }
+
+          18% {
+            opacity: .9;
+          }
+
+          65% {
+
+            opacity: .7;
+
+            transform:
+              rotate(${angle + 480}deg)
+              translateX(${110 + (i % 5) * 15}px)
+              scale(1.2);
+
+          }
+
+          100% {
+
+            opacity: 0;
+
+            transform:
+              rotate(${angle + rotation}deg)
+              translateX(4px)
+              scale(.03);
+
+          }
+
+        }
+
+      `;
+
+    }
+
 
     style.textContent = `
 
       #universeWind {
 
         position: fixed;
-
         inset: 0;
 
         z-index: 9999;
@@ -500,29 +772,25 @@ function createWindEffect() {
           );
 
         animation:
-          tornadoFade 2.9s ease-out forwards;
+          tornadoFade
+          2.9s
+          ease-out
+          forwards;
 
       }
 
-
-      /* ======================================
-         UNIVERSE GLOW
-      ====================================== */
 
       .tornadoUniverseGlow {
 
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 10vw;
-
         height: 10vw;
 
         min-width: 100px;
-
         min-height: 100px;
 
         border-radius: 50%;
@@ -542,38 +810,27 @@ function createWindEffect() {
           );
 
         box-shadow:
-
-          0 0 35px
-          rgba(255,255,255,.9),
-
-          0 0 100px
-          rgba(180,100,255,.9),
-
-          0 0 220px
-          rgba(100,40,255,.6);
+          0 0 35px rgba(255,255,255,.9),
+          0 0 100px rgba(180,100,255,.9),
+          0 0 220px rgba(100,40,255,.6);
 
         animation:
-          universeCoreExplosion 2.6s
+          universeCoreExplosion
+          2.6s
           ease-out
           forwards;
 
       }
 
 
-      /* ======================================
-         MAIN TORNADO
-      ====================================== */
-
       .tornadoCore {
 
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 100vw;
-
         height: 100vh;
 
         transform:
@@ -584,31 +841,25 @@ function createWindEffect() {
           preserve-3d;
 
         animation:
-          tornadoExpand 2.7s
+          tornadoExpand
+          2.7s
           cubic-bezier(.12,.65,.15,1)
           forwards;
 
       }
 
 
-      /* ======================================
-         SPIRAL RINGS
-      ====================================== */
-
       .tornadoRing {
 
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 15vw;
-
         height: 15vw;
 
         min-width: 120px;
-
         min-height: 120px;
 
         border-radius: 50%;
@@ -621,15 +872,9 @@ function createWindEffect() {
           rgba(220,180,255,.42);
 
         box-shadow:
-
-          0 0 15px
-          rgba(200,140,255,.55),
-
-          0 0 40px
-          rgba(130,60,255,.35),
-
-          inset 0 0 20px
-          rgba(255,255,255,.1);
+          0 0 15px rgba(200,140,255,.55),
+          0 0 40px rgba(130,60,255,.35),
+          inset 0 0 20px rgba(255,255,255,.1);
 
         opacity: 0;
 
@@ -639,166 +884,154 @@ function createWindEffect() {
       }
 
 
-      .ring1 {
+      .tornadoEye {
+
+        position: absolute;
+
+        left: 50%;
+        top: 50%;
+
+        width: 18vw;
+        height: 18vw;
+
+        min-width: 130px;
+        min-height: 130px;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(255,255,255,.98) 0%,
+            rgba(210,170,255,.8) 8%,
+            rgba(140,70,255,.4) 25%,
+            rgba(50,10,120,.12) 50%,
+            transparent 70%
+          );
+
+        box-shadow:
+          0 0 30px rgba(255,255,255,.9),
+          0 0 80px rgba(190,110,255,.8),
+          0 0 160px rgba(100,30,255,.6);
+
         animation:
-          ringSpin1 2.5s linear forwards;
+          eyePulse
+          2.5s
+          ease-out
+          forwards;
+
       }
 
-      .ring2 {
+
+      .tornadoDust {
+
+        position: absolute;
+
+        inset: 0;
+
+        transform-style:
+          preserve-3d;
+
+      }
+
+
+      .tornadoDust span {
+
+        position: absolute;
+
+        left: 50%;
+        top: 50%;
+
+        width: 5px;
+        height: 5px;
+
+        border-radius: 50%;
+
+        background: white;
+
+        box-shadow:
+          0 0 10px
+          rgba(220,180,255,.95);
+
+        opacity: 0;
+
+      }
+
+
+      .tornadoMist {
+
+        position: absolute;
+
+        left: 50%;
+        top: 50%;
+
+        border-radius: 50%;
+
+        transform:
+          translate(-50%, -50%);
+
+        filter:
+          blur(30px);
+
+        background:
+          radial-gradient(
+            ellipse,
+            rgba(180,110,255,.22),
+            rgba(100,40,200,.08),
+            transparent 70%
+          );
+
+        opacity: 0;
+
+      }
+
+
+      .mist1 {
+
+        width: 75vw;
+        height: 20vw;
+
         animation:
-          ringSpin2 2.4s linear .04s forwards;
+          mistRotation
+          2.5s
+          ease-out
+          forwards;
+
       }
 
-      .ring3 {
+
+      .mist2 {
+
+        width: 55vw;
+        height: 15vw;
+
         animation:
-          ringSpin1 2.3s linear .08s forwards;
+          mistRotation
+          2.2s
+          ease-out
+          .15s
+          forwards;
+
       }
 
-      .ring4 {
+
+      .mist3 {
+
+        width: 38vw;
+        height: 11vw;
+
         animation:
-          ringSpin2 2.2s linear .12s forwards;
-      }
-
-      .ring5 {
-        animation:
-          ringSpin1 2.1s linear .16s forwards;
-      }
-
-      .ring6 {
-        animation:
-          ringSpin2 2s linear .2s forwards;
-      }
-
-      .ring7 {
-        animation:
-          ringSpin1 1.9s linear .24s forwards;
-      }
-
-      .ring8 {
-        animation:
-          ringSpin2 1.8s linear .28s forwards;
-      }
-
-      .ring9 {
-        animation:
-          ringSpin1 1.7s linear .32s forwards;
-      }
-
-      .ring10 {
-        animation:
-          ringSpin2 1.6s linear .36s forwards;
-      }
-
-
-      @keyframes ringSpin1 {
-
-        0% {
-
-          opacity: 0;
-
-          width: 8vw;
-          height: 3vw;
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(0deg)
-            scale(.2);
-
-        }
-
-        15% {
-
-          opacity: .75;
-
-        }
-
-        45% {
-
-          opacity: .95;
-
-        }
-
-        75% {
-
-          opacity: .65;
-
-        }
-
-        100% {
-
-          opacity: 0;
-
-          width: 110vw;
-          height: 30vw;
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(1080deg)
-            scale(1);
-
-        }
+          mistRotation
+          2s
+          ease-out
+          .3s
+          forwards;
 
       }
 
-
-      @keyframes ringSpin2 {
-
-        0% {
-
-          opacity: 0;
-
-          width: 8vw;
-          height: 3vw;
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(180deg)
-            scale(.2);
-
-        }
-
-        15% {
-
-          opacity: .7;
-
-        }
-
-        45% {
-
-          opacity: .9;
-
-        }
-
-        75% {
-
-          opacity: .6;
-
-        }
-
-        100% {
-
-          opacity: 0;
-
-          width: 120vw;
-          height: 32vw;
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(-900deg)
-            scale(1);
-
-        }
-
-      }
-
-
-      /* ======================================
-         TORNADO EXPANSION
-      ====================================== */
 
       @keyframes tornadoExpand {
 
@@ -814,9 +1047,7 @@ function createWindEffect() {
         }
 
         12% {
-
           opacity: 1;
-
         }
 
         35% {
@@ -860,60 +1091,6 @@ function createWindEffect() {
       }
 
 
-      /* ======================================
-         TORNADO EYE
-      ====================================== */
-
-      .tornadoEye {
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 18vw;
-
-        height: 18vw;
-
-        min-width: 130px;
-
-        min-height: 130px;
-
-        border-radius: 50%;
-
-        transform:
-          translate(-50%, -50%);
-
-        background:
-          radial-gradient(
-            circle,
-            rgba(255,255,255,.98) 0%,
-            rgba(210,170,255,.8) 8%,
-            rgba(140,70,255,.4) 25%,
-            rgba(50,10,120,.12) 50%,
-            transparent 70%
-          );
-
-        box-shadow:
-
-          0 0 30px
-          rgba(255,255,255,.9),
-
-          0 0 80px
-          rgba(190,110,255,.8),
-
-          0 0 160px
-          rgba(100,30,255,.6);
-
-        animation:
-          eyePulse 2.5s
-          ease-out
-          forwards;
-
-      }
-
-
       @keyframes eyePulse {
 
         0% {
@@ -927,9 +1104,7 @@ function createWindEffect() {
         }
 
         18% {
-
           opacity: 1;
-
         }
 
         45% {
@@ -961,809 +1136,6 @@ function createWindEffect() {
       }
 
 
-      /* ======================================
-         PARTICLES
-      ====================================== */
-
-      .tornadoDust {
-
-        position: absolute;
-
-        inset: 0;
-
-        transform-style:
-          preserve-3d;
-
-      }
-
-
-      .tornadoDust span {
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 5px;
-
-        height: 5px;
-
-        border-radius: 50%;
-
-        background: white;
-
-        box-shadow:
-          0 0 10px
-          rgba(220,180,255,.95);
-
-        opacity: 0;
-
-      }
-
-
-      .tornadoDust span:nth-child(1) {
-        animation: dust1 2.3s linear forwards;
-      }
-
-      .tornadoDust span:nth-child(2) {
-        animation: dust2 2.1s linear .08s forwards;
-      }
-
-      .tornadoDust span:nth-child(3) {
-        animation: dust3 2.4s linear .16s forwards;
-      }
-
-      .tornadoDust span:nth-child(4) {
-        animation: dust4 2.2s linear .24s forwards;
-      }
-
-      .tornadoDust span:nth-child(5) {
-        animation: dust5 2.5s linear .32s forwards;
-      }
-
-      .tornadoDust span:nth-child(6) {
-        animation: dust6 2.2s linear .4s forwards;
-      }
-
-      .tornadoDust span:nth-child(7) {
-        animation: dust7 2.4s linear .48s forwards;
-      }
-
-      .tornadoDust span:nth-child(8) {
-        animation: dust8 2.1s linear .56s forwards;
-      }
-
-      .tornadoDust span:nth-child(9) {
-        animation: dust9 2.5s linear .64s forwards;
-      }
-
-      .tornadoDust span:nth-child(10) {
-        animation: dust10 2.2s linear .72s forwards;
-      }
-
-      .tornadoDust span:nth-child(11) {
-        animation: dust11 2.4s linear .8s forwards;
-      }
-
-      .tornadoDust span:nth-child(12) {
-        animation: dust12 2.1s linear .88s forwards;
-      }
-
-      .tornadoDust span:nth-child(13) {
-        animation: dust13 2.5s linear .96s forwards;
-      }
-
-      .tornadoDust span:nth-child(14) {
-        animation: dust14 2.2s linear 1.04s forwards;
-      }
-
-      .tornadoDust span:nth-child(15) {
-        animation: dust15 2.4s linear 1.12s forwards;
-      }
-
-      .tornadoDust span:nth-child(16) {
-        animation: dust16 2.1s linear 1.2s forwards;
-      }
-
-      .tornadoDust span:nth-child(17) {
-        animation: dust17 2.5s linear 1.28s forwards;
-      }
-
-      .tornadoDust span:nth-child(18) {
-        animation: dust18 2.2s linear 1.36s forwards;
-      }
-
-      .tornadoDust span:nth-child(19) {
-        animation: dust19 2.4s linear 1.44s forwards;
-      }
-
-      .tornadoDust span:nth-child(20) {
-        animation: dust20 2.1s linear 1.52s forwards;
-      }
-
-
-      /* ======================================
-         PARTICLE MOTION
-      ====================================== */
-
-      @keyframes dust1 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(0deg)
-            translateX(650px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(420deg)
-            translateX(130px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1000deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust2 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(45deg)
-            translateX(700px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(500deg)
-            translateX(150px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1100deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust3 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(90deg)
-            translateX(620px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(560deg)
-            translateX(120px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1200deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust4 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(135deg)
-            translateX(680px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(470deg)
-            translateX(140px)
-            scale(1.3);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1000deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust5 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(180deg)
-            translateX(720px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(620deg)
-            translateX(160px)
-            scale(1.6);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1250deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust6 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(225deg)
-            translateX(630px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(530deg)
-            translateX(130px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1100deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust7 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(270deg)
-            translateX(690px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(680deg)
-            translateX(150px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1300deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust8 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(315deg)
-            translateX(610px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(580deg)
-            translateX(120px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1150deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust9 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(20deg)
-            translateX(730px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(600deg)
-            translateX(145px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1200deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust10 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(65deg)
-            translateX(640px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(510deg)
-            translateX(130px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1080deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust11 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(110deg)
-            translateX(700px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(640deg)
-            translateX(150px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1280deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust12 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(155deg)
-            translateX(620px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(490deg)
-            translateX(125px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1050deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust13 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(200deg)
-            translateX(710px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(590deg)
-            translateX(155px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1180deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust14 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(245deg)
-            translateX(650px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(530deg)
-            translateX(135px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1120deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust15 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(290deg)
-            translateX(730px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(650deg)
-            translateX(160px)
-            scale(1.6);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1300deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust16 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(335deg)
-            translateX(610px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(470deg)
-            translateX(125px)
-            scale(1.3);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1000deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust17 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(15deg)
-            translateX(680px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(610deg)
-            translateX(145px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1250deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust18 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(75deg)
-            translateX(660px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(550deg)
-            translateX(135px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1150deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust19 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(150deg)
-            translateX(720px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(670deg)
-            translateX(155px)
-            scale(1.5);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1350deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      @keyframes dust20 {
-
-        0% {
-          opacity: 0;
-          transform:
-            rotate(250deg)
-            translateX(690px)
-            scale(.2);
-        }
-
-        20% { opacity: 1; }
-
-        65% {
-          transform:
-            rotate(520deg)
-            translateX(140px)
-            scale(1.4);
-        }
-
-        100% {
-          opacity: 0;
-          transform:
-            rotate(1080deg)
-            translateX(5px)
-            scale(.05);
-        }
-
-      }
-
-
-      /* ======================================
-         COSMIC MIST
-      ====================================== */
-
-      .tornadoMist {
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        border-radius: 50%;
-
-        transform:
-          translate(-50%, -50%);
-
-        filter:
-          blur(30px);
-
-        background:
-          radial-gradient(
-            ellipse,
-            rgba(180,110,255,.22),
-            rgba(100,40,200,.08),
-            transparent 70%
-          );
-
-        opacity: 0;
-
-      }
-
-
-      .mist1 {
-
-        width: 75vw;
-
-        height: 20vw;
-
-        animation:
-          mistRotation 2.5s
-          ease-out
-          forwards;
-
-      }
-
-
-      .mist2 {
-
-        width: 55vw;
-
-        height: 15vw;
-
-        animation:
-          mistRotation 2.2s
-          ease-out
-          .15s
-          forwards;
-
-      }
-
-
-      .mist3 {
-
-        width: 38vw;
-
-        height: 11vw;
-
-        animation:
-          mistRotation 2s
-          ease-out
-          .3s
-          forwards;
-
-      }
-
-
       @keyframes mistRotation {
 
         0% {
@@ -1778,9 +1150,7 @@ function createWindEffect() {
         }
 
         20% {
-
           opacity: .8;
-
         }
 
         60% {
@@ -1808,10 +1178,6 @@ function createWindEffect() {
       }
 
 
-      /* ======================================
-         CORE EXPLOSION
-      ====================================== */
-
       @keyframes universeCoreExplosion {
 
         0% {
@@ -1825,9 +1191,7 @@ function createWindEffect() {
         }
 
         18% {
-
           opacity: 1;
-
         }
 
         48% {
@@ -1862,42 +1226,43 @@ function createWindEffect() {
       @keyframes tornadoFade {
 
         0% {
-
           opacity: 0;
-
         }
 
         10% {
-
           opacity: 1;
-
         }
 
         72% {
-
           opacity: 1;
-
         }
 
         100% {
-
           opacity: 0;
-
         }
 
       }
 
+
+      ${ringCSS}
+
+      ${dustCSS}
+
     `;
 
     document.head.appendChild(style);
+
   }
 
 
-  setTimeout(() => {
+  window.setTimeout(() => {
 
-    tornado.remove();
+    if (tornado.parentNode) {
+      tornado.remove();
+    }
 
-  }, 3000);
+  }, 3100);
+
 }
 
 
@@ -1907,45 +1272,69 @@ function createWindEffect() {
 
 function showMessage() {
 
+  if (!messageBox || !message) {
+    console.error(
+      "Universe139: message elements not found."
+    );
+    return;
+  }
+
   const newMessage =
     getRandomMessage();
 
+  /*
+    IMPORTANT:
+    Always write the message before
+    displaying the message box.
+  */
+
   message.textContent =
-    newMessage;
+    newMessage || "Your message is waiting for you.";
 
   messageBox.classList.remove("hidden");
 
-  messageBox.style.display = "block";
+  /*
+    Do NOT rely only on style.display.
+    The .hidden class uses !important.
+  */
 
-  messageBox.style.opacity = "0";
+  messageBox.style.display =
+    "block";
 
-  loading.classList.add("hidden");
+  messageBox.style.opacity =
+    "0";
 
-  revealBtn.classList.add("hidden");
+  messageBox.style.transform =
+    "translateY(18px) scale(.98)";
 
-  againBtn.classList.remove("hidden");
+  hideElement(loading);
+  hideElement(revealBtn);
 
-  shareBtn.classList.remove("hidden");
+  showElement(againBtn);
+  showElement(shareBtn);
 
+  window.requestAnimationFrame(() => {
 
-  // Smooth message appearance
+    window.requestAnimationFrame(() => {
 
-  setTimeout(() => {
+      messageBox.style.transition =
+        "opacity .8s ease, transform .8s ease";
 
-    messageBox.style.transition =
-      "opacity .8s ease, transform .8s ease";
+      messageBox.style.opacity =
+        "1";
 
-    messageBox.style.opacity = "1";
+      messageBox.style.transform =
+        "translateY(0) scale(1)";
 
-    messageBox.style.transform =
-      "translateY(0) scale(1)";
+    });
 
-  }, 80);
+  });
+
 }
 
 
 // ==========================================
-// FIRST REVEAL
+// REVEAL MESSAGE
 // ==========================================
 
 function revealMessage() {
@@ -1954,34 +1343,42 @@ function revealMessage() {
     return;
   }
 
-  isRevealing = true;
+  if (!message || !messageBox) {
+    console.error(
+      "Universe139: message DOM is unavailable."
+    );
+    return;
+  }
 
-  messageBox.classList.add("hidden");
+  isRevealing =
+    true;
 
-  loading.classList.remove("hidden");
+  hideElement(messageBox);
 
-  revealBtn.classList.add("hidden");
+  showElement(loading);
 
-  againBtn.classList.add("hidden");
+  hideElement(revealBtn);
+  hideElement(againBtn);
+  hideElement(shareBtn);
 
-  shareBtn.classList.add("hidden");
+  if (loadingText) {
 
-  loadingText.textContent =
-    translations[currentLanguage].loading;
+    loadingText.textContent =
+      translations[currentLanguage].loading;
 
+  }
 
-  // 🌪️ COSMIC TORNADO
   createWindEffect();
 
-
-  // Wait for tornado to build
-  setTimeout(() => {
+  window.setTimeout(() => {
 
     showMessage();
 
-    isRevealing = false;
+    isRevealing =
+      false;
 
   }, 2400);
+
 }
 
 
@@ -1995,41 +1392,48 @@ function receiveAnotherMessage() {
     return;
   }
 
-  isRevealing = true;
+  if (!messageBox) {
+    return;
+  }
 
-  messageBox.style.opacity = "0";
+  isRevealing =
+    true;
+
+  messageBox.style.opacity =
+    "0";
 
   messageBox.style.transform =
     "scale(.95)";
 
-  againBtn.classList.add("hidden");
+  hideElement(againBtn);
+  hideElement(shareBtn);
 
-  shareBtn.classList.add("hidden");
-
-
-  // 🌪️ NEW COSMIC TORNADO
   createWindEffect();
 
+  window.setTimeout(() => {
 
-  setTimeout(() => {
+    hideElement(messageBox);
 
-    messageBox.classList.add("hidden");
+    showElement(loading);
 
-    loading.classList.remove("hidden");
+    if (loadingText) {
 
-    loadingText.textContent =
-      translations[currentLanguage].loading;
+      loadingText.textContent =
+        translations[currentLanguage].loading;
+
+    }
 
   }, 350);
 
-
-  setTimeout(() => {
+  window.setTimeout(() => {
 
     showMessage();
 
-    isRevealing = false;
+    isRevealing =
+      false;
 
   }, 2400);
+
 }
 
 
@@ -2040,13 +1444,18 @@ function receiveAnotherMessage() {
 function getShareText() {
 
   const currentMessage =
-    message.textContent.trim();
+    message
+      ? message.textContent.trim()
+      : "";
+
+  const t =
+    translations[currentLanguage];
 
   return `✨ A Message From The Universe ✨
 
 “${currentMessage}”
 
-${translations[currentLanguage].shareLink}
+${t.shareLink}
 
 ${UNIVERSE139_URL}`;
 }
@@ -2058,88 +1467,155 @@ ${UNIVERSE139_URL}`;
 
 async function copyText(text) {
 
+  if (!text) {
+    return false;
+  }
+
   try {
 
-    await navigator.clipboard.writeText(text);
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+    } else {
+
+      const textarea =
+        document.createElement("textarea");
+
+      textarea.value =
+        text;
+
+      textarea.style.position =
+        "fixed";
+
+      textarea.style.left =
+        "-99999px";
+
+      textarea.style.top =
+        "0";
+
+      document.body.appendChild(
+        textarea
+      );
+
+      textarea.focus();
+      textarea.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      textarea.remove();
+
+    }
 
     showShareToast(
       translations[currentLanguage].copied
     );
+
+    return true;
 
   } catch (error) {
 
-    const textarea =
-      document.createElement("textarea");
-
-    textarea.value = text;
-
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-
-    document.body.appendChild(textarea);
-
-    textarea.select();
-
-    document.execCommand("copy");
-
-    textarea.remove();
-
-    showShareToast(
-      translations[currentLanguage].copied
+    console.error(
+      "Universe139 copy error:",
+      error
     );
+
+    return false;
+
   }
+
 }
 
 
 // ==========================================
-// SHARE FUNCTIONS
+// WHATSAPP
 // ==========================================
 
 function shareWhatsApp() {
 
   const text =
-    encodeURIComponent(getShareText());
+    encodeURIComponent(
+      getShareText()
+    );
 
   window.open(
     `https://wa.me/?text=${text}`,
-    "_blank"
+    "_blank",
+    "noopener,noreferrer"
   );
+
 }
 
+
+// ==========================================
+// FACEBOOK
+// ==========================================
 
 async function shareFacebook() {
 
-  await copyText(getShareText());
+  /*
+    Facebook's web share dialog accepts the URL.
+    It does NOT reliably accept arbitrary post text.
 
-  setTimeout(() => {
+    Therefore we:
+    1. Copy the complete message.
+    2. Open the correct live Universe139 URL.
+  */
 
-    const url =
-      encodeURIComponent(UNIVERSE139_URL);
+  await copyText(
+    getShareText()
+  );
 
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      "_blank",
-      "width=600,height=500"
+  const shareURL =
+    "https://www.facebook.com/sharer/sharer.php?u=" +
+    encodeURIComponent(
+      UNIVERSE139_URL
     );
 
-  }, 500);
+  window.open(
+    shareURL,
+    "_blank",
+    "width=700,height=650,noopener,noreferrer"
+  );
+
 }
 
+
+// ==========================================
+// TELEGRAM
+// ==========================================
 
 function shareTelegram() {
 
   const text =
-    encodeURIComponent(getShareText());
+    encodeURIComponent(
+      getShareText()
+    );
 
   const url =
-    encodeURIComponent(UNIVERSE139_URL);
+    encodeURIComponent(
+      UNIVERSE139_URL
+    );
 
   window.open(
     `https://t.me/share/url?url=${url}&text=${text}`,
-    "_blank"
+    "_blank",
+    "noopener,noreferrer"
   );
+
 }
 
+
+// ==========================================
+// GMAIL
+// ==========================================
 
 function shareGmail() {
 
@@ -2155,10 +1631,16 @@ function shareGmail() {
 
   window.open(
     `https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`,
-    "_blank"
+    "_blank",
+    "noopener,noreferrer"
   );
+
 }
 
+
+// ==========================================
+// EMAIL
+// ==========================================
 
 function shareEmail() {
 
@@ -2174,8 +1656,13 @@ function shareEmail() {
 
   window.location.href =
     `mailto:?subject=${subject}&body=${body}`;
+
 }
 
+
+// ==========================================
+// SMS
+// ==========================================
 
 function shareSMS() {
 
@@ -2186,53 +1673,66 @@ function shareSMS() {
 
   window.location.href =
     `sms:?body=${text}`;
+
 }
 
+
+// ==========================================
+// LINKEDIN
+// ==========================================
 
 async function shareLinkedIn() {
 
-  await copyText(getShareText());
+  await copyText(
+    getShareText()
+  );
 
-  setTimeout(() => {
-
-    const url =
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-      "_blank"
+  const url =
+    encodeURIComponent(
+      UNIVERSE139_URL
     );
 
-  }, 500);
+  window.open(
+    `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
 }
 
+
+// ==========================================
+// REDDIT
+// ==========================================
 
 async function shareReddit() {
 
-  await copyText(getShareText());
+  await copyText(
+    getShareText()
+  );
 
-  setTimeout(() => {
-
-    const title =
-      encodeURIComponent(
-        "A Message From The Universe"
-      );
-
-    const url =
-      encodeURIComponent(
-        UNIVERSE139_URL
-      );
-
-    window.open(
-      `https://www.reddit.com/submit?url=${url}&title=${title}`,
-      "_blank"
+  const title =
+    encodeURIComponent(
+      "A Message From The Universe"
     );
 
-  }, 500);
+  const url =
+    encodeURIComponent(
+      UNIVERSE139_URL
+    );
+
+  window.open(
+    `https://www.reddit.com/submit?url=${url}&title=${title}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
 }
 
+
+// ==========================================
+// VIBER
+// ==========================================
 
 async function shareViber() {
 
@@ -2241,14 +1741,19 @@ async function shareViber() {
 
   await copyText(text);
 
-  setTimeout(() => {
+  window.setTimeout(() => {
 
     window.location.href =
       `viber://forward?text=${encodeURIComponent(text)}`;
 
   }, 300);
+
 }
 
+
+// ==========================================
+// TIKTOK
+// ==========================================
 
 async function shareTikTok() {
 
@@ -2256,33 +1761,652 @@ async function shareTikTok() {
     getShareText()
   );
 
-  setTimeout(() => {
+  window.open(
+    "https://www.tiktok.com/",
+    "_blank",
+    "noopener,noreferrer"
+  );
 
-    window.open(
-      "https://www.tiktok.com/",
-      "_blank"
-    );
-
-  }, 700);
 }
 
+
+// ==========================================
+// CREATE SHARE IMAGE
+// ==========================================
+
+async function createMessageImageBlob() {
+
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
+
+  if (!currentMessage) {
+    throw new Error(
+      "No Universe139 message available."
+    );
+  }
+
+  const canvas =
+    document.createElement("canvas");
+
+  const width =
+    1080;
+
+  const height =
+    1350;
+
+  canvas.width =
+    width;
+
+  canvas.height =
+    height;
+
+  const ctx =
+    canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error(
+      "Canvas is not supported."
+    );
+  }
+
+
+  // ========================================
+  // COSMIC BACKGROUND
+  // ========================================
+
+  const background =
+    ctx.createLinearGradient(
+      0,
+      0,
+      width,
+      height
+    );
+
+  background.addColorStop(
+    0,
+    "#080512"
+  );
+
+  background.addColorStop(
+    .35,
+    "#25113f"
+  );
+
+  background.addColorStop(
+    .7,
+    "#120827"
+  );
+
+  background.addColorStop(
+    1,
+    "#030207"
+  );
+
+  ctx.fillStyle =
+    background;
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  // ========================================
+  // COSMIC GLOW
+  // ========================================
+
+  const glow =
+    ctx.createRadialGradient(
+      width / 2,
+      430,
+      20,
+      width / 2,
+      430,
+      650
+    );
+
+  glow.addColorStop(
+    0,
+    "rgba(190,120,255,.45)"
+  );
+
+  glow.addColorStop(
+    .3,
+    "rgba(110,50,200,.20)"
+  );
+
+  glow.addColorStop(
+    1,
+    "rgba(0,0,0,0)"
+  );
+
+  ctx.fillStyle =
+    glow;
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  // ========================================
+  // STARS
+  // ========================================
+
+  for (
+    let i = 0;
+    i < 150;
+    i++
+  ) {
+
+    const x =
+      Math.random() * width;
+
+    const y =
+      Math.random() * height;
+
+    const radius =
+      Math.random() * 2 + .5;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle =
+      `rgba(255,255,255,${.25 + Math.random() * .7})`;
+
+    ctx.fill();
+
+  }
+
+
+  // ========================================
+  // BRAND
+  // ========================================
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillStyle =
+    "#d9b7ff";
+
+  ctx.font =
+    "600 30px Arial, sans-serif";
+
+  ctx.fillText(
+    "UNIVERSE139",
+    width / 2,
+    115
+  );
+
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.75)";
+
+  ctx.font =
+    "500 20px Arial, sans-serif";
+
+  ctx.fillText(
+    "A MESSAGE FROM THE UNIVERSE",
+    width / 2,
+    155
+  );
+
+
+  // ========================================
+  // MESSAGE CARD
+  // ========================================
+
+  const cardX =
+    75;
+
+  const cardY =
+    270;
+
+  const cardW =
+    width - 150;
+
+  const cardH =
+    650;
+
+  const radius =
+    42;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    cardX + radius,
+    cardY
+  );
+
+  ctx.lineTo(
+    cardX + cardW - radius,
+    cardY
+  );
+
+  ctx.quadraticCurveTo(
+    cardX + cardW,
+    cardY,
+    cardX + cardW,
+    cardY + radius
+  );
+
+  ctx.lineTo(
+    cardX + cardW,
+    cardY + cardH - radius
+  );
+
+  ctx.quadraticCurveTo(
+    cardX + cardW,
+    cardY + cardH,
+    cardX + cardW - radius,
+    cardY + cardH
+  );
+
+  ctx.lineTo(
+    cardX + radius,
+    cardY + cardH
+  );
+
+  ctx.quadraticCurveTo(
+    cardX,
+    cardY + cardH,
+    cardX,
+    cardY + cardH - radius
+  );
+
+  ctx.lineTo(
+    cardX,
+    cardY + radius
+  );
+
+  ctx.quadraticCurveTo(
+    cardX,
+    cardY,
+    cardX + radius,
+    cardY
+  );
+
+  ctx.closePath();
+
+  const cardGradient =
+    ctx.createLinearGradient(
+      cardX,
+      cardY,
+      cardX + cardW,
+      cardY + cardH
+    );
+
+  cardGradient.addColorStop(
+    0,
+    "rgba(100,55,150,.55)"
+  );
+
+  cardGradient.addColorStop(
+    1,
+    "rgba(20,8,40,.92)"
+  );
+
+  ctx.fillStyle =
+    cardGradient;
+
+  ctx.fill();
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.18)";
+
+  ctx.lineWidth =
+    2;
+
+  ctx.stroke();
+
+
+  // ========================================
+  // QUOTE
+  // ========================================
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.font =
+    "italic 54px Georgia, serif";
+
+  ctx.fillText(
+    "“",
+    150,
+    390
+  );
+
+  ctx.font =
+    "500 34px Arial, sans-serif";
+
+  const maxWidth =
+    cardW - 150;
+
+  const lines =
+    wrapCanvasText(
+      ctx,
+      currentMessage,
+      maxWidth
+    );
+
+  const lineHeight =
+    58;
+
+  const startY =
+    485 -
+    ((lines.length - 1) *
+      lineHeight) / 2;
+
+  lines.forEach(
+    (line, index) => {
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillText(
+        line,
+        width / 2,
+        startY +
+          index *
+          lineHeight
+      );
+
+    }
+  );
+
+
+  // ========================================
+  // FOOTER
+  // ========================================
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.55)";
+
+  ctx.font =
+    "20px Arial, sans-serif";
+
+  ctx.fillText(
+    "Keep this message close to your heart.",
+    width / 2,
+    1030
+  );
+
+  ctx.fillStyle =
+    "#d9b7ff";
+
+  ctx.font =
+    "700 28px Arial, sans-serif";
+
+  ctx.fillText(
+    "message-from-universe.vercel.app",
+    width / 2,
+    1130
+  );
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.45)";
+
+  ctx.font =
+    "18px Arial, sans-serif";
+
+  ctx.fillText(
+    "Your message is waiting...",
+    width / 2,
+    1180
+  );
+
+
+  return new Promise(
+    (resolve, reject) => {
+
+      canvas.toBlob(
+        blob => {
+
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(
+              new Error(
+                "Unable to create image."
+              )
+            );
+          }
+
+        },
+        "image/png",
+        1
+      );
+
+    }
+  );
+
+}
+
+
+// ==========================================
+// CANVAS TEXT WRAPPING
+// ==========================================
+
+function wrapCanvasText(
+  ctx,
+  text,
+  maxWidth
+) {
+
+  const words =
+    text.split(/\s+/);
+
+  const lines = [];
+
+  let current =
+    "";
+
+  for (
+    const word of words
+  ) {
+
+    const test =
+      current
+        ? `${current} ${word}`
+        : word;
+
+    const width =
+      ctx.measureText(test).width;
+
+    if (
+      width <= maxWidth
+    ) {
+
+      current =
+        test;
+
+    } else {
+
+      if (current) {
+        lines.push(current);
+      }
+
+      current =
+        word;
+
+    }
+
+  }
+
+  if (current) {
+    lines.push(current);
+  }
+
+  return lines;
+
+}
+
+
+// ==========================================
+// INSTAGRAM
+// ==========================================
 
 async function shareInstagram() {
 
-  await copyText(
-    getShareText()
-  );
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
 
-  setTimeout(() => {
+  if (!currentMessage) {
 
-    window.open(
-      "https://www.instagram.com/",
-      "_blank"
+    showShareToast(
+      translations[currentLanguage].month
     );
 
-  }, 700);
+    return;
+
+  }
+
+  try {
+
+    const blob =
+      await createMessageImageBlob();
+
+    const file =
+      new File(
+        [blob],
+        "Universe139-message.png",
+        {
+          type: "image/png"
+        }
+      );
+
+
+    /*
+      Mobile browsers that support native
+      file sharing can send the image
+      directly to Instagram.
+    */
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file]
+      })
+    ) {
+
+      await navigator.share({
+
+        title:
+          "Universe139",
+
+        text:
+          currentMessage,
+
+        files:
+          [file]
+
+      });
+
+      return;
+
+    }
+
+
+    /*
+      Desktop fallback:
+      download the image.
+    */
+
+    const objectURL =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href =
+      objectURL;
+
+    link.download =
+      "Universe139-message.png";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    link.remove();
+
+    window.setTimeout(() => {
+
+      URL.revokeObjectURL(
+        objectURL
+      );
+
+    }, 2000);
+
+
+    showShareToast(
+      "Your Universe139 image is ready to share"
+    );
+
+    window.setTimeout(() => {
+
+      window.open(
+        "https://www.instagram.com/",
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }, 1200);
+
+  } catch (error) {
+
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error(
+      "Instagram share error:",
+      error
+    );
+
+    /*
+      Final fallback.
+    */
+
+    await copyText(
+      getShareText()
+    );
+
+    showShareToast(
+      "Message copied"
+    );
+
+  }
+
 }
 
+
+// ==========================================
+// SNAPCHAT
+// ==========================================
 
 async function shareSnapchat() {
 
@@ -2290,16 +2414,18 @@ async function shareSnapchat() {
     getShareText()
   );
 
-  setTimeout(() => {
+  window.open(
+    "https://www.snapchat.com/",
+    "_blank",
+    "noopener,noreferrer"
+  );
 
-    window.open(
-      "https://www.snapchat.com/",
-      "_blank"
-    );
-
-  }, 700);
 }
 
+
+// ==========================================
+// PINTEREST
+// ==========================================
 
 function sharePinterest() {
 
@@ -2315,17 +2441,25 @@ function sharePinterest() {
 
   window.open(
     `https://pinterest.com/pin/create/button/?url=${url}&description=${description}`,
-    "_blank"
+    "_blank",
+    "noopener,noreferrer"
   );
+
 }
 
+
+// ==========================================
+// NATIVE MORE SHARE
+// ==========================================
 
 async function shareMore() {
 
   const text =
     getShareText();
 
-  if (navigator.share) {
+  if (
+    navigator.share
+  ) {
 
     try {
 
@@ -2335,13 +2469,20 @@ async function shareMore() {
           "Universe139",
 
         text:
-          text
+          text,
+
+        url:
+          UNIVERSE139_URL
 
       });
 
     } catch (error) {
 
-      if (error.name !== "AbortError") {
+      if (
+        error &&
+        error.name !==
+          "AbortError"
+      ) {
 
         console.error(
           "Share error:",
@@ -2354,9 +2495,12 @@ async function shareMore() {
 
   } else {
 
-    await copyText(text);
+    await copyText(
+      text
+    );
 
   }
+
 }
 
 
@@ -2384,25 +2528,34 @@ function showShareToast(text) {
   toast.textContent =
     text;
 
-  document.body.appendChild(toast);
+  document.body.appendChild(
+    toast
+  );
 
-  setTimeout(() => {
+  window.setTimeout(() => {
 
-    toast.classList.add("show");
+    toast.classList.add(
+      "show"
+    );
 
   }, 20);
 
-  setTimeout(() => {
+  window.setTimeout(() => {
 
-    toast.classList.remove("show");
+    toast.classList.remove(
+      "show"
+    );
 
-    setTimeout(() => {
+    window.setTimeout(() => {
 
-      toast.remove();
+      if (toast.parentNode) {
+        toast.remove();
+      }
 
     }, 300);
 
   }, 1800);
+
 }
 
 
@@ -2424,12 +2577,16 @@ function createSharePanel() {
   const t =
     translations[currentLanguage];
 
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
+
   const panel =
     document.createElement("div");
 
   panel.id =
     "universe139SharePanel";
-
 
   panel.innerHTML = `
 
@@ -2440,6 +2597,8 @@ function createSharePanel() {
       <button
         class="shareClose"
         id="shareClose"
+        type="button"
+        aria-label="${t.close}"
       >
         ×
       </button>
@@ -2452,7 +2611,6 @@ function createSharePanel() {
         ${t.shareInstructions}
       </p>
 
-
       <div class="sharePreview">
 
         <div class="sharePreviewTitle">
@@ -2460,127 +2618,78 @@ function createSharePanel() {
         </div>
 
         <div class="sharePreviewMessage">
-          “${message.textContent.trim()}”
+          “${escapeHTML(currentMessage)}”
         </div>
 
         <div class="sharePreviewLink">
-          Universe139
+          message-from-universe.vercel.app
         </div>
 
       </div>
 
-
       <div class="shareGrid">
 
-        <button
-          class="shareOption"
-          id="shareWhatsApp"
-        >
+        <button class="shareOption" id="shareWhatsApp" type="button">
           WhatsApp
         </button>
 
-        <button
-          class="shareOption"
-          id="shareFacebook"
-        >
+        <button class="shareOption" id="shareFacebook" type="button">
           Facebook
         </button>
 
-        <button
-          class="shareOption"
-          id="shareTelegram"
-        >
+        <button class="shareOption" id="shareTelegram" type="button">
           Telegram
         </button>
 
-        <button
-          class="shareOption"
-          id="shareGmail"
-        >
+        <button class="shareOption" id="shareGmail" type="button">
           Gmail
         </button>
 
-        <button
-          class="shareOption"
-          id="shareEmail"
-        >
+        <button class="shareOption" id="shareEmail" type="button">
           Email
         </button>
 
-        <button
-          class="shareOption"
-          id="shareSMS"
-        >
+        <button class="shareOption" id="shareSMS" type="button">
           SMS
         </button>
 
-        <button
-          class="shareOption"
-          id="shareLinkedIn"
-        >
+        <button class="shareOption" id="shareLinkedIn" type="button">
           LinkedIn
         </button>
 
-        <button
-          class="shareOption"
-          id="shareReddit"
-        >
+        <button class="shareOption" id="shareReddit" type="button">
           Reddit
         </button>
 
-        <button
-          class="shareOption"
-          id="shareViber"
-        >
+        <button class="shareOption" id="shareViber" type="button">
           Viber
         </button>
 
-        <button
-          class="shareOption"
-          id="shareTikTok"
-        >
+        <button class="shareOption" id="shareTikTok" type="button">
           TikTok
         </button>
 
-        <button
-          class="shareOption"
-          id="shareInstagram"
-        >
+        <button class="shareOption" id="shareInstagram" type="button">
           Instagram
         </button>
 
-        <button
-          class="shareOption"
-          id="shareSnapchat"
-        >
+        <button class="shareOption" id="shareSnapchat" type="button">
           Snapchat
         </button>
 
-        <button
-          class="shareOption"
-          id="sharePinterest"
-        >
+        <button class="shareOption" id="sharePinterest" type="button">
           Pinterest
         </button>
 
-        <button
-          class="shareOption"
-          id="copyMessage"
-        >
+        <button class="shareOption" id="copyMessage" type="button">
           ${t.copyMessage}
         </button>
 
-        <button
-          class="shareOption"
-          id="copyLink"
-        >
+        <button class="shareOption" id="copyLink" type="button">
           ${t.copyLink}
         </button>
 
-        <button
-          class="shareOption"
-          id="shareMore"
-        >
+        <button class="shareOption" id="shareMore" type="button">
           ${t.more}
         </button>
 
@@ -2590,164 +2699,214 @@ function createSharePanel() {
 
   `;
 
-  document.body.appendChild(panel);
-
+  document.body.appendChild(
+    panel
+  );
 
   addSharePanelStyles();
 
 
-  // Close
+  // CLOSE
 
-  document
-    .getElementById("shareClose")
-    .addEventListener(
+  const closeButton =
+    document.getElementById(
+      "shareClose"
+    );
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
       "click",
       closeSharePanel
     );
 
+  }
 
-  document
-    .querySelector(
-      "#universe139SharePanel .shareOverlay"
+
+  const overlay =
+    panel.querySelector(
+      ".shareOverlay"
+    );
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      closeSharePanel
+    );
+
+  }
+
+
+  // SOCIAL BUTTONS
+
+  bindShareButton(
+    "shareWhatsApp",
+    shareWhatsApp
+  );
+
+  bindShareButton(
+    "shareFacebook",
+    shareFacebook
+  );
+
+  bindShareButton(
+    "shareTelegram",
+    shareTelegram
+  );
+
+  bindShareButton(
+    "shareGmail",
+    shareGmail
+  );
+
+  bindShareButton(
+    "shareEmail",
+    shareEmail
+  );
+
+  bindShareButton(
+    "shareSMS",
+    shareSMS
+  );
+
+  bindShareButton(
+    "shareLinkedIn",
+    shareLinkedIn
+  );
+
+  bindShareButton(
+    "shareReddit",
+    shareReddit
+  );
+
+  bindShareButton(
+    "shareViber",
+    shareViber
+  );
+
+  bindShareButton(
+    "shareTikTok",
+    shareTikTok
+  );
+
+  bindShareButton(
+    "shareInstagram",
+    shareInstagram
+  );
+
+  bindShareButton(
+    "shareSnapchat",
+    shareSnapchat
+  );
+
+  bindShareButton(
+    "sharePinterest",
+    sharePinterest
+  );
+
+  bindShareButton(
+    "shareMore",
+    shareMore
+  );
+
+
+  const copyMessageButton =
+    document.getElementById(
+      "copyMessage"
+    );
+
+  if (copyMessageButton) {
+
+    copyMessageButton.addEventListener(
+      "click",
+      () => {
+
+        copyText(
+          getShareText()
+        );
+
+      }
+    );
+
+  }
+
+
+  const copyLinkButton =
+    document.getElementById(
+      "copyLink"
+    );
+
+  if (copyLinkButton) {
+
+    copyLinkButton.addEventListener(
+      "click",
+      () => {
+
+        copyText(
+          UNIVERSE139_URL
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+// ==========================================
+// BIND SHARE BUTTON
+// ==========================================
+
+function bindShareButton(
+  id,
+  handler
+) {
+
+  const button =
+    document.getElementById(id);
+
+  if (!button) {
+    return;
+  }
+
+  button.addEventListener(
+    "click",
+    handler
+  );
+
+}
+
+
+// ==========================================
+// ESCAPE HTML
+// ==========================================
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
     )
-    .addEventListener(
-      "click",
-      closeSharePanel
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
     );
 
-
-  // Platforms
-
-  document
-    .getElementById("shareWhatsApp")
-    .addEventListener(
-      "click",
-      shareWhatsApp
-    );
-
-
-  document
-    .getElementById("shareFacebook")
-    .addEventListener(
-      "click",
-      shareFacebook
-    );
-
-
-  document
-    .getElementById("shareTelegram")
-    .addEventListener(
-      "click",
-      shareTelegram
-    );
-
-
-  document
-    .getElementById("shareGmail")
-    .addEventListener(
-      "click",
-      shareGmail
-    );
-
-
-  document
-    .getElementById("shareEmail")
-    .addEventListener(
-      "click",
-      shareEmail
-    );
-
-
-  document
-    .getElementById("shareSMS")
-    .addEventListener(
-      "click",
-      shareSMS
-    );
-
-
-  document
-    .getElementById("shareLinkedIn")
-    .addEventListener(
-      "click",
-      shareLinkedIn
-    );
-
-
-  document
-    .getElementById("shareReddit")
-    .addEventListener(
-      "click",
-      shareReddit
-    );
-
-
-  document
-    .getElementById("shareViber")
-    .addEventListener(
-      "click",
-      shareViber
-    );
-
-
-  document
-    .getElementById("shareTikTok")
-    .addEventListener(
-      "click",
-      shareTikTok
-    );
-
-
-  document
-    .getElementById("shareInstagram")
-    .addEventListener(
-      "click",
-      shareInstagram
-    );
-
-
-  document
-    .getElementById("shareSnapchat")
-    .addEventListener(
-      "click",
-      shareSnapchat
-    );
-
-
-  document
-    .getElementById("sharePinterest")
-    .addEventListener(
-      "click",
-      sharePinterest
-    );
-
-
-  document
-    .getElementById("copyMessage")
-    .addEventListener(
-      "click",
-      () => {
-        copyText(getShareText());
-      }
-    );
-
-
-  document
-    .getElementById("copyLink")
-    .addEventListener(
-      "click",
-      () => {
-        copyText(UNIVERSE139_URL);
-      }
-    );
-
-
-  document
-    .getElementById("shareMore")
-    .addEventListener(
-      "click",
-      shareMore
-    );
 }
 
 
@@ -2766,20 +2925,23 @@ function closeSharePanel() {
     return;
   }
 
-  panel.classList.add("closing");
+  panel.classList.add(
+    "closing"
+  );
 
-  setTimeout(() => {
+  window.setTimeout(() => {
 
-    panel.remove();
+    if (panel.parentNode) {
+      panel.remove();
+    }
 
   }, 220);
+
 }
 
 
 // ==========================================
-// SHARE PANEL DESIGN
-// NO ICONS
-// NO ANIMATED ICONS
+// SHARE PANEL CSS
 // ==========================================
 
 function addSharePanelStyles() {
@@ -2949,17 +3111,6 @@ function addSharePanelStyles() {
       cursor:
         pointer;
 
-      transition:
-        background .2s ease;
-
-    }
-
-
-    .shareClose:hover {
-
-      background:
-        rgba(255,255,255,.16);
-
     }
 
 
@@ -3012,6 +3163,9 @@ function addSharePanelStyles() {
       margin-bottom:
         12px;
 
+      word-break:
+        break-word;
+
     }
 
 
@@ -3028,10 +3182,6 @@ function addSharePanelStyles() {
 
     }
 
-
-    /* ==================================
-       CLEAN TEXT BUTTONS
-       ================================== */
 
     .shareGrid {
 
@@ -3109,10 +3259,6 @@ function addSharePanelStyles() {
 
     }
 
-
-    /* ==================================
-       TOAST
-       ================================== */
 
     #universe139Toast {
 
@@ -3234,10 +3380,6 @@ function addSharePanelStyles() {
     }
 
 
-    /* ==================================
-       MOBILE
-       ================================== */
-
     @media (max-width:600px) {
 
       .shareModal {
@@ -3288,7 +3430,10 @@ function addSharePanelStyles() {
 
   `;
 
-  document.head.appendChild(style);
+  document.head.appendChild(
+    style
+  );
+
 }
 
 
@@ -3299,64 +3444,79 @@ function addSharePanelStyles() {
 function shareMessage() {
 
   const currentMessage =
-    message.textContent.trim();
+    message
+      ? message.textContent.trim()
+      : "";
 
   if (!currentMessage) {
+
+    console.warn(
+      "Universe139: no message to share."
+    );
+
     return;
+
   }
 
   createSharePanel();
+
 }
 
 
 // ==========================================
-// BUTTON EVENTS
+// INITIALIZE EVENTS
 // ==========================================
 
-document
-  .querySelectorAll(".languageBtn")
-  .forEach(button => {
+function initializeEvents() {
 
-    button.addEventListener(
+  document
+    .querySelectorAll(
+      ".languageBtn"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectLanguage(
+            button.dataset.language
+          );
+
+        }
+      );
+
+    });
+
+
+  if (revealBtn) {
+
+    revealBtn.addEventListener(
       "click",
-      () => {
-
-        selectLanguage(
-          button.dataset.language
-        );
-
-      }
+      revealMessage
     );
 
-  });
+  }
 
 
-if (revealBtn) {
+  if (againBtn) {
 
-  revealBtn.addEventListener(
-    "click",
-    revealMessage
-  );
+    againBtn.addEventListener(
+      "click",
+      receiveAnotherMessage
+    );
 
-}
-
-
-if (againBtn) {
-
-  againBtn.addEventListener(
-    "click",
-    receiveAnotherMessage
-  );
-
-}
+  }
 
 
-if (shareBtn) {
+  if (shareBtn) {
 
-  shareBtn.addEventListener(
-    "click",
-    shareMessage
-  );
+    shareBtn.addEventListener(
+      "click",
+      shareMessage
+    );
+
+  }
 
 }
 
@@ -3365,22 +3525,83 @@ if (shareBtn) {
 // INITIAL STATE
 // ==========================================
 
-messageBox.classList.add("hidden");
+function initializeState() {
 
-loading.classList.add("hidden");
+  hideElement(
+    messageBox
+  );
 
-revealBtn.classList.add("hidden");
+  hideElement(
+    loading
+  );
 
-againBtn.classList.add("hidden");
+  hideElement(
+    revealBtn
+  );
 
-shareBtn.classList.add("hidden");
+  hideElement(
+    againBtn
+  );
+
+  hideElement(
+    shareBtn
+  );
+
+  if (message) {
+
+    message.textContent =
+      "";
+
+  }
+
+}
 
 
-console.log(
-  "Universe139 loaded successfully"
-);
+// ==========================================
+// START APPLICATION
+// ==========================================
 
-console.log(
-  "Universe139 URL:",
-  UNIVERSE139_URL
-);
+function initializeUniverse139() {
+
+  initializeDOM();
+
+  initializeState();
+
+  initializeEvents();
+
+  console.log(
+    "Universe139 loaded successfully"
+  );
+
+  console.log(
+    "Universe139 URL:",
+    UNIVERSE139_URL
+  );
+
+  console.log(
+    "Message database:",
+    Object.keys(messageTemplates)
+  );
+
+}
+
+
+// ==========================================
+// DOM READY
+// ==========================================
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeUniverse139
+  );
+
+} else {
+
+  initializeUniverse139();
+
+}
