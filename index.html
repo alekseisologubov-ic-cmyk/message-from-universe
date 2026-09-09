@@ -1,113 +1,717 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Message From The Universe</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <meta
+    name="description"
+    content="Universe139 — Receive a message from the universe."
+  >
 
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta
+    name="theme-color"
+    content="#080612"
+  >
+
+  <title>Universe139 — Message From The Universe</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+
+    body {
+
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          #34215c 0%,
+          #160d2b 35%,
+          #080612 75%
+        );
+
+      color: white;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      overflow-x: hidden;
+    }
+
+
+    .container {
+
+      width: 100%;
+
+      max-width: 650px;
+
+      min-height: 100vh;
+
+      padding:
+        35px
+        20px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+    }
+
+
+    .stars {
+
+      position: fixed;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.7;
+
+      background-image:
+        radial-gradient(
+          white 1px,
+          transparent 1px
+        );
+
+      background-size:
+        55px 55px;
+    }
+
+
+    #title {
+
+      font-size: clamp(
+        36px,
+        8vw,
+        64px
+      );
+
+      line-height: 1.05;
+
+      letter-spacing: 3px;
+
+      font-weight: 700;
+
+      margin-bottom: 20px;
+
+      text-shadow:
+        0 0 15px rgba(
+          255,
+          255,
+          255,
+          0.35
+        ),
+        0 0 35px rgba(
+          180,
+          120,
+          255,
+          0.4
+        );
+    }
+
+
+    #subtitle {
+
+      font-size: 18px;
+
+      opacity: 0.85;
+
+      margin-bottom: 35px;
+    }
+
+
+    #languageBox {
+
+      width: 100%;
+
+      max-width: 420px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 12px;
+    }
+
+
+    #chooseLanguage {
+
+      font-size: 16px;
+
+      margin-bottom: 5px;
+
+      opacity: 0.75;
+    }
+
+
+    .languageBtn {
+
+      width: 100%;
+
+      padding:
+        16px
+        20px;
+
+      border: 1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.2
+        );
+
+      border-radius: 14px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.08
+        );
+
+      color: white;
+
+      font-size: 17px;
+
+      cursor: pointer;
+
+      transition:
+        0.25s ease;
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+
+    .languageBtn:hover {
+
+      transform:
+        translateY(-2px);
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.15
+        );
+
+      border-color:
+        rgba(
+          255,
+          255,
+          255,
+          0.45
+        );
+    }
+
+
+    #revealBtn,
+    #againBtn,
+    #shareBtn {
+
+      border: none;
+
+      border-radius: 50px;
+
+      padding:
+        17px
+        28px;
+
+      font-size: 16px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #9b5cff,
+          #5b2bbf
+        );
+
+      box-shadow:
+        0 10px 30px
+        rgba(
+          120,
+          60,
+          255,
+          0.3
+        );
+
+      transition:
+        0.25s ease;
+    }
+
+
+    #revealBtn:hover,
+    #againBtn:hover,
+    #shareBtn:hover {
+
+      transform:
+        translateY(-3px);
+
+      box-shadow:
+        0 15px 40px
+        rgba(
+          150,
+          80,
+          255,
+          0.45
+        );
+    }
+
+
+    #loading {
+
+      margin-top: 25px;
+    }
+
+
+    #loadingText {
+
+      font-size: 18px;
+
+      opacity: 0.8;
+
+      animation:
+        pulse 1.5s
+        infinite;
+    }
+
+
+    @keyframes pulse {
+
+      0% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.3;
+      }
+
+    }
+
+
+    #messageBox {
+
+      width: 100%;
+
+      max-width: 560px;
+
+      padding: 35px 25px;
+
+      border-radius: 25px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.08
+        );
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.15
+        );
+
+      backdrop-filter:
+        blur(15px);
+
+      box-shadow:
+        0 20px 60px
+        rgba(
+          0,
+          0,
+          0,
+          0.35
+        );
+    }
+
+
+    #month {
+
+      font-size: 13px;
+
+      letter-spacing: 2px;
+
+      opacity: 0.6;
+
+      margin-bottom: 25px;
+    }
+
+
+    #message {
+
+      font-size: clamp(
+        24px,
+        5vw,
+        34px
+      );
+
+      line-height: 1.45;
+
+      font-weight: 500;
+
+      margin-bottom: 30px;
+
+      text-shadow:
+        0 0 15px
+        rgba(
+          255,
+          255,
+          255,
+          0.15
+        );
+    }
+
+
+    #smallText {
+
+      font-size: 14px;
+
+      opacity: 0.55;
+
+      margin-bottom: 25px;
+    }
+
+
+    .buttons {
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 12px;
+
+      align-items: center;
+    }
+
+
+    #shareBtn {
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+
+      border:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.2
+        );
+
+      box-shadow: none;
+    }
+
+
+    .hidden {
+
+      display: none !important;
+    }
+
+
+    .logo {
+
+      margin-bottom: 25px;
+
+      font-size: 14px;
+
+      letter-spacing: 4px;
+
+      opacity: 0.45;
+
+      text-transform: uppercase;
+    }
+
+
+    @media (
+      max-width: 480px
+    ) {
+
+      .container {
+
+        padding:
+          25px
+          16px;
+      }
+
+
+      #title {
+
+        font-size: 38px;
+
+        letter-spacing: 2px;
+      }
+
+
+      #subtitle {
+
+        font-size: 16px;
+      }
+
+
+      #messageBox {
+
+        padding:
+          28px
+          18px;
+      }
+
+
+      #message {
+
+        font-size: 24px;
+      }
+
+    }
+
+  </style>
+
 </head>
+
 
 <body>
 
   <div class="stars"></div>
 
+
   <main class="container">
 
-    <div class="moon">☾</div>
+
+    <div class="logo">
+      Universe139
+    </div>
+
 
     <h1 id="title">
-      MESSAGE FROM<br>THE UNIVERSE
+      MESSAGE FROM<br>
+      THE UNIVERSE
     </h1>
 
-    <p class="subtitle" id="subtitle">
+
+    <p id="subtitle">
       You were guided here for a reason.
     </p>
 
-    <!-- LANGUAGE SELECTION -->
 
-    <div id="languageBox" class="language-box">
+    <!-- =========================================
+         LANGUAGE SELECTION
+         ========================================= -->
 
-      <p class="choose-language" id="chooseLanguage">
+    <div id="languageBox">
+
+
+      <div id="chooseLanguage">
         Choose your language
-      </p>
-
-      <div class="languages">
-
-        <button class="languageBtn" data-language="en">
-          🇺🇸 English
-        </button>
-
-        <button class="languageBtn" data-language="es">
-          🇪🇸 Español
-        </button>
-
-        <button class="languageBtn" data-language="zh">
-          🇨🇳 中文
-        </button>
-
-        <button class="languageBtn" data-language="ru">
-          🇷🇺 Русский
-        </button>
-
       </div>
+
+
+      <button
+        class="languageBtn"
+        data-language="en"
+        type="button"
+      >
+        🇺🇸 English
+      </button>
+
+
+      <button
+        class="languageBtn"
+        data-language="es"
+        type="button"
+      >
+        🇪🇸 Español
+      </button>
+
+
+      <button
+        class="languageBtn"
+        data-language="zh"
+        type="button"
+      >
+        🇨🇳 中文
+      </button>
+
+
+      <button
+        class="languageBtn"
+        data-language="ru"
+        type="button"
+      >
+        🇷🇺 Русский
+      </button>
+
+
+      <!-- NEW: HINDI -->
+
+      <button
+        class="languageBtn"
+        data-language="hi"
+        type="button"
+      >
+        🇮🇳 हिन्दी
+      </button>
+
+
+      <!-- NEW: THAI -->
+
+      <button
+        class="languageBtn"
+        data-language="th"
+        type="button"
+      >
+        🇹🇭 ไทย
+      </button>
+
 
     </div>
 
-    <!-- CRYSTAL -->
 
-    <div class="crystal">🔮</div>
+    <!-- =========================================
+         REVEAL BUTTON
+         ========================================= -->
 
-    <!-- REVEAL -->
-
-    <button id="revealBtn" class="hidden">
+    <button
+      id="revealBtn"
+      class="hidden"
+      type="button"
+    >
       ✨ REVEAL MY MESSAGE
     </button>
 
-    <!-- LOADING -->
 
-    <div id="loading" class="loading hidden">
+    <!-- =========================================
+         LOADING
+         ========================================= -->
 
-      <div class="spinner"></div>
+    <div
+      id="loading"
+      class="hidden"
+    >
 
-      <p id="loadingText">
+      <div id="loadingText">
         Connecting to the universe...
-      </p>
-
-    </div>
-
-    <!-- MESSAGE -->
-
-    <div id="messageBox" class="message-box hidden">
-
-      <div class="month" id="month"></div>
-
-      <p id="message"></p>
-
-      <div class="divider">
-        ✦ ✧ ✦
       </div>
 
-      <p class="small-text" id="smallText">
-        Keep this message close to your heart.
-      </p>
-
-      <button id="againBtn">
-        🔮 RECEIVE ANOTHER MESSAGE
-      </button>
-
-      <button id="shareBtn">
-        ✨ SHARE
-      </button>
-
     </div>
+
+
+    <!-- =========================================
+         MESSAGE
+         ========================================= -->
+
+    <section
+      id="messageBox"
+      class="hidden"
+    >
+
+
+      <div id="month">
+        YOUR MESSAGE FOR
+      </div>
+
+
+      <div id="message">
+      </div>
+
+
+      <div id="smallText">
+        Keep this message close to your heart.
+      </div>
+
+
+      <div class="buttons">
+
+
+        <button
+          id="againBtn"
+          type="button"
+        >
+          🔮 RECEIVE ANOTHER MESSAGE
+        </button>
+
+
+        <button
+          id="shareBtn"
+          type="button"
+        >
+          ✨ SHARE
+        </button>
+
+
+      </div>
+
+
+    </section>
+
 
   </main>
 
+
+  <!-- =========================================
+       JAVASCRIPT
+       ========================================= -->
+
   <script src="script.js"></script>
 
+
 </body>
+
 </html>
+```
