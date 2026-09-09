@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,12 +12,12 @@
 
   <meta
     name="description"
-    content="Universe139 — Receive a message from the universe."
+    content="Universe139 — A message from the universe for today."
   >
 
   <meta
     name="theme-color"
-    content="#080612"
+    content="#080512"
   >
 
   <title>Universe139 — Message From The Universe</title>
@@ -68,12 +67,13 @@
       overflow-x: hidden;
 
       background:
+
         radial-gradient(
-          circle at 50% 15%,
-          #49306d 0%,
-          #24133f 28%,
-          #10091d 58%,
-          #05030a 100%
+          circle at 50% 10%,
+          #4b3470 0%,
+          #261541 28%,
+          #11091e 58%,
+          #050309 100%
         );
 
       position: relative;
@@ -81,7 +81,7 @@
 
 
     /* =========================================
-       BACKGROUND GLOW
+       SPACE GLOW
        ========================================= */
 
     body::before {
@@ -90,22 +90,24 @@
 
       position: fixed;
 
-      width: 600px;
-      height: 600px;
+      width: 700px;
+      height: 700px;
 
-      top: -250px;
+      top: -320px;
       left: 50%;
 
-      transform: translateX(-50%);
+      transform:
+        translateX(-50%);
 
       background:
+
         radial-gradient(
           circle,
-          rgba(190,130,255,0.22),
-          transparent 70%
+          rgba(190,130,255,0.25),
+          transparent 68%
         );
 
-      filter: blur(30px);
+      filter: blur(35px);
 
       pointer-events: none;
     }
@@ -129,15 +131,15 @@
 
         radial-gradient(
           circle,
-          rgba(255,255,255,0.8) 1px,
+          rgba(255,255,255,0.85) 1px,
           transparent 1.5px
         );
 
       background-size:
-        65px 65px;
+        70px 70px;
 
       animation:
-        starsMove 25s linear infinite;
+        starsMove 30s linear infinite;
     }
 
 
@@ -150,26 +152,26 @@
 
       to {
         transform:
-          translateY(65px);
+          translateY(70px);
       }
 
     }
 
 
     /* =========================================
-       MAIN CONTAINER
+       MAIN
        ========================================= */
 
     .container {
 
       width: 100%;
 
-      max-width: 680px;
+      max-width: 720px;
 
       min-height: 100vh;
 
       padding:
-        40px 20px;
+        35px 20px;
 
       display: flex;
 
@@ -195,17 +197,17 @@
 
       font-size: 13px;
 
-      letter-spacing: 6px;
+      letter-spacing: 7px;
 
       text-transform: uppercase;
 
       opacity: 0.55;
 
-      margin-bottom: 25px;
+      margin-bottom: 22px;
 
       text-shadow:
-        0 0 15px
-        rgba(210,160,255,0.6);
+        0 0 20px
+        rgba(210,160,255,0.7);
     }
 
 
@@ -219,7 +221,7 @@
         clamp(
           38px,
           8vw,
-          66px
+          68px
         );
 
       line-height: 1.05;
@@ -235,8 +237,8 @@
         0 0 15px
         rgba(255,255,255,0.35),
 
-        0 0 35px
-        rgba(170,100,255,0.4);
+        0 0 40px
+        rgba(170,100,255,0.45);
     }
 
 
@@ -250,9 +252,9 @@
 
       line-height: 1.5;
 
-      opacity: 0.78;
+      opacity: 0.75;
 
-      margin-bottom: 32px;
+      margin-bottom: 38px;
     }
 
 
@@ -264,21 +266,27 @@
 
       width: 100%;
 
-      max-width: 540px;
+      max-width: 620px;
 
       display: grid;
 
       grid-template-columns:
-        repeat(2, 1fr);
+        repeat(3, 1fr);
 
-      gap: 18px;
+      justify-items: center;
 
-      margin-top: 5px;
+      align-items: center;
+
+      column-gap: 25px;
+
+      row-gap: 28px;
+
+      margin-bottom: 25px;
     }
 
 
     /* =========================================
-       CHOOSE LANGUAGE
+       LANGUAGE TITLE
        ========================================= */
 
     #chooseLanguage {
@@ -286,91 +294,155 @@
       grid-column:
         1 / -1;
 
-      font-size: 15px;
+      font-size: 14px;
 
-      letter-spacing: 1px;
+      letter-spacing: 2px;
 
-      opacity: 0.65;
+      text-transform: uppercase;
 
-      margin-bottom: 2px;
+      opacity: 0.55;
+
+      margin-bottom: 5px;
     }
 
 
     /* =========================================
-       CRYSTAL LANGUAGE BUTTON
+       DIAMOND BUTTON
        ========================================= */
 
     .languageBtn {
 
-      position: relative;
+      width: 145px;
 
-      min-height: 105px;
+      height: 145px;
 
-      border:
-
-        1px solid
-        rgba(
-          255,
-          255,
-          255,
-          0.30
-        );
-
-      border-radius: 28px;
-
-      color: white;
-
-      font-size: 17px;
-
-      font-weight: 600;
-
-      letter-spacing: 0.3px;
+      border: none;
 
       cursor: pointer;
 
-      overflow: hidden;
+      color: white;
+
+      position: relative;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
 
       background:
 
         linear-gradient(
           145deg,
-          rgba(255,255,255,0.22),
-          rgba(255,255,255,0.07)
+          rgba(255,255,255,0.25),
+          rgba(170,110,255,0.10) 45%,
+          rgba(255,255,255,0.04)
         );
 
+      border:
+
+        1px solid
+        rgba(255,255,255,0.38);
+
       backdrop-filter:
-        blur(18px);
+        blur(14px);
 
       -webkit-backdrop-filter:
-        blur(18px);
+        blur(14px);
 
       box-shadow:
 
         inset
-        0 1px 2px
-        rgba(255,255,255,0.55),
+        0 1px 4px
+        rgba(255,255,255,0.6),
 
         inset
-        0 -1px 2px
-        rgba(0,0,0,0.18),
+        0 -3px 8px
+        rgba(0,0,0,0.25),
 
-        0 15px 35px
-        rgba(0,0,0,0.28),
+        0 15px 40px
+        rgba(0,0,0,0.35),
 
-        0 0 25px
-        rgba(150,90,255,0.08);
+        0 0 30px
+        rgba(160,90,255,0.15);
+
+      transform:
+        rotate(45deg);
+
+      border-radius: 18px;
 
       transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        background 0.35s ease;
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        background 0.4s ease;
 
       animation:
-        crystalFloat 5s ease-in-out infinite;
+        diamondFloat 5s ease-in-out infinite;
+
+      overflow: hidden;
     }
 
 
-    /* Different floating timing */
+    /* =========================================
+       DIAMOND CONTENT
+       ========================================= */
+
+    .languageBtn .diamondContent {
+
+      transform:
+        rotate(-45deg);
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      width: 100%;
+
+      height: 100%;
+
+      position: relative;
+
+      z-index: 5;
+    }
+
+
+    /* =========================================
+       FLOATING ANIMATION
+       ========================================= */
+
+    @keyframes diamondFloat {
+
+      0%,
+      100% {
+
+        transform:
+          rotate(45deg)
+          translateY(0);
+
+      }
+
+      50% {
+
+        transform:
+          rotate(45deg)
+          translateY(-12px);
+
+      }
+
+    }
+
+
+    /* =========================================
+       DIFFERENT FLOAT SPEEDS
+       ========================================= */
 
     .languageBtn:nth-of-type(2) {
       animation-delay: -1s;
@@ -392,20 +464,8 @@
       animation-delay: -1.5s;
     }
 
-
-    @keyframes crystalFloat {
-
-      0%,
-      100% {
-        transform:
-          translateY(0);
-      }
-
-      50% {
-        transform:
-          translateY(-5px);
-      }
-
+    .languageBtn:nth-of-type(7) {
+      animation-delay: -2.5s;
     }
 
 
@@ -419,31 +479,49 @@
 
       position: absolute;
 
-      top: -100%;
+      width: 220%;
+
+      height: 45px;
+
       left: -70%;
 
-      width: 220%;
-      height: 250%;
+      top: 35%;
 
       background:
 
         linear-gradient(
-          120deg,
-          transparent 38%,
-          rgba(255,255,255,0.03) 44%,
-          rgba(255,255,255,0.35) 50%,
-          rgba(255,255,255,0.03) 56%,
-          transparent 63%
+          90deg,
+          transparent,
+          rgba(255,255,255,0.45),
+          transparent
         );
 
       transform:
-        rotate(18deg)
-        translateX(-30%);
+        rotate(-45deg);
 
-      transition:
-        transform 0.8s ease;
+      opacity: 0.35;
+
+      animation:
+        crystalShine 5s ease-in-out infinite;
 
       pointer-events: none;
+    }
+
+
+    @keyframes crystalShine {
+
+      0% {
+        left: -160%;
+      }
+
+      55% {
+        left: 160%;
+      }
+
+      100% {
+        left: 160%;
+      }
+
     }
 
 
@@ -457,87 +535,101 @@
 
       position: absolute;
 
-      inset: 1px;
+      inset: 4px;
 
-      border-radius: 27px;
+      border-radius: 15px;
 
       background:
 
         radial-gradient(
-          circle at 20% 8%,
-          rgba(255,255,255,0.35),
-          transparent 27%
+          circle at 25% 20%,
+          rgba(255,255,255,0.5),
+          transparent 25%
         );
+
+      opacity: 0.65;
 
       pointer-events: none;
     }
 
 
     /* =========================================
-       HOVER
+       FLAG
+       ========================================= */
+
+    .flag {
+
+      display: block;
+
+      font-size: 31px;
+
+      margin-bottom: 7px;
+
+      filter:
+
+        drop-shadow(
+          0 3px 8px
+          rgba(0,0,0,0.35)
+        );
+    }
+
+
+    /* =========================================
+       LANGUAGE NAME
+       ========================================= */
+
+    .languageName {
+
+      font-size: 16px;
+
+      font-weight: 600;
+
+      text-shadow:
+        0 2px 8px
+        rgba(0,0,0,0.45);
+    }
+
+
+    /* =========================================
+       HOVER DIAMOND
        ========================================= */
 
     .languageBtn:hover {
 
       transform:
-        translateY(-9px)
-        scale(1.035);
+        rotate(45deg)
+        translateY(-15px)
+        scale(1.08);
 
       background:
 
         linear-gradient(
           145deg,
-          rgba(255,255,255,0.30),
-          rgba(170,100,255,0.13)
+          rgba(255,255,255,0.38),
+          rgba(180,110,255,0.20),
+          rgba(255,255,255,0.08)
         );
 
       box-shadow:
 
         inset
-        0 1px 3px
-        rgba(255,255,255,0.65),
+        0 1px 5px
+        rgba(255,255,255,0.75),
 
-        0 20px 45px
-        rgba(0,0,0,0.35),
+        0 25px 55px
+        rgba(0,0,0,0.45),
 
-        0 0 35px
-        rgba(170,100,255,0.28);
-    }
-
-
-    .languageBtn:hover::before {
-
-      transform:
-        rotate(18deg)
-        translateX(45%);
+        0 0 50px
+        rgba(185,110,255,0.5);
     }
 
 
     .languageBtn:active {
 
       transform:
-        translateY(-2px)
-        scale(0.98);
-    }
-
-
-    /* =========================================
-       LANGUAGE EMOJI
-       ========================================= */
-
-    .languageBtn .flag {
-
-      display: block;
-
-      font-size: 30px;
-
-      margin-bottom: 7px;
-
-      filter:
-        drop-shadow(
-          0 3px 7px
-          rgba(0,0,0,0.25)
-        );
+        rotate(45deg)
+        translateY(-3px)
+        scale(1.02);
     }
 
 
@@ -545,16 +637,14 @@
        REVEAL BUTTON
        ========================================= */
 
-    #revealBtn,
-    #againBtn,
-    #shareBtn {
+    #revealBtn {
 
       border: none;
 
       border-radius: 50px;
 
       padding:
-        17px 30px;
+        17px 32px;
 
       font-size: 16px;
 
@@ -568,31 +658,29 @@
 
         linear-gradient(
           135deg,
-          #a968ff,
-          #6731c7
+          #b276ff,
+          #6934c9
         );
 
       box-shadow:
 
         0 12px 35px
-        rgba(120,60,255,0.35);
+        rgba(120,60,255,0.4);
 
       transition:
         0.3s ease;
     }
 
 
-    #revealBtn:hover,
-    #againBtn:hover,
-    #shareBtn:hover {
+    #revealBtn:hover {
 
       transform:
         translateY(-4px);
 
       box-shadow:
 
-        0 18px 45px
-        rgba(140,80,255,0.5);
+        0 18px 50px
+        rgba(150,80,255,0.55);
     }
 
 
@@ -644,10 +732,10 @@
 
       width: 100%;
 
-      max-width: 570px;
+      max-width: 600px;
 
       padding:
-        38px 28px;
+        40px 28px;
 
       border-radius: 30px;
 
@@ -662,35 +750,30 @@
       border:
 
         1px solid
-        rgba(
-          255,
-          255,
-          255,
-          0.20
-        );
+        rgba(255,255,255,0.22);
 
       backdrop-filter:
-        blur(20px);
+        blur(22px);
 
       -webkit-backdrop-filter:
-        blur(20px);
+        blur(22px);
 
       box-shadow:
 
         inset
-        0 1px 2px
-        rgba(255,255,255,0.35),
+        0 1px 3px
+        rgba(255,255,255,0.4),
 
         0 25px 70px
-        rgba(0,0,0,0.40),
+        rgba(0,0,0,0.45),
 
-        0 0 45px
-        rgba(140,80,255,0.12);
+        0 0 50px
+        rgba(150,90,255,0.18);
     }
 
 
     /* =========================================
-       MONTH
+       TODAY LABEL
        ========================================= */
 
     #month {
@@ -715,7 +798,7 @@
         clamp(
           24px,
           5vw,
-          35px
+          36px
         );
 
       line-height: 1.45;
@@ -725,8 +808,7 @@
       margin-bottom: 30px;
 
       text-shadow:
-
-        0 0 15px
+        0 0 18px
         rgba(255,255,255,0.18);
     }
 
@@ -761,28 +843,62 @@
     }
 
 
+    #againBtn,
     #shareBtn {
+
+      border: none;
+
+      border-radius: 50px;
+
+      padding:
+        15px 28px;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+      color: white;
+
+      cursor: pointer;
+
+      transition:
+        0.3s ease;
+    }
+
+
+    #againBtn {
 
       background:
 
-        rgba(
-          255,
-          255,
-          255,
-          0.10
+        linear-gradient(
+          135deg,
+          #a968ff,
+          #6731c7
         );
+
+      box-shadow:
+
+        0 10px 30px
+        rgba(120,60,255,0.35);
+    }
+
+
+    #shareBtn {
+
+      background:
+        rgba(255,255,255,0.10);
 
       border:
-
         1px solid
-        rgba(
-          255,
-          255,
-          255,
-          0.20
-        );
+        rgba(255,255,255,0.20);
+    }
 
-      box-shadow: none;
+
+    #againBtn:hover,
+    #shareBtn:hover {
+
+      transform:
+        translateY(-3px);
     }
 
 
@@ -800,7 +916,7 @@
        MOBILE
        ========================================= */
 
-    @media (max-width: 520px) {
+    @media (max-width: 600px) {
 
       .container {
 
@@ -811,7 +927,7 @@
 
       #title {
 
-        font-size: 39px;
+        font-size: 40px;
 
         letter-spacing: 2px;
       }
@@ -821,13 +937,18 @@
 
         font-size: 16px;
 
-        margin-bottom: 25px;
+        margin-bottom: 30px;
       }
 
 
       #languageBox {
 
-        gap: 12px;
+        grid-template-columns:
+          repeat(2, 1fr);
+
+        column-gap: 10px;
+
+        row-gap: 25px;
 
         max-width: 430px;
       }
@@ -835,32 +956,28 @@
 
       .languageBtn {
 
-        min-height: 92px;
+        width: 125px;
 
-        border-radius: 22px;
-
-        font-size: 15px;
+        height: 125px;
       }
 
 
-      .languageBtn::after {
-
-        border-radius: 21px;
-      }
-
-
-      .languageBtn .flag {
+      .flag {
 
         font-size: 27px;
+      }
+
+
+      .languageName {
+
+        font-size: 14px;
       }
 
 
       #messageBox {
 
         padding:
-          30px 18px;
-
-        border-radius: 25px;
+          32px 18px;
       }
 
 
@@ -873,22 +990,26 @@
 
 
     /* =========================================
-       VERY SMALL PHONES
+       SMALL PHONES
        ========================================= */
 
     @media (max-width: 350px) {
 
-      #languageBox {
+      .languageBtn {
 
-        grid-template-columns:
-          1fr;
+        width: 110px;
+
+        height: 110px;
       }
 
+      .flag {
 
-      #chooseLanguage {
+        font-size: 24px;
+      }
 
-        grid-column:
-          auto;
+      .languageName {
+
+        font-size: 13px;
       }
 
     }
@@ -901,16 +1022,8 @@
 <body>
 
 
-  <!-- =========================================
-       STAR BACKGROUND
-       ========================================= -->
-
   <div class="stars"></div>
 
-
-  <!-- =========================================
-       MAIN
-       ========================================= -->
 
   <main class="container">
 
@@ -931,9 +1044,9 @@
     </p>
 
 
-    <!-- =========================================
-         LANGUAGE SELECTION
-         ========================================= -->
+    <!-- ======================================
+         FLOATING CRYSTAL LANGUAGES
+         ====================================== -->
 
     <div id="languageBox">
 
@@ -951,11 +1064,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇺🇸
-        </span>
+        <div class="diamondContent">
 
-        English
+          <span class="flag">
+            🇺🇸
+          </span>
+
+          <span class="languageName">
+            English
+          </span>
+
+        </div>
 
       </button>
 
@@ -968,11 +1087,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇪🇸
-        </span>
+        <div class="diamondContent">
 
-        Español
+          <span class="flag">
+            🇪🇸
+          </span>
+
+          <span class="languageName">
+            Español
+          </span>
+
+        </div>
 
       </button>
 
@@ -985,11 +1110,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇨🇳
-        </span>
+        <div class="diamondContent">
 
-        中文
+          <span class="flag">
+            🇨🇳
+          </span>
+
+          <span class="languageName">
+            中文
+          </span>
+
+        </div>
 
       </button>
 
@@ -1002,11 +1133,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇷🇺
-        </span>
+        <div class="diamondContent">
 
-        Русский
+          <span class="flag">
+            🇷🇺
+          </span>
+
+          <span class="languageName">
+            Русский
+          </span>
+
+        </div>
 
       </button>
 
@@ -1019,11 +1156,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇮🇳
-        </span>
+        <div class="diamondContent">
 
-        हिन्दी
+          <span class="flag">
+            🇮🇳
+          </span>
+
+          <span class="languageName">
+            हिन्दी
+          </span>
+
+        </div>
 
       </button>
 
@@ -1036,11 +1179,17 @@
         type="button"
       >
 
-        <span class="flag">
-          🇹🇭
-        </span>
+        <div class="diamondContent">
 
-        ไทย
+          <span class="flag">
+            🇹🇭
+          </span>
+
+          <span class="languageName">
+            ไทย
+          </span>
+
+        </div>
 
       </button>
 
@@ -1048,9 +1197,9 @@
     </div>
 
 
-    <!-- =========================================
-         REVEAL BUTTON
-         ========================================= -->
+    <!-- ======================================
+         REVEAL
+         ====================================== -->
 
     <button
       id="revealBtn"
@@ -1061,9 +1210,9 @@
     </button>
 
 
-    <!-- =========================================
+    <!-- ======================================
          LOADING
-         ========================================= -->
+         ====================================== -->
 
     <div
       id="loading"
@@ -1077,18 +1226,17 @@
     </div>
 
 
-    <!-- =========================================
+    <!-- ======================================
          MESSAGE
-         ========================================= -->
+         ====================================== -->
 
     <section
       id="messageBox"
       class="hidden"
     >
 
-
       <div id="month">
-        YOUR MESSAGE FOR
+        YOUR MESSAGE FOR TODAY
       </div>
 
 
@@ -1122,21 +1270,14 @@
 
       </div>
 
-
     </section>
 
 
   </main>
 
 
-  <!-- =========================================
-       JAVASCRIPT
-       ========================================= -->
-
   <script src="script.js"></script>
-
 
 </body>
 
 </html>
-```
