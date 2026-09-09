@@ -2564,7 +2564,7 @@ async function createMessageImageBlob() {
     width - 150;
 
   const cardH =
-    650;
+    720;
 
   const radius =
     42;
@@ -2666,16 +2666,16 @@ async function createMessageImageBlob() {
     "#ffffff";
 
   ctx.font =
-    "italic 54px Georgia, serif";
+    "italic 64px Georgia, serif";
 
   ctx.fillText(
     "“",
     150,
-    390
+    400
   );
 
   ctx.font =
-    "500 34px Arial, sans-serif";
+    "700 48px Arial, sans-serif";
 
   const maxWidth =
     cardW - 150;
@@ -2688,10 +2688,10 @@ async function createMessageImageBlob() {
     );
 
   const lineHeight =
-    58;
+    72;
 
   const startY =
-    485 -
+    520 -
     ((lines.length - 1) *
       lineHeight) / 2;
 
@@ -2726,7 +2726,7 @@ async function createMessageImageBlob() {
   ctx.fillText(
     "Keep this message close to your heart.",
     width / 2,
-    1030
+    1100
   );
 
   ctx.fillStyle =
@@ -2738,7 +2738,7 @@ async function createMessageImageBlob() {
   ctx.fillText(
     getDisplayURL(),
     width / 2,
-    1130
+    1200
   );
 
   ctx.fillStyle =
@@ -2750,7 +2750,7 @@ async function createMessageImageBlob() {
   ctx.fillText(
     "Your message is waiting...",
     width / 2,
-    1180
+    1250
   );
 
 
