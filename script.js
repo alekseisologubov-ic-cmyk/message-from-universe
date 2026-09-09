@@ -1,15 +1,9 @@
 /* =========================================================
    UNIVERSE139 — MESSAGE FROM THE UNIVERSE
-   Hurricane / Wind transition version
-   ========================================================= */
-
-
-/* =========================================================
-   TRANSLATIONS
+   Corrected Hurricane Version
    ========================================================= */
 
 const translations = {
-
     en: {
         title: "MESSAGE FROM THE UNIVERSE",
         subtitle: "Choose your language and receive your message",
@@ -91,11 +85,10 @@ const translations = {
 
 
 /* =========================================================
-   MESSAGE TEMPLATES
+   MESSAGES
    ========================================================= */
 
 const messageTemplates = {
-
     en: [
         "Something you have been waiting for is moving closer to you.",
         "The answer you seek may arrive when you stop forcing it.",
@@ -237,11 +230,10 @@ const messageTemplates = {
 
 
 /* =========================================================
-   MESSAGE VARIATIONS
+   VARIATIONS
    ========================================================= */
 
 const messageVariations = {
-
     en: [
         "The universe is aligning the right moment.",
         "Stay open to what is coming.",
@@ -388,7 +380,7 @@ const messageVariations = {
 
 let currentLanguage = "en";
 let lastMessage = "";
-let revealTimer = null;
+let isShowingMessage = false;
 let windTimer = null;
 
 
@@ -406,720 +398,12 @@ const monthText = document.getElementById("month");
 const title = document.querySelector("h1");
 const subtitle = document.querySelector(".subtitle");
 
-const languageButtons = document.querySelectorAll(".languageBtn");
+const languageButtons =
+    document.querySelectorAll(".languageBtn");
 
 
 /* =========================================================
-   CREATE HURRICANE ELEMENTS
-   ========================================================= */
-
-function createWindEffect() {
-
-    let existing = document.getElementById("universeWind");
-
-    if (existing) {
-        existing.remove();
-    }
-
-    const wind = document.createElement("div");
-    wind.id = "universeWind";
-    wind.className = "universeWind";
-
-    wind.innerHTML = `
-        <div class="windGlow"></div>
-
-        <div class="hurricaneCore">
-            <div class="hurricaneRing ring1"></div>
-            <div class="hurricaneRing ring2"></div>
-            <div class="hurricaneRing ring3"></div>
-            <div class="hurricaneEye"></div>
-        </div>
-
-        <div class="windLines"></div>
-
-        <div class="windMessage">
-            <div class="windSymbol">🌪</div>
-            <div class="windMain"></div>
-            <div class="windSub"></div>
-        </div>
-    `;
-
-    document.body.appendChild(wind);
-
-    const lines = wind.querySelector(".windLines");
-
-    // Create wind particles
-    for (let i = 0; i < 80; i++) {
-
-        const line = document.createElement("span");
-
-        line.className = "windLine";
-
-        const length = 40 + Math.random() * 180;
-        const top = Math.random() * 100;
-        const delay = Math.random() * 1.5;
-        const duration = 0.5 + Math.random() * 1.2;
-
-        line.style.width = `${length}px`;
-        line.style.top = `${top}%`;
-        line.style.left = `${-250 + Math.random() * 100}%`;
-        line.style.animationDelay = `${delay}s`;
-        line.style.animationDuration = `${duration}s`;
-
-        lines.appendChild(line);
-    }
-
-    return wind;
-}
-
-
-/* =========================================================
-   HURRICANE CSS
-   ========================================================= */
-
-function addWindStyles() {
-
-    if (document.getElementById("universeWindStyles")) {
-        return;
-    }
-
-    const style = document.createElement("style");
-
-    style.id = "universeWindStyles";
-
-    style.textContent = `
-
-        /* ==========================================
-           HURRICANE OVERLAY
-           ========================================== */
-
-        .universeWind {
-
-            position: fixed;
-            inset: 0;
-
-            z-index: 9999;
-
-            overflow: hidden;
-
-            pointer-events: none;
-
-            opacity: 0;
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(100, 60, 180, 0.18),
-                    rgba(0, 0, 0, 0.94) 75%
-                );
-
-            backdrop-filter: blur(2px);
-
-            animation: windAppear 0.45s ease forwards;
-
-        }
-
-
-        .universeWind::before {
-
-            content: "";
-
-            position: absolute;
-
-            inset: -50%;
-
-            background:
-                repeating-radial-gradient(
-                    ellipse at center,
-                    transparent 0px,
-                    transparent 35px,
-                    rgba(160, 130, 255, 0.06) 37px,
-                    transparent 42px
-                );
-
-            animation: giantWindSpin 2.4s linear infinite;
-
-        }
-
-
-        /* ==========================================
-           CENTER GLOW
-           ========================================== */
-
-        .windGlow {
-
-            position: absolute;
-
-            width: 500px;
-            height: 500px;
-
-            left: 50%;
-            top: 50%;
-
-            transform: translate(-50%, -50%);
-
-            border-radius: 50%;
-
-            background:
-                radial-gradient(
-                    circle,
-                    rgba(190, 160, 255, 0.16) 0%,
-                    rgba(100, 60, 180, 0.08) 35%,
-                    transparent 70%
-                );
-
-            filter: blur(10px);
-
-            animation: glowPulse 0.8s ease-in-out infinite alternate;
-
-        }
-
-
-        /* ==========================================
-           HURRICANE
-           ========================================== */
-
-        .hurricaneCore {
-
-            position: absolute;
-
-            width: 420px;
-            height: 420px;
-
-            left: 50%;
-            top: 50%;
-
-            transform: translate(-50%, -50%);
-
-            border-radius: 50%;
-
-            animation: hurricaneRotate 1.5s linear infinite;
-
-        }
-
-
-        .hurricaneRing {
-
-            position: absolute;
-
-            left: 50%;
-            top: 50%;
-
-            border-radius: 50%;
-
-            border-style: solid;
-
-            transform: translate(-50%, -50%) rotate(0deg);
-
-            filter: blur(1px);
-
-        }
-
-
-        .ring1 {
-
-            width: 130px;
-            height: 130px;
-
-            border-width: 2px;
-
-            border-color:
-                rgba(255,255,255,0.15)
-                transparent
-                rgba(190,150,255,0.65)
-                transparent;
-
-            animation: ringSpin 1.2s linear infinite;
-
-        }
-
-
-        .ring2 {
-
-            width: 250px;
-            height: 250px;
-
-            border-width: 3px;
-
-            border-color:
-                transparent
-                rgba(170,130,255,0.55)
-                transparent
-                rgba(255,255,255,0.15);
-
-            animation: ringSpinReverse 1.7s linear infinite;
-
-        }
-
-
-        .ring3 {
-
-            width: 390px;
-            height: 390px;
-
-            border-width: 2px;
-
-            border-color:
-                rgba(255,255,255,0.10)
-                transparent
-                rgba(150,100,255,0.40)
-                transparent;
-
-            animation: ringSpin 2.2s linear infinite;
-
-        }
-
-
-        .hurricaneEye {
-
-            position: absolute;
-
-            width: 44px;
-            height: 44px;
-
-            left: 50%;
-            top: 50%;
-
-            transform: translate(-50%, -50%);
-
-            border-radius: 50%;
-
-            background:
-                radial-gradient(
-                    circle,
-                    rgba(255,255,255,0.8),
-                    rgba(160,120,255,0.35) 35%,
-                    transparent 70%
-                );
-
-            box-shadow:
-                0 0 25px rgba(190,160,255,0.7),
-                0 0 70px rgba(120,80,220,0.5);
-
-            animation: eyePulse 0.8s ease-in-out infinite alternate;
-
-        }
-
-
-        /* ==========================================
-           WIND LINES
-           ========================================== */
-
-        .windLines {
-
-            position: absolute;
-
-            inset: 0;
-
-            overflow: hidden;
-
-        }
-
-
-        .windLine {
-
-            position: absolute;
-
-            height: 1px;
-
-            border-radius: 100%;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent,
-                    rgba(255,255,255,0.75),
-                    rgba(180,140,255,0.45),
-                    transparent
-                );
-
-            filter: blur(0.5px);
-
-            opacity: 0;
-
-            animation-name: windFly;
-
-            animation-timing-function: linear;
-
-            animation-iteration-count: infinite;
-
-        }
-
-
-        /* ==========================================
-           MESSAGE
-           ========================================== */
-
-        .windMessage {
-
-            position: absolute;
-
-            left: 50%;
-            top: 50%;
-
-            transform: translate(-50%, -50%);
-
-            width: min(90%, 600px);
-
-            text-align: center;
-
-            z-index: 20;
-
-            opacity: 0;
-
-            animation: windText 0.7s ease 0.35s forwards;
-
-        }
-
-
-        .windSymbol {
-
-            font-size: 52px;
-
-            margin-bottom: 18px;
-
-            filter:
-                drop-shadow(
-                    0 0 20px rgba(180,140,255,0.7)
-                );
-
-            animation: symbolSpin 2s linear infinite;
-
-        }
-
-
-        .windMain {
-
-            font-size: clamp(18px, 4vw, 30px);
-
-            font-weight: 700;
-
-            letter-spacing: 3px;
-
-            line-height: 1.4;
-
-            color: white;
-
-            text-shadow:
-                0 0 15px rgba(190,160,255,0.8),
-                0 0 35px rgba(130,90,255,0.5);
-
-        }
-
-
-        .windSub {
-
-            margin-top: 15px;
-
-            font-size: 12px;
-
-            letter-spacing: 4px;
-
-            opacity: 0.65;
-
-            color: white;
-
-        }
-
-
-        /* ==========================================
-           BACKGROUND SPEED
-           ========================================== */
-
-        body.universe-wind .stars {
-
-            animation-duration: 0.7s !important;
-
-            transform: scale(1.15);
-
-            transition: transform 0.7s ease;
-
-        }
-
-
-        body.universe-wind .container {
-
-            filter: blur(3px);
-
-            transform: scale(0.97);
-
-            transition:
-                filter 0.4s ease,
-                transform 0.4s ease;
-
-        }
-
-
-        /* ==========================================
-           ANIMATIONS
-           ========================================== */
-
-        @keyframes windAppear {
-
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-
-        }
-
-
-        @keyframes giantWindSpin {
-
-            from {
-                transform: rotate(0deg) scale(1);
-            }
-
-            to {
-                transform: rotate(360deg) scale(1.08);
-            }
-
-        }
-
-
-        @keyframes hurricaneRotate {
-
-            from {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(0deg);
-            }
-
-            to {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(360deg);
-            }
-
-        }
-
-
-        @keyframes ringSpin {
-
-            from {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(0deg)
-                    scale(1);
-            }
-
-            to {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(360deg)
-                    scale(1.05);
-            }
-
-        }
-
-
-        @keyframes ringSpinReverse {
-
-            from {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(360deg)
-                    scale(1);
-            }
-
-            to {
-                transform:
-                    translate(-50%, -50%)
-                    rotate(0deg)
-                    scale(1.08);
-            }
-
-        }
-
-
-        @keyframes eyePulse {
-
-            from {
-                transform:
-                    translate(-50%, -50%)
-                    scale(0.8);
-            }
-
-            to {
-                transform:
-                    translate(-50%, -50%)
-                    scale(1.15);
-            }
-
-        }
-
-
-        @keyframes glowPulse {
-
-            from {
-                transform:
-                    translate(-50%, -50%)
-                    scale(0.85);
-                opacity: 0.5;
-            }
-
-            to {
-                transform:
-                    translate(-50%, -50%)
-                    scale(1.2);
-                opacity: 1;
-            }
-
-        }
-
-
-        @keyframes symbolSpin {
-
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-
-        }
-
-
-        @keyframes windText {
-
-            from {
-                opacity: 0;
-                transform:
-                    translate(-50%, -50%)
-                    scale(0.8);
-            }
-
-            to {
-                opacity: 1;
-                transform:
-                    translate(-50%, -50%)
-                    scale(1);
-            }
-
-        }
-
-
-        @keyframes windFly {
-
-            0% {
-
-                opacity: 0;
-
-                transform:
-                    translateX(-300px)
-                    translateY(0)
-                    rotate(0deg);
-
-            }
-
-            15% {
-
-                opacity: 0.8;
-
-            }
-
-            50% {
-
-                opacity: 1;
-
-                transform:
-                    translateX(50vw)
-                    translateY(-30px)
-                    rotate(-8deg);
-
-            }
-
-            100% {
-
-                opacity: 0;
-
-                transform:
-                    translateX(130vw)
-                    translateY(60px)
-                    rotate(5deg);
-
-            }
-
-        }
-
-
-        /* ==========================================
-           MOBILE
-           ========================================== */
-
-        @media (max-width: 600px) {
-
-            .hurricaneCore {
-
-                width: 280px;
-                height: 280px;
-
-            }
-
-            .ring1 {
-
-                width: 90px;
-                height: 90px;
-
-            }
-
-            .ring2 {
-
-                width: 175px;
-                height: 175px;
-
-            }
-
-            .ring3 {
-
-                width: 270px;
-                height: 270px;
-
-            }
-
-            .windGlow {
-
-                width: 350px;
-                height: 350px;
-
-            }
-
-            .windMain {
-
-                padding: 0 20px;
-
-                letter-spacing: 2px;
-
-            }
-
-        }
-
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .universeWind *,
-            .universeWind::before {
-
-                animation-duration: 2s !important;
-
-            }
-
-        }
-
-    `;
-
-    document.head.appendChild(style);
-}
-
-addWindStyles();
-
-
-/* =========================================================
-   GENERATE 500 UNIQUE MESSAGES
+   GENERATE MESSAGES
    ========================================================= */
 
 const generatedMessages = {};
@@ -1131,12 +415,10 @@ Object.keys(messageTemplates).forEach(language => {
 
     const messages = new Set();
 
-    // Base messages
     base.forEach(message => {
         messages.add(message);
     });
 
-    // Base + variation
     for (let i = 0; i < base.length; i++) {
 
         for (let j = 0; j < variations.length; j++) {
@@ -1149,7 +431,6 @@ Object.keys(messageTemplates).forEach(language => {
 
     }
 
-    // Additional combinations until exactly 500
     outerLoop:
 
     for (let i = 0; i < base.length; i++) {
@@ -1172,81 +453,35 @@ Object.keys(messageTemplates).forEach(language => {
 
     }
 
-    generatedMessages[language] = Array.from(messages).slice(0, 500);
+    generatedMessages[language] =
+        Array.from(messages).slice(0, 500);
 
 });
 
 
 /* =========================================================
-   LANGUAGE
-   ========================================================= */
-
-function selectLanguage(language) {
-
-    currentLanguage = language;
-
-    const t = translations[language];
-
-    // Update interface
-    if (title) {
-        title.textContent = t.title;
-    }
-
-    if (subtitle) {
-        subtitle.textContent = t.subtitle;
-    }
-
-    if (revealBtn) {
-        revealBtn.textContent = t.reveal;
-    }
-
-    if (monthText) {
-        monthText.textContent = t.today;
-    }
-
-    // Hide languages
-    if (languageBox) {
-        languageBox.style.display = "none";
-    }
-
-    // Show receive button
-    if (revealBtn) {
-        revealBtn.style.display = "inline-block";
-    }
-
-    // Small pause before first message
-    clearTimeout(revealTimer);
-
-    revealTimer = setTimeout(() => {
-
-        revealMessage(false);
-
-    }, 500);
-}
-
-
-/* =========================================================
-   RANDOM MESSAGE
+   GET RANDOM MESSAGE
    ========================================================= */
 
 function getRandomMessage() {
 
-    const messages = generatedMessages[currentLanguage];
+    const messages =
+        generatedMessages[currentLanguage];
 
     if (!messages || messages.length === 0) {
-        return "";
+        return "The Universe has a message for you.";
     }
 
     let message;
 
     do {
 
-        const index =
+        const randomIndex =
             Math.floor(
                 Math.random() * messages.length
             );
 
-        message = messages[index];
+        message = messages[randomIndex];
 
     } while (
         messages.length > 1 &&
@@ -1260,218 +495,567 @@ function getRandomMessage() {
 
 
 /* =========================================================
-   NORMAL MESSAGE REVEAL
+   SHOW MESSAGE
    ========================================================= */
 
-function revealMessage(useWind = false) {
+function showMessage() {
 
-    clearTimeout(revealTimer);
+    const message = getRandomMessage();
 
-    if (useWind) {
+    if (messageText) {
 
-        hurricaneTransition();
+        messageText.textContent = message;
 
-        return;
+        // IMPORTANT:
+        // Force message to be visible
+        messageText.style.opacity = "1";
+        messageText.style.visibility = "visible";
 
     }
 
-    const t = translations[currentLanguage];
+    if (loading) {
+        loading.style.display = "none";
+    }
+
+    if (messageBox) {
+
+        messageBox.style.display = "block";
+        messageBox.style.visibility = "visible";
+        messageBox.style.opacity = "1";
+
+    }
+
+    isShowingMessage = true;
+
+}
+
+
+/* =========================================================
+   FIRST MESSAGE
+   ========================================================= */
+
+function revealFirstMessage() {
 
     if (messageBox) {
         messageBox.style.display = "none";
-        messageBox.style.opacity = "0";
     }
 
     if (loading) {
 
-        loading.textContent = t.loading;
+        loading.textContent =
+            translations[currentLanguage].loading;
 
         loading.style.display = "block";
 
     }
 
-    revealTimer = setTimeout(() => {
+    setTimeout(() => {
 
-        const newMessage = getRandomMessage();
+        showMessage();
 
-        if (messageText) {
-            messageText.textContent = newMessage;
-        }
-
-        if (loading) {
-            loading.style.display = "none";
-        }
-
-        if (messageBox) {
-
-            messageBox.style.display = "block";
-
-            requestAnimationFrame(() => {
-
-                messageBox.style.opacity = "1";
-
-            });
-
-        }
-
-    }, 1800);
+    }, 1500);
 
 }
 
 
 /* =========================================================
-   HURRICANE TRANSITION
+   LANGUAGE SELECTION
    ========================================================= */
 
-function hurricaneTransition() {
+function selectLanguage(language) {
 
-    clearTimeout(revealTimer);
-    clearTimeout(windTimer);
+    if (!translations[language]) {
+        return;
+    }
 
-    const t = translations[currentLanguage];
+    currentLanguage = language;
 
-    // Hide current message
-    if (messageBox) {
+    const t = translations[language];
 
-        messageBox.style.opacity = "0";
+    if (title) {
+        title.textContent = t.title;
+    }
 
-        setTimeout(() => {
+    if (subtitle) {
+        subtitle.textContent = t.subtitle;
+    }
 
-            messageBox.style.display = "none";
+    if (revealBtn) {
 
-        }, 250);
+        revealBtn.textContent =
+            t.reveal;
 
     }
 
-    // Hide button during storm
+    if (monthText) {
+        monthText.textContent =
+            t.today;
+    }
+
+    if (languageBox) {
+        languageBox.style.display = "none";
+    }
+
     if (revealBtn) {
+
+        revealBtn.style.display =
+            "inline-block";
 
         revealBtn.disabled = true;
 
-        revealBtn.style.opacity = "0";
-
     }
 
-    // Universe enters wind mode
-    document.body.classList.add("universe-wind");
+    isShowingMessage = false;
 
-    // Create storm
-    const wind = createWindEffect();
+    revealFirstMessage();
 
-    const windMain = wind.querySelector(".windMain");
-    const windSub = wind.querySelector(".windSub");
+    setTimeout(() => {
 
-    windMain.textContent = t.wind;
-    windSub.textContent = t.connection;
+        if (revealBtn) {
 
-    /*
-        The storm lasts approximately 2.8 seconds.
-        The message is then revealed.
-    */
+            revealBtn.disabled = false;
 
-    windTimer = setTimeout(() => {
+            revealBtn.textContent =
+                t.another;
 
-        // Fade hurricane away
-        wind.style.transition = "opacity 0.7s ease";
-        wind.style.opacity = "0";
+        }
 
-        // Remove wind mode
-        document.body.classList.remove("universe-wind");
-
-        // Reveal new message
-        setTimeout(() => {
-
-            wind.remove();
-
-            const newMessage = getRandomMessage();
-
-            if (messageText) {
-                messageText.textContent = newMessage;
-            }
-
-            if (messageBox) {
-
-                messageBox.style.display = "block";
-
-                requestAnimationFrame(() => {
-
-                    messageBox.style.opacity = "1";
-
-                });
-
-            }
-
-            if (revealBtn) {
-
-                revealBtn.disabled = false;
-
-                revealBtn.style.opacity = "1";
-
-                revealBtn.textContent = t.another;
-
-            }
-
-        }, 650);
-
-    }, 2800);
+    }, 1900);
 
 }
 
 
 /* =========================================================
-   LANGUAGE BUTTONS
+   HURRICANE CSS
+   ========================================================= */
+
+function addWindStyles() {
+
+    if (
+        document.getElementById(
+            "universe139WindStyles"
+        )
+    ) {
+        return;
+    }
+
+    const style =
+        document.createElement("style");
+
+    style.id =
+        "universe139WindStyles";
+
+    style.textContent = `
+
+        .universeWind {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            pointer-events: none;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(130,80,220,.18),
+                    rgba(0,0,0,.94)
+                );
+            opacity: 0;
+            animation: stormIn .4s forwards;
+        }
+
+        .universeWind::before {
+            content: "";
+            position: absolute;
+            width: 160vmax;
+            height: 160vmax;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            background:
+                repeating-radial-gradient(
+                    ellipse,
+                    transparent 0 40px,
+                    rgba(190,150,255,.07) 42px 45px,
+                    transparent 48px
+                );
+            animation: giantSpin 2s linear infinite;
+        }
+
+        .windCore {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .windRing {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            border: 2px solid rgba(200,170,255,.4);
+            animation: ringSpin 1.2s linear infinite;
+        }
+
+        .windRing:nth-child(1) {
+            width: 120px;
+            height: 120px;
+        }
+
+        .windRing:nth-child(2) {
+            width: 230px;
+            height: 230px;
+            border-color: transparent rgba(220,200,255,.5);
+            animation-duration: 1.6s;
+            animation-direction: reverse;
+        }
+
+        .windRing:nth-child(3) {
+            width: 360px;
+            height: 360px;
+            border-color: rgba(150,110,255,.3) transparent;
+            animation-duration: 2s;
+        }
+
+        .windEye {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                white,
+                rgba(190,150,255,.5),
+                transparent 70%
+            );
+            box-shadow:
+                0 0 30px rgba(200,170,255,.9),
+                0 0 80px rgba(140,90,255,.7);
+            animation: eyePulse .7s infinite alternate;
+        }
+
+        .windWords {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 90%;
+            text-align: center;
+            z-index: 10;
+            color: white;
+            text-shadow:
+                0 0 20px rgba(190,160,255,.9);
+            animation: wordsIn .7s .3s both;
+        }
+
+        .windEmoji {
+            font-size: 55px;
+            margin-bottom: 15px;
+            animation: emojiSpin 1.5s linear infinite;
+        }
+
+        .windMainText {
+            font-size: clamp(17px,4vw,30px);
+            font-weight: bold;
+            letter-spacing: 2px;
+            line-height: 1.4;
+        }
+
+        .windSubText {
+            margin-top: 14px;
+            font-size: 12px;
+            letter-spacing: 4px;
+            opacity: .65;
+        }
+
+        .windParticle {
+            position: absolute;
+            height: 1px;
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    white,
+                    rgba(190,150,255,.6),
+                    transparent
+                );
+            opacity: 0;
+            animation: particleFly linear infinite;
+        }
+
+        body.universe-wind .stars {
+            animation-duration: .6s !important;
+            transform: scale(1.2);
+        }
+
+        body.universe-wind .container {
+            filter: blur(3px);
+            transform: scale(.97);
+        }
+
+        @keyframes stormIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes giantSpin {
+            from { transform: translate(-50%,-50%) rotate(0deg); }
+            to { transform: translate(-50%,-50%) rotate(360deg); }
+        }
+
+        @keyframes ringSpin {
+            from {
+                transform: translate(-50%,-50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%,-50%) rotate(360deg);
+            }
+        }
+
+        @keyframes eyePulse {
+            from { transform: translate(-50%,-50%) scale(.75); }
+            to { transform: translate(-50%,-50%) scale(1.2); }
+        }
+
+        @keyframes wordsIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%,-50%) scale(.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%,-50%) scale(1);
+            }
+        }
+
+        @keyframes emojiSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes particleFly {
+
+            0% {
+                opacity: 0;
+                transform: translateX(-300px);
+            }
+
+            15% {
+                opacity: .9;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(130vw);
+            }
+        }
+
+    `;
+
+    document.head.appendChild(style);
+}
+
+addWindStyles();
+
+
+/* =========================================================
+   CREATE HURRICANE
+   ========================================================= */
+
+function createHurricane() {
+
+    const storm =
+        document.createElement("div");
+
+    storm.className =
+        "universeWind";
+
+    storm.innerHTML = `
+
+        <div class="windCore">
+
+            <div class="windRing"></div>
+            <div class="windRing"></div>
+            <div class="windRing"></div>
+
+            <div class="windEye"></div>
+
+        </div>
+
+        <div class="windWords">
+
+            <div class="windEmoji">🌪️</div>
+
+            <div class="windMainText">
+                ${translations[currentLanguage].wind}
+            </div>
+
+            <div class="windSubText">
+                ${translations[currentLanguage].connection}
+            </div>
+
+        </div>
+
+    `;
+
+    const particles =
+        document.createElement("div");
+
+    for (let i = 0; i < 90; i++) {
+
+        const particle =
+            document.createElement("span");
+
+        particle.className =
+            "windParticle";
+
+        particle.style.width =
+            `${40 + Math.random() * 180}px`;
+
+        particle.style.top =
+            `${Math.random() * 100}%`;
+
+        particle.style.left =
+            `${-20 - Math.random() * 50}%`;
+
+        particle.style.animationDuration =
+            `${.5 + Math.random() * 1.2}s`;
+
+        particle.style.animationDelay =
+            `${Math.random() * 1.5}s`;
+
+        particles.appendChild(particle);
+
+    }
+
+    storm.appendChild(particles);
+
+    document.body.appendChild(storm);
+
+    return storm;
+}
+
+
+/* =========================================================
+   HURRICANE — RECEIVE ANOTHER MESSAGE
+   ========================================================= */
+
+function receiveAnotherMessage() {
+
+    if (!isShowingMessage) {
+        return;
+    }
+
+    if (
+        revealBtn &&
+        revealBtn.disabled
+    ) {
+        return;
+    }
+
+    if (revealBtn) {
+        revealBtn.disabled = true;
+    }
+
+    if (messageBox) {
+
+        messageBox.style.transition =
+            "opacity .25s ease";
+
+        messageBox.style.opacity =
+            "0";
+
+    }
+
+    document.body.classList.add(
+        "universe-wind"
+    );
+
+    const storm =
+        createHurricane();
+
+    windTimer =
+        setTimeout(() => {
+
+            storm.style.transition =
+                "opacity .7s ease";
+
+            storm.style.opacity =
+                "0";
+
+            document.body.classList.remove(
+                "universe-wind"
+            );
+
+            setTimeout(() => {
+
+                storm.remove();
+
+                // THIS IS THE IMPORTANT FIX
+                showMessage();
+
+                if (revealBtn) {
+
+                    revealBtn.disabled =
+                        false;
+
+                    revealBtn.textContent =
+                        translations[
+                            currentLanguage
+                        ].another;
+
+                }
+
+            }, 700);
+
+        }, 2600);
+
+}
+
+
+/* =========================================================
+   LANGUAGE BUTTON EVENTS
    ========================================================= */
 
 languageButtons.forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        const language =
-            button.dataset.language;
+            const language =
+                button.dataset.language;
 
-        if (language) {
             selectLanguage(language);
-        }
 
-    });
+        }
+    );
 
 });
 
 
 /* =========================================================
-   RECEIVE MESSAGE BUTTON
+   RECEIVE BUTTON
    ========================================================= */
 
 if (revealBtn) {
 
-    revealBtn.addEventListener("click", () => {
-
-        /*
-            First click:
-            Normal reveal.
-
-            Later clicks:
-            Hurricane / wind transition.
-        */
-
-        if (messageBox &&
-            messageBox.style.display === "block") {
-
-            revealMessage(true);
-
-        } else {
-
-            revealMessage(false);
-
-        }
-
-    });
+    revealBtn.addEventListener(
+        "click",
+        receiveAnotherMessage
+    );
 
 }
 
 
 /* =========================================================
-   SHARE BUTTON
+   SHARE
    ========================================================= */
 
 const shareBtn =
@@ -1479,59 +1063,61 @@ const shareBtn =
 
 if (shareBtn) {
 
-    shareBtn.addEventListener("click", async () => {
+    shareBtn.addEventListener(
+        "click",
+        async () => {
 
-        const t = translations[currentLanguage];
+            const text =
+                messageText
+                    ? messageText.textContent
+                    : "";
 
-        const text =
-            messageText
-                ? messageText.textContent
-                : "";
+            const t =
+                translations[currentLanguage];
 
-        try {
+            try {
 
-            if (
-                navigator.share
-            ) {
+                if (
+                    navigator.share
+                ) {
 
-                await navigator.share({
+                    await navigator.share({
+                        title: "Universe139",
+                        text: text,
+                        url: window.location.href
+                    });
 
-                    title: "Universe139",
-                    text: text,
-                    url: window.location.href
+                } else {
 
-                });
+                    await navigator.clipboard.writeText(
+                        text
+                    );
 
-            } else {
-
-                await navigator.clipboard.writeText(
-                    text
-                );
-
-                const originalText =
-                    shareBtn.textContent;
-
-                shareBtn.textContent =
-                    t.copied;
-
-                setTimeout(() => {
+                    const old =
+                        shareBtn.textContent;
 
                     shareBtn.textContent =
-                        t.share;
+                        t.copied;
 
-                }, 1800);
+                    setTimeout(() => {
+
+                        shareBtn.textContent =
+                            t.share;
+
+                    }, 1800);
+
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Share cancelled."
+                );
 
             }
 
-        } catch (error) {
-
-            console.log(
-                "Share cancelled or unavailable."
-            );
-
         }
-
-    });
+    );
 
 }
 
@@ -1541,35 +1127,33 @@ if (shareBtn) {
    ========================================================= */
 
 if (revealBtn) {
-    revealBtn.style.display = "none";
+
+    revealBtn.style.display =
+        "none";
+
 }
 
 if (loading) {
-    loading.style.display = "none";
+
+    loading.style.display =
+        "none";
+
 }
 
 if (messageBox) {
-    messageBox.style.display = "none";
+
+    messageBox.style.display =
+        "none";
+
+    messageBox.style.opacity =
+        "0";
+
 }
 
-
-/* =========================================================
-   DEBUG INFO
-   ========================================================= */
-
 console.log(
-    "Universe139 loaded successfully."
-);
-
-console.log(
-    "Languages:",
-    Object.keys(generatedMessages)
-);
-
-console.log(
-    "Messages per language:",
+    "Universe139 ready:",
     Object.keys(generatedMessages).map(
-        language =>
-            `${language}: ${generatedMessages[language].length}`
+        lang =>
+            `${lang}: ${generatedMessages[lang].length} messages`
     )
 );
