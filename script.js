@@ -1,6 +1,5 @@
 /* =====================================================
    UNIVERSE139
-   6 LANGUAGES / 500 MESSAGES EACH
    ===================================================== */
 
 
@@ -19,7 +18,7 @@ const translations = {
     another: "🔮 RECEIVE ANOTHER MESSAGE",
     share: "✨ SHARE",
     small: "Keep this message close to your heart.",
-    month: "YOUR MESSAGE FOR",
+    month: "YOUR MESSAGE FOR TODAY",
     copied: "Your message has been copied!"
   },
 
@@ -32,7 +31,7 @@ const translations = {
     another: "🔮 RECIBIR OTRO MENSAJE",
     share: "✨ COMPARTIR",
     small: "Guarda este mensaje cerca de tu corazón.",
-    month: "TU MENSAJE PARA",
+    month: "TU MENSAJE DE HOY",
     copied: "¡Tu mensaje ha sido copiado!"
   },
 
@@ -45,7 +44,7 @@ const translations = {
     another: "🔮 再收到一条讯息",
     share: "✨ 分享",
     small: "把这份讯息放在心里。",
-    month: "你本月的宇宙讯息",
+    month: "你今天的宇宙讯息",
     copied: "讯息已复制！"
   },
 
@@ -58,7 +57,7 @@ const translations = {
     another: "🔮 ПОЛУЧИТЬ ЕЩЁ ОДНО ПОСЛАНИЕ",
     share: "✨ ПОДЕЛИТЬСЯ",
     small: "Сохрани это послание в своём сердце.",
-    month: "ТВОЁ ПОСЛАНИЕ НА",
+    month: "ТВОЁ ПОСЛАНИЕ НА СЕГОДНЯ",
     copied: "Послание скопировано!"
   },
 
@@ -71,7 +70,7 @@ const translations = {
     another: "🔮 एक और संदेश प्राप्त करें",
     share: "✨ साझा करें",
     small: "इस संदेश को अपने दिल के करीब रखें।",
-    month: "इस महीने आपके लिए संदेश",
+    month: "आज आपके लिए संदेश",
     copied: "आपका संदेश कॉपी हो गया!"
   },
 
@@ -84,7 +83,7 @@ const translations = {
     another: "🔮 รับข้อความอีกครั้ง",
     share: "✨ แชร์",
     small: "เก็บข้อความนี้ไว้ใกล้หัวใจ",
-    month: "ข้อความจากจักรวาลสำหรับ",
+    month: "ข้อความจากจักรวาลสำหรับวันนี้",
     copied: "คัดลอกข้อความแล้ว!"
   }
 
@@ -92,7 +91,7 @@ const translations = {
 
 
 /* =====================================================
-   BASE MESSAGES
+   MESSAGE TEMPLATES
    ===================================================== */
 
 const messageTemplates = {
@@ -239,7 +238,7 @@ const messageTemplates = {
 
 
 /* =====================================================
-   MESSAGE VARIATIONS
+   VARIATIONS
    ===================================================== */
 
 const messageVariations = {
@@ -386,35 +385,45 @@ const messageVariations = {
 
 
 /* =====================================================
-   CREATE EXACTLY 500 UNIQUE MESSAGES
+   GENERATE 500 MESSAGES
    ===================================================== */
 
 Object.keys(messageTemplates).forEach(language => {
 
-  const base = messageTemplates[language];
-  const variations = messageVariations[language];
+  const base =
+    messageTemplates[language];
 
-  const uniqueMessages = new Set();
+  const variations =
+    messageVariations[language];
 
-  /* -----------------------------------------------
-     1. Original messages
-     ----------------------------------------------- */
+  const messages =
+    new Set();
+
+
+  /* Original */
 
   base.forEach(message => {
-    uniqueMessages.add(message);
+
+    messages.add(message);
+
   });
 
 
-  /* -----------------------------------------------
-     2. Base + one variation
-     20 x 20 = 400 combinations
-     ----------------------------------------------- */
+  /* Base + variation */
 
-  for (let i = 0; i < base.length; i++) {
+  for (
+    let i = 0;
+    i < base.length;
+    i++
+  ) {
 
-    for (let j = 0; j < variations.length; j++) {
+    for (
+      let j = 0;
+      j < variations.length;
+      j++
+    ) {
 
-      uniqueMessages.add(
+      messages.add(
         `${base[i]} ${variations[j]}`
       );
 
@@ -423,48 +432,49 @@ Object.keys(messageTemplates).forEach(language => {
   }
 
 
-  /* -----------------------------------------------
-     3. Add combinations of TWO variations
-     until we reach 500
-     ----------------------------------------------- */
+  /*
+    We have 420 possible combinations
+    from the first two stages.
 
-  let combination = 0;
+    Add a third phrase to safely reach 500.
+  */
 
-  while (uniqueMessages.size < 500) {
+  let counter = 0;
+
+
+  while (
+    messages.size < 500
+  ) {
 
     const baseIndex =
-      combination % base.length;
+      counter % base.length;
 
     const variation1 =
-      Math.floor(
-        combination / base.length
-      ) % variations.length;
+      counter % variations.length;
 
     const variation2 =
       (
-        Math.floor(
-          combination / (base.length * variations.length)
-        ) +
-        variation1 +
-        1
+        counter +
+        7
       ) % variations.length;
+
 
     const newMessage =
       `${base[baseIndex]} ${variations[variation1]} ${variations[variation2]}`;
 
-    uniqueMessages.add(newMessage);
 
-    combination++;
+    messages.add(newMessage);
+
+    counter++;
 
   }
 
 
-  /* -----------------------------------------------
-     Store exactly 500
-     ----------------------------------------------- */
-
   translations[language].messages =
-    Array.from(uniqueMessages).slice(0, 500);
+    Array.from(messages).slice(
+      0,
+      500
+    );
 
 });
 
@@ -473,7 +483,9 @@ Object.keys(messageTemplates).forEach(language => {
    APP STATE
    ===================================================== */
 
-let currentLanguage = "en";
+let currentLanguage =
+  "en";
+
 
 const lastMessageIndex = {
 
@@ -488,50 +500,78 @@ const lastMessageIndex = {
 
 
 /* =====================================================
-   GET ELEMENTS
+   DOM
    ===================================================== */
 
 const languageBox =
-  document.getElementById("languageBox");
+  document.getElementById(
+    "languageBox"
+  );
 
 const languageButtons =
-  document.querySelectorAll(".languageBtn");
+  document.querySelectorAll(
+    ".languageBtn"
+  );
 
 const revealBtn =
-  document.getElementById("revealBtn");
+  document.getElementById(
+    "revealBtn"
+  );
 
 const loading =
-  document.getElementById("loading");
+  document.getElementById(
+    "loading"
+  );
 
 const loadingText =
-  document.getElementById("loadingText");
+  document.getElementById(
+    "loadingText"
+  );
 
 const messageBox =
-  document.getElementById("messageBox");
+  document.getElementById(
+    "messageBox"
+  );
 
 const messageElement =
-  document.getElementById("message");
+  document.getElementById(
+    "message"
+  );
 
 const againBtn =
-  document.getElementById("againBtn");
+  document.getElementById(
+    "againBtn"
+  );
 
 const shareBtn =
-  document.getElementById("shareBtn");
+  document.getElementById(
+    "shareBtn"
+  );
 
 const title =
-  document.getElementById("title");
+  document.getElementById(
+    "title"
+  );
 
 const subtitle =
-  document.getElementById("subtitle");
+  document.getElementById(
+    "subtitle"
+  );
 
 const chooseLanguage =
-  document.getElementById("chooseLanguage");
+  document.getElementById(
+    "chooseLanguage"
+  );
 
 const smallText =
-  document.getElementById("smallText");
+  document.getElementById(
+    "smallText"
+  );
 
 const monthElement =
-  document.getElementById("month");
+  document.getElementById(
+    "month"
+  );
 
 
 /* =====================================================
@@ -540,18 +580,22 @@ const monthElement =
 
 function selectLanguage(language) {
 
-  if (!translations[language]) {
+  if (
+    !translations[language]
+  ) {
 
     console.error(
-      "Language not found:",
+      "Unknown language:",
       language
     );
 
     return;
+
   }
 
 
-  currentLanguage = language;
+  currentLanguage =
+    language;
 
 
   const t =
@@ -561,8 +605,6 @@ function selectLanguage(language) {
   document.documentElement.lang =
     language;
 
-
-  /* Update interface */
 
   title.innerHTML =
     t.title;
@@ -596,23 +638,27 @@ function selectLanguage(language) {
     t.small;
 
 
-  /* Hide language choices */
-
-  languageBox.classList.add("hidden");
-
-
-  /* Show reveal button */
-
-  revealBtn.classList.remove("hidden");
+  monthElement.textContent =
+    t.month;
 
 
-  /* Automatically generate message */
+  /*
+    Hide language diamonds
+  */
 
-  setTimeout(() => {
+  languageBox.classList.add(
+    "hidden"
+  );
 
-    revealMessage();
 
-  }, 700);
+  /*
+    Generate today's message
+  */
+
+  setTimeout(
+    revealMessage,
+    500
+  );
 
 }
 
@@ -623,8 +669,10 @@ function selectLanguage(language) {
 
 function getRandomMessage() {
 
-  const list =
-    translations[currentLanguage].messages;
+  const messages =
+    translations[
+      currentLanguage
+    ].messages;
 
 
   let randomIndex;
@@ -634,45 +682,61 @@ function getRandomMessage() {
 
     randomIndex =
       Math.floor(
-        Math.random() * list.length
+        Math.random() *
+        messages.length
       );
 
-  } while (
+  }
+
+  while (
 
     randomIndex ===
-    lastMessageIndex[currentLanguage]
+    lastMessageIndex[
+      currentLanguage
+    ]
 
   );
 
 
-  lastMessageIndex[currentLanguage] =
+  lastMessageIndex[
+    currentLanguage
+  ] =
     randomIndex;
 
 
-  return list[randomIndex];
+  return messages[
+    randomIndex
+  ];
 
 }
 
 
 /* =====================================================
-   REVEAL MESSAGE
+   REVEAL
    ===================================================== */
 
 function revealMessage() {
 
-  /* Hide previous content */
-
-  revealBtn.classList.add("hidden");
-
-  messageBox.classList.add("hidden");
+  revealBtn.classList.add(
+    "hidden"
+  );
 
 
-  /* Show loading */
+  messageBox.classList.add(
+    "hidden"
+  );
 
-  loading.classList.remove("hidden");
+
+  loading.classList.remove(
+    "hidden"
+  );
 
 
-  /* Generate after 2.5 seconds */
+  loadingText.textContent =
+    translations[
+      currentLanguage
+    ].loading;
+
 
   setTimeout(() => {
 
@@ -684,49 +748,20 @@ function revealMessage() {
       `"${newMessage}"`;
 
 
-    /* Locales */
-
-    const localeMap = {
-
-      en: "en-US",
-      es: "es-ES",
-      zh: "zh-CN",
-      ru: "ru-RU",
-      hi: "hi-IN",
-      th: "th-TH"
-
-    };
-
-
-    const locale =
-      localeMap[currentLanguage];
-
-
-    const now =
-      new Date();
-
-
-    const month =
-      now.toLocaleString(
-        locale,
-        {
-          month: "long"
-        }
-      );
-
-
     monthElement.textContent =
-      `${translations[currentLanguage].month} ${month.toUpperCase()}`;
+      translations[
+        currentLanguage
+      ].month;
 
 
-    /* Hide loading */
+    loading.classList.add(
+      "hidden"
+    );
 
-    loading.classList.add("hidden");
 
-
-    /* Show message */
-
-    messageBox.classList.remove("hidden");
+    messageBox.classList.remove(
+      "hidden"
+    );
 
 
   }, 2500);
@@ -738,28 +773,32 @@ function revealMessage() {
    LANGUAGE BUTTONS
    ===================================================== */
 
-languageButtons.forEach(button => {
+languageButtons.forEach(
+  button => {
 
-  button.addEventListener(
-    "click",
-    function () {
+    button.addEventListener(
+      "click",
+      () => {
 
-      const language =
-        this.dataset.language;
-
-
-      console.log(
-        "Selected language:",
-        language
-      );
+        const language =
+          button.dataset.language;
 
 
-      selectLanguage(language);
+        console.log(
+          "Language selected:",
+          language
+        );
 
-    }
-  );
 
-});
+        selectLanguage(
+          language
+        );
+
+      }
+    );
+
+  }
+);
 
 
 /* =====================================================
@@ -798,7 +837,7 @@ if (shareBtn) {
 
   shareBtn.addEventListener(
     "click",
-    async function () {
+    async () => {
 
       const text =
         messageElement.textContent +
@@ -806,16 +845,16 @@ if (shareBtn) {
         "\n\n@universe139";
 
 
-      /* Native phone sharing */
-
-      if (navigator.share) {
+      if (
+        navigator.share
+      ) {
 
         try {
 
           await navigator.share({
 
             title:
-              "Message From The Universe",
+              "Universe139",
 
             text:
               text,
@@ -825,7 +864,9 @@ if (shareBtn) {
 
           });
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
           console.log(
             "Share cancelled."
@@ -834,10 +875,9 @@ if (shareBtn) {
         }
 
         return;
+
       }
 
-
-      /* Clipboard fallback */
 
       try {
 
@@ -852,7 +892,9 @@ if (shareBtn) {
           ].copied
         );
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         alert(text);
 
@@ -865,19 +907,11 @@ if (shareBtn) {
 
 
 /* =====================================================
-   FINAL CHECK
+   STARTUP CHECK
    ===================================================== */
 
 console.log(
-  "================================="
-);
-
-console.log(
-  "✨ Universe139 loaded successfully"
-);
-
-console.log(
-  "================================="
+  "✨ Universe139 loaded"
 );
 
 console.log(
@@ -908,8 +942,4 @@ console.log(
 console.log(
   "Thai:",
   translations.th.messages.length
-);
-
-console.log(
-  "================================="
 );
