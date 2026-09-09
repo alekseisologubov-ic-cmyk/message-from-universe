@@ -1,7 +1,6 @@
 // api/shotstack-webhook.js
 
 export default async function handler(req, res) {
-  // Shotstack sends POST requests.
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
@@ -9,29 +8,20 @@ export default async function handler(req, res) {
     });
   }
 
-  const BUFFER_API_KEY = process.env.BUFFER_API_KEY;
-  const BUFFER_TIKTOK_CHANNEL_ID =
-    process.env.BUFFER_TIKTOK_CHANNEL_ID;
+  const bufferApiKey = process.env.BUFFER_API_KEY;
+  const channelId = process.env.BUFFER_TIKTOK_CHANNEL_ID;
 
-  // Make sure Buffer is configured.
-  if (!BUFFER_API_KEY) {
-    console.error("Missing BUFFER_API_KEY");
-
+  if (!bufferApiKey) {
     return res.status(500).json({
       success: false,
-      error: "BUFFER_API_KEY is not configured in Vercel."
+      error: "BUFFER_API_KEY is missing."
     });
   }
 
-  if (!BUFFER_TIKTOK_CHANNEL_ID) {
-    console.error(
-      "Missing BUFFER_TIKTOK_CHANNEL_ID"
-    );
-
+  if (!channelId) {
     return res.status(500).json({
       success: false,
-      error:
-        "BUFFER_TIKTOK_CHANNEL_ID is not configured in Vercel."
+      error: "BUFFER_TIKTOK_CHANNEL_ID is missing."
     });
   }
 
@@ -42,97 +32,50 @@ export default async function handler(req, res) {
     JSON.stringify(payload, null, 2)
   );
 
-  /*
-    Shotstack callback can contain the render status
-    and the final video URL.
-
-    We only continue when the render is finished.
-  */
-
-  const status = payload.status;
-
-  if (status !== "done" && status !== "ready") {
+  // We only want completed renders.
+  if (payload.status !== "done") {
     return res.status(200).json({
       success: true,
-      received: true,
       ignored: true,
-      reason: `Render status: ${status || "unknown"}`
+      status: payload.status || "unknown"
     });
   }
 
-  /*
-    Different Shotstack responses can expose the URL
-    in slightly different places, so check the common
-    locations.
-  */
-
-  const videoUrl =
-    payload.url ||
-    payload.response?.url ||
-    payload.response?.output?.url ||
-    payload.data?.url ||
-    payload.data?.response?.url ||
-    null;
+  const videoUrl = payload.url;
 
   if (!videoUrl) {
-    console.error(
-      "No MP4 URL found in Shotstack webhook."
-    );
-
     return res.status(400).json({
       success: false,
-      error: "Shotstack webhook did not contain a video URL.",
+      error: "Completed render has no video URL.",
       payload
     });
   }
 
-  /*
-    Universe139 TikTok caption.
-  */
+  const message =
+    payload.customData?.message ||
+    "A message from the universe, just for you. ✨";
 
-  const caption = `
+  const caption = `${message}
+
 ✨ A message from the universe, just for you.
-
-Something in this message may be meant for you today.
 
 Discover your personal message:
 https://message-from-universe.vercel.app/
 
-#Universe139
-#MessageFromTheUniverse
-#DailyMessage
-#Universe
-#SpiritualTok
-#Motivation
-#PositiveEnergy
-#DailyInspiration
-`.trim();
-
-  /*
-    Buffer GraphQL mutation.
-
-    automatic = Buffer publishes automatically.
-    addToQueue = use the next available Buffer
-    publishing slot for the TikTok channel.
-  */
+#Universe139 #MessageFromTheUniverse #DailyMessage #Universe #Motivation #DailyInspiration`;
 
   const mutation = `
     mutation CreatePost {
       createPost(
         input: {
           text: ${JSON.stringify(caption)}
-          channelId: ${JSON.stringify(
-            BUFFER_TIKTOK_CHANNEL_ID
-          )}
+          channelId: ${JSON.stringify(channelId)}
           schedulingType: automatic
           mode: addToQueue
           assets: [
             {
               video: {
                 url: ${JSON.stringify(videoUrl)}
-                metadata: {
-                  thumbnailOffset: 3000
-                }
               }
             }
           ]
@@ -144,11 +87,6 @@ https://message-from-universe.vercel.app/
             text
             dueAt
             status
-            assets {
-              id
-              mimeType
-              source
-            }
           }
         }
 
@@ -160,98 +98,70 @@ https://message-from-universe.vercel.app/
   `;
 
   try {
-    const bufferResponse = await fetch(
+    const response = await fetch(
       "https://api.buffer.com",
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${BUFFER_API_KEY}`
+          Authorization: `Bearer ${bufferApiKey}`
         },
-
         body: JSON.stringify({
           query: mutation
         })
       }
     );
 
-    const bufferData =
-      await bufferResponse.json();
+    const data = await response.json();
 
     console.log(
       "Buffer response:",
-      JSON.stringify(
-        bufferData,
-        null,
-        2
-      )
+      JSON.stringify(data, null, 2)
     );
 
-    /*
-      HTTP-level error.
-    */
-
-    if (!bufferResponse.ok) {
+    if (!response.ok) {
       return res.status(500).json({
         success: false,
         error: "Buffer API request failed.",
-        details: bufferData
+        details: data
       });
     }
 
-    /*
-      GraphQL-level error.
-    */
-
-    if (bufferData.errors) {
+    if (data.errors) {
       return res.status(500).json({
         success: false,
-        error: "Buffer GraphQL error.",
-        details: bufferData.errors
+        error: "Buffer GraphQL request failed.",
+        details: data.errors
       });
     }
 
-    /*
-      MutationError can appear inside data even
-      when the HTTP request itself succeeded.
-    */
-
-    const result =
-      bufferData?.data?.createPost;
+    const result = data?.data?.createPost;
 
     if (!result) {
       return res.status(500).json({
         success: false,
         error: "Buffer returned no createPost result.",
-        details: bufferData
+        details: data
       });
     }
 
     if (result.message) {
       return res.status(500).json({
         success: false,
-        error: "Buffer could not create the post.",
-        message: result.message
+        error: result.message
       });
     }
 
-    /*
-      Success.
-    */
-
-    const post = result.post;
-
     return res.status(200).json({
       success: true,
-      message: "MP4 successfully added to Buffer.",
+      message: "Video successfully added to Buffer.",
       videoUrl,
-      bufferPost: post || null
+      post: result.post || null
     });
 
   } catch (error) {
     console.error(
-      "Webhook processing error:",
+      "Webhook error:",
       error
     );
 
