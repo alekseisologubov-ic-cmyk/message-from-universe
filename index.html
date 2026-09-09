@@ -14,7 +14,6 @@
   <title>Universe139 — Message From The Universe</title>
 
   <style>
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -31,9 +30,11 @@
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       color: white;
+
       display: flex;
       justify-content: center;
       align-items: center;
+
       overflow-x: hidden;
 
       background:
@@ -48,37 +49,10 @@
       position: relative;
     }
 
-    body::before {
-      content: "";
-
-      position: fixed;
-
-      width: 650px;
-      height: 650px;
-
-      top: -300px;
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(190,130,255,0.20),
-          transparent 68%
-        );
-
-      filter: blur(25px);
-
-      pointer-events: none;
-    }
-
     .stars {
       position: fixed;
       inset: 0;
-
       pointer-events: none;
-
       opacity: 0.45;
 
       background-image:
@@ -89,32 +63,17 @@
         );
 
       background-size: 75px 75px;
-
-      animation:
-        starsMove 35s linear infinite;
-    }
-
-    @keyframes starsMove {
-      from {
-        transform: translateY(0);
-      }
-
-      to {
-        transform: translateY(75px);
-      }
     }
 
     .container {
       width: 100%;
       max-width: 760px;
-
       min-height: 100vh;
 
       padding: 35px 20px;
 
       display: flex;
       flex-direction: column;
-
       justify-content: center;
       align-items: center;
 
@@ -130,31 +89,14 @@
       text-transform: uppercase;
       opacity: 0.55;
       margin-bottom: 22px;
-
-      text-shadow:
-        0 0 20px
-        rgba(210,160,255,0.6);
     }
 
     #title {
-      font-size:
-        clamp(
-          38px,
-          8vw,
-          68px
-        );
-
+      font-size: clamp(38px, 8vw, 68px);
       line-height: 1.05;
       letter-spacing: 3px;
       font-weight: 700;
       margin-bottom: 18px;
-
-      text-shadow:
-        0 0 15px
-        rgba(255,255,255,0.3),
-
-        0 0 40px
-        rgba(170,100,255,0.4);
     }
 
     #subtitle {
@@ -169,9 +111,7 @@
       max-width: 650px;
 
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
+      grid-template-columns: repeat(3, 1fr);
 
       justify-items: center;
       align-items: center;
@@ -186,30 +126,23 @@
       grid-column: 1 / -1;
 
       font-size: 14px;
-
       letter-spacing: 2px;
-
       text-transform: uppercase;
 
       opacity: 0.55;
-
-      margin-bottom: 5px;
     }
 
     .languageBtn {
       width: 140px;
       height: 140px;
 
-      border: none;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 18px;
 
       cursor: pointer;
-
       color: white;
 
-      position: relative;
-
       display: flex;
-
       justify-content: center;
       align-items: center;
 
@@ -221,250 +154,49 @@
           rgba(255,255,255,0.035)
         );
 
-      border:
-        1px solid
-        rgba(255,255,255,0.35);
-
-      backdrop-filter:
-        blur(8px);
-
-      -webkit-backdrop-filter:
-        blur(8px);
+      backdrop-filter: blur(8px);
 
       box-shadow:
+        inset 0 1px 4px rgba(255,255,255,0.55),
+        inset 0 -3px 8px rgba(0,0,0,0.25),
+        0 15px 35px rgba(0,0,0,0.35);
 
-        inset
-        0 1px 4px
-        rgba(255,255,255,0.55),
-
-        inset
-        0 -3px 8px
-        rgba(0,0,0,0.25),
-
-        0 15px 35px
-        rgba(0,0,0,0.35),
-
-        0 0 25px
-        rgba(160,90,255,0.14);
-
-      transform:
-        rotate(45deg);
-
-      border-radius: 18px;
-
-      transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        background 0.35s ease;
-
-      animation:
-        diamondFloat 7s ease-in-out infinite;
-
-      overflow: hidden;
-
-      -webkit-tap-highlight-color:
-        transparent;
+      transform: rotate(45deg);
     }
 
     .diamondContent {
-      transform:
-        rotate(-45deg);
+      transform: rotate(-45deg);
 
       width: 100%;
       height: 100%;
 
       display: flex;
-
       flex-direction: column;
-
       justify-content: center;
       align-items: center;
-
-      position: relative;
-
-      z-index: 5;
-    }
-
-    @keyframes diamondFloat {
-
-      0%,
-      100% {
-        transform:
-          rotate(45deg)
-          translateY(0);
-      }
-
-      50% {
-        transform:
-          rotate(45deg)
-          translateY(-8px);
-      }
-
-    }
-
-    .languageBtn:nth-of-type(2) {
-      animation-delay: -1s;
-    }
-
-    .languageBtn:nth-of-type(3) {
-      animation-delay: -2s;
-    }
-
-    .languageBtn:nth-of-type(4) {
-      animation-delay: -3s;
-    }
-
-    .languageBtn:nth-of-type(5) {
-      animation-delay: -4s;
-    }
-
-    .languageBtn:nth-of-type(6) {
-      animation-delay: -1.5s;
-    }
-
-    .languageBtn:nth-of-type(7) {
-      animation-delay: -2.5s;
-    }
-
-    .languageBtn::before {
-      content: "";
-
-      position: absolute;
-
-      width: 200%;
-      height: 35px;
-
-      left: -150%;
-      top: 40%;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,0.38),
-          transparent
-        );
-
-      transform:
-        rotate(-45deg);
-
-      opacity: 0.3;
-
-      animation:
-        crystalShine 9s ease-in-out infinite;
-
-      pointer-events: none;
-    }
-
-    @keyframes crystalShine {
-
-      0% {
-        left: -160%;
-      }
-
-      50% {
-        left: 160%;
-      }
-
-      100% {
-        left: 160%;
-      }
-
-    }
-
-    .languageBtn::after {
-      content: "";
-
-      position: absolute;
-
-      inset: 4px;
-
-      border-radius: 15px;
-
-      background:
-        radial-gradient(
-          circle at 25% 20%,
-          rgba(255,255,255,0.42),
-          transparent 25%
-        );
-
-      opacity: 0.55;
-
-      pointer-events: none;
     }
 
     .flag {
       display: block;
-
       font-size: 30px;
-
       margin-bottom: 7px;
-
-      filter:
-        drop-shadow(
-          0 3px 7px
-          rgba(0,0,0,0.35)
-        );
     }
 
     .languageName {
       font-size: 15px;
-
       font-weight: 600;
-
-      text-shadow:
-        0 2px 8px
-        rgba(0,0,0,0.5);
-    }
-
-    .languageBtn:hover {
-      transform:
-        rotate(45deg)
-        translateY(-12px)
-        scale(1.06);
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.34),
-          rgba(180,110,255,0.18),
-          rgba(255,255,255,0.06)
-        );
-
-      box-shadow:
-
-        inset
-        0 1px 5px
-        rgba(255,255,255,0.7),
-
-        0 20px 45px
-        rgba(0,0,0,0.4),
-
-        0 0 45px
-        rgba(185,110,255,0.45);
-    }
-
-    .languageBtn:active {
-      transform:
-        rotate(45deg)
-        translateY(-2px)
-        scale(1.02);
     }
 
     #revealBtn {
       border: none;
-
       border-radius: 50px;
 
-      padding:
-        16px 32px;
+      padding: 16px 32px;
 
       font-size: 16px;
-
       font-weight: 700;
 
       color: white;
-
       cursor: pointer;
 
       background:
@@ -475,21 +207,7 @@
         );
 
       box-shadow:
-        0 10px 30px
-        rgba(120,60,255,0.4);
-
-      transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    #revealBtn:hover {
-      transform:
-        translateY(-3px);
-
-      box-shadow:
-        0 15px 40px
-        rgba(150,80,255,0.5);
+        0 10px 30px rgba(120,60,255,0.4);
     }
 
     #loading {
@@ -498,35 +216,14 @@
 
     #loadingText {
       font-size: 18px;
-
       opacity: 0.8;
-
-      animation:
-        pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-
-      0% {
-        opacity: 0.35;
-      }
-
-      50% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 0.35;
-      }
-
     }
 
     #messageBox {
       width: 100%;
       max-width: 620px;
 
-      padding:
-        40px 28px;
+      padding: 40px 28px;
 
       border-radius: 30px;
 
@@ -538,94 +235,54 @@
         );
 
       border:
-        1px solid
-        rgba(255,255,255,0.2);
+        1px solid rgba(255,255,255,0.2);
 
-      backdrop-filter:
-        blur(14px);
-
-      -webkit-backdrop-filter:
-        blur(14px);
+      backdrop-filter: blur(14px);
 
       box-shadow:
-
-        inset
-        0 1px 3px
-        rgba(255,255,255,0.35),
-
-        0 20px 55px
-        rgba(0,0,0,0.4),
-
-        0 0 40px
-        rgba(150,90,255,0.15);
+        inset 0 1px 3px rgba(255,255,255,0.35),
+        0 20px 55px rgba(0,0,0,0.4);
     }
 
     #month {
       font-size: 13px;
-
       letter-spacing: 2px;
-
       opacity: 0.58;
-
       margin-bottom: 25px;
     }
 
     #message {
-      font-size:
-        clamp(
-          24px,
-          5vw,
-          36px
-        );
-
+      font-size: clamp(24px, 5vw, 36px);
       line-height: 1.45;
-
       font-weight: 500;
-
       margin-bottom: 30px;
-
-      text-shadow:
-        0 0 18px
-        rgba(255,255,255,0.18);
     }
 
     #smallText {
       font-size: 14px;
-
       opacity: 0.52;
-
       margin-bottom: 25px;
     }
 
     .buttons {
       display: flex;
-
       flex-direction: column;
-
       gap: 12px;
-
       align-items: center;
     }
 
     #againBtn,
     #shareBtn {
       border: none;
-
       border-radius: 50px;
 
-      padding:
-        14px 26px;
+      padding: 14px 26px;
 
       font-size: 15px;
-
       font-weight: 700;
 
       color: white;
-
       cursor: pointer;
-
-      transition:
-        transform 0.25s ease;
     }
 
     #againBtn {
@@ -635,28 +292,18 @@
           #a968ff,
           #6731c7
         );
-
-      box-shadow:
-        0 8px 25px
-        rgba(120,60,255,0.35);
     }
 
     #shareBtn {
-      background:
-        rgba(255,255,255,0.09);
-
-      border:
-        1px solid
-        rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.18);
     }
 
-    #againBtn:hover,
-    #shareBtn:hover {
-      transform:
-        translateY(-3px);
-    }
+    /*
+      IMPORTANT
+      Keep this exactly.
+    */
 
-    /* IMPORTANT */
     .hidden {
       display: none !important;
     }
@@ -664,28 +311,17 @@
     @media (max-width: 650px) {
 
       .container {
-        padding:
-          30px 15px;
+        padding: 30px 15px;
       }
 
       #title {
         font-size: 40px;
-        letter-spacing: 2px;
-      }
-
-      #subtitle {
-        font-size: 16px;
-        margin-bottom: 28px;
       }
 
       #languageBox {
-        grid-template-columns:
-          repeat(2, 1fr);
-
+        grid-template-columns: repeat(2, 1fr);
         column-gap: 10px;
         row-gap: 25px;
-
-        max-width: 430px;
       }
 
       .languageBtn {
@@ -693,55 +329,14 @@
         height: 120px;
       }
 
-      .flag {
-        font-size: 26px;
-      }
-
-      .languageName {
-        font-size: 14px;
-      }
-
       #messageBox {
-        padding:
-          32px 18px;
+        padding: 32px 18px;
       }
 
       #message {
         font-size: 24px;
       }
     }
-
-    @media (max-width: 360px) {
-
-      .languageBtn {
-        width: 105px;
-        height: 105px;
-      }
-
-      .flag {
-        font-size: 23px;
-      }
-
-      .languageName {
-        font-size: 13px;
-      }
-
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-
-      .stars,
-      .languageBtn,
-      .languageBtn::before {
-        animation: none;
-      }
-
-      * {
-        scroll-behavior: auto !important;
-      }
-
-    }
-
   </style>
 </head>
 
@@ -770,66 +365,42 @@
         Choose your language
       </div>
 
-      <button
-        class="languageBtn"
-        data-language="en"
-        type="button"
-      >
+      <button class="languageBtn" data-language="en" type="button">
         <div class="diamondContent">
           <span class="flag">🇺🇸</span>
           <span class="languageName">English</span>
         </div>
       </button>
 
-      <button
-        class="languageBtn"
-        data-language="es"
-        type="button"
-      >
+      <button class="languageBtn" data-language="es" type="button">
         <div class="diamondContent">
           <span class="flag">🇪🇸</span>
           <span class="languageName">Español</span>
         </div>
       </button>
 
-      <button
-        class="languageBtn"
-        data-language="zh"
-        type="button"
-      >
+      <button class="languageBtn" data-language="zh" type="button">
         <div class="diamondContent">
           <span class="flag">🇨🇳</span>
           <span class="languageName">中文</span>
         </div>
       </button>
 
-      <button
-        class="languageBtn"
-        data-language="ru"
-        type="button"
-      >
+      <button class="languageBtn" data-language="ru" type="button">
         <div class="diamondContent">
           <span class="flag">🇷🇺</span>
           <span class="languageName">Русский</span>
         </div>
       </button>
 
-      <button
-        class="languageBtn"
-        data-language="hi"
-        type="button"
-      >
+      <button class="languageBtn" data-language="hi" type="button">
         <div class="diamondContent">
           <span class="flag">🇮🇳</span>
           <span class="languageName">हिन्दी</span>
         </div>
       </button>
 
-      <button
-        class="languageBtn"
-        data-language="th"
-        type="button"
-      >
+      <button class="languageBtn" data-language="th" type="button">
         <div class="diamondContent">
           <span class="flag">🇹🇭</span>
           <span class="languageName">ไทย</span>
@@ -843,7 +414,7 @@
       class="hidden"
       type="button"
     >
-      ✨ RECEIVE MY MESSAGE
+      ✨ REVEAL MY MESSAGE
     </button>
 
     <div
@@ -872,18 +443,11 @@
 
       <div class="buttons">
 
-        <button
-          id="againBtn"
-          class="hidden"
-          type="button"
-        >
+        <button id="againBtn" type="button">
           🔮 RECEIVE ANOTHER MESSAGE
         </button>
 
-        <button
-          id="shareBtn"
-          type="button"
-        >
+        <button id="shareBtn" type="button">
           ✨ SHARE
         </button>
 
