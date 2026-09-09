@@ -26,6 +26,10 @@
 
   <style>
 
+    /* =========================================
+       RESET
+       ========================================= */
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -40,6 +44,10 @@
     }
 
 
+    /* =========================================
+       BODY
+       ========================================= */
+
     body {
 
       min-height: 100vh;
@@ -48,14 +56,6 @@
         Arial,
         Helvetica,
         sans-serif;
-
-      background:
-        radial-gradient(
-          circle at 50% 20%,
-          #34215c 0%,
-          #160d2b 35%,
-          #080612 75%
-        );
 
       color: white;
 
@@ -66,20 +66,110 @@
       align-items: center;
 
       overflow-x: hidden;
+
+      background:
+        radial-gradient(
+          circle at 50% 15%,
+          #49306d 0%,
+          #24133f 28%,
+          #10091d 58%,
+          #05030a 100%
+        );
+
+      position: relative;
     }
 
+
+    /* =========================================
+       BACKGROUND GLOW
+       ========================================= */
+
+    body::before {
+
+      content: "";
+
+      position: fixed;
+
+      width: 600px;
+      height: 600px;
+
+      top: -250px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(190,130,255,0.22),
+          transparent 70%
+        );
+
+      filter: blur(30px);
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================
+       STARS
+       ========================================= */
+
+    .stars {
+
+      position: fixed;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.55;
+
+      background-image:
+
+        radial-gradient(
+          circle,
+          rgba(255,255,255,0.8) 1px,
+          transparent 1.5px
+        );
+
+      background-size:
+        65px 65px;
+
+      animation:
+        starsMove 25s linear infinite;
+    }
+
+
+    @keyframes starsMove {
+
+      from {
+        transform:
+          translateY(0);
+      }
+
+      to {
+        transform:
+          translateY(65px);
+      }
+
+    }
+
+
+    /* =========================================
+       MAIN CONTAINER
+       ========================================= */
 
     .container {
 
       width: 100%;
 
-      max-width: 650px;
+      max-width: 680px;
 
       min-height: 100vh;
 
       padding:
-        35px
-        20px;
+        40px 20px;
 
       display: flex;
 
@@ -90,37 +180,47 @@
       align-items: center;
 
       text-align: center;
+
+      position: relative;
+
+      z-index: 2;
     }
 
 
-    .stars {
+    /* =========================================
+       LOGO
+       ========================================= */
 
-      position: fixed;
+    .logo {
 
-      inset: 0;
+      font-size: 13px;
 
-      pointer-events: none;
+      letter-spacing: 6px;
 
-      opacity: 0.7;
+      text-transform: uppercase;
 
-      background-image:
-        radial-gradient(
-          white 1px,
-          transparent 1px
-        );
+      opacity: 0.55;
 
-      background-size:
-        55px 55px;
+      margin-bottom: 25px;
+
+      text-shadow:
+        0 0 15px
+        rgba(210,160,255,0.6);
     }
 
+
+    /* =========================================
+       TITLE
+       ========================================= */
 
     #title {
 
-      font-size: clamp(
-        36px,
-        8vw,
-        64px
-      );
+      font-size:
+        clamp(
+          38px,
+          8vw,
+          66px
+        );
 
       line-height: 1.05;
 
@@ -128,120 +228,322 @@
 
       font-weight: 700;
 
-      margin-bottom: 20px;
+      margin-bottom: 18px;
 
       text-shadow:
-        0 0 15px rgba(
-          255,
-          255,
-          255,
-          0.35
-        ),
-        0 0 35px rgba(
-          180,
-          120,
-          255,
-          0.4
-        );
+
+        0 0 15px
+        rgba(255,255,255,0.35),
+
+        0 0 35px
+        rgba(170,100,255,0.4);
     }
 
+
+    /* =========================================
+       SUBTITLE
+       ========================================= */
 
     #subtitle {
 
       font-size: 18px;
 
-      opacity: 0.85;
+      line-height: 1.5;
 
-      margin-bottom: 35px;
+      opacity: 0.78;
+
+      margin-bottom: 32px;
     }
 
+
+    /* =========================================
+       LANGUAGE AREA
+       ========================================= */
 
     #languageBox {
 
       width: 100%;
 
-      max-width: 420px;
+      max-width: 540px;
 
-      display: flex;
+      display: grid;
 
-      flex-direction: column;
+      grid-template-columns:
+        repeat(2, 1fr);
 
-      gap: 12px;
+      gap: 18px;
+
+      margin-top: 5px;
     }
 
+
+    /* =========================================
+       CHOOSE LANGUAGE
+       ========================================= */
 
     #chooseLanguage {
 
-      font-size: 16px;
+      grid-column:
+        1 / -1;
 
-      margin-bottom: 5px;
+      font-size: 15px;
 
-      opacity: 0.75;
+      letter-spacing: 1px;
+
+      opacity: 0.65;
+
+      margin-bottom: 2px;
     }
 
 
+    /* =========================================
+       CRYSTAL LANGUAGE BUTTON
+       ========================================= */
+
     .languageBtn {
 
-      width: 100%;
+      position: relative;
 
-      padding:
-        16px
-        20px;
+      min-height: 105px;
 
-      border: 1px solid
+      border:
+
+        1px solid
         rgba(
           255,
           255,
           255,
-          0.2
+          0.30
         );
 
-      border-radius: 14px;
-
-      background:
-        rgba(
-          255,
-          255,
-          255,
-          0.08
-        );
+      border-radius: 28px;
 
       color: white;
 
       font-size: 17px;
 
+      font-weight: 600;
+
+      letter-spacing: 0.3px;
+
       cursor: pointer;
 
-      transition:
-        0.25s ease;
+      overflow: hidden;
+
+      background:
+
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.22),
+          rgba(255,255,255,0.07)
+        );
 
       backdrop-filter:
-        blur(10px);
+        blur(18px);
+
+      -webkit-backdrop-filter:
+        blur(18px);
+
+      box-shadow:
+
+        inset
+        0 1px 2px
+        rgba(255,255,255,0.55),
+
+        inset
+        0 -1px 2px
+        rgba(0,0,0,0.18),
+
+        0 15px 35px
+        rgba(0,0,0,0.28),
+
+        0 0 25px
+        rgba(150,90,255,0.08);
+
+      transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        background 0.35s ease;
+
+      animation:
+        crystalFloat 5s ease-in-out infinite;
     }
 
+
+    /* Different floating timing */
+
+    .languageBtn:nth-of-type(2) {
+      animation-delay: -1s;
+    }
+
+    .languageBtn:nth-of-type(3) {
+      animation-delay: -2s;
+    }
+
+    .languageBtn:nth-of-type(4) {
+      animation-delay: -3s;
+    }
+
+    .languageBtn:nth-of-type(5) {
+      animation-delay: -4s;
+    }
+
+    .languageBtn:nth-of-type(6) {
+      animation-delay: -1.5s;
+    }
+
+
+    @keyframes crystalFloat {
+
+      0%,
+      100% {
+        transform:
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          translateY(-5px);
+      }
+
+    }
+
+
+    /* =========================================
+       CRYSTAL SHINE
+       ========================================= */
+
+    .languageBtn::before {
+
+      content: "";
+
+      position: absolute;
+
+      top: -100%;
+      left: -70%;
+
+      width: 220%;
+      height: 250%;
+
+      background:
+
+        linear-gradient(
+          120deg,
+          transparent 38%,
+          rgba(255,255,255,0.03) 44%,
+          rgba(255,255,255,0.35) 50%,
+          rgba(255,255,255,0.03) 56%,
+          transparent 63%
+        );
+
+      transform:
+        rotate(18deg)
+        translateX(-30%);
+
+      transition:
+        transform 0.8s ease;
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================
+       CRYSTAL HIGHLIGHT
+       ========================================= */
+
+    .languageBtn::after {
+
+      content: "";
+
+      position: absolute;
+
+      inset: 1px;
+
+      border-radius: 27px;
+
+      background:
+
+        radial-gradient(
+          circle at 20% 8%,
+          rgba(255,255,255,0.35),
+          transparent 27%
+        );
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================
+       HOVER
+       ========================================= */
 
     .languageBtn:hover {
 
       transform:
-        translateY(-2px);
+        translateY(-9px)
+        scale(1.035);
 
       background:
-        rgba(
-          255,
-          255,
-          255,
-          0.15
+
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.30),
+          rgba(170,100,255,0.13)
         );
 
-      border-color:
-        rgba(
-          255,
-          255,
-          255,
-          0.45
+      box-shadow:
+
+        inset
+        0 1px 3px
+        rgba(255,255,255,0.65),
+
+        0 20px 45px
+        rgba(0,0,0,0.35),
+
+        0 0 35px
+        rgba(170,100,255,0.28);
+    }
+
+
+    .languageBtn:hover::before {
+
+      transform:
+        rotate(18deg)
+        translateX(45%);
+    }
+
+
+    .languageBtn:active {
+
+      transform:
+        translateY(-2px)
+        scale(0.98);
+    }
+
+
+    /* =========================================
+       LANGUAGE EMOJI
+       ========================================= */
+
+    .languageBtn .flag {
+
+      display: block;
+
+      font-size: 30px;
+
+      margin-bottom: 7px;
+
+      filter:
+        drop-shadow(
+          0 3px 7px
+          rgba(0,0,0,0.25)
         );
     }
 
+
+    /* =========================================
+       REVEAL BUTTON
+       ========================================= */
 
     #revealBtn,
     #againBtn,
@@ -252,35 +554,31 @@
       border-radius: 50px;
 
       padding:
-        17px
-        28px;
+        17px 30px;
 
       font-size: 16px;
 
       font-weight: 700;
 
-      cursor: pointer;
-
       color: white;
 
+      cursor: pointer;
+
       background:
+
         linear-gradient(
           135deg,
-          #9b5cff,
-          #5b2bbf
+          #a968ff,
+          #6731c7
         );
 
       box-shadow:
-        0 10px 30px
-        rgba(
-          120,
-          60,
-          255,
-          0.3
-        );
+
+        0 12px 35px
+        rgba(120,60,255,0.35);
 
       transition:
-        0.25s ease;
+        0.3s ease;
     }
 
 
@@ -289,22 +587,24 @@
     #shareBtn:hover {
 
       transform:
-        translateY(-3px);
+        translateY(-4px);
 
       box-shadow:
-        0 15px 40px
-        rgba(
-          150,
-          80,
-          255,
-          0.45
-        );
+
+        0 18px 45px
+        rgba(140,80,255,0.5);
     }
 
+
+    /* =========================================
+       LOADING
+       ========================================= */
 
     #loading {
 
       margin-top: 25px;
+
+      text-align: center;
     }
 
 
@@ -315,8 +615,7 @@
       opacity: 0.8;
 
       animation:
-        pulse 1.5s
-        infinite;
+        pulse 1.5s infinite;
     }
 
 
@@ -337,46 +636,62 @@
     }
 
 
+    /* =========================================
+       MESSAGE BOX
+       ========================================= */
+
     #messageBox {
 
       width: 100%;
 
-      max-width: 560px;
+      max-width: 570px;
 
-      padding: 35px 25px;
+      padding:
+        38px 28px;
 
-      border-radius: 25px;
+      border-radius: 30px;
 
       background:
-        rgba(
-          255,
-          255,
-          255,
-          0.08
+
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.14),
+          rgba(255,255,255,0.045)
         );
 
       border:
+
         1px solid
         rgba(
           255,
           255,
           255,
-          0.15
+          0.20
         );
 
       backdrop-filter:
-        blur(15px);
+        blur(20px);
+
+      -webkit-backdrop-filter:
+        blur(20px);
 
       box-shadow:
-        0 20px 60px
-        rgba(
-          0,
-          0,
-          0,
-          0.35
-        );
+
+        inset
+        0 1px 2px
+        rgba(255,255,255,0.35),
+
+        0 25px 70px
+        rgba(0,0,0,0.40),
+
+        0 0 45px
+        rgba(140,80,255,0.12);
     }
 
+
+    /* =========================================
+       MONTH
+       ========================================= */
 
     #month {
 
@@ -384,19 +699,24 @@
 
       letter-spacing: 2px;
 
-      opacity: 0.6;
+      opacity: 0.58;
 
       margin-bottom: 25px;
     }
 
 
+    /* =========================================
+       MESSAGE
+       ========================================= */
+
     #message {
 
-      font-size: clamp(
-        24px,
-        5vw,
-        34px
-      );
+      font-size:
+        clamp(
+          24px,
+          5vw,
+          35px
+        );
 
       line-height: 1.45;
 
@@ -405,25 +725,29 @@
       margin-bottom: 30px;
 
       text-shadow:
+
         0 0 15px
-        rgba(
-          255,
-          255,
-          255,
-          0.15
-        );
+        rgba(255,255,255,0.18);
     }
 
+
+    /* =========================================
+       SMALL TEXT
+       ========================================= */
 
     #smallText {
 
       font-size: 14px;
 
-      opacity: 0.55;
+      opacity: 0.52;
 
       margin-bottom: 25px;
     }
 
+
+    /* =========================================
+       MESSAGE BUTTONS
+       ========================================= */
 
     .buttons {
 
@@ -440,25 +764,31 @@
     #shareBtn {
 
       background:
+
         rgba(
           255,
           255,
           255,
-          0.12
+          0.10
         );
 
       border:
+
         1px solid
         rgba(
           255,
           255,
           255,
-          0.2
+          0.20
         );
 
       box-shadow: none;
     }
 
+
+    /* =========================================
+       HIDDEN
+       ========================================= */
 
     .hidden {
 
@@ -466,35 +796,22 @@
     }
 
 
-    .logo {
+    /* =========================================
+       MOBILE
+       ========================================= */
 
-      margin-bottom: 25px;
-
-      font-size: 14px;
-
-      letter-spacing: 4px;
-
-      opacity: 0.45;
-
-      text-transform: uppercase;
-    }
-
-
-    @media (
-      max-width: 480px
-    ) {
+    @media (max-width: 520px) {
 
       .container {
 
         padding:
-          25px
-          16px;
+          30px 15px;
       }
 
 
       #title {
 
-        font-size: 38px;
+        font-size: 39px;
 
         letter-spacing: 2px;
       }
@@ -503,20 +820,75 @@
       #subtitle {
 
         font-size: 16px;
+
+        margin-bottom: 25px;
+      }
+
+
+      #languageBox {
+
+        gap: 12px;
+
+        max-width: 430px;
+      }
+
+
+      .languageBtn {
+
+        min-height: 92px;
+
+        border-radius: 22px;
+
+        font-size: 15px;
+      }
+
+
+      .languageBtn::after {
+
+        border-radius: 21px;
+      }
+
+
+      .languageBtn .flag {
+
+        font-size: 27px;
       }
 
 
       #messageBox {
 
         padding:
-          28px
-          18px;
+          30px 18px;
+
+        border-radius: 25px;
       }
 
 
       #message {
 
         font-size: 24px;
+      }
+
+    }
+
+
+    /* =========================================
+       VERY SMALL PHONES
+       ========================================= */
+
+    @media (max-width: 350px) {
+
+      #languageBox {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      #chooseLanguage {
+
+        grid-column:
+          auto;
       }
 
     }
@@ -528,8 +900,17 @@
 
 <body>
 
+
+  <!-- =========================================
+       STAR BACKGROUND
+       ========================================= -->
+
   <div class="stars"></div>
 
+
+  <!-- =========================================
+       MAIN
+       ========================================= -->
 
   <main class="container">
 
@@ -562,61 +943,105 @@
       </div>
 
 
+      <!-- ENGLISH -->
+
       <button
         class="languageBtn"
         data-language="en"
         type="button"
       >
-        🇺🇸 English
+
+        <span class="flag">
+          🇺🇸
+        </span>
+
+        English
+
       </button>
 
+
+      <!-- SPANISH -->
 
       <button
         class="languageBtn"
         data-language="es"
         type="button"
       >
-        🇪🇸 Español
+
+        <span class="flag">
+          🇪🇸
+        </span>
+
+        Español
+
       </button>
 
+
+      <!-- CHINESE -->
 
       <button
         class="languageBtn"
         data-language="zh"
         type="button"
       >
-        🇨🇳 中文
+
+        <span class="flag">
+          🇨🇳
+        </span>
+
+        中文
+
       </button>
 
+
+      <!-- RUSSIAN -->
 
       <button
         class="languageBtn"
         data-language="ru"
         type="button"
       >
-        🇷🇺 Русский
+
+        <span class="flag">
+          🇷🇺
+        </span>
+
+        Русский
+
       </button>
 
 
-      <!-- NEW: HINDI -->
+      <!-- HINDI -->
 
       <button
         class="languageBtn"
         data-language="hi"
         type="button"
       >
-        🇮🇳 हिन्दी
+
+        <span class="flag">
+          🇮🇳
+        </span>
+
+        हिन्दी
+
       </button>
 
 
-      <!-- NEW: THAI -->
+      <!-- THAI -->
 
       <button
         class="languageBtn"
         data-language="th"
         type="button"
       >
-        🇹🇭 ไทย
+
+        <span class="flag">
+          🇹🇭
+        </span>
+
+        ไทย
+
       </button>
 
 
