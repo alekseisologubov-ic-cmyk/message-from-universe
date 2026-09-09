@@ -1,6 +1,7 @@
 // ==========================================
 // UNIVERSE139 — MESSAGE FROM THE UNIVERSE
 // COMPLETE WORKING SCRIPT
+// FIXED MESSAGE REVEAL
 // ==========================================
 
 const UNIVERSE139_URL =
@@ -416,6 +417,7 @@ function showElement(element) {
 
 // ==========================================
 // LANGUAGE
+// FIX: slightly longer delay + safe reveal
 // ==========================================
 
 function selectLanguage(language) {
@@ -475,14 +477,16 @@ function selectLanguage(language) {
   showElement(revealBtn);
 
   /*
-    Start automatically after language selection.
+    FIX:
+    Give the DOM a moment to finish the language
+    transition before starting the reveal.
   */
 
   window.setTimeout(() => {
 
     revealMessage();
 
-  }, 400);
+  }, 600);
 
 }
 
@@ -1268,38 +1272,77 @@ function createWindEffect() {
 
 // ==========================================
 // SHOW MESSAGE
+// FIXED
 // ==========================================
 
 function showMessage() {
 
   if (!messageBox || !message) {
+
     console.error(
       "Universe139: message elements not found."
     );
+
+    isRevealing = false;
+
     return;
+
   }
+
+
+  // ----------------------------------------
+  // GET MESSAGE FIRST
+  // ----------------------------------------
 
   const newMessage =
     getRandomMessage();
 
-  /*
-    IMPORTANT:
-    Always write the message before
-    displaying the message box.
-  */
+  const finalMessage =
+    newMessage ||
+    "Your message is waiting for you.";
+
+
+  // ----------------------------------------
+  // WRITE MESSAGE BEFORE SHOWING BOX
+  // ----------------------------------------
 
   message.textContent =
-    newMessage || "Your message is waiting for you.";
+    finalMessage;
+
+
+  // ----------------------------------------
+  // FORCE MESSAGE ITSELF VISIBLE
+  // ----------------------------------------
+
+  message.classList.remove("hidden");
+
+  message.style.display =
+    "block";
+
+  message.style.visibility =
+    "visible";
+
+  message.style.opacity =
+    "1";
+
+  message.style.color =
+    "#ffffff";
+
+
+  // ----------------------------------------
+  // FORCE MESSAGE BOX VISIBLE
+  // ----------------------------------------
 
   messageBox.classList.remove("hidden");
 
-  /*
-    Do NOT rely only on style.display.
-    The .hidden class uses !important.
-  */
+  messageBox.style.setProperty(
+    "display",
+    "block",
+    "important"
+  );
 
-  messageBox.style.display =
-    "block";
+  messageBox.style.visibility =
+    "visible";
 
   messageBox.style.opacity =
     "0";
@@ -1307,34 +1350,71 @@ function showMessage() {
   messageBox.style.transform =
     "translateY(18px) scale(.98)";
 
+
+  // ----------------------------------------
+  // HIDE LOADING / REVEAL
+  // ----------------------------------------
+
   hideElement(loading);
   hideElement(revealBtn);
+
+
+  // ----------------------------------------
+  // SHOW BUTTONS
+  // ----------------------------------------
 
   showElement(againBtn);
   showElement(shareBtn);
 
+
+  // ----------------------------------------
+  // MAKE SURE BUTTONS ARE VISIBLE
+  // ----------------------------------------
+
+  if (againBtn) {
+
+    againBtn.style.visibility =
+      "visible";
+
+  }
+
+  if (shareBtn) {
+
+    shareBtn.style.visibility =
+      "visible";
+
+  }
+
+
+  // ----------------------------------------
+  // ANIMATE MESSAGE BOX
+  // ----------------------------------------
+
   window.requestAnimationFrame(() => {
 
-    window.requestAnimationFrame(() => {
+    messageBox.style.transition =
+      "opacity .8s ease, transform .8s ease";
 
-      messageBox.style.transition =
-        "opacity .8s ease, transform .8s ease";
+    messageBox.style.opacity =
+      "1";
 
-      messageBox.style.opacity =
-        "1";
-
-      messageBox.style.transform =
-        "translateY(0) scale(1)";
-
-    });
+    messageBox.style.transform =
+      "translateY(0) scale(1)";
 
   });
+
+
+  console.log(
+    "Universe139 message displayed:",
+    finalMessage
+  );
 
 }
 
 
 // ==========================================
 // REVEAL MESSAGE
+// FIXED
 // ==========================================
 
 function revealMessage() {
@@ -1344,22 +1424,36 @@ function revealMessage() {
   }
 
   if (!message || !messageBox) {
+
     console.error(
       "Universe139: message DOM is unavailable."
     );
+
     return;
+
   }
+
 
   isRevealing =
     true;
 
+
+  // ----------------------------------------
+  // HIDE CURRENT CONTENT
+  // ----------------------------------------
+
   hideElement(messageBox);
+  hideElement(againBtn);
+  hideElement(shareBtn);
+  hideElement(revealBtn);
+
+
+  // ----------------------------------------
+  // SHOW LOADING
+  // ----------------------------------------
 
   showElement(loading);
 
-  hideElement(revealBtn);
-  hideElement(againBtn);
-  hideElement(shareBtn);
 
   if (loadingText) {
 
@@ -1368,14 +1462,95 @@ function revealMessage() {
 
   }
 
-  createWindEffect();
+
+  // ----------------------------------------
+  // COSMIC EFFECT
+  //
+  // IMPORTANT:
+  // The animation is OPTIONAL.
+  // If it fails, the message must STILL appear.
+  // ----------------------------------------
+
+  try {
+
+    createWindEffect();
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 wind effect error:",
+      error
+    );
+
+  }
+
+
+  // ----------------------------------------
+  // REVEAL MESSAGE
+  // ----------------------------------------
 
   window.setTimeout(() => {
 
-    showMessage();
+    try {
 
-    isRevealing =
-      false;
+      showMessage();
+
+    } catch (error) {
+
+      console.error(
+        "Universe139 showMessage error:",
+        error
+      );
+
+      // Emergency fallback
+
+      if (message) {
+
+        message.textContent =
+          getRandomMessage() ||
+          "Your message is waiting for you.";
+
+        message.style.display =
+          "block";
+
+        message.style.visibility =
+          "visible";
+
+        message.style.opacity =
+          "1";
+
+      }
+
+      if (messageBox) {
+
+        messageBox.classList.remove(
+          "hidden"
+        );
+
+        messageBox.style.setProperty(
+          "display",
+          "block",
+          "important"
+        );
+
+        messageBox.style.visibility =
+          "visible";
+
+        messageBox.style.opacity =
+          "1";
+
+      }
+
+      hideElement(loading);
+      showElement(againBtn);
+      showElement(shareBtn);
+
+    } finally {
+
+      isRevealing =
+        false;
+
+    }
 
   }, 2400);
 
@@ -1384,6 +1559,7 @@ function revealMessage() {
 
 // ==========================================
 // ANOTHER MESSAGE
+// FIXED
 // ==========================================
 
 function receiveAnotherMessage() {
@@ -1392,12 +1568,29 @@ function receiveAnotherMessage() {
     return;
   }
 
-  if (!messageBox) {
+  if (!messageBox || !message) {
     return;
   }
 
+
   isRevealing =
     true;
+
+
+  // ----------------------------------------
+  // HIDE BUTTONS
+  // ----------------------------------------
+
+  hideElement(againBtn);
+  hideElement(shareBtn);
+
+
+  // ----------------------------------------
+  // FADE CURRENT MESSAGE
+  // ----------------------------------------
+
+  messageBox.style.transition =
+    "opacity .3s ease, transform .3s ease";
 
   messageBox.style.opacity =
     "0";
@@ -1405,10 +1598,28 @@ function receiveAnotherMessage() {
   messageBox.style.transform =
     "scale(.95)";
 
-  hideElement(againBtn);
-  hideElement(shareBtn);
 
-  createWindEffect();
+  // ----------------------------------------
+  // START COSMIC EFFECT SAFELY
+  // ----------------------------------------
+
+  try {
+
+    createWindEffect();
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 wind effect error:",
+      error
+    );
+
+  }
+
+
+  // ----------------------------------------
+  // SHOW LOADING
+  // ----------------------------------------
 
   window.setTimeout(() => {
 
@@ -1425,12 +1636,71 @@ function receiveAnotherMessage() {
 
   }, 350);
 
+
+  // ----------------------------------------
+  // SHOW NEW MESSAGE
+  // ----------------------------------------
+
   window.setTimeout(() => {
 
-    showMessage();
+    try {
 
-    isRevealing =
-      false;
+      showMessage();
+
+    } catch (error) {
+
+      console.error(
+        "Universe139 second message error:",
+        error
+      );
+
+      if (message) {
+
+        message.textContent =
+          getRandomMessage() ||
+          "Your message is waiting for you.";
+
+        message.style.display =
+          "block";
+
+        message.style.visibility =
+          "visible";
+
+        message.style.opacity =
+          "1";
+
+      }
+
+      if (messageBox) {
+
+        messageBox.classList.remove(
+          "hidden"
+        );
+
+        messageBox.style.setProperty(
+          "display",
+          "block",
+          "important"
+        );
+
+        messageBox.style.visibility =
+          "visible";
+
+        messageBox.style.opacity =
+          "1";
+
+      }
+
+      hideElement(loading);
+      showElement(againBtn);
+      showElement(shareBtn);
+
+    } finally {
+
+      isRevealing =
+        false;
+
+    }
 
   }, 2400);
 
@@ -1559,15 +1829,6 @@ function shareWhatsApp() {
 // ==========================================
 
 async function shareFacebook() {
-
-  /*
-    Facebook's web share dialog accepts the URL.
-    It does NOT reliably accept arbitrary post text.
-
-    Therefore we:
-    1. Copy the complete message.
-    2. Open the correct live Universe139 URL.
-  */
 
   await copyText(
     getShareText()
@@ -2291,12 +2552,6 @@ async function shareInstagram() {
       );
 
 
-    /*
-      Mobile browsers that support native
-      file sharing can send the image
-      directly to Instagram.
-    */
-
     if (
       navigator.share &&
       navigator.canShare &&
@@ -2322,11 +2577,6 @@ async function shareInstagram() {
 
     }
 
-
-    /*
-      Desktop fallback:
-      download the image.
-    */
 
     const objectURL =
       URL.createObjectURL(
@@ -2386,10 +2636,6 @@ async function shareInstagram() {
       "Instagram share error:",
       error
     );
-
-    /*
-      Final fallback.
-    */
 
     await copyText(
       getShareText()
@@ -2706,8 +2952,6 @@ function createSharePanel() {
   addSharePanelStyles();
 
 
-  // CLOSE
-
   const closeButton =
     document.getElementById(
       "shareClose"
@@ -2737,8 +2981,6 @@ function createSharePanel() {
 
   }
 
-
-  // SOCIAL BUTTONS
 
   bindShareButton(
     "shareWhatsApp",
@@ -3551,6 +3793,12 @@ function initializeState() {
 
     message.textContent =
       "";
+
+    message.style.display =
+      "block";
+
+    message.style.visibility =
+      "visible";
 
   }
 
