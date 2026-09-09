@@ -432,27 +432,11 @@ function createWindEffect() {
 
     <div class="tornadoDust">
 
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
 
     </div>
 
@@ -465,10 +449,6 @@ function createWindEffect() {
   document.body.appendChild(tornado);
 
 
-  // ==========================================
-  // TORNADO CSS
-  // ==========================================
-
   if (!document.getElementById("universe139TornadoCSS")) {
 
     const style = document.createElement("style");
@@ -478,17 +458,11 @@ function createWindEffect() {
     style.textContent = `
 
       #universeWind {
-
         position: fixed;
-
         inset: 0;
-
         z-index: 9999;
-
         pointer-events: none;
-
         overflow: hidden;
-
         perspective: 1200px;
 
         background:
@@ -501,28 +475,19 @@ function createWindEffect() {
 
         animation:
           tornadoFade 2.9s ease-out forwards;
-
       }
 
 
-      /* ======================================
-         UNIVERSE GLOW
-      ====================================== */
-
       .tornadoUniverseGlow {
-
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 10vw;
-
         height: 10vw;
 
         min-width: 100px;
-
         min-height: 100px;
 
         border-radius: 50%;
@@ -542,158 +507,83 @@ function createWindEffect() {
           );
 
         box-shadow:
-
-          0 0 35px
-          rgba(255,255,255,.9),
-
-          0 0 100px
-          rgba(180,100,255,.9),
-
-          0 0 220px
-          rgba(100,40,255,.6);
+          0 0 35px rgba(255,255,255,.9),
+          0 0 100px rgba(180,100,255,.9),
+          0 0 220px rgba(100,40,255,.6);
 
         animation:
-          universeCoreExplosion 2.6s
-          ease-out
-          forwards;
-
+          universeCoreExplosion 2.6s ease-out forwards;
       }
 
 
-      /* ======================================
-         MAIN TORNADO
-      ====================================== */
-
       .tornadoCore {
-
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 100vw;
-
         height: 100vh;
 
         transform:
           translate(-50%, -50%)
           scale(.08);
 
-        transform-style:
-          preserve-3d;
+        transform-style: preserve-3d;
 
         animation:
           tornadoExpand 2.7s
           cubic-bezier(.12,.65,.15,1)
           forwards;
-
       }
 
 
-      /* ======================================
-         SPIRAL RINGS
-      ====================================== */
-
       .tornadoRing {
-
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 15vw;
-
         height: 15vw;
 
         min-width: 120px;
-
         min-height: 120px;
 
         border-radius: 50%;
 
-        transform-style:
-          preserve-3d;
+        transform-style: preserve-3d;
 
         border:
           3px solid
           rgba(220,180,255,.42);
 
         box-shadow:
-
-          0 0 15px
-          rgba(200,140,255,.55),
-
-          0 0 40px
-          rgba(130,60,255,.35),
-
-          inset 0 0 20px
-          rgba(255,255,255,.1);
+          0 0 15px rgba(200,140,255,.55),
+          0 0 40px rgba(130,60,255,.35),
+          inset 0 0 20px rgba(255,255,255,.1);
 
         opacity: 0;
 
-        filter:
-          blur(.7px);
-
+        filter: blur(.7px);
       }
 
 
-      .ring1 {
-        animation:
-          ringSpin1 2.5s linear forwards;
-      }
-
-      .ring2 {
-        animation:
-          ringSpin2 2.4s linear .04s forwards;
-      }
-
-      .ring3 {
-        animation:
-          ringSpin1 2.3s linear .08s forwards;
-      }
-
-      .ring4 {
-        animation:
-          ringSpin2 2.2s linear .12s forwards;
-      }
-
-      .ring5 {
-        animation:
-          ringSpin1 2.1s linear .16s forwards;
-      }
-
-      .ring6 {
-        animation:
-          ringSpin2 2s linear .2s forwards;
-      }
-
-      .ring7 {
-        animation:
-          ringSpin1 1.9s linear .24s forwards;
-      }
-
-      .ring8 {
-        animation:
-          ringSpin2 1.8s linear .28s forwards;
-      }
-
-      .ring9 {
-        animation:
-          ringSpin1 1.7s linear .32s forwards;
-      }
-
-      .ring10 {
-        animation:
-          ringSpin2 1.6s linear .36s forwards;
-      }
+      .ring1 { animation: ringSpin1 2.5s linear forwards; }
+      .ring2 { animation: ringSpin2 2.4s linear .04s forwards; }
+      .ring3 { animation: ringSpin1 2.3s linear .08s forwards; }
+      .ring4 { animation: ringSpin2 2.2s linear .12s forwards; }
+      .ring5 { animation: ringSpin1 2.1s linear .16s forwards; }
+      .ring6 { animation: ringSpin2 2s linear .2s forwards; }
+      .ring7 { animation: ringSpin1 1.9s linear .24s forwards; }
+      .ring8 { animation: ringSpin2 1.8s linear .28s forwards; }
+      .ring9 { animation: ringSpin1 1.7s linear .32s forwards; }
+      .ring10 { animation: ringSpin2 1.6s linear .36s forwards; }
 
 
       @keyframes ringSpin1 {
 
         0% {
-
           opacity: 0;
 
           width: 8vw;
@@ -704,29 +594,21 @@ function createWindEffect() {
             rotateX(68deg)
             rotateZ(0deg)
             scale(.2);
-
         }
 
         15% {
-
           opacity: .75;
-
         }
 
         45% {
-
           opacity: .95;
-
         }
 
         75% {
-
           opacity: .65;
-
         }
 
         100% {
-
           opacity: 0;
 
           width: 110vw;
@@ -737,16 +619,13 @@ function createWindEffect() {
             rotateX(68deg)
             rotateZ(1080deg)
             scale(1);
-
         }
-
       }
 
 
       @keyframes ringSpin2 {
 
         0% {
-
           opacity: 0;
 
           width: 8vw;
@@ -757,29 +636,21 @@ function createWindEffect() {
             rotateX(68deg)
             rotateZ(180deg)
             scale(.2);
-
         }
 
         15% {
-
           opacity: .7;
-
         }
 
         45% {
-
           opacity: .9;
-
         }
 
         75% {
-
           opacity: .6;
-
         }
 
         100% {
-
           opacity: 0;
 
           width: 120vw;
@@ -790,94 +661,68 @@ function createWindEffect() {
             rotateX(68deg)
             rotateZ(-900deg)
             scale(1);
-
         }
-
       }
 
-
-      /* ======================================
-         TORNADO EXPANSION
-      ====================================== */
 
       @keyframes tornadoExpand {
 
         0% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(.05)
             rotate(0deg);
-
         }
 
         12% {
-
           opacity: 1;
-
         }
 
         35% {
-
           transform:
             translate(-50%, -50%)
             scale(.35)
             rotate(90deg);
-
         }
 
         58% {
-
           transform:
             translate(-50%, -50%)
             scale(.8)
             rotate(260deg);
-
         }
 
         78% {
-
           transform:
             translate(-50%, -50%)
             scale(1.5)
             rotate(540deg);
-
         }
 
         100% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(3.8)
             rotate(900deg);
-
         }
-
       }
 
-
-      /* ======================================
-         TORNADO EYE
-      ====================================== */
 
       .tornadoEye {
 
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 18vw;
-
         height: 18vw;
 
         min-width: 130px;
-
         min-height: 130px;
 
         border-radius: 50%;
@@ -896,84 +741,56 @@ function createWindEffect() {
           );
 
         box-shadow:
-
-          0 0 30px
-          rgba(255,255,255,.9),
-
-          0 0 80px
-          rgba(190,110,255,.8),
-
-          0 0 160px
-          rgba(100,30,255,.6);
+          0 0 30px rgba(255,255,255,.9),
+          0 0 80px rgba(190,110,255,.8),
+          0 0 160px rgba(100,30,255,.6);
 
         animation:
-          eyePulse 2.5s
-          ease-out
-          forwards;
-
+          eyePulse 2.5s ease-out forwards;
       }
 
 
       @keyframes eyePulse {
 
         0% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(.1);
-
         }
 
         18% {
-
           opacity: 1;
-
         }
 
         45% {
-
           transform:
             translate(-50%, -50%)
             scale(.8);
-
         }
 
         70% {
-
           transform:
             translate(-50%, -50%)
             scale(1.4);
-
         }
 
         100% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(4);
-
         }
-
       }
 
 
-      /* ======================================
-         PARTICLES
-      ====================================== */
-
       .tornadoDust {
-
         position: absolute;
-
         inset: 0;
 
-        transform-style:
-          preserve-3d;
-
+        transform-style: preserve-3d;
       }
 
 
@@ -982,11 +799,9 @@ function createWindEffect() {
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         width: 5px;
-
         height: 5px;
 
         border-radius: 50%;
@@ -994,11 +809,9 @@ function createWindEffect() {
         background: white;
 
         box-shadow:
-          0 0 10px
-          rgba(220,180,255,.95);
+          0 0 10px rgba(220,180,255,.95);
 
         opacity: 0;
-
       }
 
 
@@ -1083,12 +896,7 @@ function createWindEffect() {
       }
 
 
-      /* ======================================
-         PARTICLE MOTION
-      ====================================== */
-
       @keyframes dust1 {
-
         0% {
           opacity: 0;
           transform:
@@ -1113,12 +921,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust2 {
-
         0% {
           opacity: 0;
           transform:
@@ -1143,12 +949,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust3 {
-
         0% {
           opacity: 0;
           transform:
@@ -1173,12 +977,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust4 {
-
         0% {
           opacity: 0;
           transform:
@@ -1203,12 +1005,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust5 {
-
         0% {
           opacity: 0;
           transform:
@@ -1233,12 +1033,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust6 {
-
         0% {
           opacity: 0;
           transform:
@@ -1263,12 +1061,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust7 {
-
         0% {
           opacity: 0;
           transform:
@@ -1293,12 +1089,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust8 {
-
         0% {
           opacity: 0;
           transform:
@@ -1323,12 +1117,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust9 {
-
         0% {
           opacity: 0;
           transform:
@@ -1353,12 +1145,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust10 {
-
         0% {
           opacity: 0;
           transform:
@@ -1383,12 +1173,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust11 {
-
         0% {
           opacity: 0;
           transform:
@@ -1413,12 +1201,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust12 {
-
         0% {
           opacity: 0;
           transform:
@@ -1443,12 +1229,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust13 {
-
         0% {
           opacity: 0;
           transform:
@@ -1473,12 +1257,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust14 {
-
         0% {
           opacity: 0;
           transform:
@@ -1503,12 +1285,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust15 {
-
         0% {
           opacity: 0;
           transform:
@@ -1533,12 +1313,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust16 {
-
         0% {
           opacity: 0;
           transform:
@@ -1563,12 +1341,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust17 {
-
         0% {
           opacity: 0;
           transform:
@@ -1593,12 +1369,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust18 {
-
         0% {
           opacity: 0;
           transform:
@@ -1623,12 +1397,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust19 {
-
         0% {
           opacity: 0;
           transform:
@@ -1653,12 +1425,10 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
 
       @keyframes dust20 {
-
         0% {
           opacity: 0;
           transform:
@@ -1683,20 +1453,14 @@ function createWindEffect() {
             translateX(5px)
             scale(.05);
         }
-
       }
 
-
-      /* ======================================
-         COSMIC MIST
-      ====================================== */
 
       .tornadoMist {
 
         position: absolute;
 
         left: 50%;
-
         top: 50%;
 
         border-radius: 50%;
@@ -1704,8 +1468,7 @@ function createWindEffect() {
         transform:
           translate(-50%, -50%);
 
-        filter:
-          blur(30px);
+        filter: blur(30px);
 
         background:
           radial-gradient(
@@ -1716,175 +1479,124 @@ function createWindEffect() {
           );
 
         opacity: 0;
-
       }
 
 
       .mist1 {
-
         width: 75vw;
-
         height: 20vw;
 
         animation:
-          mistRotation 2.5s
-          ease-out
-          forwards;
-
+          mistRotation 2.5s ease-out forwards;
       }
 
 
       .mist2 {
-
         width: 55vw;
-
         height: 15vw;
 
         animation:
-          mistRotation 2.2s
-          ease-out
-          .15s
-          forwards;
-
+          mistRotation 2.2s ease-out .15s forwards;
       }
 
 
       .mist3 {
-
         width: 38vw;
-
         height: 11vw;
 
         animation:
-          mistRotation 2s
-          ease-out
-          .3s
-          forwards;
-
+          mistRotation 2s ease-out .3s forwards;
       }
 
 
       @keyframes mistRotation {
 
         0% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             rotate(0deg)
             scale(.1);
-
         }
 
         20% {
-
           opacity: .8;
-
         }
 
         60% {
-
           opacity: .55;
 
           transform:
             translate(-50%, -50%)
             rotate(600deg)
             scale(1.5);
-
         }
 
         100% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             rotate(1200deg)
             scale(3);
-
         }
-
       }
 
-
-      /* ======================================
-         CORE EXPLOSION
-      ====================================== */
 
       @keyframes universeCoreExplosion {
 
         0% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(.05);
-
         }
 
         18% {
-
           opacity: 1;
-
         }
 
         48% {
-
           transform:
             translate(-50%, -50%)
             scale(1);
-
         }
 
         75% {
-
           transform:
             translate(-50%, -50%)
             scale(2);
-
         }
 
         100% {
-
           opacity: 0;
 
           transform:
             translate(-50%, -50%)
             scale(5);
-
         }
-
       }
 
 
       @keyframes tornadoFade {
 
         0% {
-
           opacity: 0;
-
         }
 
         10% {
-
           opacity: 1;
-
         }
 
         72% {
-
           opacity: 1;
-
         }
 
         100% {
-
           opacity: 0;
-
         }
-
       }
 
     `;
@@ -1928,8 +1640,6 @@ function showMessage() {
   shareBtn.classList.remove("hidden");
 
 
-  // Smooth message appearance
-
   setTimeout(() => {
 
     messageBox.style.transition =
@@ -1970,11 +1680,9 @@ function revealMessage() {
     translations[currentLanguage].loading;
 
 
-  // 🌪️ COSMIC TORNADO
   createWindEffect();
 
 
-  // Wait for tornado to build
   setTimeout(() => {
 
     showMessage();
@@ -2007,7 +1715,6 @@ function receiveAnotherMessage() {
   shareBtn.classList.add("hidden");
 
 
-  // 🌪️ NEW COSMIC TORNADO
   createWindEffect();
 
 
@@ -2034,7 +1741,7 @@ function receiveAnotherMessage() {
 
 
 // ==========================================
-// SHARE TEXT
+// COMPLETE SHARE TEXT
 // ==========================================
 
 function getShareText() {
@@ -2042,11 +1749,18 @@ function getShareText() {
   const currentMessage =
     message.textContent.trim();
 
+  if (!currentMessage) {
+    return "";
+  }
+
+  const t =
+    translations[currentLanguage];
+
   return `✨ A Message From The Universe ✨
 
 “${currentMessage}”
 
-${translations[currentLanguage].shareLink}
+${t.shareLink}
 
 ${UNIVERSE139_URL}`;
 }
@@ -2057,6 +1771,10 @@ ${UNIVERSE139_URL}`;
 // ==========================================
 
 async function copyText(text) {
+
+  if (!text) {
+    return;
+  }
 
   try {
 
@@ -2075,9 +1793,11 @@ async function copyText(text) {
 
     textarea.style.position = "fixed";
     textarea.style.left = "-9999px";
+    textarea.style.top = "0";
 
     document.body.appendChild(textarea);
 
+    textarea.focus();
     textarea.select();
 
     document.execCommand("copy");
@@ -2092,13 +1812,15 @@ async function copyText(text) {
 
 
 // ==========================================
-// SHARE FUNCTIONS
+// WHATSAPP
 // ==========================================
 
 function shareWhatsApp() {
 
   const text =
-    encodeURIComponent(getShareText());
+    encodeURIComponent(
+      getShareText()
+    );
 
   window.open(
     `https://wa.me/?text=${text}`,
@@ -2107,14 +1829,26 @@ function shareWhatsApp() {
 }
 
 
+// ==========================================
+// FACEBOOK
+// ==========================================
+
 async function shareFacebook() {
 
-  await copyText(getShareText());
+  const text =
+    getShareText();
+
+  // Facebook does not allow arbitrary
+  // text to be injected into its composer.
+  // Copy the complete message first.
+  await copyText(text);
 
   setTimeout(() => {
 
     const url =
-      encodeURIComponent(UNIVERSE139_URL);
+      encodeURIComponent(
+        UNIVERSE139_URL
+      );
 
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -2122,17 +1856,25 @@ async function shareFacebook() {
       "width=600,height=500"
     );
 
-  }, 500);
+  }, 700);
 }
 
+
+// ==========================================
+// TELEGRAM
+// ==========================================
 
 function shareTelegram() {
 
   const text =
-    encodeURIComponent(getShareText());
+    encodeURIComponent(
+      getShareText()
+    );
 
   const url =
-    encodeURIComponent(UNIVERSE139_URL);
+    encodeURIComponent(
+      UNIVERSE139_URL
+    );
 
   window.open(
     `https://t.me/share/url?url=${url}&text=${text}`,
@@ -2140,6 +1882,10 @@ function shareTelegram() {
   );
 }
 
+
+// ==========================================
+// GMAIL
+// ==========================================
 
 function shareGmail() {
 
@@ -2160,6 +1906,10 @@ function shareGmail() {
 }
 
 
+// ==========================================
+// EMAIL
+// ==========================================
+
 function shareEmail() {
 
   const subject =
@@ -2177,6 +1927,10 @@ function shareEmail() {
 }
 
 
+// ==========================================
+// SMS
+// ==========================================
+
 function shareSMS() {
 
   const text =
@@ -2189,9 +1943,16 @@ function shareSMS() {
 }
 
 
+// ==========================================
+// LINKEDIN
+// ==========================================
+
 async function shareLinkedIn() {
 
-  await copyText(getShareText());
+  const text =
+    getShareText();
+
+  await copyText(text);
 
   setTimeout(() => {
 
@@ -2202,22 +1963,30 @@ async function shareLinkedIn() {
 
     window.open(
       `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-      "_blank"
+      "_blank",
+      "width=600,height=600"
     );
 
-  }, 500);
+  }, 700);
 }
 
 
+// ==========================================
+// REDDIT
+// ==========================================
+
 async function shareReddit() {
 
-  await copyText(getShareText());
+  const text =
+    getShareText();
+
+  await copyText(text);
 
   setTimeout(() => {
 
     const title =
       encodeURIComponent(
-        "A Message From The Universe"
+        "✨ A Message From The Universe ✨"
       );
 
     const url =
@@ -2230,9 +1999,13 @@ async function shareReddit() {
       "_blank"
     );
 
-  }, 500);
+  }, 700);
 }
 
+
+// ==========================================
+// VIBER
+// ==========================================
 
 async function shareViber() {
 
@@ -2250,11 +2023,19 @@ async function shareViber() {
 }
 
 
+// ==========================================
+// TIKTOK
+// ==========================================
+
 async function shareTikTok() {
 
-  await copyText(
-    getShareText()
-  );
+  const text =
+    getShareText();
+
+  // TikTok does not allow a website
+  // to pre-fill arbitrary caption text.
+  // Copy the complete Universe139 message.
+  await copyText(text);
 
   setTimeout(() => {
 
@@ -2267,11 +2048,19 @@ async function shareTikTok() {
 }
 
 
+// ==========================================
+// INSTAGRAM
+// ==========================================
+
 async function shareInstagram() {
 
-  await copyText(
-    getShareText()
-  );
+  const text =
+    getShareText();
+
+  // Instagram does not allow arbitrary
+  // web pre-filled captions.
+  // Copy the complete message first.
+  await copyText(text);
 
   setTimeout(() => {
 
@@ -2284,11 +2073,16 @@ async function shareInstagram() {
 }
 
 
+// ==========================================
+// SNAPCHAT
+// ==========================================
+
 async function shareSnapchat() {
 
-  await copyText(
-    getShareText()
-  );
+  const text =
+    getShareText();
+
+  await copyText(text);
 
   setTimeout(() => {
 
@@ -2300,6 +2094,10 @@ async function shareSnapchat() {
   }, 700);
 }
 
+
+// ==========================================
+// PINTEREST
+// ==========================================
 
 function sharePinterest() {
 
@@ -2320,10 +2118,18 @@ function sharePinterest() {
 }
 
 
+// ==========================================
+// MORE / NATIVE SHARE
+// ==========================================
+
 async function shareMore() {
 
   const text =
     getShareText();
+
+  if (!text) {
+    return;
+  }
 
   if (navigator.share) {
 
@@ -2335,13 +2141,18 @@ async function shareMore() {
           "Universe139",
 
         text:
-          text
+          text,
+
+        url:
+          UNIVERSE139_URL
 
       });
 
     } catch (error) {
 
-      if (error.name !== "AbortError") {
+      if (
+        error.name !== "AbortError"
+      ) {
 
         console.error(
           "Share error:",
@@ -2424,6 +2235,9 @@ function createSharePanel() {
   const t =
     translations[currentLanguage];
 
+  const currentMessage =
+    message.textContent.trim();
+
   const panel =
     document.createElement("div");
 
@@ -2440,35 +2254,42 @@ function createSharePanel() {
       <button
         class="shareClose"
         id="shareClose"
+        aria-label="${t.close}"
       >
         ×
       </button>
 
+
       <h2>
         ${t.shareTitle}
       </h2>
+
 
       <p class="shareDescription">
         ${t.shareInstructions}
       </p>
 
 
+      <!-- ACTUAL MESSAGE PREVIEW -->
+
       <div class="sharePreview">
 
         <div class="sharePreviewTitle">
-          A Message From The Universe
+          ✨ A Message From The Universe ✨
         </div>
 
         <div class="sharePreviewMessage">
-          “${message.textContent.trim()}”
+          “${currentMessage}”
         </div>
 
         <div class="sharePreviewLink">
-          Universe139
+          ${UNIVERSE139_URL}
         </div>
 
       </div>
 
+
+      <!-- TEXT ONLY BUTTONS -->
 
       <div class="shareGrid">
 
@@ -2596,7 +2417,9 @@ function createSharePanel() {
   addSharePanelStyles();
 
 
-  // Close
+  // ==========================================
+  // CLOSE
+  // ==========================================
 
   document
     .getElementById("shareClose")
@@ -2616,7 +2439,9 @@ function createSharePanel() {
     );
 
 
-  // Platforms
+  // ==========================================
+  // PLATFORMS
+  // ==========================================
 
   document
     .getElementById("shareWhatsApp")
@@ -2722,25 +2547,45 @@ function createSharePanel() {
     );
 
 
+  // ==========================================
+  // COPY MESSAGE
+  // ==========================================
+
   document
     .getElementById("copyMessage")
     .addEventListener(
       "click",
       () => {
-        copyText(getShareText());
+
+        copyText(
+          getShareText()
+        );
+
       }
     );
 
+
+  // ==========================================
+  // COPY LINK
+  // ==========================================
 
   document
     .getElementById("copyLink")
     .addEventListener(
       "click",
       () => {
-        copyText(UNIVERSE139_URL);
+
+        copyText(
+          UNIVERSE139_URL
+        );
+
       }
     );
 
+
+  // ==========================================
+  // MORE
+  // ==========================================
 
   document
     .getElementById("shareMore")
@@ -2778,8 +2623,7 @@ function closeSharePanel() {
 
 // ==========================================
 // SHARE PANEL DESIGN
-// NO ICONS
-// NO ANIMATED ICONS
+// TEXT ONLY — NO ICONS
 // ==========================================
 
 function addSharePanelStyles() {
@@ -2963,13 +2807,17 @@ function addSharePanelStyles() {
     }
 
 
+    /* ======================================
+       ACTUAL MESSAGE PREVIEW
+       ====================================== */
+
     .sharePreview {
 
       margin-bottom:
         22px;
 
       padding:
-        18px;
+        20px;
 
       border-radius:
         18px;
@@ -2979,7 +2827,7 @@ function addSharePanelStyles() {
 
       border:
         1px solid
-        rgba(255,255,255,.1);
+        rgba(255,255,255,.12);
 
     }
 
@@ -2987,7 +2835,7 @@ function addSharePanelStyles() {
     .sharePreviewTitle {
 
       margin-bottom:
-        10px;
+        12px;
 
       font-size:
         13px;
@@ -3004,13 +2852,16 @@ function addSharePanelStyles() {
         white;
 
       font-size:
-        16px;
+        17px;
 
       line-height:
-        1.55;
+        1.6;
 
       margin-bottom:
-        12px;
+        14px;
+
+      word-break:
+        break-word;
 
     }
 
@@ -3026,12 +2877,15 @@ function addSharePanelStyles() {
       font-weight:
         600;
 
+      word-break:
+        break-word;
+
     }
 
 
-    /* ==================================
-       CLEAN TEXT BUTTONS
-       ================================== */
+    /* ======================================
+       TEXT BUTTONS
+       ====================================== */
 
     .shareGrid {
 
@@ -3110,9 +2964,9 @@ function addSharePanelStyles() {
     }
 
 
-    /* ==================================
+    /* ======================================
        TOAST
-       ================================== */
+       ====================================== */
 
     #universe139Toast {
 
@@ -3234,9 +3088,9 @@ function addSharePanelStyles() {
     }
 
 
-    /* ==================================
+    /* ======================================
        MOBILE
-       ================================== */
+       ====================================== */
 
     @media (max-width:600px) {
 
@@ -3269,6 +3123,14 @@ function addSharePanelStyles() {
 
         font-size:
           11px;
+
+      }
+
+
+      .sharePreviewMessage {
+
+        font-size:
+          15px;
 
       }
 
