@@ -6,6 +6,10 @@ const TEMPLATE_ID =
 const SHOTSTACK_ENDPOINT =
   "https://api.shotstack.io/edit/v1/templates/render";
 
+const APP_URL =
+  process.env.APP_URL ||
+  "https://message-from-universe.vercel.app";
+
 const MESSAGES = [
   "Something you've been waiting for is closer than you think.",
   "The answer may arrive when you stop looking for it.",
@@ -87,14 +91,27 @@ async function renderTemplate(message, slot) {
     );
   }
 
+  /*
+   * Pass the message through the callback URL
+   * so the webhook knows exactly which message
+   * belongs to this render.
+   */
+  const callbackUrl =
+    `${APP_URL}/api/shotstack-webhook` +
+    `?message=${encodeURIComponent(message)}` +
+    `&slot=${encodeURIComponent(slot)}`;
+
   const requestBody = {
     id: TEMPLATE_ID,
+
     merge: [
       {
         find: "MESSAGE",
         replace: message
       }
-    ]
+    ],
+
+    callback: callbackUrl
   };
 
   console.log(
@@ -143,7 +160,7 @@ async function renderTemplate(message, slot) {
 
   if (!renderId) {
     throw new Error(
-      "Shotstack returned success but no render ID: " +
+      "Shotstack returned no render ID: " +
       JSON.stringify(data)
     );
   }
@@ -168,7 +185,7 @@ export default async function handler(req, res) {
   }
 
   /*
-   * Protect the route when CRON_SECRET exists.
+   * Vercel Cron authentication.
    */
   const cronSecret =
     process.env.CRON_SECRET;
@@ -197,6 +214,9 @@ export default async function handler(req, res) {
       JSON.stringify(messages, null, 2)
     );
 
+    /*
+     * Create exactly 3 renders.
+     */
     const results =
       await Promise.allSettled(
         messages.map(
@@ -236,10 +256,8 @@ export default async function handler(req, res) {
       ).length;
 
     /*
-     * IMPORTANT:
-     * If all 3 failed, return HTTP 500.
-     * This makes the Vercel log visibly fail
-     * instead of showing a misleading 200.
+     * Do not return a fake success if all
+     * three Shotstack renders failed.
      */
     if (created === 0) {
       return res.status(500).json({
