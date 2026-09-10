@@ -6,12 +6,6 @@ const TEMPLATE_ID =
 const SHOTSTACK_ENDPOINT =
   "https://api.shotstack.io/edit/v1/templates/render";
 
-/*
- * Universe139 message library.
- * The daily job selects 3 different messages.
- *
- * You can add hundreds of messages here later.
- */
 const MESSAGES = [
   "Something you've been waiting for is closer than you think.",
   "The answer may arrive when you stop looking for it.",
@@ -54,10 +48,6 @@ const MESSAGES = [
   "The chapter ahead may be brighter than the one behind you."
 ];
 
-/*
- * Get a stable day number.
- * This makes the selection deterministic for each day.
- */
 function getDayNumber() {
   const start = Date.UTC(2026, 0, 1);
 
@@ -74,40 +64,43 @@ function getDayNumber() {
   );
 }
 
-/*
- * Select exactly 3 different messages for today.
- */
 function getTodayMessages() {
   const day = getDayNumber();
 
   const first =
-    Math.abs((day * 3) % MESSAGES.length);
-
-  const second =
-    (first + 1) % MESSAGES.length;
-
-  const third =
-    (first + 2) % MESSAGES.length;
+    Math.abs(day * 3) % MESSAGES.length;
 
   return [
     MESSAGES[first],
-    MESSAGES[second],
-    MESSAGES[third]
+    MESSAGES[(first + 1) % MESSAGES.length],
+    MESSAGES[(first + 2) % MESSAGES.length]
   ];
 }
 
-/*
- * Render one version of the Shotstack template.
- */
 async function renderTemplate(message, slot) {
   const apiKey =
     process.env.SHOTSTACK_API_KEY;
 
   if (!apiKey) {
     throw new Error(
-      "SHOTSTACK_API_KEY is missing."
+      "SHOTSTACK_API_KEY is missing"
     );
   }
+
+  const requestBody = {
+    id: TEMPLATE_ID,
+    merge: [
+      {
+        find: "MESSAGE",
+        replace: message
+      }
+    ]
+  };
+
+  console.log(
+    `SHOTSTACK REQUEST SLOT ${slot}:`,
+    JSON.stringify(requestBody, null, 2)
+  );
 
   const response = await fetch(
     SHOTSTACK_ENDPOINT,
@@ -115,39 +108,42 @@ async function renderTemplate(message, slot) {
       method: "POST",
 
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json",
-        "x-api-key": apiKey
+        "x-api-key": apiKey.trim()
       },
 
-      body: JSON.stringify({
-        id: TEMPLATE_ID,
-
-        merge: [
-          {
-            find: "MESSAGE",
-            replace: message
-          }
-        ]
-      })
+      body: JSON.stringify(requestBody)
     }
   );
 
   const data = await response.json();
 
+  console.log(
+    `SHOTSTACK RESPONSE SLOT ${slot}:`,
+    JSON.stringify(data, null, 2)
+  );
+
   if (!response.ok) {
     throw new Error(
-      `Shotstack returned ${response.status}: ` +
+      `Shotstack HTTP ${response.status}: ` +
+      JSON.stringify(data)
+    );
+  }
+
+  if (!data?.success) {
+    throw new Error(
+      "Shotstack rejected the request: " +
       JSON.stringify(data)
     );
   }
 
   const renderId =
-    data?.response?.id || null;
+    data?.response?.id;
 
   if (!renderId) {
     throw new Error(
-      "Shotstack did not return a render ID: " +
+      "Shotstack returned success but no render ID: " +
       JSON.stringify(data)
     );
   }
@@ -161,9 +157,6 @@ async function renderTemplate(message, slot) {
 }
 
 export default async function handler(req, res) {
-  /*
-   * Only allow GET/POST.
-   */
   if (
     req.method !== "GET" &&
     req.method !== "POST"
@@ -175,10 +168,7 @@ export default async function handler(req, res) {
   }
 
   /*
-   * Protect the endpoint when CRON_SECRET exists.
-   *
-   * Vercel Cron sends:
-   * Authorization: Bearer <CRON_SECRET>
+   * Protect the route when CRON_SECRET exists.
    */
   const cronSecret =
     process.env.CRON_SECRET;
@@ -202,12 +192,11 @@ export default async function handler(req, res) {
     const messages =
       getTodayMessages();
 
-    /*
-     * Render all 3 template variations.
-     *
-     * Promise.allSettled allows one failed
-     * render without losing the other two.
-     */
+    console.log(
+      "TODAY'S MESSAGES:",
+      JSON.stringify(messages, null, 2)
+    );
+
     const results =
       await Promise.allSettled(
         messages.map(
@@ -219,22 +208,26 @@ export default async function handler(req, res) {
         )
       );
 
-    const videos = results.map(
-      (result, index) => {
-        if (result.status === "fulfilled") {
-          return result.value;
-        }
+    const videos =
+      results.map(
+        (result, index) => {
+          if (
+            result.status ===
+            "fulfilled"
+          ) {
+            return result.value;
+          }
 
-        return {
-          slot: index + 1,
-          message: messages[index],
-          status: "failed",
-          error:
-            result.reason?.message ||
-            String(result.reason)
-        };
-      }
-    );
+          return {
+            slot: index + 1,
+            message: messages[index],
+            status: "failed",
+            error:
+              result.reason?.message ||
+              String(result.reason)
+          };
+        }
+      );
 
     const created =
       videos.filter(
@@ -242,8 +235,24 @@ export default async function handler(req, res) {
           video.status === "queued"
       ).length;
 
+    /*
+     * IMPORTANT:
+     * If all 3 failed, return HTTP 500.
+     * This makes the Vercel log visibly fail
+     * instead of showing a misleading 200.
+     */
+    if (created === 0) {
+      return res.status(500).json({
+        success: false,
+        created: 0,
+        total: 3,
+        templateId: TEMPLATE_ID,
+        videos
+      });
+    }
+
     return res.status(200).json({
-      success: created > 0,
+      success: true,
       created,
       total: 3,
       templateId: TEMPLATE_ID,
