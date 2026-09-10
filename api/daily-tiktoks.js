@@ -10,74 +10,132 @@ const APP_URL =
   process.env.APP_URL ||
   "https://message-from-universe.vercel.app";
 
-const MESSAGES = [
-  "Something you've been waiting for is closer than you think.",
-  "The answer may arrive when you stop looking for it.",
-  "A new beginning is already moving toward you.",
-  "Trust what feels right, even when the path is not completely clear.",
-  "What is meant for you does not need to be forced.",
-  "Today may bring a small sign that changes how you see everything.",
-  "Let go of what is no longer yours. Make room for what is coming.",
-  "Your energy is shifting. Pay attention to what appears today.",
-  "The answer you're looking for may arrive in an unexpected form.",
-  "You are closer to your breakthrough than you realize.",
-  "Something unexpected may open a door you thought was closed.",
-  "Your next chapter does not need permission from your past.",
-  "Slow progress is still progress. Keep moving.",
-  "What feels like a delay may actually be preparation.",
-  "Today, choose the path that gives you peace.",
-  "A small decision today may create a much bigger change tomorrow.",
-  "You are allowed to begin again.",
-  "The right opportunity may appear when you stop chasing the wrong one.",
-  "Your intuition knows more than your fear does.",
-  "There is still more possibility ahead than you can see right now.",
-  "What is coming may be better than what you were asking for.",
-  "You do not need to know the whole path. Just take the next step.",
-  "Something is quietly falling into place.",
-  "The moment you stop forcing it may be the moment it arrives.",
-  "Your story is changing, even if you cannot see it yet.",
-  "A door may open where you least expect it.",
-  "What you need may already be closer than you think.",
-  "Your timing is not wrong. Your timing is your own.",
-  "You may soon understand why things had to happen this way.",
-  "The energy around you is changing. Stay open.",
-  "Your patience is about to make sense.",
-  "One small sign today may be enough.",
-  "You are not behind. You are becoming.",
-  "Something you've almost given up on may surprise you.",
-  "Your next opportunity may look different from what you expected.",
-  "What feels uncertain today may become clear very soon.",
-  "There is a reason you are seeing this message now.",
-  "Trust the quiet feeling inside you.",
-  "The chapter ahead may be brighter than the one behind you."
+/*
+ * Universe139 daily content.
+ *
+ * Each day gets exactly 3 messages:
+ *   1 = Morning
+ *   2 = Afternoon
+ *   3 = Evening
+ *
+ * The messages are selected deterministically from separate pools,
+ * so the same calendar day always produces the same 3 messages.
+ */
+
+const MORNING_MESSAGES = [
+  "Something quiet is aligning for you. You may not see it yet, but the door is already opening.",
+  "This morning carries a possibility you almost stopped believing in. Leave room for it.",
+  "Before the world gets loud, remember this: not everything meant for you has arrived yet.",
+  "A gentle change is beginning beneath the surface. Do not dismiss what feels different today.",
+  "There is more ahead than what yesterday showed you. Start today without assuming you know the ending.",
+  "Something is making its way toward you without asking for your attention. Notice the quiet signs.",
+  "The next chapter may begin with something so small you almost overlook it. Stay awake to possibility.",
+  "You do not need a perfect plan this morning. One honest step can change the direction of a day.",
+  "A door can begin opening long before you hear the click. Trust what is quietly shifting.",
+  "Today may feel ordinary at first. That does not mean something extraordinary is not moving underneath it.",
+  "Your path is not as empty as it looks. Some answers are still traveling toward you.",
+  "Begin gently today. What is meant to grow in your life does not need to arrive all at once.",
+  "There is a reason you felt the need to pause. Something important may become clearer when you listen.",
+  "You may be entering a season where less force creates more movement. Let today unfold differently.",
+  "A possibility you thought had passed may be finding its way back to you in another form."
 ];
 
-function getDayNumber() {
-  const start = Date.UTC(2026, 0, 1);
+const AFTERNOON_MESSAGES = [
+  "The answer may arrive from a direction you stopped watching. Stay open to the unexpected.",
+  "If today took an unfamiliar turn, do not rush to call it a setback. The route may be changing for a reason.",
+  "Something you were not looking for may matter more than what you were chasing. Pay attention to the interruption.",
+  "The smallest conversation today could shift a decision you thought was already made.",
+  "Not every closed door is a rejection. Some are simply redirecting you toward a better entrance.",
+  "What looks like a delay in the middle of the day may be creating space for something more useful to arrive.",
+  "A coincidence today may feel strangely precise. You do not have to explain it to notice it.",
+  "Your next clue may not look like an answer. It may look like a person, a sentence, or a sudden change of plan.",
+  "Sometimes the sign is not what appears, but what suddenly stops feeling right.",
+  "You are allowed to change your mind when new information changes the path in front of you.",
+  "A surprising opportunity can feel inconvenient at first. Give the unusual option a second look.",
+  "What if the thing that interrupted your plans is exactly what needed your attention today?",
+  "You may discover that the missing piece was never far away. You simply had not looked from this angle.",
+  "The right moment does not always announce itself. Sometimes it arrives disguised as a small choice.",
+  "Something unexpected may make sense later. For now, stay curious instead of certain."
+];
 
+const EVENING_MESSAGES = [
+  "Tonight, release the question for a moment. What is meant for you does not need to be chased.",
+  "You do not have to solve tomorrow tonight. Let your mind rest from what it cannot control yet.",
+  "Some answers become visible only after the noise settles. Give yourself permission to be still.",
+  "Leave one fear outside the door tonight. It does not need to follow you into the next chapter.",
+  "The day did not need to be perfect to move you forward. Some progress happens quietly.",
+  "What felt confusing this morning may look different after everything you learned today. Let that be enough for now.",
+  "Not every unanswered question is a warning. Some are simply waiting for the right moment.",
+  "Before you sleep, remember how much can change between one ordinary night and one unexpected morning.",
+  "You can close this day without having every answer. Peace does not require certainty.",
+  "Something you are worried about may already be moving toward resolution beyond what you can see.",
+  "Tonight is not the end of the story. It is only the quiet space between chapters.",
+  "Put down what you cannot carry any farther. Tomorrow deserves a little more room.",
+  "The future does not need to be clear tonight. Let hope remain without demanding proof.",
+  "There are things you will understand later that you cannot force yourself to understand now.",
+  "Rest knowing that one difficult day does not get to decide what comes next."
+];
+
+function getLocalDateKey() {
+  /*
+   * Use Pacific Time for the Universe139 publishing day.
+   * Vercel Cron itself runs in UTC, but content selection follows
+   * America/Los_Angeles.
+   */
   const now = new Date();
 
-  const today = Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate()
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(now);
+
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
   );
 
-  return Math.floor(
-    (today - start) / 86400000
-  );
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function hashString(value) {
+  let hash = 2166136261;
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
 }
 
 function getTodayMessages() {
-  const day = getDayNumber();
+  const dateKey = getLocalDateKey();
+  const seed = hashString(dateKey);
 
-  const first =
-    Math.abs(day * 3) % MESSAGES.length;
+  const morning =
+    MORNING_MESSAGES[
+      seed % MORNING_MESSAGES.length
+    ];
+
+  const afternoon =
+    AFTERNOON_MESSAGES[
+      Math.floor(seed / 7) %
+        AFTERNOON_MESSAGES.length
+    ];
+
+  const evening =
+    EVENING_MESSAGES[
+      Math.floor(seed / 17) %
+        EVENING_MESSAGES.length
+    ];
 
   return [
-    MESSAGES[first],
-    MESSAGES[(first + 1) % MESSAGES.length],
-    MESSAGES[(first + 2) % MESSAGES.length]
+    morning,
+    afternoon,
+    evening
   ];
 }
 
@@ -91,15 +149,21 @@ async function renderTemplate(message, slot) {
     );
   }
 
+  const slotName =
+    slot === 1
+      ? "morning"
+      : slot === 2
+        ? "afternoon"
+        : "evening";
+
   /*
-   * Pass the message through the callback URL
-   * so the webhook knows exactly which message
-   * belongs to this render.
+   * Pass message + slot information to webhook.
    */
   const callbackUrl =
     `${APP_URL}/api/shotstack-webhook` +
     `?message=${encodeURIComponent(message)}` +
-    `&slot=${encodeURIComponent(slot)}`;
+    `&slot=${encodeURIComponent(slot)}` +
+    `&slotName=${encodeURIComponent(slotName)}`;
 
   const requestBody = {
     id: TEMPLATE_ID,
@@ -115,8 +179,12 @@ async function renderTemplate(message, slot) {
   };
 
   console.log(
-    `SHOTSTACK REQUEST SLOT ${slot}:`,
-    JSON.stringify(requestBody, null, 2)
+    `SHOTSTACK REQUEST SLOT ${slot} (${slotName}):`,
+    JSON.stringify(
+      requestBody,
+      null,
+      2
+    )
   );
 
   const response = await fetch(
@@ -134,11 +202,16 @@ async function renderTemplate(message, slot) {
     }
   );
 
-  const data = await response.json();
+  const data =
+    await response.json();
 
   console.log(
     `SHOTSTACK RESPONSE SLOT ${slot}:`,
-    JSON.stringify(data, null, 2)
+    JSON.stringify(
+      data,
+      null,
+      2
+    )
   );
 
   if (!response.ok) {
@@ -167,13 +240,17 @@ async function renderTemplate(message, slot) {
 
   return {
     slot,
+    slotName,
     message,
     renderId,
     status: "queued"
   };
 }
 
-export default async function handler(req, res) {
+export default async function handler(
+  req,
+  res
+) {
   if (
     req.method !== "GET" &&
     req.method !== "POST"
@@ -206,16 +283,31 @@ export default async function handler(req, res) {
   }
 
   try {
+    const dateKey =
+      getLocalDateKey();
+
     const messages =
       getTodayMessages();
 
     console.log(
+      `GENERATING UNIVERSE139 TIKTOKS FOR ${dateKey}`
+    );
+
+    console.log(
       "TODAY'S MESSAGES:",
-      JSON.stringify(messages, null, 2)
+      JSON.stringify(
+        messages,
+        null,
+        2
+      )
     );
 
     /*
-     * Create exactly 3 renders.
+     * Create exactly 3 renders:
+     *
+     * 1 = Morning
+     * 2 = Afternoon
+     * 3 = Evening
      */
     const results =
       await Promise.allSettled(
@@ -240,8 +332,19 @@ export default async function handler(req, res) {
 
           return {
             slot: index + 1,
-            message: messages[index],
+
+            slotName:
+              index === 0
+                ? "morning"
+                : index === 1
+                  ? "afternoon"
+                  : "evening",
+
+            message:
+              messages[index],
+
             status: "failed",
+
             error:
               result.reason?.message ||
               String(result.reason)
@@ -251,19 +354,21 @@ export default async function handler(req, res) {
 
     const created =
       videos.filter(
-        video =>
-          video.status === "queued"
+        (video) =>
+          video.status ===
+          "queued"
       ).length;
 
     /*
-     * Do not return a fake success if all
-     * three Shotstack renders failed.
+     * Do not report success if all 3
+     * Shotstack renders failed.
      */
     if (created === 0) {
       return res.status(500).json({
         success: false,
         created: 0,
         total: 3,
+        date: dateKey,
         templateId: TEMPLATE_ID,
         videos
       });
@@ -273,6 +378,7 @@ export default async function handler(req, res) {
       success: true,
       created,
       total: 3,
+      date: dateKey,
       templateId: TEMPLATE_ID,
       videos
     });
@@ -285,7 +391,9 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
       success: false,
-      error: error.message
+      error:
+        error?.message ||
+        String(error)
     });
   }
 }
