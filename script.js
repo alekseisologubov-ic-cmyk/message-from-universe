@@ -384,6 +384,8 @@ let subtitle;
 let revealBtn;
 let loading;
 let loadingText;
+let crystalBallWrap;
+let ballHurricane;
 let messageBox;
 let month;
 let message;
@@ -418,6 +420,12 @@ function initializeDOM() {
 
   loadingText =
     document.getElementById("loadingText");
+
+  crystalBallWrap =
+    document.getElementById("crystalBallWrap");
+
+  ballHurricane =
+    document.getElementById("ballHurricane");
 
   messageBox =
     document.getElementById("messageBox");
@@ -1318,6 +1326,183 @@ function createWindEffect() {
 
 
 // ==========================================
+// CONTAINED BALL HURRICANE
+//
+// A smaller, clipped version of the same 3D wind
+// effect, running INSIDE the crystal ball itself
+// (overflow:hidden + border-radius:50% on
+// #ballSphere naturally clips it to the sphere).
+// This is what makes the message look like it's
+// swirling into existence inside the glass ball,
+// with a floating, weightless, 3D feel — the
+// rotateX() tilt gives the rings their elliptical,
+// "seen through glass" perspective.
+// ==========================================
+
+function createBallHurricane() {
+
+  if (!ballHurricane) {
+    return;
+  }
+
+  ballHurricane.innerHTML = "";
+
+  const RING_COUNT = 6;
+  const DUST_COUNT = 18;
+
+  let inner = `<div class="ballVortexCore"></div>`;
+
+  for (let i = 1; i <= RING_COUNT; i++) {
+    inner += `<div class="ballRing bring${i}"></div>`;
+  }
+
+  for (let i = 1; i <= DUST_COUNT; i++) {
+    inner += `<span class="ballDust bdust${i}"></span>`;
+  }
+
+  ballHurricane.innerHTML = inner;
+
+  if (!document.getElementById("universe139BallHurricaneCSS")) {
+
+    const style = document.createElement("style");
+    style.id = "universe139BallHurricaneCSS";
+
+    let ringCSS = "";
+
+    for (let i = 1; i <= RING_COUNT; i++) {
+
+      const direction = i % 2 === 0 ? -1 : 1;
+
+      ringCSS += `
+        .bring${i} {
+          animation: ballRing${i} ${1.3 + i * 0.15}s ease-out forwards;
+        }
+
+        @keyframes ballRing${i} {
+          0% {
+            opacity: 0;
+            width: 10%;
+            height: 4%;
+            transform: translate(-50%, -50%) rotateX(68deg) rotateZ(0deg) scale(.2);
+          }
+          20% { opacity: .9; }
+          60% { opacity: .6; }
+          100% {
+            opacity: 0;
+            width: ${55 + i * 9}%;
+            height: ${18 + i * 3}%;
+            transform: translate(-50%, -50%) rotateX(68deg) rotateZ(${direction * (620 + i * 70)}deg) scale(1);
+          }
+        }
+      `;
+
+    }
+
+    let dustCSS = "";
+
+    for (let i = 1; i <= DUST_COUNT; i++) {
+
+      const angle = i * 43;
+      const distance = 30 + (i % 5) * 8;
+      const rotation = 420 + (i % 6) * 60;
+
+      dustCSS += `
+        .bdust${i} {
+          animation: ballDust${i} ${1.4 + (i % 5) * .15}s linear ${(i % 8) * .04}s forwards;
+        }
+
+        @keyframes ballDust${i} {
+          0% {
+            opacity: 0;
+            transform: rotate(${angle}deg) translateX(${distance}%) scale(.2);
+          }
+          20% { opacity: .95; }
+          65% {
+            opacity: .7;
+            transform: rotate(${angle + 300}deg) translateX(${distance * 0.4}%) scale(1.1);
+          }
+          100% {
+            opacity: 0;
+            transform: rotate(${angle + rotation}deg) translateX(2%) scale(.05);
+          }
+        }
+      `;
+
+    }
+
+    style.textContent = `
+
+      #ballHurricane {
+        perspective: 400px;
+      }
+
+      .ballVortexCore {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 14%;
+        height: 14%;
+        border-radius: 50%;
+        transform: translate(-50%,-50%) scale(.1);
+        background: radial-gradient(circle,
+          rgba(255,255,255,1) 0%,
+          rgba(205,160,255,.85) 25%,
+          rgba(130,60,255,.4) 55%,
+          transparent 75%);
+        box-shadow: 0 0 18px rgba(255,255,255,.9), 0 0 40px rgba(180,100,255,.8);
+        animation: ballCorePulse 2.2s ease-out forwards;
+      }
+
+      @keyframes ballCorePulse {
+        0% { opacity: 0; transform: translate(-50%,-50%) scale(.1); }
+        20% { opacity: 1; }
+        55% { transform: translate(-50%,-50%) scale(1); }
+        100% { opacity: 0; transform: translate(-50%,-50%) scale(2.2); }
+      }
+
+      .ballRing {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        border: 2px solid rgba(220,180,255,.5);
+        box-shadow: 0 0 10px rgba(200,140,255,.5), inset 0 0 12px rgba(255,255,255,.12);
+        opacity: 0;
+      }
+
+      .ballDust {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 0 6px rgba(220,180,255,.95);
+        opacity: 0;
+      }
+
+      ${ringCSS}
+      ${dustCSS}
+
+    `;
+
+    document.head.appendChild(style);
+
+  }
+
+  window.setTimeout(() => {
+
+    if (ballHurricane) {
+      ballHurricane.innerHTML = "";
+    }
+
+  }, 2300);
+
+}
+
+
+// ==========================================
 // SHOW MESSAGE
 // FIXED
 // ==========================================
@@ -1500,6 +1685,7 @@ function revealMessage() {
   // ----------------------------------------
 
   showElement(loading);
+  showElement(crystalBallWrap);
 
 
   if (loadingText) {
@@ -1521,6 +1707,7 @@ function revealMessage() {
   try {
 
     createWindEffect();
+    createBallHurricane();
 
   } catch (error) {
 
@@ -1645,6 +1832,10 @@ function receiveAnotherMessage() {
   messageBox.style.transform =
     "scale(.95)";
 
+  if (message) {
+    message.style.opacity = "0";
+  }
+
 
   // ----------------------------------------
   // START COSMIC EFFECT SAFELY
@@ -1653,6 +1844,7 @@ function receiveAnotherMessage() {
   try {
 
     createWindEffect();
+    createBallHurricane();
 
   } catch (error) {
 
@@ -4434,6 +4626,10 @@ function initializeState() {
   );
 
   hideElement(
+    crystalBallWrap
+  );
+
+  hideElement(
     revealBtn
   );
 
@@ -4455,6 +4651,9 @@ function initializeState() {
 
     message.style.visibility =
       "visible";
+
+    message.style.opacity =
+      "0";
 
   }
 
