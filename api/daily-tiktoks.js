@@ -11,15 +11,38 @@ const APP_URL =
   "https://message-from-universe.vercel.app";
 
 /*
- * Universe139 daily content.
+ * ============================================================
+ * UNIVERSE139 DAILY TIKTOK CONTENT
+ * ============================================================
  *
- * Each day gets exactly 3 messages:
- *   1 = Morning
- *   2 = Afternoon
- *   3 = Evening
+ * Every cron run creates exactly 3 videos:
  *
- * The messages are selected deterministically from separate pools,
- * so the same calendar day always produces the same 3 messages.
+ *   Slot 1 = Morning
+ *   Slot 2 = Afternoon
+ *   Slot 3 = Evening
+ *
+ * Greeting:
+ *   Visual only
+ *   NOT included in MESSAGE
+ *   NOT spoken by ElevenLabs
+ *
+ * The existing Shotstack template already contains:
+ *
+ *   THIS MESSAGE MAY BE FOR YOU.
+ *
+ * We replace that visual text with:
+ *
+ *   GOOD MORNING
+ *   GOOD AFTERNOON
+ *   GOOD EVENING
+ *
+ * The existing {{ MESSAGE }} remains the spoken/message text.
+ */
+
+/*
+ * ============================================================
+ * MORNING
+ * ============================================================
  */
 
 const MORNING_MESSAGES = [
@@ -40,6 +63,12 @@ const MORNING_MESSAGES = [
   "A possibility you thought had passed may be finding its way back to you in another form."
 ];
 
+/*
+ * ============================================================
+ * AFTERNOON
+ * ============================================================
+ */
+
 const AFTERNOON_MESSAGES = [
   "The answer may arrive from a direction you stopped watching. Stay open to the unexpected.",
   "If today took an unfamiliar turn, do not rush to call it a setback. The route may be changing for a reason.",
@@ -57,6 +86,12 @@ const AFTERNOON_MESSAGES = [
   "The right moment does not always announce itself. Sometimes it arrives disguised as a small choice.",
   "Something unexpected may make sense later. For now, stay curious instead of certain."
 ];
+
+/*
+ * ============================================================
+ * EVENING
+ * ============================================================
+ */
 
 const EVENING_MESSAGES = [
   "Tonight, release the question for a moment. What is meant for you does not need to be chased.",
@@ -76,11 +111,15 @@ const EVENING_MESSAGES = [
   "Rest knowing that one difficult day does not get to decide what comes next."
 ];
 
+/*
+ * ============================================================
+ * DATE / SELECTION
+ * ============================================================
+ */
+
 function getLocalDateKey() {
   /*
-   * Use Pacific Time for the Universe139 publishing day.
-   * Vercel Cron itself runs in UTC, but content selection follows
-   * America/Los_Angeles.
+   * Universe139 publishing day = Los Angeles time.
    */
   const now = new Date();
 
@@ -93,31 +132,61 @@ function getLocalDateKey() {
 
   const values = Object.fromEntries(
     parts
-      .filter((part) => part.type !== "literal")
-      .map((part) => [part.type, part.value])
+      .filter(
+        (part) =>
+          part.type !== "literal"
+      )
+      .map(
+        (part) => [
+          part.type,
+          part.value
+        ]
+      )
   );
 
-  return `${values.year}-${values.month}-${values.day}`;
+  return (
+    `${values.year}-` +
+    `${values.month}-` +
+    `${values.day}`
+  );
 }
 
 function hashString(value) {
   let hash = 2166136261;
 
-  for (let i = 0; i < value.length; i += 1) {
+  for (
+    let i = 0;
+    i < value.length;
+    i += 1
+  ) {
     hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
+
+    hash = Math.imul(
+      hash,
+      16777619
+    );
   }
 
   return hash >>> 0;
 }
 
+/*
+ * ============================================================
+ * TODAY'S 3 MESSAGES
+ * ============================================================
+ */
+
 function getTodayMessages() {
-  const dateKey = getLocalDateKey();
-  const seed = hashString(dateKey);
+  const dateKey =
+    getLocalDateKey();
+
+  const seed =
+    hashString(dateKey);
 
   const morning =
     MORNING_MESSAGES[
-      seed % MORNING_MESSAGES.length
+      seed %
+        MORNING_MESSAGES.length
     ];
 
   const afternoon =
@@ -133,13 +202,36 @@ function getTodayMessages() {
     ];
 
   return [
-    morning,
-    afternoon,
-    evening
+    {
+      slot: 1,
+      slotName: "morning",
+      greeting: "GOOD MORNING",
+      message: morning
+    },
+    {
+      slot: 2,
+      slotName: "afternoon",
+      greeting: "GOOD AFTERNOON",
+      message: afternoon
+    },
+    {
+      slot: 3,
+      slotName: "evening",
+      greeting: "GOOD EVENING",
+      message: evening
+    }
   ];
 }
 
-async function renderTemplate(message, slot) {
+/*
+ * ============================================================
+ * SHOTSTACK RENDER
+ * ============================================================
+ */
+
+async function renderTemplate(
+  video
+) {
   const apiKey =
     process.env.SHOTSTACK_API_KEY;
 
@@ -149,29 +241,68 @@ async function renderTemplate(message, slot) {
     );
   }
 
-  const slotName =
-    slot === 1
-      ? "morning"
-      : slot === 2
-        ? "afternoon"
-        : "evening";
-
   /*
-   * Pass message + slot information to webhook.
+   * Callback URL lets the webhook know:
+   *
+   *   message
+   *   slot
+   *   slotName
+   *   greeting
+   *
+   * Greeting is NOT spoken.
    */
   const callbackUrl =
     `${APP_URL}/api/shotstack-webhook` +
-    `?message=${encodeURIComponent(message)}` +
-    `&slot=${encodeURIComponent(slot)}` +
-    `&slotName=${encodeURIComponent(slotName)}`;
+    `?message=${encodeURIComponent(
+      video.message
+    )}` +
+    `&slot=${encodeURIComponent(
+      video.slot
+    )}` +
+    `&slotName=${encodeURIComponent(
+      video.slotName
+    )}` +
+    `&greeting=${encodeURIComponent(
+      video.greeting
+    )}`;
 
+  /*
+   * IMPORTANT:
+   *
+   * "THIS MESSAGE MAY BE FOR YOU."
+   *
+   * is an existing visual text element in the
+   * Shotstack template.
+   *
+   * We replace THAT text with:
+   *
+   *   GOOD MORNING
+   *   GOOD AFTERNOON
+   *   GOOD EVENING
+   *
+   * This does NOT affect the ElevenLabs audio,
+   * because the audio prompt is:
+   *
+   * "Wait... this message may be for you."
+   *
+   * The main MESSAGE is kept separate.
+   */
   const requestBody = {
     id: TEMPLATE_ID,
 
     merge: [
       {
-        find: "MESSAGE",
-        replace: message
+        find:
+          "THIS MESSAGE MAY BE FOR YOU.",
+        replace:
+          video.greeting
+      },
+
+      {
+        find:
+          "MESSAGE",
+        replace:
+          video.message
       }
     ],
 
@@ -179,7 +310,7 @@ async function renderTemplate(message, slot) {
   };
 
   console.log(
-    `SHOTSTACK REQUEST SLOT ${slot} (${slotName}):`,
+    `SHOTSTACK REQUEST SLOT ${video.slot} (${video.slotName}):`,
     JSON.stringify(
       requestBody,
       null,
@@ -187,26 +318,43 @@ async function renderTemplate(message, slot) {
     )
   );
 
-  const response = await fetch(
-    SHOTSTACK_ENDPOINT,
-    {
-      method: "POST",
+  const response =
+    await fetch(
+      SHOTSTACK_ENDPOINT,
+      {
+        method: "POST",
 
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "x-api-key": apiKey.trim()
-      },
+        headers: {
+          Accept:
+            "application/json",
 
-      body: JSON.stringify(requestBody)
-    }
-  );
+          "Content-Type":
+            "application/json",
 
-  const data =
-    await response.json();
+          "x-api-key":
+            apiKey.trim()
+        },
+
+        body:
+          JSON.stringify(
+            requestBody
+          )
+      }
+    );
+
+  let data;
+
+  try {
+    data =
+      await response.json();
+  } catch (error) {
+    throw new Error(
+      `Shotstack returned invalid JSON. HTTP ${response.status}`
+    );
+  }
 
   console.log(
-    `SHOTSTACK RESPONSE SLOT ${slot}:`,
+    `SHOTSTACK RESPONSE SLOT ${video.slot}:`,
     JSON.stringify(
       data,
       null,
@@ -239,37 +387,62 @@ async function renderTemplate(message, slot) {
   }
 
   return {
-    slot,
-    slotName,
-    message,
+    slot:
+      video.slot,
+
+    slotName:
+      video.slotName,
+
+    greeting:
+      video.greeting,
+
+    message:
+      video.message,
+
     renderId,
-    status: "queued"
+
+    status:
+      "queued"
   };
 }
+
+/*
+ * ============================================================
+ * VERCEL HANDLER
+ * ============================================================
+ */
 
 export default async function handler(
   req,
   res
 ) {
+  /*
+   * Allow GET and POST.
+   */
   if (
     req.method !== "GET" &&
     req.method !== "POST"
   ) {
     return res.status(405).json({
       success: false,
-      error: "Method not allowed"
+      error:
+        "Method not allowed"
     });
   }
 
   /*
-   * Vercel Cron authentication.
+   * ==========================================================
+   * VERCEL CRON AUTHENTICATION
+   * ==========================================================
    */
+
   const cronSecret =
     process.env.CRON_SECRET;
 
   if (cronSecret) {
     const authorization =
-      req.headers.authorization || "";
+      req.headers.authorization ||
+      "";
 
     if (
       authorization !==
@@ -277,50 +450,53 @@ export default async function handler(
     ) {
       return res.status(401).json({
         success: false,
-        error: "Unauthorized"
+        error:
+          "Unauthorized"
       });
     }
   }
 
   try {
+    /*
+     * Get today's content.
+     */
     const dateKey =
       getLocalDateKey();
 
-    const messages =
+    const videos =
       getTodayMessages();
 
     console.log(
-      `GENERATING UNIVERSE139 TIKTOKS FOR ${dateKey}`
+      `UNIVERSE139 DAILY TIKTOK GENERATION: ${dateKey}`
     );
 
     console.log(
-      "TODAY'S MESSAGES:",
+      "TODAY'S VIDEO PLAN:",
       JSON.stringify(
-        messages,
+        videos,
         null,
         2
       )
     );
 
     /*
-     * Create exactly 3 renders:
-     *
-     * 1 = Morning
-     * 2 = Afternoon
-     * 3 = Evening
+     * Exactly 3 Shotstack renders.
      */
     const results =
       await Promise.allSettled(
-        messages.map(
-          (message, index) =>
+        videos.map(
+          (video) =>
             renderTemplate(
-              message,
-              index + 1
+              video
             )
         )
       );
 
-    const videos =
+    /*
+     * Convert Promise results
+     * into a clean response.
+     */
+    const output =
       results.map(
         (result, index) => {
           if (
@@ -331,56 +507,85 @@ export default async function handler(
           }
 
           return {
-            slot: index + 1,
+            slot:
+              videos[index].slot,
 
             slotName:
-              index === 0
-                ? "morning"
-                : index === 1
-                  ? "afternoon"
-                  : "evening",
+              videos[index]
+                .slotName,
+
+            greeting:
+              videos[index]
+                .greeting,
 
             message:
-              messages[index],
+              videos[index]
+                .message,
 
-            status: "failed",
+            status:
+              "failed",
 
             error:
-              result.reason?.message ||
-              String(result.reason)
+              result.reason
+                ?.message ||
+              String(
+                result.reason
+              )
           };
         }
       );
 
+    /*
+     * Count successful Shotstack requests.
+     */
     const created =
-      videos.filter(
+      output.filter(
         (video) =>
           video.status ===
           "queued"
       ).length;
 
     /*
-     * Do not report success if all 3
-     * Shotstack renders failed.
+     * If all three failed,
+     * return HTTP 500.
      */
     if (created === 0) {
       return res.status(500).json({
         success: false,
+
         created: 0,
+
         total: 3,
-        date: dateKey,
-        templateId: TEMPLATE_ID,
-        videos
+
+        date:
+          dateKey,
+
+        templateId:
+          TEMPLATE_ID,
+
+        videos:
+          output
       });
     }
 
+    /*
+     * At least one render succeeded.
+     */
     return res.status(200).json({
       success: true,
+
       created,
+
       total: 3,
-      date: dateKey,
-      templateId: TEMPLATE_ID,
-      videos
+
+      date:
+        dateKey,
+
+      templateId:
+        TEMPLATE_ID,
+
+      videos:
+        output
     });
 
   } catch (error) {
@@ -391,6 +596,7 @@ export default async function handler(
 
     return res.status(500).json({
       success: false,
+
       error:
         error?.message ||
         String(error)
