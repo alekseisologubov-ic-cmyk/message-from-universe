@@ -1,10 +1,10 @@
 // api/daily-tiktoks.js
 
-const TEMPLATE_ID =
-  "6602ea2c-d887-4666-8bcd-feaac57de0c9";
-
 const SHOTSTACK_ENDPOINT =
-  "https://api.shotstack.io/edit/v1/templates/render";
+  "https://api.shotstack.io/edit/v1/render";
+
+const PEXELS_ENDPOINT =
+  "https://api.pexels.com/v1/videos/search";
 
 const APP_URL =
   process.env.APP_URL ||
@@ -12,36 +12,31 @@ const APP_URL =
 
 /*
  * ============================================================
- * UNIVERSE139 DAILY TIKTOK CONTENT
+ * UNIVERSE139 DAILY TIKTOK
  * ============================================================
  *
- * Every cron run creates exactly 3 videos:
+ * Creates exactly 3 videos:
  *
- *   Slot 1 = Morning
- *   Slot 2 = Afternoon
- *   Slot 3 = Evening
+ *   1 = Morning
+ *   2 = Afternoon
+ *   3 = Evening
  *
- * Greeting:
- *   Visual only
- *   NOT included in MESSAGE
- *   NOT spoken by ElevenLabs
+ * Each video gets:
  *
- * The existing Shotstack template already contains:
+ *   - fresh Pexels portrait background
+ *   - written GOOD MORNING / AFTERNOON / EVENING
+ *   - Universe139 message
+ *   - existing ElevenLabs voice
+ *   - DON’T IGNORE THE SIGN
+ *   - UNIVERSE139
+ *   - GET YOUR MESSAGE / LINK IN BIO
  *
- *   THIS MESSAGE MAY BE FOR YOU.
- *
- * We replace that visual text with:
- *
- *   GOOD MORNING
- *   GOOD AFTERNOON
- *   GOOD EVENING
- *
- * The existing {{ MESSAGE }} remains the spoken/message text.
+ * The Pexels video is NOT spoken.
  */
 
 /*
  * ============================================================
- * MORNING
+ * MESSAGE POOLS
  * ============================================================
  */
 
@@ -63,12 +58,6 @@ const MORNING_MESSAGES = [
   "A possibility you thought had passed may be finding its way back to you in another form."
 ];
 
-/*
- * ============================================================
- * AFTERNOON
- * ============================================================
- */
-
 const AFTERNOON_MESSAGES = [
   "The answer may arrive from a direction you stopped watching. Stay open to the unexpected.",
   "If today took an unfamiliar turn, do not rush to call it a setback. The route may be changing for a reason.",
@@ -86,12 +75,6 @@ const AFTERNOON_MESSAGES = [
   "The right moment does not always announce itself. Sometimes it arrives disguised as a small choice.",
   "Something unexpected may make sense later. For now, stay curious instead of certain."
 ];
-
-/*
- * ============================================================
- * EVENING
- * ============================================================
- */
 
 const EVENING_MESSAGES = [
   "Tonight, release the question for a moment. What is meant for you does not need to be chased.",
@@ -113,36 +96,73 @@ const EVENING_MESSAGES = [
 
 /*
  * ============================================================
- * DATE / SELECTION
+ * VIDEO SEARCH THEMES
+ * ============================================================
+ */
+
+const VIDEO_QUERIES = {
+  morning: [
+    "mysterious sunrise",
+    "dreamy sunrise sky",
+    "golden sunrise clouds",
+    "cosmic sunrise",
+    "morning sky stars"
+  ],
+
+  afternoon: [
+    "mysterious clouds",
+    "dramatic sky",
+    "cosmic energy",
+    "purple sky",
+    "mysterious universe"
+  ],
+
+  evening: [
+    "moon night sky",
+    "stars night sky",
+    "dreamy galaxy",
+    "purple night sky",
+    "mysterious moon"
+  ]
+};
+
+/*
+ * ============================================================
+ * DATE
  * ============================================================
  */
 
 function getLocalDateKey() {
-  /*
-   * Universe139 publishing day = Los Angeles time.
-   */
   const now = new Date();
 
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Los_Angeles",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).formatToParts(now);
+  const parts =
+    new Intl.DateTimeFormat(
+      "en-CA",
+      {
+        timeZone:
+          "America/Los_Angeles",
 
-  const values = Object.fromEntries(
-    parts
-      .filter(
-        (part) =>
-          part.type !== "literal"
-      )
-      .map(
-        (part) => [
-          part.type,
-          part.value
-        ]
-      )
-  );
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }
+    ).formatToParts(now);
+
+  const values =
+    Object.fromEntries(
+      parts
+        .filter(
+          (part) =>
+            part.type !==
+            "literal"
+        )
+        .map(
+          (part) => [
+            part.type,
+            part.value
+          ]
+        )
+    );
 
   return (
     `${values.year}-` +
@@ -150,6 +170,12 @@ function getLocalDateKey() {
     `${values.day}`
   );
 }
+
+/*
+ * ============================================================
+ * DETERMINISTIC HASH
+ * ============================================================
+ */
 
 function hashString(value) {
   let hash = 2166136261;
@@ -172,65 +198,1072 @@ function hashString(value) {
 
 /*
  * ============================================================
- * TODAY'S 3 MESSAGES
+ * TODAY'S 3 CONTENT ITEMS
  * ============================================================
  */
 
-function getTodayMessages() {
+function getTodayVideos() {
   const dateKey =
     getLocalDateKey();
 
   const seed =
     hashString(dateKey);
 
-  const morning =
-    MORNING_MESSAGES[
-      seed %
-        MORNING_MESSAGES.length
-    ];
+  const morningIndex =
+    seed %
+    MORNING_MESSAGES.length;
 
-  const afternoon =
-    AFTERNOON_MESSAGES[
-      Math.floor(seed / 7) %
-        AFTERNOON_MESSAGES.length
-    ];
+  const afternoonIndex =
+    Math.floor(seed / 7) %
+    AFTERNOON_MESSAGES.length;
 
-  const evening =
-    EVENING_MESSAGES[
-      Math.floor(seed / 17) %
-        EVENING_MESSAGES.length
-    ];
+  const eveningIndex =
+    Math.floor(seed / 17) %
+    EVENING_MESSAGES.length;
 
   return [
     {
       slot: 1,
       slotName: "morning",
       greeting: "GOOD MORNING",
-      message: morning
+      message:
+        MORNING_MESSAGES[
+          morningIndex
+        ]
     },
+
     {
       slot: 2,
       slotName: "afternoon",
       greeting: "GOOD AFTERNOON",
-      message: afternoon
+      message:
+        AFTERNOON_MESSAGES[
+          afternoonIndex
+        ]
     },
+
     {
       slot: 3,
       slotName: "evening",
       greeting: "GOOD EVENING",
-      message: evening
+      message:
+        EVENING_MESSAGES[
+          eveningIndex
+        ]
     }
   ];
 }
 
 /*
  * ============================================================
- * SHOTSTACK RENDER
+ * GET PEXELS VIDEO
  * ============================================================
  */
 
-async function renderTemplate(
-  video
+async function getPexelsVideo(
+  slotName,
+  seed
+) {
+  const apiKey =
+    process.env.PEXELS_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "PEXELS_API_KEY is missing"
+    );
+  }
+
+  const queries =
+    VIDEO_QUERIES[
+      slotName
+    ] || [];
+
+  if (!queries.length) {
+    throw new Error(
+      `No Pexels queries configured for ${slotName}`
+    );
+  }
+
+  /*
+   * Change search query by day/slot.
+   */
+  const query =
+    queries[
+      seed % queries.length
+    ];
+
+  const url =
+    new URL(
+      PEXELS_ENDPOINT
+    );
+
+  url.searchParams.set(
+    "query",
+    query
+  );
+
+  url.searchParams.set(
+    "orientation",
+    "portrait"
+  );
+
+  url.searchParams.set(
+    "size",
+    "large"
+  );
+
+  url.searchParams.set(
+    "page",
+    String(
+      (Math.floor(seed / 5) %
+        5) + 1
+    )
+  );
+
+  url.searchParams.set(
+    "per_page",
+    "40"
+  );
+
+  console.log(
+    `PEXELS SEARCH ${slotName}: ${query}`
+  );
+
+  const response =
+    await fetch(
+      url.toString(),
+      {
+        method: "GET",
+
+        headers: {
+          Authorization:
+            apiKey.trim()
+        }
+      }
+    );
+
+  let data;
+
+  try {
+    data =
+      await response.json();
+  } catch {
+    throw new Error(
+      `Pexels returned invalid JSON. HTTP ${response.status}`
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Pexels HTTP ${response.status}: ` +
+      JSON.stringify(data)
+    );
+  }
+
+  if (
+    !Array.isArray(
+      data?.videos
+    ) ||
+    data.videos.length === 0
+  ) {
+    throw new Error(
+      `No Pexels videos found for "${query}"`
+    );
+  }
+
+  /*
+   * Prefer portrait videos long enough
+   * for the Universe139 timeline.
+   */
+  const suitable =
+    data.videos.filter(
+      (video) => {
+        const portrait =
+          Number(
+            video.width
+          ) <
+          Number(
+            video.height
+          );
+
+        const longEnough =
+          Number(
+            video.duration || 0
+          ) >= 14;
+
+        return (
+          portrait &&
+          longEnough &&
+          Array.isArray(
+            video.video_files
+          ) &&
+          video.video_files.length >
+            0
+        );
+      }
+    );
+
+  const candidates =
+    suitable.length
+      ? suitable
+      : data.videos;
+
+  const selected =
+    candidates[
+      seed % candidates.length
+    ];
+
+  /*
+   * Prefer HD portrait MP4.
+   */
+  const files =
+    Array.isArray(
+      selected.video_files
+    )
+      ? selected.video_files
+      : [];
+
+  const mp4Files =
+    files.filter(
+      (file) =>
+        file.file_type ===
+          "video/mp4" &&
+        file.link
+    );
+
+  /*
+   * Prefer a reasonably large
+   * portrait source without choosing
+   * an unnecessarily huge 4K file.
+   */
+  const sortedFiles =
+    mp4Files.sort(
+      (a, b) => {
+        const aWidth =
+          Number(
+            a.width || 0
+          );
+
+        const bWidth =
+          Number(
+            b.width || 0
+          );
+
+        const aPortrait =
+          aWidth <
+          Number(
+            a.height || 0
+          );
+
+        const bPortrait =
+          bWidth <
+          Number(
+            b.height || 0
+          );
+
+        if (
+          aPortrait !==
+          bPortrait
+        ) {
+          return aPortrait
+            ? -1
+            : 1;
+        }
+
+        return (
+          Math.abs(
+            aWidth - 1080
+          ) -
+          Math.abs(
+            bWidth - 1080
+          )
+        );
+      }
+    );
+
+  const selectedFile =
+    sortedFiles[0];
+
+  if (
+    !selectedFile?.link
+  ) {
+    throw new Error(
+      "Pexels video has no usable MP4 URL"
+    );
+  }
+
+  console.log(
+    `PEXELS VIDEO SELECTED ${slotName}:`,
+    selected.id
+  );
+
+  return {
+    id:
+      selected.id,
+
+    url:
+      selectedFile.link,
+
+    duration:
+      selected.duration,
+
+    width:
+      selectedFile.width,
+
+    height:
+      selectedFile.height,
+
+    photographer:
+      selected.user?.name ||
+      "",
+
+    pexelsUrl:
+      selected.url || ""
+  };
+}
+
+/*
+ * ============================================================
+ * SHOTSTACK TIMELINE
+ * ============================================================
+ */
+
+function buildTimeline(
+  message,
+  greeting,
+  videoUrl
+) {
+  return {
+    background: "#0a0514",
+
+    tracks: [
+      /*
+       * ======================================================
+       * AUDIO
+       * ======================================================
+       */
+
+      {
+        clips: [
+          {
+            asset: {
+              type: "audio",
+
+              prompt:
+                "Wait... this message may be for you.",
+
+              model:
+                "elevenlabs-multilingual-v2"
+            },
+
+            start: 0,
+
+            length: "auto"
+          },
+
+          {
+            asset: {
+              type: "audio",
+
+              prompt:
+                message,
+
+              model:
+                "elevenlabs-multilingual-v2"
+            },
+
+            start: 2.6,
+
+            length: "auto"
+          }
+        ]
+      },
+
+      /*
+       * ======================================================
+       * MAIN TEXT
+       * ======================================================
+       */
+
+      {
+        clips: [
+          /*
+           * GREETING
+           *
+           * Visual only.
+           * No audio.
+           */
+
+          {
+            asset: {
+              type: "rich-text",
+
+              text:
+                greeting,
+
+              font: {
+                family:
+                  "1Ptgg87LROyAm0K08i4gS7lu",
+
+                size: 62,
+
+                weight: "400",
+
+                color:
+                  "#e9d8ff"
+              },
+
+              style: {
+                letterSpacing: 1,
+
+                textTransform:
+                  "uppercase",
+
+                lineHeight: 1.05
+              },
+
+              shadow: {
+                offsetX: 0,
+
+                offsetY: 3,
+
+                blur: 14,
+
+                color:
+                  "#000000",
+
+                opacity: 0.45
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.3
+              }
+            },
+
+            start:
+              0.892,
+
+            length:
+              2.108,
+
+            width:
+              940,
+
+            height:
+              320,
+
+            offset: {
+              x: 0,
+
+              y: 0.12
+            },
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          },
+
+          /*
+           * MAIN MESSAGE
+           */
+
+          {
+            asset: {
+              type: "rich-text",
+
+              text:
+                message,
+
+              font: {
+                family:
+                  "pxiEyp8kv8JHgFVrFJDUc1NECPY",
+
+                size:
+                  72,
+
+                weight:
+                  "400",
+
+                color:
+                  "#ffffff"
+              },
+
+              style: {
+                lineHeight:
+                  1.15
+              },
+
+              shadow: {
+                offsetX: 0,
+
+                offsetY: 4,
+
+                blur: 24,
+
+                color:
+                  "#000000",
+
+                opacity: 0.5
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.8
+              }
+            },
+
+            start:
+              0.892,
+
+            length:
+              7.608,
+
+            width:
+              880,
+
+            height:
+              700,
+
+            offset: {
+              x: 0,
+
+              y: 0
+            },
+
+            effect:
+              "zoomInSlow",
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          },
+
+          /*
+           * SIGN
+           */
+
+          {
+            asset: {
+              type:
+                "rich-text",
+
+              text:
+                "DON'T IGNORE THE SIGN ✨",
+
+              font: {
+                family:
+                  "1Ptgg87LROyAm0K08i4gS7lu",
+
+                size:
+                  68,
+
+                weight:
+                  "400",
+
+                color:
+                  "#ffffff"
+              },
+
+              style: {
+                letterSpacing:
+                  1,
+
+                textTransform:
+                  "none",
+
+                lineHeight:
+                  1.05
+              },
+
+              shadow: {
+                offsetX: 0,
+
+                offsetY: 3,
+
+                blur: 16,
+
+                color:
+                  "#000000",
+
+                opacity:
+                  0.5
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.5
+              }
+            },
+
+            start:
+              8.5,
+
+            length:
+              2,
+
+            width:
+              940,
+
+            height:
+              300,
+
+            offset: {
+              x: 0,
+
+              y: 0.16
+            },
+
+            effect:
+              "zoomInSlow",
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          },
+
+          /*
+           * UNIVERSE139
+           */
+
+          {
+            asset: {
+              type:
+                "rich-text",
+
+              text:
+                "UNIVERSE139",
+
+              font: {
+                family:
+                  "pxiEyp8kv8JHgFVrFJDUc1NECPY",
+
+                size:
+                  36,
+
+                weight:
+                  "600",
+
+                color:
+                  "#c9a7ff"
+              },
+
+              style: {
+                letterSpacing:
+                  3,
+
+                textTransform:
+                  "uppercase"
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.5
+              }
+            },
+
+            start:
+              10.5,
+
+            length:
+              1.5,
+
+            width:
+              700,
+
+            height:
+              150,
+
+            offset: {
+              x: 0,
+
+              y: -0.22
+            },
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          },
+
+          /*
+           * CTA
+           */
+
+          {
+            asset: {
+              type:
+                "rich-text",
+
+              text:
+                "GET YOUR MESSAGE\nLINK IN BIO",
+
+              font: {
+                family:
+                  "1Ptgg87LROyAm0K08i4gS7lu",
+
+                size:
+                  46,
+
+                weight:
+                  "400",
+
+                color:
+                  "#ffffff"
+              },
+
+              style: {
+                letterSpacing:
+                  1,
+
+                textTransform:
+                  "uppercase",
+
+                lineHeight:
+                  1.1
+              },
+
+              shadow: {
+                offsetX: 0,
+
+                offsetY: 3,
+
+                blur: 14,
+
+                color:
+                  "#000000",
+
+                opacity:
+                  0.5
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.4
+              }
+            },
+
+            start:
+              10.5,
+
+            length:
+              3.26,
+
+            width:
+              900,
+
+            height:
+              260,
+
+            offset: {
+              x: 0,
+
+              y: 0.06
+            },
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            },
+
+            effect:
+              "zoomInSlow"
+          }
+        ]
+      },
+
+      /*
+       * ======================================================
+       * WAIT
+       * ======================================================
+       */
+
+      {
+        clips: [
+          {
+            asset: {
+              type:
+                "rich-text",
+
+              text:
+                "WAIT...",
+
+              font: {
+                family:
+                  "1Ptgg87LROyAm0K08i4gS7lu",
+
+                size:
+                  110,
+
+                weight:
+                  "400",
+
+                color:
+                  "#ffffff"
+              },
+
+              style: {
+                letterSpacing:
+                  2,
+
+                textTransform:
+                  "uppercase"
+              },
+
+              shadow: {
+                offsetX: 0,
+
+                offsetY: 4,
+
+                blur: 20,
+
+                color:
+                  "#000000",
+
+                opacity:
+                  0.5
+              },
+
+              align: {
+                horizontal:
+                  "center",
+
+                vertical:
+                  "middle"
+              },
+
+              animation: {
+                preset:
+                  "fadeIn",
+
+                duration:
+                  0.2
+              }
+            },
+
+            start:
+              0,
+
+            length:
+              1.5,
+
+            width:
+              900,
+
+            height:
+              300,
+
+            offset: {
+              x: 0,
+
+              y: 0.28
+            },
+
+            transition: {
+              in:
+                "zoom",
+
+              out:
+                "fade"
+            }
+          }
+        ]
+      },
+
+      /*
+       * ======================================================
+       * PURPLE COSMIC GLOW
+       * ======================================================
+       *
+       * This stays on top of the Pexels video.
+       */
+
+      {
+        clips: [
+          {
+            asset: {
+              type:
+                "html5",
+
+              html:
+                "<div class=\"glow\"></div>",
+
+              css:
+                "html,body{margin:0;padding:0;width:900px;height:900px;overflow:hidden;background:transparent}.glow{width:900px;height:900px;border-radius:50%;background:radial-gradient(circle, rgba(180,110,255,0.85) 0%, rgba(160,90,255,0.4) 35%, rgba(140,70,255,0) 68%);filter:blur(4px)}",
+
+              js:
+                "gsap.to('.glow',{scale:1.15,opacity:0.85,duration:3,yoyo:true,repeat:-1,ease:'sine.inOut',transformOrigin:'50% 50%'})"
+            },
+
+            start:
+              2.5,
+
+            length:
+              6,
+
+            width:
+              900,
+
+            height:
+              900,
+
+            offset: {
+              x: 0,
+
+              y: 0
+            },
+
+            effect:
+              "zoomInSlow",
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          }
+        ]
+      },
+
+      /*
+       * ======================================================
+       * PEXELS VIDEO BACKGROUND
+       * ======================================================
+       *
+       * This replaces the old full-screen HTML5 sky.
+       *
+       * The video URL comes from Pexels at runtime.
+       */
+
+      {
+        clips: [
+          {
+            asset: {
+              type:
+                "video",
+
+              src:
+                videoUrl,
+
+              volume:
+                0,
+
+              fit:
+                "cover"
+            },
+
+            start:
+              0,
+
+            length:
+              13.8,
+
+            width:
+              1080,
+
+            height:
+              1920,
+
+            transition: {
+              in:
+                "fade",
+
+              out:
+                "fade"
+            }
+          }
+        ]
+      }
+    ]
+  };
+}
+
+/*
+ * ============================================================
+ * RENDER ONE VIDEO
+ * ============================================================
+ */
+
+async function renderVideo(
+  video,
+  background,
+  dateKey,
+  seed
 ) {
   const apiKey =
     process.env.SHOTSTACK_API_KEY;
@@ -241,16 +1274,6 @@ async function renderTemplate(
     );
   }
 
-  /*
-   * Callback URL lets the webhook know:
-   *
-   *   message
-   *   slot
-   *   slotName
-   *   greeting
-   *
-   * Greeting is NOT spoken.
-   */
   const callbackUrl =
     `${APP_URL}/api/shotstack-webhook` +
     `?message=${encodeURIComponent(
@@ -264,55 +1287,61 @@ async function renderTemplate(
     )}` +
     `&greeting=${encodeURIComponent(
       video.greeting
+    )}` +
+    `&date=${encodeURIComponent(
+      dateKey
+    )}` +
+    `&pexelsId=${encodeURIComponent(
+      background.id
     )}`;
 
-  /*
-   * IMPORTANT:
-   *
-   * "THIS MESSAGE MAY BE FOR YOU."
-   *
-   * is an existing visual text element in the
-   * Shotstack template.
-   *
-   * We replace THAT text with:
-   *
-   *   GOOD MORNING
-   *   GOOD AFTERNOON
-   *   GOOD EVENING
-   *
-   * This does NOT affect the ElevenLabs audio,
-   * because the audio prompt is:
-   *
-   * "Wait... this message may be for you."
-   *
-   * The main MESSAGE is kept separate.
-   */
-  const requestBody = {
-    id: TEMPLATE_ID,
+  const edit = {
+    timeline:
+      buildTimeline(
+        video.message,
+        video.greeting,
+        background.url
+      ),
 
-    merge: [
-      {
-        find:
-          "THIS MESSAGE MAY BE FOR YOU.",
-        replace:
-          video.greeting
+    output: {
+      size: {
+        width:
+          1080,
+
+        height:
+          1920
       },
 
-      {
-        find:
-          "MESSAGE",
-        replace:
-          video.message
-      }
-    ],
+      format:
+        "mp4",
 
-    callback: callbackUrl
+      fps:
+        30
+    },
+
+    callback:
+      callbackUrl
   };
 
   console.log(
-    `SHOTSTACK REQUEST SLOT ${video.slot} (${video.slotName}):`,
+    `SHOTSTACK SLOT ${video.slot} (${video.slotName})`
+  );
+
+  console.log(
     JSON.stringify(
-      requestBody,
+      {
+        date:
+          dateKey,
+
+        greeting:
+          video.greeting,
+
+        message:
+          video.message,
+
+        pexelsId:
+          background.id
+      },
       null,
       2
     )
@@ -322,7 +1351,8 @@ async function renderTemplate(
     await fetch(
       SHOTSTACK_ENDPOINT,
       {
-        method: "POST",
+        method:
+          "POST",
 
         headers: {
           Accept:
@@ -337,7 +1367,7 @@ async function renderTemplate(
 
         body:
           JSON.stringify(
-            requestBody
+            edit
           )
       }
     );
@@ -347,7 +1377,7 @@ async function renderTemplate(
   try {
     data =
       await response.json();
-  } catch (error) {
+  } catch {
     throw new Error(
       `Shotstack returned invalid JSON. HTTP ${response.status}`
     );
@@ -399,6 +1429,12 @@ async function renderTemplate(
     message:
       video.message,
 
+    pexelsId:
+      background.id,
+
+    pexelsUrl:
+      background.pexelsUrl,
+
     renderId,
 
     status:
@@ -416,26 +1452,22 @@ export default async function handler(
   req,
   res
 ) {
-  /*
-   * Allow GET and POST.
-   */
   if (
     req.method !== "GET" &&
     req.method !== "POST"
   ) {
     return res.status(405).json({
-      success: false,
+      success:
+        false,
+
       error:
         "Method not allowed"
     });
   }
 
   /*
-   * ==========================================================
-   * VERCEL CRON AUTHENTICATION
-   * ==========================================================
+   * Vercel Cron authentication.
    */
-
   const cronSecret =
     process.env.CRON_SECRET;
 
@@ -449,7 +1481,9 @@ export default async function handler(
       `Bearer ${cronSecret}`
     ) {
       return res.status(401).json({
-        success: false,
+        success:
+          false,
+
         error:
           "Unauthorized"
       });
@@ -457,48 +1491,75 @@ export default async function handler(
   }
 
   try {
-    /*
-     * Get today's content.
-     */
     const dateKey =
       getLocalDateKey();
 
     const videos =
-      getTodayMessages();
+      getTodayVideos();
+
+    const baseSeed =
+      hashString(
+        dateKey
+      );
 
     console.log(
-      `UNIVERSE139 DAILY TIKTOK GENERATION: ${dateKey}`
-    );
-
-    console.log(
-      "TODAY'S VIDEO PLAN:",
-      JSON.stringify(
-        videos,
-        null,
-        2
-      )
+      `UNIVERSE139 DAILY TIKTOKS: ${dateKey}`
     );
 
     /*
-     * Exactly 3 Shotstack renders.
+     * Get one Pexels background
+     * for each slot.
      */
-    const results =
-      await Promise.allSettled(
+    const prepared =
+      await Promise.all(
         videos.map(
-          (video) =>
-            renderTemplate(
-              video
-            )
+          async (video) => {
+            const slotSeed =
+              baseSeed +
+              video.slot * 1009;
+
+            const background =
+              await getPexelsVideo(
+                video.slotName,
+                slotSeed
+              );
+
+            return {
+              video,
+              background,
+              seed:
+                slotSeed
+            };
+          }
         )
       );
 
     /*
-     * Convert Promise results
-     * into a clean response.
+     * Create exactly 3 Shotstack jobs.
      */
+    const results =
+      await Promise.allSettled(
+        prepared.map(
+          ({
+            video,
+            background,
+            seed
+          }) =>
+            renderVideo(
+              video,
+              background,
+              dateKey,
+              seed
+            )
+        )
+      );
+
     const output =
       results.map(
-        (result, index) => {
+        (
+          result,
+          index
+        ) => {
           if (
             result.status ===
             "fulfilled"
@@ -508,19 +1569,24 @@ export default async function handler(
 
           return {
             slot:
-              videos[index].slot,
+              prepared[index]
+                .video.slot,
 
             slotName:
-              videos[index]
-                .slotName,
+              prepared[index]
+                .video.slotName,
 
             greeting:
-              videos[index]
-                .greeting,
+              prepared[index]
+                .video.greeting,
 
             message:
-              videos[index]
-                .message,
+              prepared[index]
+                .video.message,
+
+            pexelsId:
+              prepared[index]
+                .background.id,
 
             status:
               "failed",
@@ -535,9 +1601,6 @@ export default async function handler(
         }
       );
 
-    /*
-     * Count successful Shotstack requests.
-     */
     const created =
       output.filter(
         (video) =>
@@ -551,38 +1614,34 @@ export default async function handler(
      */
     if (created === 0) {
       return res.status(500).json({
-        success: false,
+        success:
+          false,
 
-        created: 0,
+        created:
+          0,
 
-        total: 3,
+        total:
+          3,
 
         date:
           dateKey,
-
-        templateId:
-          TEMPLATE_ID,
 
         videos:
           output
       });
     }
 
-    /*
-     * At least one render succeeded.
-     */
     return res.status(200).json({
-      success: true,
+      success:
+        true,
 
       created,
 
-      total: 3,
+      total:
+        3,
 
       date:
         dateKey,
-
-      templateId:
-        TEMPLATE_ID,
 
       videos:
         output
@@ -595,7 +1654,8 @@ export default async function handler(
     );
 
     return res.status(500).json({
-      success: false,
+      success:
+        false,
 
       error:
         error?.message ||
