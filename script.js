@@ -2263,8 +2263,7 @@ async function submitSubscription() {
       .trim()
       .toLowerCase();
 
-
-  // Reliable email validation
+  // Simple and reliable validation
   const atPosition =
     email.indexOf("@");
 
@@ -2276,7 +2275,6 @@ async function submitSubscription() {
     atPosition > 0 &&
     dotPosition > atPosition + 1 &&
     dotPosition < email.length - 1;
-
 
   if (!emailIsValid) {
 
@@ -2293,29 +2291,116 @@ async function submitSubscription() {
     return;
   }
 
-
   if (submitButton) {
 
-    submitButton.disabled =
-      true;
-
-    submitButton.style.opacity =
-      ".65";
+    submitButton.disabled = true;
+    submitButton.style.opacity = ".65";
 
   }
 
-
   if (status) {
 
-    status.textContent =
-      "";
-
+    status.textContent = "";
     status.className =
       "universe139SubscribeStatus";
 
   }
 
+  try {
 
+    const response =
+      await fetch(
+        "/api/subscribe",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+
+            email: email,
+
+            language:
+              currentLanguage
+
+          })
+        }
+      );
+
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Subscription failed."
+      );
+
+    }
+
+    // SUCCESS
+    if (status) {
+
+      status.textContent =
+        translations[
+          currentLanguage
+        ].subscribeSuccess;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeSuccess";
+
+    }
+
+    emailInput.value = "";
+
+    if (submitButton) {
+
+      submitButton.disabled = false;
+      submitButton.style.opacity = "1";
+
+    }
+
+    // Close after showing thank-you message
+    window.setTimeout(
+      () => {
+        closeSubscriptionForm();
+      },
+      2500
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 subscription error:",
+      error
+    );
+
+    if (status) {
+
+      status.textContent =
+        "Something went wrong. Please try again.";
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeError";
+
+    }
+
+    if (submitButton) {
+
+      submitButton.disabled = false;
+      submitButton.style.opacity = "1";
+
+    }
+
+  }
+
+}
   try {
 
     const response =
