@@ -2255,7 +2255,6 @@ async function submitSubscription() {
 
   const email = String(emailInput.value || "").trim().toLowerCase();
   const emailIsValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
-
   if (!emailIsValid) {
     if (status) {
       status.textContent = translations[currentLanguage].subscribeError;
