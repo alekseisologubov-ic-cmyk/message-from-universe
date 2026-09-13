@@ -2,6 +2,8 @@
 // UNIVERSE139 — MESSAGE FROM THE UNIVERSE
 // COMPLETE WORKING SCRIPT
 // FIXED MESSAGE REVEAL
+// FIXED: duplicate/orphaned code block in submitSubscription()
+//        that broke the whole script with a syntax error
 // ==========================================
 
 const UNIVERSE139_URL =
@@ -608,6 +610,7 @@ function selectLanguage(language) {
       t.share;
   }
 
+  updateSubscriptionText();
 
   hideElement(languageBox);
   showElement(revealBtn);
@@ -2242,6 +2245,24 @@ function closeSubscriptionForm() {
   }, 220);
 }
 
+// ==========================================
+// SUBMIT SUBSCRIPTION
+// FIXED: this used to contain a second, orphaned
+// try/catch block sitting OUTSIDE the function
+// (after the closing brace) that used `await`
+// at the top level of the script. That is an
+// illegal syntax combination outside an async
+// function, so the browser threw a SyntaxError
+// while parsing the file. A syntax error anywhere
+// in a <script> stops the ENTIRE script from
+// running — no functions get defined, no click
+// listeners ever get attached, which is exactly
+// why nothing happened when picking a language
+// (or clicking anything else on the page).
+// The duplicate block is merged into one clean,
+// fully-contained function below.
+// ==========================================
+
 async function submitSubscription() {
 
   const emailInput =
@@ -2347,9 +2368,9 @@ async function submitSubscription() {
     if (status) {
 
       status.textContent =
-        translations[
-          currentLanguage
-        ].subscribeSuccess;
+        data.alreadySubscribed
+          ? translations[currentLanguage].subscribeAlready
+          : translations[currentLanguage].subscribeSuccess;
 
       status.className =
         "universe139SubscribeStatus universe139SubscribeSuccess";
@@ -2383,7 +2404,7 @@ async function submitSubscription() {
     if (status) {
 
       status.textContent =
-        "Something went wrong. Please try again.";
+        "The subscription service is not connected yet.";
 
       status.className =
         "universe139SubscribeStatus universe139SubscribeError";
@@ -2394,113 +2415,6 @@ async function submitSubscription() {
 
       submitButton.disabled = false;
       submitButton.style.opacity = "1";
-
-    }
-
-  }
-
-}
-  try {
-
-    const response =
-      await fetch(
-        "/api/subscribe",
-        {
-          method:
-            "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-
-              email:
-                email,
-
-              language:
-                currentLanguage
-
-            })
-        }
-      );
-
-
-    const data =
-      await response
-        .json()
-        .catch(() => ({}));
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.error ||
-        "Subscription failed."
-      );
-
-    }
-
-
-    if (status) {
-
-      status.textContent =
-        data.alreadySubscribed
-          ? translations[
-              currentLanguage
-            ].subscribeAlready
-          : translations[
-              currentLanguage
-            ].subscribeSuccess;
-
-      status.className =
-        "universe139SubscribeStatus universe139SubscribeSuccess";
-
-    }
-
-
-    emailInput.value =
-      "";
-
-
-    window.setTimeout(
-      () => {
-
-        closeSubscriptionForm();
-
-      },
-      2200
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Universe139 subscription error:",
-      error
-    );
-
-
-    if (status) {
-
-      status.textContent =
-        "The subscription service is not connected yet.";
-
-      status.className =
-        "universe139SubscribeStatus universe139SubscribeError";
-
-    }
-
-
-    if (submitButton) {
-
-      submitButton.disabled =
-        false;
-
-      submitButton.style.opacity =
-        "1";
 
     }
 
@@ -3944,7 +3858,7 @@ async function createMessageImageBlob() {
     "italic 64px Georgia, serif";
 
   ctx.fillText(
-    "“",
+    "\u201C",
     150,
     400
   );
