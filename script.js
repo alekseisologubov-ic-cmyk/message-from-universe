@@ -66,7 +66,10 @@ const translations = {
       "Choose where you want to share your message.",
 
     shareLink:
-      "👆 Universe139 — Press here to see your message for today"
+      "👆 Universe139 — Press here to see your message for today",
+    subscribeTitle: "✨ Get a Message Every Day",
+    subscribeText: "Receive a new message from the Universe every day.",
+    subscribeButton: "Subscribe"
   },
 
   es: {
@@ -95,7 +98,10 @@ const translations = {
       "Elige dónde quieres compartir tu mensaje.",
 
     shareLink:
-      "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy"
+      "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy",
+    subscribeTitle: "✨ Recibe un mensaje cada día",
+    subscribeText: "Recibe un nuevo mensaje del Universo cada día.",
+    subscribeButton: "Suscribirse"
   },
 
   zh: {
@@ -124,7 +130,10 @@ const translations = {
       "选择你想分享讯息的方式。",
 
     shareLink:
-      "👆 Universe139 — 点击这里查看你今天的宇宙讯息"
+      "👆 Universe139 — 点击这里查看你今天的宇宙讯息",
+    subscribeTitle: "✨ 每天收到一条讯息",
+    subscribeText: "每天收到一条来自宇宙的新讯息。",
+    subscribeButton: "订阅"
   },
 
   ru: {
@@ -153,7 +162,10 @@ const translations = {
       "Выберите, где вы хотите поделиться своим посланием.",
 
     shareLink:
-      "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня"
+      "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня",
+    subscribeTitle: "✨ Получай послание каждый день",
+    subscribeText: "Получай новое послание от Вселенной каждый день.",
+    subscribeButton: "Подписаться"
   },
 
   hi: {
@@ -182,7 +194,10 @@ const translations = {
       "चुनें कि आप अपना संदेश कहाँ साझा करना चाहते हैं।",
 
     shareLink:
-      "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं"
+      "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं",
+    subscribeTitle: "✨ हर दिन एक संदेश पाएं",
+    subscribeText: "हर दिन ब्रह्मांड की ओर से एक नया संदेश पाएं।",
+    subscribeButton: "सब्सक्राइब करें"
   },
 
   th: {
@@ -211,7 +226,10 @@ const translations = {
       "เลือกสถานที่ที่คุณต้องการแชร์ข้อความของคุณ",
 
     shareLink:
-      "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้"
+      "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้",
+    subscribeTitle: "✨ รับข้อความจากจักรวาลทุกวัน",
+    subscribeText: "รับข้อความใหม่จากจักรวาลทุกวัน",
+    subscribeButton: "สมัครสมาชิก"
   }
 
 };
@@ -392,6 +410,8 @@ let message;
 let smallText;
 let againBtn;
 let shareBtn;
+let subscribeBox;
+let subscribeButton;
 
 
 // ==========================================
@@ -444,6 +464,12 @@ function initializeDOM() {
 
   shareBtn =
     document.getElementById("shareBtn");
+
+  subscribeBox =
+    document.getElementById("universe139SubscribeBox");
+
+  subscribeButton =
+    document.getElementById("universe139SubscribeButton");
 
 }
 
@@ -526,6 +552,25 @@ function selectLanguage(language) {
   if (shareBtn) {
     shareBtn.textContent =
       t.share;
+  }
+
+  if (subscribeBox) {
+    const subscribeTitle =
+      subscribeBox.querySelector(".universe139SubscribeTitle");
+    const subscribeText =
+      subscribeBox.querySelector(".universe139SubscribeText");
+
+    if (subscribeTitle) {
+      subscribeTitle.textContent = t.subscribeTitle;
+    }
+
+    if (subscribeText) {
+      subscribeText.textContent = t.subscribeText;
+    }
+  }
+
+  if (subscribeButton) {
+    subscribeButton.textContent = t.subscribeButton;
   }
 
   hideElement(languageBox);
@@ -1597,6 +1642,7 @@ function showMessage() {
 
   showElement(againBtn);
   showElement(shareBtn);
+  showSubscriptionBox();
 
 
   // ----------------------------------------
@@ -1678,6 +1724,7 @@ function revealMessage() {
   hideElement(againBtn);
   hideElement(shareBtn);
   hideElement(revealBtn);
+  hideSubscriptionBox();
 
 
   // ----------------------------------------
@@ -1817,6 +1864,7 @@ function receiveAnotherMessage() {
 
   hideElement(againBtn);
   hideElement(shareBtn);
+  hideSubscriptionBox();
 
 
   // ----------------------------------------
@@ -4552,6 +4600,138 @@ function shareMessage() {
 
 }
 
+
+// ==========================================
+// DAILY SUBSCRIPTION CTA
+// ADDITION ONLY — EXISTING APP UI UNCHANGED
+// ==========================================
+
+// Add your real subscription/payment URL here when ready.
+const UNIVERSE139_SUBSCRIPTION_URL = "";
+
+function createSubscriptionBox() {
+
+  if (document.getElementById("universe139SubscribeBox")) {
+    return;
+  }
+
+  const t = translations[currentLanguage];
+  const box = document.createElement("div");
+
+  box.id = "universe139SubscribeBox";
+
+  box.innerHTML = `
+    <div class="universe139SubscribeTitle">${escapeHTML(t.subscribeTitle)}</div>
+    <div class="universe139SubscribeText">${escapeHTML(t.subscribeText)}</div>
+    <button id="universe139SubscribeButton" class="universe139SubscribeButton" type="button">${escapeHTML(t.subscribeButton)}</button>
+  `;
+
+  // Add only the new subscription block; existing elements are untouched.
+  if (messageBox && messageBox.parentNode) {
+    messageBox.parentNode.insertBefore(box, messageBox.nextSibling);
+  }
+
+  subscribeBox = box;
+  subscribeButton = document.getElementById("universe139SubscribeButton");
+
+  addSubscriptionStyles();
+
+  if (subscribeButton) {
+    subscribeButton.addEventListener("click", startSubscription);
+  }
+}
+
+function startSubscription() {
+  if (UNIVERSE139_SUBSCRIPTION_URL) {
+    window.open(UNIVERSE139_SUBSCRIPTION_URL, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  showShareToast("Subscription link will be connected here.");
+}
+
+function showSubscriptionBox() {
+  createSubscriptionBox();
+  if (subscribeBox) {
+    subscribeBox.classList.remove("universe139SubscribeHidden");
+  }
+}
+
+function hideSubscriptionBox() {
+  if (subscribeBox) {
+    subscribeBox.classList.add("universe139SubscribeHidden");
+  }
+}
+
+function addSubscriptionStyles() {
+  if (document.getElementById("universe139SubscribeStyles")) {
+    return;
+  }
+
+  const style = document.createElement("style");
+  style.id = "universe139SubscribeStyles";
+  style.textContent = `
+    #universe139SubscribeBox {
+      width: min(620px, 100%);
+      margin: 18px auto 8px;
+      padding: 16px 18px;
+      box-sizing: border-box;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.12);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: universe139SubscribeIn .7s ease forwards;
+    }
+    .universe139SubscribeTitle {
+      color: #ffffff;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+    .universe139SubscribeText {
+      margin-top: 5px;
+      color: rgba(255,255,255,.65);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .universe139SubscribeButton {
+      margin-top: 11px;
+      min-height: 42px;
+      padding: 9px 19px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: #ffffff;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .universe139SubscribeButton:hover {
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.3);
+      transform: translateY(-1px);
+    }
+    .universe139SubscribeButton:active {
+      transform: scale(.97);
+    }
+    .universe139SubscribeHidden {
+      display: none !important;
+    }
+    @keyframes universe139SubscribeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width:600px) {
+      #universe139SubscribeBox { margin-top: 15px; padding: 14px 12px; }
+      .universe139SubscribeTitle { font-size: 16px; }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 // ==========================================
 // INITIALIZE EVENTS
