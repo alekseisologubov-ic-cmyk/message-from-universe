@@ -1,41 +1,12 @@
 // ==========================================
 // UNIVERSE139 — MESSAGE FROM THE UNIVERSE
 // COMPLETE WORKING SCRIPT
-// FIXED MESSAGE REVEAL
+// FREE DAILY SUBSCRIPTION ADDITION
+// EXISTING APP DESIGN PRESERVED
 // ==========================================
 
 const UNIVERSE139_URL =
   "https://message-from-universe.vercel.app/";
-
-// Human-friendly version of the link (no protocol, no trailing slash)
-// used anywhere we display the URL as text instead of a real <a href>.
-function getDisplayURL() {
-
-  return UNIVERSE139_URL
-    .replace(/^https?:\/\//, "")
-    .replace(/\/$/, "");
-
-}
-
-// Detects Facebook's (and other apps') own in-app browser — the
-// webview that opens when someone taps a link *inside* the
-// Facebook/Instagram/Messenger app rather than a real browser tab.
-// These in-app browsers deliberately sandbox window.open(), the
-// Web Share API, and sometimes the clipboard for security reasons,
-// so sharing can silently fail there no matter how the code is
-// written. This lets us detect it and tell the person how to get
-// around it, instead of a share button that just does nothing.
-function isInAppBrowser() {
-
-  const ua =
-    navigator.userAgent || "";
-
-  return /FBAN|FBAV|FB_IAB|Instagram|Line\/|MicroMessenger/i.test(
-    ua
-  );
-
-}
-
 
 // ==========================================
 // TRANSLATIONS
@@ -67,9 +38,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — Press here to see your message for today",
+
     subscribeTitle: "✨ Get a Message Every Day",
     subscribeText: "Receive a new message from the Universe every day.",
-    subscribeButton: "Subscribe"
+    subscribeButton: "Subscribe",
+    subscribeFormTitle: "✉️ Get Your Daily Message",
+    subscribeFormText: "Enter your email and receive a new message from the Universe every day.",
+    subscribeEmailPlaceholder: "Your email address",
+    subscribeSubmit: "Start Daily Messages",
+    subscribeClose: "Close",
+    subscribeSuccess: "✨ You are subscribed! Your daily messages will begin soon.",
+    subscribeError: "Please enter a valid email address and try again.",
+    subscribeAlready: "You are already subscribed. We will keep sending your daily messages.",
+    subscribeNote: "Free for now. You can unsubscribe at any time."
   },
 
   es: {
@@ -99,9 +80,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — Pulsa aquí para recibir tu mensaje de hoy",
+
     subscribeTitle: "✨ Recibe un mensaje cada día",
     subscribeText: "Recibe un nuevo mensaje del Universo cada día.",
-    subscribeButton: "Suscribirse"
+    subscribeButton: "Suscribirse",
+    subscribeFormTitle: "✉️ Recibe tu mensaje diario",
+    subscribeFormText: "Introduce tu correo y recibe un nuevo mensaje del Universo cada día.",
+    subscribeEmailPlaceholder: "Tu correo electrónico",
+    subscribeSubmit: "Activar mensajes diarios",
+    subscribeClose: "Cerrar",
+    subscribeSuccess: "✨ ¡Ya estás suscrito! Tus mensajes diarios comenzarán pronto.",
+    subscribeError: "Introduce un correo electrónico válido e inténtalo de nuevo.",
+    subscribeAlready: "Ya estás suscrito. Seguiremos enviando tus mensajes diarios.",
+    subscribeNote: "Gratis por ahora. Puedes cancelar la suscripción cuando quieras."
   },
 
   zh: {
@@ -131,9 +122,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — 点击这里查看你今天的宇宙讯息",
+
     subscribeTitle: "✨ 每天收到一条讯息",
     subscribeText: "每天收到一条来自宇宙的新讯息。",
-    subscribeButton: "订阅"
+    subscribeButton: "订阅",
+    subscribeFormTitle: "✉️ 每天收到你的讯息",
+    subscribeFormText: "输入你的邮箱，每天收到一条来自宇宙的新讯息。",
+    subscribeEmailPlaceholder: "你的电子邮箱",
+    subscribeSubmit: "开始每日讯息",
+    subscribeClose: "关闭",
+    subscribeSuccess: "✨ 你已经订阅！你的每日讯息很快就会开始。",
+    subscribeError: "请输入有效的电子邮箱地址，然后重试。",
+    subscribeAlready: "你已经订阅。我们会继续发送你的每日讯息。",
+    subscribeNote: "目前免费。你可以随时取消订阅。"
   },
 
   ru: {
@@ -154,7 +155,7 @@ const translations = {
     copyLink: "Копировать ссылку",
     more: "Ещё...",
     copied: "Скопировано!",
-    copiedShare: "Послание и ссылка скопированы! Вставьте их в приложении, чтобы поделиться.",
+    copiedShare: "Послание и ссылка скопированы. Вставьте их в приложении, чтобы поделиться.",
     noMessage: "Сначала откройте своё послание.",
     inAppBrowserNotice: "Вы находитесь во встроенном браузере приложения — нажмите ⋯ или ⋮ и выберите «Открыть в браузере» для всех вариантов обмена.",
 
@@ -163,9 +164,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — Нажми здесь, чтобы получить своё послание на сегодня",
+
     subscribeTitle: "✨ Получай послание каждый день",
     subscribeText: "Получай новое послание от Вселенной каждый день.",
-    subscribeButton: "Подписаться"
+    subscribeButton: "Подписаться",
+    subscribeFormTitle: "✉️ Получай своё ежедневное послание",
+    subscribeFormText: "Введи свой email и получай новое послание от Вселенной каждый день.",
+    subscribeEmailPlaceholder: "Ваш email",
+    subscribeSubmit: "Включить ежедневные сообщения",
+    subscribeClose: "Закрыть",
+    subscribeSuccess: "✨ Ты подписался! Ежедневные послания скоро начнут приходить.",
+    subscribeError: "Пожалуйста, введи правильный email и попробуй ещё раз.",
+    subscribeAlready: "Ты уже подписан. Мы продолжим отправлять твои ежедневные послания.",
+    subscribeNote: "Пока бесплатно. Ты можешь отказаться от подписки в любое время."
   },
 
   hi: {
@@ -195,9 +206,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — आज का अपना संदेश देखने के लिए यहां दबाएं",
+
     subscribeTitle: "✨ हर दिन एक संदेश पाएं",
     subscribeText: "हर दिन ब्रह्मांड की ओर से एक नया संदेश पाएं।",
-    subscribeButton: "सब्सक्राइब करें"
+    subscribeButton: "सब्सक्राइब करें",
+    subscribeFormTitle: "✉️ हर दिन अपना संदेश पाएं",
+    subscribeFormText: "अपना ईमेल दर्ज करें और हर दिन ब्रह्मांड की ओर से एक नया संदेश पाएं।",
+    subscribeEmailPlaceholder: "आपका ईमेल",
+    subscribeSubmit: "दैनिक संदेश शुरू करें",
+    subscribeClose: "बंद करें",
+    subscribeSuccess: "✨ आपने सदस्यता ले ली है! आपके दैनिक संदेश जल्द शुरू होंगे।",
+    subscribeError: "कृपया सही ईमेल दर्ज करें और फिर से प्रयास करें।",
+    subscribeAlready: "आप पहले से सदस्य हैं। हम आपके दैनिक संदेश भेजते रहेंगे।",
+    subscribeNote: "अभी मुफ्त है। आप कभी भी सदस्यता समाप्त कर सकते हैं।"
   },
 
   th: {
@@ -227,9 +248,19 @@ const translations = {
 
     shareLink:
       "👆 Universe139 — กดที่นี่เพื่อดูข้อความของคุณสำหรับวันนี้",
+
     subscribeTitle: "✨ รับข้อความจากจักรวาลทุกวัน",
     subscribeText: "รับข้อความใหม่จากจักรวาลทุกวัน",
-    subscribeButton: "สมัครสมาชิก"
+    subscribeButton: "สมัครสมาชิก",
+    subscribeFormTitle: "✉️ รับข้อความประจำวันของคุณ",
+    subscribeFormText: "กรอกอีเมลของคุณและรับข้อความใหม่จากจักรวาลทุกวัน",
+    subscribeEmailPlaceholder: "อีเมลของคุณ",
+    subscribeSubmit: "เริ่มรับข้อความรายวัน",
+    subscribeClose: "ปิด",
+    subscribeSuccess: "✨ คุณสมัครสมาชิกแล้ว! ข้อความประจำวันจะเริ่มส่งให้คุณเร็วๆ นี้",
+    subscribeError: "กรุณากรอกอีเมลที่ถูกต้องแล้วลองอีกครั้ง",
+    subscribeAlready: "คุณสมัครสมาชิกอยู่แล้ว เราจะส่งข้อความประจำวันให้คุณต่อไป",
+    subscribeNote: "ฟรีในตอนนี้ คุณสามารถยกเลิกได้ทุกเมื่อ"
   }
 
 };
@@ -410,6 +441,7 @@ let message;
 let smallText;
 let againBtn;
 let shareBtn;
+
 let subscribeBox;
 let subscribeButton;
 
@@ -464,12 +496,6 @@ function initializeDOM() {
 
   shareBtn =
     document.getElementById("shareBtn");
-
-  subscribeBox =
-    document.getElementById("universe139SubscribeBox");
-
-  subscribeButton =
-    document.getElementById("universe139SubscribeButton");
 
 }
 
@@ -554,33 +580,8 @@ function selectLanguage(language) {
       t.share;
   }
 
-  if (subscribeBox) {
-    const subscribeTitle =
-      subscribeBox.querySelector(".universe139SubscribeTitle");
-    const subscribeText =
-      subscribeBox.querySelector(".universe139SubscribeText");
-
-    if (subscribeTitle) {
-      subscribeTitle.textContent = t.subscribeTitle;
-    }
-
-    if (subscribeText) {
-      subscribeText.textContent = t.subscribeText;
-    }
-  }
-
-  if (subscribeButton) {
-    subscribeButton.textContent = t.subscribeButton;
-  }
-
   hideElement(languageBox);
   showElement(revealBtn);
-
-  /*
-    FIX:
-    Give the DOM a moment to finish the language
-    transition before starting the reveal.
-  */
 
   window.setTimeout(() => {
 
@@ -1372,16 +1373,6 @@ function createWindEffect() {
 
 // ==========================================
 // CONTAINED BALL HURRICANE
-//
-// A smaller, clipped version of the same 3D wind
-// effect, running INSIDE the crystal ball itself
-// (overflow:hidden + border-radius:50% on
-// #ballSphere naturally clips it to the sphere).
-// This is what makes the message look like it's
-// swirling into existence inside the glass ball,
-// with a floating, weightless, 3D feel — the
-// rotateX() tilt gives the rings their elliptical,
-// "seen through glass" perspective.
 // ==========================================
 
 function createBallHurricane() {
@@ -1395,82 +1386,186 @@ function createBallHurricane() {
   const RING_COUNT = 6;
   const DUST_COUNT = 18;
 
-  let inner = `<div class="ballVortexCore"></div>`;
+  let inner =
+    `<div class="ballVortexCore"></div>`;
 
-  for (let i = 1; i <= RING_COUNT; i++) {
-    inner += `<div class="ballRing bring${i}"></div>`;
+  for (
+    let i = 1;
+    i <= RING_COUNT;
+    i++
+  ) {
+
+    inner +=
+      `<div class="ballRing bring${i}"></div>`;
+
   }
 
-  for (let i = 1; i <= DUST_COUNT; i++) {
-    inner += `<span class="ballDust bdust${i}"></span>`;
+  for (
+    let i = 1;
+    i <= DUST_COUNT;
+    i++
+  ) {
+
+    inner +=
+      `<span class="ballDust bdust${i}"></span>`;
+
   }
 
-  ballHurricane.innerHTML = inner;
+  ballHurricane.innerHTML =
+    inner;
 
-  if (!document.getElementById("universe139BallHurricaneCSS")) {
+  if (
+    !document.getElementById(
+      "universe139BallHurricaneCSS"
+    )
+  ) {
 
-    const style = document.createElement("style");
-    style.id = "universe139BallHurricaneCSS";
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "universe139BallHurricaneCSS";
 
     let ringCSS = "";
 
-    for (let i = 1; i <= RING_COUNT; i++) {
+    for (
+      let i = 1;
+      i <= RING_COUNT;
+      i++
+    ) {
 
-      const direction = i % 2 === 0 ? -1 : 1;
+      const direction =
+        i % 2 === 0
+          ? -1
+          : 1;
 
       ringCSS += `
         .bring${i} {
-          animation: ballRing${i} ${1.3 + i * 0.15}s ease-out forwards;
+
+          animation:
+            ballRing${i}
+            ${1.3 + i * 0.15}s
+            ease-out
+            forwards;
+
         }
 
         @keyframes ballRing${i} {
+
           0% {
+
             opacity: 0;
+
             width: 10%;
             height: 4%;
-            transform: translate(-50%, -50%) rotateX(68deg) rotateZ(0deg) scale(.2);
+
+            transform:
+              translate(-50%, -50%)
+              rotateX(68deg)
+              rotateZ(0deg)
+              scale(.2);
+
           }
-          20% { opacity: .9; }
-          60% { opacity: .6; }
+
+          20% {
+            opacity: .9;
+          }
+
+          60% {
+            opacity: .6;
+          }
+
           100% {
+
             opacity: 0;
+
             width: ${55 + i * 9}%;
             height: ${18 + i * 3}%;
-            transform: translate(-50%, -50%) rotateX(68deg) rotateZ(${direction * (620 + i * 70)}deg) scale(1);
+
+            transform:
+              translate(-50%, -50%)
+              rotateX(68deg)
+              rotateZ(${direction * (620 + i * 70)}deg)
+              scale(1);
+
           }
+
         }
+
       `;
 
     }
 
     let dustCSS = "";
 
-    for (let i = 1; i <= DUST_COUNT; i++) {
+    for (
+      let i = 1;
+      i <= DUST_COUNT;
+      i++
+    ) {
 
-      const angle = i * 43;
-      const distance = 30 + (i % 5) * 8;
-      const rotation = 420 + (i % 6) * 60;
+      const angle =
+        i * 43;
+
+      const distance =
+        30 + (i % 5) * 8;
+
+      const rotation =
+        420 + (i % 6) * 60;
 
       dustCSS += `
         .bdust${i} {
-          animation: ballDust${i} ${1.4 + (i % 5) * .15}s linear ${(i % 8) * .04}s forwards;
+
+          animation:
+            ballDust${i}
+            ${1.4 + (i % 5) * .15}s
+            linear
+            ${(i % 8) * .04}s
+            forwards;
+
         }
 
         @keyframes ballDust${i} {
+
           0% {
+
             opacity: 0;
-            transform: rotate(${angle}deg) translateX(${distance}%) scale(.2);
+
+            transform:
+              rotate(${angle}deg)
+              translateX(${distance}%)
+              scale(.2);
+
           }
-          20% { opacity: .95; }
+
+          20% {
+            opacity: .95;
+          }
+
           65% {
+
             opacity: .7;
-            transform: rotate(${angle + 300}deg) translateX(${distance * 0.4}%) scale(1.1);
+
+            transform:
+              rotate(${angle + 300}deg)
+              translateX(${distance * 0.4}%)
+              scale(1.1);
+
           }
+
           100% {
+
             opacity: 0;
-            transform: rotate(${angle + rotation}deg) translateX(2%) scale(.05);
+
+            transform:
+              rotate(${angle + rotation}deg)
+              translateX(2%)
+              scale(.05);
+
           }
+
         }
+
       `;
 
     }
@@ -1482,52 +1577,115 @@ function createBallHurricane() {
       }
 
       .ballVortexCore {
+
         position: absolute;
+
         left: 50%;
         top: 50%;
+
         width: 14%;
         height: 14%;
+
         border-radius: 50%;
-        transform: translate(-50%,-50%) scale(.1);
-        background: radial-gradient(circle,
-          rgba(255,255,255,1) 0%,
-          rgba(205,160,255,.85) 25%,
-          rgba(130,60,255,.4) 55%,
-          transparent 75%);
-        box-shadow: 0 0 18px rgba(255,255,255,.9), 0 0 40px rgba(180,100,255,.8);
-        animation: ballCorePulse 2.2s ease-out forwards;
+
+        transform:
+          translate(-50%,-50%)
+          scale(.1);
+
+        background:
+          radial-gradient(
+            circle,
+            rgba(255,255,255,1) 0%,
+            rgba(205,160,255,.85) 25%,
+            rgba(130,60,255,.4) 55%,
+            transparent 75%
+          );
+
+        box-shadow:
+          0 0 18px rgba(255,255,255,.9),
+          0 0 40px rgba(180,100,255,.8);
+
+        animation:
+          ballCorePulse
+          2.2s
+          ease-out
+          forwards;
+
       }
 
       @keyframes ballCorePulse {
-        0% { opacity: 0; transform: translate(-50%,-50%) scale(.1); }
-        20% { opacity: 1; }
-        55% { transform: translate(-50%,-50%) scale(1); }
-        100% { opacity: 0; transform: translate(-50%,-50%) scale(2.2); }
+
+        0% {
+          opacity: 0;
+          transform:
+            translate(-50%,-50%)
+            scale(.1);
+        }
+
+        20% {
+          opacity: 1;
+        }
+
+        55% {
+          transform:
+            translate(-50%,-50%)
+            scale(1);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            translate(-50%,-50%)
+            scale(2.2);
+        }
+
       }
 
       .ballRing {
+
         position: absolute;
+
         left: 50%;
         top: 50%;
+
         border-radius: 50%;
-        border: 2px solid rgba(220,180,255,.5);
-        box-shadow: 0 0 10px rgba(200,140,255,.5), inset 0 0 12px rgba(255,255,255,.12);
+
+        border:
+          2px solid
+          rgba(220,180,255,.5);
+
+        box-shadow:
+          0 0 10px rgba(200,140,255,.5),
+          inset 0 0 12px rgba(255,255,255,.12);
+
         opacity: 0;
+
       }
 
       .ballDust {
+
         position: absolute;
+
         left: 50%;
         top: 50%;
+
         width: 4px;
         height: 4px;
+
         border-radius: 50%;
+
         background: white;
-        box-shadow: 0 0 6px rgba(220,180,255,.95);
+
+        box-shadow:
+          0 0 6px
+          rgba(220,180,255,.95);
+
         opacity: 0;
+
       }
 
       ${ringCSS}
+
       ${dustCSS}
 
     `;
@@ -1549,7 +1707,6 @@ function createBallHurricane() {
 
 // ==========================================
 // SHOW MESSAGE
-// FIXED
 // ==========================================
 
 function showMessage() {
@@ -1567,10 +1724,6 @@ function showMessage() {
   }
 
 
-  // ----------------------------------------
-  // GET MESSAGE FIRST
-  // ----------------------------------------
-
   const newMessage =
     getRandomMessage();
 
@@ -1579,17 +1732,9 @@ function showMessage() {
     "Your message is waiting for you.";
 
 
-  // ----------------------------------------
-  // WRITE MESSAGE BEFORE SHOWING BOX
-  // ----------------------------------------
-
   message.textContent =
     finalMessage;
 
-
-  // ----------------------------------------
-  // FORCE MESSAGE ITSELF VISIBLE
-  // ----------------------------------------
 
   message.classList.remove("hidden");
 
@@ -1605,10 +1750,6 @@ function showMessage() {
   message.style.color =
     "#ffffff";
 
-
-  // ----------------------------------------
-  // FORCE MESSAGE BOX VISIBLE
-  // ----------------------------------------
 
   messageBox.classList.remove("hidden");
 
@@ -1628,26 +1769,13 @@ function showMessage() {
     "translateY(18px) scale(.98)";
 
 
-  // ----------------------------------------
-  // HIDE LOADING / REVEAL
-  // ----------------------------------------
-
   hideElement(loading);
   hideElement(revealBtn);
 
 
-  // ----------------------------------------
-  // SHOW BUTTONS
-  // ----------------------------------------
-
   showElement(againBtn);
   showElement(shareBtn);
-  showSubscriptionBox();
 
-
-  // ----------------------------------------
-  // MAKE SURE BUTTONS ARE VISIBLE
-  // ----------------------------------------
 
   if (againBtn) {
 
@@ -1664,9 +1792,16 @@ function showMessage() {
   }
 
 
-  // ----------------------------------------
-  // ANIMATE MESSAGE BOX
-  // ----------------------------------------
+  // NEW:
+  // Show subscription option only after
+  // the message has appeared.
+
+  window.setTimeout(() => {
+
+    showSubscriptionBox();
+
+  }, 850);
+
 
   window.requestAnimationFrame(() => {
 
@@ -1692,7 +1827,6 @@ function showMessage() {
 
 // ==========================================
 // REVEAL MESSAGE
-// FIXED
 // ==========================================
 
 function revealMessage() {
@@ -1716,20 +1850,13 @@ function revealMessage() {
     true;
 
 
-  // ----------------------------------------
-  // HIDE CURRENT CONTENT
-  // ----------------------------------------
-
   hideElement(messageBox);
   hideElement(againBtn);
   hideElement(shareBtn);
   hideElement(revealBtn);
+
   hideSubscriptionBox();
 
-
-  // ----------------------------------------
-  // SHOW LOADING
-  // ----------------------------------------
 
   showElement(loading);
   showElement(crystalBallWrap);
@@ -1742,14 +1869,6 @@ function revealMessage() {
 
   }
 
-
-  // ----------------------------------------
-  // COSMIC EFFECT
-  //
-  // IMPORTANT:
-  // The animation is OPTIONAL.
-  // If it fails, the message must STILL appear.
-  // ----------------------------------------
 
   try {
 
@@ -1766,10 +1885,6 @@ function revealMessage() {
   }
 
 
-  // ----------------------------------------
-  // REVEAL MESSAGE
-  // ----------------------------------------
-
   window.setTimeout(() => {
 
     try {
@@ -1783,7 +1898,6 @@ function revealMessage() {
         error
       );
 
-      // Emergency fallback
 
       if (message) {
 
@@ -1801,6 +1915,7 @@ function revealMessage() {
           "1";
 
       }
+
 
       if (messageBox) {
 
@@ -1822,9 +1937,13 @@ function revealMessage() {
 
       }
 
+
       hideElement(loading);
+
       showElement(againBtn);
       showElement(shareBtn);
+
+      showSubscriptionBox();
 
     } finally {
 
@@ -1840,7 +1959,6 @@ function revealMessage() {
 
 // ==========================================
 // ANOTHER MESSAGE
-// FIXED
 // ==========================================
 
 function receiveAnotherMessage() {
@@ -1858,18 +1976,11 @@ function receiveAnotherMessage() {
     true;
 
 
-  // ----------------------------------------
-  // HIDE BUTTONS
-  // ----------------------------------------
-
   hideElement(againBtn);
   hideElement(shareBtn);
+
   hideSubscriptionBox();
 
-
-  // ----------------------------------------
-  // FADE CURRENT MESSAGE
-  // ----------------------------------------
 
   messageBox.style.transition =
     "opacity .3s ease, transform .3s ease";
@@ -1885,10 +1996,6 @@ function receiveAnotherMessage() {
   }
 
 
-  // ----------------------------------------
-  // START COSMIC EFFECT SAFELY
-  // ----------------------------------------
-
   try {
 
     createWindEffect();
@@ -1903,10 +2010,6 @@ function receiveAnotherMessage() {
 
   }
 
-
-  // ----------------------------------------
-  // SHOW LOADING
-  // ----------------------------------------
 
   window.setTimeout(() => {
 
@@ -1924,10 +2027,6 @@ function receiveAnotherMessage() {
   }, 350);
 
 
-  // ----------------------------------------
-  // SHOW NEW MESSAGE
-  // ----------------------------------------
-
   window.setTimeout(() => {
 
     try {
@@ -1940,6 +2039,7 @@ function receiveAnotherMessage() {
         "Universe139 second message error:",
         error
       );
+
 
       if (message) {
 
@@ -1979,8 +2079,11 @@ function receiveAnotherMessage() {
       }
 
       hideElement(loading);
+
       showElement(againBtn);
       showElement(shareBtn);
+
+      showSubscriptionBox();
 
     } finally {
 
@@ -1990,6 +2093,1239 @@ function receiveAnotherMessage() {
     }
 
   }, 2400);
+
+}
+
+
+// ==========================================
+// FREE DAILY SUBSCRIPTION
+// ==========================================
+
+function createSubscriptionBox() {
+
+  if (
+    document.getElementById(
+      "universe139SubscribeBox"
+    )
+  ) {
+
+    updateSubscriptionText();
+
+    return;
+
+  }
+
+
+  const t =
+    translations[currentLanguage];
+
+
+  const box =
+    document.createElement("div");
+
+  box.id =
+    "universe139SubscribeBox";
+
+
+  box.innerHTML = `
+
+    <div class="universe139SubscribeTitle">
+      ${escapeHTML(t.subscribeTitle)}
+    </div>
+
+    <div class="universe139SubscribeText">
+      ${escapeHTML(t.subscribeText)}
+    </div>
+
+    <button
+      id="universe139SubscribeButton"
+      class="universe139SubscribeButton"
+      type="button"
+    >
+      ${escapeHTML(t.subscribeButton)}
+    </button>
+
+  `;
+
+
+  // Append ONLY the new subscription element.
+  // No existing elements are removed or restyled.
+
+  if (messageBox) {
+
+    messageBox.appendChild(
+      box
+    );
+
+  }
+
+
+  subscribeBox =
+    box;
+
+
+  subscribeButton =
+    document.getElementById(
+      "universe139SubscribeButton"
+    );
+
+
+  addSubscriptionStyles();
+
+
+  if (subscribeButton) {
+
+    subscribeButton.addEventListener(
+      "click",
+      openSubscriptionForm
+    );
+
+  }
+
+}
+
+
+function updateSubscriptionText() {
+
+  const box =
+    document.getElementById(
+      "universe139SubscribeBox"
+    );
+
+  if (!box) {
+    return;
+  }
+
+
+  const t =
+    translations[currentLanguage];
+
+
+  const titleElement =
+    box.querySelector(
+      ".universe139SubscribeTitle"
+    );
+
+  const textElement =
+    box.querySelector(
+      ".universe139SubscribeText"
+    );
+
+  const buttonElement =
+    box.querySelector(
+      ".universe139SubscribeButton"
+    );
+
+
+  if (titleElement) {
+
+    titleElement.textContent =
+      t.subscribeTitle;
+
+  }
+
+  if (textElement) {
+
+    textElement.textContent =
+      t.subscribeText;
+
+  }
+
+  if (buttonElement) {
+
+    buttonElement.textContent =
+      t.subscribeButton;
+
+  }
+
+}
+
+
+function showSubscriptionBox() {
+
+  createSubscriptionBox();
+
+  updateSubscriptionText();
+
+
+  if (subscribeBox) {
+
+    subscribeBox.classList.remove(
+      "universe139SubscribeHidden"
+    );
+
+  }
+
+}
+
+
+function hideSubscriptionBox() {
+
+  const box =
+    document.getElementById(
+      "universe139SubscribeBox"
+    );
+
+  if (box) {
+
+    box.classList.add(
+      "universe139SubscribeHidden"
+    );
+
+  }
+
+}
+
+
+function openSubscriptionForm() {
+
+  const oldModal =
+    document.getElementById(
+      "universe139SubscriptionModal"
+    );
+
+  if (oldModal) {
+    oldModal.remove();
+  }
+
+
+  const t =
+    translations[currentLanguage];
+
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "universe139SubscriptionModal";
+
+
+  modal.innerHTML = `
+
+    <div class="universe139SubscriptionOverlay"></div>
+
+    <div class="universe139SubscriptionModal">
+
+      <button
+        id="universe139SubscribeClose"
+        class="universe139SubscribeClose"
+        type="button"
+        aria-label="${escapeHTML(t.subscribeClose)}"
+      >
+        ×
+      </button>
+
+      <div class="universe139SubscriptionIcon">
+        ✨
+      </div>
+
+      <h2>
+        ${escapeHTML(t.subscribeFormTitle)}
+      </h2>
+
+      <p class="universe139SubscriptionDescription">
+        ${escapeHTML(t.subscribeFormText)}
+      </p>
+
+      <input
+        id="universe139Email"
+        class="universe139EmailInput"
+        type="email"
+        autocomplete="email"
+        placeholder="${escapeHTML(t.subscribeEmailPlaceholder)}"
+      />
+
+      <button
+        id="universe139SubscribeSubmit"
+        class="universe139SubscribeSubmit"
+        type="button"
+      >
+        ${escapeHTML(t.subscribeSubmit)}
+      </button>
+
+      <div class="universe139SubscribeNote">
+        ${escapeHTML(t.subscribeNote)}
+      </div>
+
+      <div
+        id="universe139SubscribeStatus"
+        class="universe139SubscribeStatus"
+      ></div>
+
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    modal
+  );
+
+
+  addSubscriptionModalStyles();
+
+
+  const overlay =
+    modal.querySelector(
+      ".universe139SubscriptionOverlay"
+    );
+
+  const closeButton =
+    document.getElementById(
+      "universe139SubscribeClose"
+    );
+
+  const submitButton =
+    document.getElementById(
+      "universe139SubscribeSubmit"
+    );
+
+  const emailInput =
+    document.getElementById(
+      "universe139Email"
+    );
+
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      closeSubscriptionForm
+    );
+
+  }
+
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
+      "click",
+      closeSubscriptionForm
+    );
+
+  }
+
+
+  if (submitButton) {
+
+    submitButton.addEventListener(
+      "click",
+      submitSubscription
+    );
+
+  }
+
+
+  if (emailInput) {
+
+    emailInput.focus();
+
+    emailInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          submitSubscription();
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+function closeSubscriptionForm() {
+
+  const modal =
+    document.getElementById(
+      "universe139SubscriptionModal"
+    );
+
+  if (modal) {
+
+    modal.classList.add(
+      "universe139SubscriptionClosing"
+    );
+
+    window.setTimeout(() => {
+
+      if (modal.parentNode) {
+        modal.remove();
+      }
+
+    }, 220);
+
+  }
+
+}
+
+
+async function submitSubscription() {
+
+  const emailInput =
+    document.getElementById(
+      "universe139Email"
+    );
+
+  const submitButton =
+    document.getElementById(
+      "universe139SubscribeSubmit"
+    );
+
+  const status =
+    document.getElementById(
+      "universe139SubscribeStatus"
+    );
+
+
+  if (!emailInput) {
+    return;
+  }
+
+
+  const email =
+    String(
+      emailInput.value || ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const emailIsValid =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      email
+    );
+
+
+  if (!emailIsValid) {
+
+    if (status) {
+
+      status.textContent =
+        translations[
+          currentLanguage
+        ].subscribeError;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeError";
+
+    }
+
+    return;
+
+  }
+
+
+  if (submitButton) {
+
+    submitButton.disabled =
+      true;
+
+    submitButton.style.opacity =
+      ".65";
+
+  }
+
+
+  if (status) {
+
+    status.textContent =
+      "";
+
+    status.className =
+      "universe139SubscribeStatus";
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/subscribe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body:
+            JSON.stringify({
+              email,
+              language:
+                currentLanguage
+            })
+        }
+      );
+
+
+    const data =
+      await response.json()
+        .catch(() => ({}));
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "Subscription failed."
+      );
+
+    }
+
+
+    if (status) {
+
+      status.textContent =
+        data.alreadySubscribed
+          ? translations[
+              currentLanguage
+            ].subscribeAlready
+          : translations[
+              currentLanguage
+            ].subscribeSuccess;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeSuccess";
+
+    }
+
+
+    if (emailInput) {
+
+      emailInput.value =
+        "";
+
+    }
+
+
+    window.setTimeout(() => {
+
+      closeSubscriptionForm();
+
+    }, 2200);
+
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 subscription error:",
+      error
+    );
+
+
+    if (status) {
+
+      status.textContent =
+        translations[
+          currentLanguage
+        ].subscribeError;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeError";
+
+    }
+
+
+    if (submitButton) {
+
+      submitButton.disabled =
+        false;
+
+      submitButton.style.opacity =
+        "1";
+
+    }
+
+  }
+
+}
+
+
+function addSubscriptionStyles() {
+
+  if (
+    document.getElementById(
+      "universe139SubscribeStyles"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const style =
+    document.createElement("style");
+
+
+  style.id =
+    "universe139SubscribeStyles";
+
+
+  style.textContent = `
+
+    #universe139SubscribeBox {
+
+      width:
+        min(620px, 100%);
+
+      margin:
+        18px auto 8px;
+
+      padding:
+        16px 18px;
+
+      box-sizing:
+        border-box;
+
+      text-align:
+        center;
+
+      border-radius:
+        18px;
+
+      background:
+        rgba(255,255,255,.045);
+
+      border:
+        1px solid
+        rgba(255,255,255,.12);
+
+      opacity:
+        0;
+
+      transform:
+        translateY(10px);
+
+      animation:
+        universe139SubscribeIn
+        .7s
+        ease
+        forwards;
+
+    }
+
+
+    .universe139SubscribeTitle {
+
+      color:
+        #ffffff;
+
+      font-size:
+        17px;
+
+      line-height:
+        1.35;
+
+      font-weight:
+        600;
+
+    }
+
+
+    .universe139SubscribeText {
+
+      margin-top:
+        5px;
+
+      color:
+        rgba(255,255,255,.65);
+
+      font-size:
+        13px;
+
+      line-height:
+        1.5;
+
+    }
+
+
+    .universe139SubscribeButton {
+
+      margin-top:
+        11px;
+
+      min-height:
+        42px;
+
+      padding:
+        9px 19px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.18);
+
+      border-radius:
+        999px;
+
+      background:
+        rgba(255,255,255,.08);
+
+      color:
+        #ffffff;
+
+      cursor:
+        pointer;
+
+      font:
+        inherit;
+
+      font-size:
+        13px;
+
+      font-weight:
+        600;
+
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+
+    }
+
+
+    .universe139SubscribeButton:hover {
+
+      background:
+        rgba(255,255,255,.14);
+
+      border-color:
+        rgba(255,255,255,.3);
+
+      transform:
+        translateY(-1px);
+
+    }
+
+
+    .universe139SubscribeButton:active {
+
+      transform:
+        scale(.97);
+
+    }
+
+
+    .universe139SubscribeHidden {
+
+      display:
+        none !important;
+
+    }
+
+
+    @keyframes universe139SubscribeIn {
+
+      from {
+
+        opacity:
+          0;
+
+        transform:
+          translateY(10px);
+
+      }
+
+      to {
+
+        opacity:
+          1;
+
+        transform:
+          translateY(0);
+
+      }
+
+    }
+
+
+    @media (max-width:600px) {
+
+      #universe139SubscribeBox {
+
+        margin-top:
+          15px;
+
+        padding:
+          14px 12px;
+
+      }
+
+      .universe139SubscribeTitle {
+
+        font-size:
+          16px;
+
+      }
+
+    }
+
+  `;
+
+
+  document.head.appendChild(
+    style
+  );
+
+}
+
+
+function addSubscriptionModalStyles() {
+
+  if (
+    document.getElementById(
+      "universe139SubscriptionModalStyles"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const style =
+    document.createElement("style");
+
+
+  style.id =
+    "universe139SubscriptionModalStyles";
+
+
+  style.textContent = `
+
+    #universe139SubscriptionModal {
+
+      position:
+        fixed;
+
+      inset:
+        0;
+
+      z-index:
+        20000;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      padding:
+        20px;
+
+      animation:
+        universe139ModalFadeIn
+        .25s
+        ease
+        forwards;
+
+    }
+
+
+    .universe139SubscriptionOverlay {
+
+      position:
+        absolute;
+
+      inset:
+        0;
+
+      background:
+        rgba(5,2,20,.92);
+
+      backdrop-filter:
+        blur(14px);
+
+    }
+
+
+    .universe139SubscriptionModal {
+
+      position:
+        relative;
+
+      width:
+        min(440px,100%);
+
+      box-sizing:
+        border-box;
+
+      padding:
+        30px 25px;
+
+      border-radius:
+        24px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(48,18,86,.98),
+          rgba(17,7,38,.99)
+        );
+
+      border:
+        1px solid
+        rgba(255,255,255,.16);
+
+      box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.7);
+
+      text-align:
+        center;
+
+      animation:
+        universe139ModalIn
+        .3s
+        ease
+        forwards;
+
+    }
+
+
+    .universe139SubscribeClose {
+
+      position:
+        absolute;
+
+      right:
+        14px;
+
+      top:
+        10px;
+
+      width:
+        38px;
+
+      height:
+        38px;
+
+      border:
+        none;
+
+      background:
+        rgba(255,255,255,.07);
+
+      color:
+        white;
+
+      border-radius:
+        50%;
+
+      font-size:
+        25px;
+
+      line-height:
+        38px;
+
+      cursor:
+        pointer;
+
+    }
+
+
+    .universe139SubscriptionIcon {
+
+      font-size:
+        30px;
+
+      margin-bottom:
+        4px;
+
+    }
+
+
+    .universe139SubscriptionModal h2 {
+
+      margin:
+        5px 35px 10px;
+
+      color:
+        white;
+
+      font-size:
+        24px;
+
+      line-height:
+        1.25;
+
+      font-weight:
+        600;
+
+    }
+
+
+    .universe139SubscriptionDescription {
+
+      margin:
+        0 0 20px;
+
+      color:
+        rgba(255,255,255,.67);
+
+      font-size:
+        14px;
+
+      line-height:
+        1.55;
+
+    }
+
+
+    .universe139EmailInput {
+
+      width:
+        100%;
+
+      box-sizing:
+        border-box;
+
+      min-height:
+        48px;
+
+      padding:
+        0 15px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.16);
+
+      border-radius:
+        14px;
+
+      outline:
+        none;
+
+      background:
+        rgba(255,255,255,.06);
+
+      color:
+        white;
+
+      font:
+        inherit;
+
+      font-size:
+        14px;
+
+      margin-bottom:
+        11px;
+
+    }
+
+
+    .universe139EmailInput::placeholder {
+
+      color:
+        rgba(255,255,255,.45);
+
+    }
+
+
+    .universe139EmailInput:focus {
+
+      border-color:
+        rgba(220,190,255,.45);
+
+    }
+
+
+    .universe139SubscribeSubmit {
+
+      width:
+        100%;
+
+      min-height:
+        48px;
+
+      padding:
+        10px 18px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.18);
+
+      border-radius:
+        14px;
+
+      background:
+        rgba(255,255,255,.10);
+
+      color:
+        white;
+
+      cursor:
+        pointer;
+
+      font:
+        inherit;
+
+      font-size:
+        14px;
+
+      font-weight:
+        600;
+
+    }
+
+
+    .universe139SubscribeSubmit:hover {
+
+      background:
+        rgba(255,255,255,.15);
+
+    }
+
+
+    .universe139SubscribeNote {
+
+      margin-top:
+        13px;
+
+      color:
+        rgba(255,255,255,.42);
+
+      font-size:
+        11px;
+
+      line-height:
+        1.5;
+
+    }
+
+
+    .universe139SubscribeStatus {
+
+      min-height:
+        20px;
+
+      margin-top:
+        13px;
+
+      font-size:
+        13px;
+
+      line-height:
+        1.5;
+
+    }
+
+
+    .universe139SubscribeSuccess {
+
+      color:
+        #d9ffdf;
+
+    }
+
+
+    .universe139SubscribeError {
+
+      color:
+        #ffd0d0;
+
+    }
+
+
+    #universe139SubscriptionModal.universe139SubscriptionClosing {
+
+      animation:
+        universe139ModalFadeOut
+        .22s
+        ease
+        forwards;
+
+    }
+
+
+    @keyframes universe139ModalFadeIn {
+
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+
+    }
+
+
+    @keyframes universe139ModalFadeOut {
+
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+
+    }
+
+
+    @keyframes universe139ModalIn {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translateY(20px)
+          scale(.97);
+
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+
+      }
+
+    }
+
+
+    @media (max-width:600px) {
+
+      .universe139SubscriptionModal {
+
+        padding:
+          27px 17px;
+
+        border-radius:
+          21px;
+
+      }
+
+      .universe139SubscriptionModal h2 {
+
+        font-size:
+          21px;
+
+      }
+
+    }
+
+  `;
+
+
+  document.head.appendChild(
+    style
+  );
 
 }
 
@@ -2015,6 +3351,7 @@ function getShareText() {
 ${t.shareLink}
 
 ${UNIVERSE139_URL}`;
+
 }
 
 
@@ -2022,7 +3359,10 @@ ${UNIVERSE139_URL}`;
 // COPY
 // ==========================================
 
-async function copyText(text, toastMessage) {
+async function copyText(
+  text,
+  toastMessage
+) {
 
   if (!text) {
     return false;
@@ -2073,7 +3413,7 @@ async function copyText(text, toastMessage) {
 
     showShareToast(
       toastMessage ||
-        translations[currentLanguage].copied
+      translations[currentLanguage].copied
     );
 
     return true;
@@ -2088,21 +3428,6 @@ async function copyText(text, toastMessage) {
     return false;
 
   }
-
-}
-
-// Copies the full share text (message + link) and shows a toast that
-// makes it explicit that BOTH the message and the link were copied,
-// for platforms whose share URLs can't be pre-filled with text.
-async function copyShareTextWithNotice() {
-
-  const t =
-    translations[currentLanguage];
-
-  return copyText(
-    getShareText(),
-    t.copiedShare
-  );
 
 }
 
@@ -2128,35 +3453,34 @@ async function shareWhatsApp() {
 
   }
 
-  const waURL =
-    `https://wa.me/?text=${encodeURIComponent(getShareText())}`;
 
-  // Same rule as Facebook/LinkedIn/Reddit: window.open() must be
-  // called synchronously, before any async work, or mobile browsers
-  // silently block it as not being a direct result of the tap.
-  // wa.me already prefills the message + link as text just fine on
-  // its own, so that's the safe, always-open fallback here.
-  let fallbackWindow = null;
+  const waURL =
+    `https://wa.me/?text=${encodeURIComponent(
+      getShareText()
+    )}`;
+
+
+  let fallbackWindow =
+    null;
+
 
   if (!navigator.share) {
 
-    fallbackWindow = window.open(
-      waURL,
-      "_blank",
-      "noopener,noreferrer"
-    );
+    fallbackWindow =
+      window.open(
+        waURL,
+        "_blank",
+        "noopener,noreferrer"
+      );
 
   }
 
+
   try {
 
-    // Prefer sharing the same branded image Facebook/Instagram/
-    // TikTok use — WhatsApp accepts a shared image directly via
-    // the OS share sheet, with the message + link baked right
-    // into the picture, which reads much better in a chat than a
-    // bare text bubble.
     const blob =
       await createMessageImageBlob();
+
 
     const file =
       new File(
@@ -2166,6 +3490,7 @@ async function shareWhatsApp() {
           type: "image/png"
         }
       );
+
 
     if (
       navigator.share &&
@@ -2192,17 +3517,22 @@ async function shareWhatsApp() {
 
     }
 
-    // navigator.share exists but this browser doesn't support
-    // sharing files — fall back to text/url through the same API,
-    // which still carries the full message + link.
+
     if (navigator.share) {
 
       try {
 
         await navigator.share({
-          title: "Universe139",
-          text: getShareText(),
-          url: UNIVERSE139_URL
+
+          title:
+            "Universe139",
+
+          text:
+            getShareText(),
+
+          url:
+            UNIVERSE139_URL
+
         });
 
         return;
@@ -2211,9 +3541,12 @@ async function shareWhatsApp() {
 
         if (
           error &&
-          error.name === "AbortError"
+          error.name ===
+          "AbortError"
         ) {
+
           return;
+
         }
 
         console.error(
@@ -2225,30 +3558,35 @@ async function shareWhatsApp() {
 
     }
 
-    // Desktop fallback: the wa.me popup is already open (from
-    // above) with the message + link prefilled as text. Also
-    // download the image so it can be attached to the chat manually.
+
     const objectURL =
       URL.createObjectURL(
         blob
       );
 
+
     const link =
       document.createElement("a");
+
 
     link.href =
       objectURL;
 
+
     link.download =
       "Universe139-message.png";
+
 
     document.body.appendChild(
       link
     );
 
+
     link.click();
 
+
     link.remove();
+
 
     window.setTimeout(() => {
 
@@ -2258,7 +3596,11 @@ async function shareWhatsApp() {
 
     }, 2000);
 
-    if (!fallbackWindow || fallbackWindow.closed) {
+
+    if (
+      !fallbackWindow ||
+      fallbackWindow.closed
+    ) {
 
       window.open(
         waURL,
@@ -2272,9 +3614,12 @@ async function shareWhatsApp() {
 
     if (
       error &&
-      error.name === "AbortError"
+      error.name ===
+      "AbortError"
     ) {
+
       return;
+
     }
 
     console.error(
@@ -2282,9 +3627,11 @@ async function shareWhatsApp() {
       error
     );
 
-    // Emergency fallback if image generation itself fails — the
-    // text-prefilled popup was already opened up front if needed.
-    if (!fallbackWindow || fallbackWindow.closed) {
+
+    if (
+      !fallbackWindow ||
+      fallbackWindow.closed
+    ) {
 
       window.open(
         waURL,
@@ -2320,42 +3667,35 @@ async function shareFacebook() {
 
   }
 
+
   const shareURL =
     "https://www.facebook.com/sharer/sharer.php?u=" +
     encodeURIComponent(
       UNIVERSE139_URL
     );
 
-  // CRITICAL: window.open() must happen synchronously, in direct
-  // response to the click, or mobile browsers (especially Safari)
-  // silently block it as a popup — this is exactly why the Facebook
-  // tab wasn't appearing: it used to be called from inside a
-  // setTimeout AFTER the image was generated and the clipboard
-  // write finished, by which point the browser no longer considers
-  // it a direct result of the tap. So on any browser without the
-  // native share sheet, we open the (already fully-known) Facebook
-  // URL right here, first, before any async work at all.
-  let fallbackWindow = null;
+
+  let fallbackWindow =
+    null;
+
 
   if (!navigator.share) {
 
-    fallbackWindow = window.open(
-      shareURL,
-      "_blank",
-      "width=700,height=650,noopener,noreferrer"
-    );
+    fallbackWindow =
+      window.open(
+        shareURL,
+        "_blank",
+        "width=700,height=650,noopener,noreferrer"
+      );
 
   }
 
-  // Facebook's sharer.php dialog no longer honors any prefilled
-  // post text (the old "quote" param is silently ignored now —
-  // that's why the exact message wasn't showing up). The message
-  // only reliably shows on Facebook if it's baked into an image,
-  // the same way TikTok/Instagram sharing already works here.
+
   try {
 
     const blob =
       await createMessageImageBlob();
+
 
     const file =
       new File(
@@ -2366,6 +3706,7 @@ async function shareFacebook() {
         }
       );
 
+
     if (
       navigator.share &&
       navigator.canShare &&
@@ -2374,9 +3715,6 @@ async function shareFacebook() {
       })
     ) {
 
-      // On phones this hands the image straight to the Facebook
-      // app (feed post, Story, Messenger, etc) with the message
-      // visible in the picture itself.
       await navigator.share({
 
         title:
@@ -2394,17 +3732,22 @@ async function shareFacebook() {
 
     }
 
-    // navigator.share exists but doesn't support files on this
-    // browser — still try it with text/url before falling back
-    // to the popup window.
+
     if (navigator.share) {
 
       try {
 
         await navigator.share({
-          title: "Universe139",
-          text: getShareText(),
-          url: UNIVERSE139_URL
+
+          title:
+            "Universe139",
+
+          text:
+            getShareText(),
+
+          url:
+            UNIVERSE139_URL
+
         });
 
         return;
@@ -2413,9 +3756,12 @@ async function shareFacebook() {
 
         if (
           error &&
-          error.name === "AbortError"
+          error.name ===
+          "AbortError"
         ) {
+
           return;
+
         }
 
         console.error(
@@ -2427,30 +3773,35 @@ async function shareFacebook() {
 
     }
 
-    // Desktop fallback: the popup is already open (from above).
-    // Now download the image and copy the message + link so the
-    // person can attach the image and paste the caption in.
+
     const objectURL =
       URL.createObjectURL(
         blob
       );
 
+
     const link =
       document.createElement("a");
+
 
     link.href =
       objectURL;
 
+
     link.download =
       "Universe139-message.png";
+
 
     document.body.appendChild(
       link
     );
 
+
     link.click();
 
+
     link.remove();
+
 
     window.setTimeout(() => {
 
@@ -2460,11 +3811,14 @@ async function shareFacebook() {
 
     }, 2000);
 
+
     await copyShareTextWithNotice();
 
-    // Safety net: if navigator.share existed but both attempts
-    // above failed, no popup was pre-opened — open it now.
-    if (!fallbackWindow || fallbackWindow.closed) {
+
+    if (
+      !fallbackWindow ||
+      fallbackWindow.closed
+    ) {
 
       window.open(
         shareURL,
@@ -2478,9 +3832,12 @@ async function shareFacebook() {
 
     if (
       error &&
-      error.name === "AbortError"
+      error.name ===
+      "AbortError"
     ) {
+
       return;
+
     }
 
     console.error(
@@ -2488,12 +3845,14 @@ async function shareFacebook() {
       error
     );
 
-    // Emergency fallback if image generation itself fails —
-    // the popup was already opened up front (if applicable), so
-    // just make sure the message + link are on the clipboard too.
+
     await copyShareTextWithNotice();
 
-    if (!fallbackWindow || fallbackWindow.closed) {
+
+    if (
+      !fallbackWindow ||
+      fallbackWindow.closed
+    ) {
 
       window.open(
         shareURL,
@@ -2603,27 +3962,18 @@ function shareSMS() {
 
 async function shareLinkedIn() {
 
-  // LinkedIn's share-offsite endpoint intentionally ignores any
-  // prefilled post text — it only takes a url. So we guarantee the
-  // message + link are at least on the clipboard, with a toast that
-  // tells the person to paste them into the post they're about to write.
-  //
-  // CRITICAL: open the window FIRST, synchronously, before the
-  // await below — once you await anything (even a quick clipboard
-  // write), mobile browsers no longer treat window.open() as a
-  // direct result of the tap and silently block it. That was the
-  // actual bug: the popup was being requested only after the
-  // clipboard copy had already finished.
   const url =
     encodeURIComponent(
       UNIVERSE139_URL
     );
+
 
   window.open(
     `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
     "_blank",
     "noopener,noreferrer"
   );
+
 
   await copyShareTextWithNotice();
 
@@ -2644,22 +3994,18 @@ async function shareReddit() {
       "A Message From The Universe"
     );
 
-  // Reddit link-posts (url=) don't render any text alongside them.
-  // Using a self text-post (selftext=true&text=) instead puts the
-  // message AND the link together in the post body.
   const body =
     encodeURIComponent(
       text
     );
 
-  // Same fix as Facebook/LinkedIn: open synchronously first, then
-  // copy to clipboard — awaiting the clipboard write before calling
-  // window.open() is what let the popup get silently blocked.
+
   window.open(
     `https://www.reddit.com/submit?selftext=true&title=${title}&text=${body}`,
     "_blank",
     "noopener,noreferrer"
   );
+
 
   await copyShareTextWithNotice();
 
@@ -2675,12 +4021,16 @@ async function shareViber() {
   const text =
     getShareText();
 
-  await copyText(text);
+  await copyText(
+    text
+  );
 
   window.setTimeout(() => {
 
     window.location.href =
-      `viber://forward?text=${encodeURIComponent(text)}`;
+      `viber://forward?text=${encodeURIComponent(
+        text
+      )}`;
 
   }, 300);
 
@@ -2708,15 +4058,12 @@ async function shareTikTok() {
 
   }
 
+
   try {
 
-    // TikTok doesn't accept a prefilled caption/link the way
-    // WhatsApp or Telegram do — but its app DOES readily accept a
-    // shared image to start a post or Story with. So we generate
-    // the same branded message image Instagram uses, and share
-    // that image straight to the TikTok app via the OS share sheet.
     const blob =
       await createMessageImageBlob();
+
 
     const file =
       new File(
@@ -2726,6 +4073,7 @@ async function shareTikTok() {
           type: "image/png"
         }
       );
+
 
     if (
       navigator.share &&
@@ -2752,16 +4100,22 @@ async function shareTikTok() {
 
     }
 
-    // Some mobile browsers support navigator.share with text/url
-    // but not files — still worth trying before falling back further.
+
     if (navigator.share) {
 
       try {
 
         await navigator.share({
-          title: "Universe139",
-          text: getShareText(),
-          url: UNIVERSE139_URL
+
+          title:
+            "Universe139",
+
+          text:
+            getShareText(),
+
+          url:
+            UNIVERSE139_URL
+
         });
 
         return;
@@ -2770,9 +4124,12 @@ async function shareTikTok() {
 
         if (
           error &&
-          error.name === "AbortError"
+          error.name ===
+          "AbortError"
         ) {
+
           return;
+
         }
 
         console.error(
@@ -2784,30 +4141,35 @@ async function shareTikTok() {
 
     }
 
-    // Desktop fallback: there is no TikTok web-compose URL, so we
-    // download the ready-made image, copy the message + link, and
-    // send the person straight to TikTok's upload page to post it.
+
     const objectURL =
       URL.createObjectURL(
         blob
       );
 
+
     const link =
       document.createElement("a");
+
 
     link.href =
       objectURL;
 
+
     link.download =
       "Universe139-message.png";
+
 
     document.body.appendChild(
       link
     );
 
+
     link.click();
 
+
     link.remove();
+
 
     window.setTimeout(() => {
 
@@ -2817,7 +4179,9 @@ async function shareTikTok() {
 
     }, 2000);
 
+
     await copyShareTextWithNotice();
+
 
     window.setTimeout(() => {
 
@@ -2833,9 +4197,12 @@ async function shareTikTok() {
 
     if (
       error &&
-      error.name === "AbortError"
+      error.name ===
+      "AbortError"
     ) {
+
       return;
+
     }
 
     console.error(
@@ -2843,9 +4210,9 @@ async function shareTikTok() {
       error
     );
 
-    // Emergency fallback if image generation itself fails —
-    // still guarantee the message + link reach the clipboard.
+
     await copyShareTextWithNotice();
+
 
     window.open(
       "https://www.tiktok.com/",
@@ -2870,10 +4237,13 @@ async function createMessageImageBlob() {
       : "";
 
   if (!currentMessage) {
+
     throw new Error(
       "No Universe139 message available."
     );
+
   }
+
 
   const canvas =
     document.createElement("canvas");
@@ -2884,25 +4254,26 @@ async function createMessageImageBlob() {
   const height =
     1350;
 
+
   canvas.width =
     width;
 
   canvas.height =
     height;
 
+
   const ctx =
     canvas.getContext("2d");
 
+
   if (!ctx) {
+
     throw new Error(
       "Canvas is not supported."
     );
+
   }
 
-
-  // ========================================
-  // COSMIC BACKGROUND
-  // ========================================
 
   const background =
     ctx.createLinearGradient(
@@ -2911,6 +4282,7 @@ async function createMessageImageBlob() {
       width,
       height
     );
+
 
   background.addColorStop(
     0,
@@ -2932,6 +4304,7 @@ async function createMessageImageBlob() {
     "#030207"
   );
 
+
   ctx.fillStyle =
     background;
 
@@ -2943,10 +4316,6 @@ async function createMessageImageBlob() {
   );
 
 
-  // ========================================
-  // COSMIC GLOW
-  // ========================================
-
   const glow =
     ctx.createRadialGradient(
       width / 2,
@@ -2956,6 +4325,7 @@ async function createMessageImageBlob() {
       430,
       650
     );
+
 
   glow.addColorStop(
     0,
@@ -2972,6 +4342,7 @@ async function createMessageImageBlob() {
     "rgba(0,0,0,0)"
   );
 
+
   ctx.fillStyle =
     glow;
 
@@ -2983,10 +4354,6 @@ async function createMessageImageBlob() {
   );
 
 
-  // ========================================
-  // STARS
-  // ========================================
-
   for (
     let i = 0;
     i < 150;
@@ -2994,13 +4361,18 @@ async function createMessageImageBlob() {
   ) {
 
     const x =
-      Math.random() * width;
+      Math.random() *
+      width;
 
     const y =
-      Math.random() * height;
+      Math.random() *
+      height;
 
     const radius =
-      Math.random() * 2 + .5;
+      Math.random() *
+        2 +
+      .5;
+
 
     ctx.beginPath();
 
@@ -3012,6 +4384,7 @@ async function createMessageImageBlob() {
       Math.PI * 2
     );
 
+
     ctx.fillStyle =
       `rgba(255,255,255,${.25 + Math.random() * .7})`;
 
@@ -3020,18 +4393,16 @@ async function createMessageImageBlob() {
   }
 
 
-  // ========================================
-  // BRAND
-  // ========================================
-
   ctx.textAlign =
     "center";
+
 
   ctx.fillStyle =
     "#d9b7ff";
 
   ctx.font =
     "600 30px Arial, sans-serif";
+
 
   ctx.fillText(
     "UNIVERSE139",
@@ -3046,16 +4417,13 @@ async function createMessageImageBlob() {
   ctx.font =
     "500 20px Arial, sans-serif";
 
+
   ctx.fillText(
     "A MESSAGE FROM THE UNIVERSE",
     width / 2,
     155
   );
 
-
-  // ========================================
-  // MESSAGE CARD
-  // ========================================
 
   const cardX =
     75;
@@ -3071,6 +4439,7 @@ async function createMessageImageBlob() {
 
   const radius =
     42;
+
 
   ctx.beginPath();
 
@@ -3129,6 +4498,7 @@ async function createMessageImageBlob() {
 
   ctx.closePath();
 
+
   const cardGradient =
     ctx.createLinearGradient(
       cardX,
@@ -3136,6 +4506,7 @@ async function createMessageImageBlob() {
       cardX + cardW,
       cardY + cardH
     );
+
 
   cardGradient.addColorStop(
     0,
@@ -3147,10 +4518,12 @@ async function createMessageImageBlob() {
     "rgba(20,8,40,.92)"
   );
 
+
   ctx.fillStyle =
     cardGradient;
 
   ctx.fill();
+
 
   ctx.strokeStyle =
     "rgba(255,255,255,.18)";
@@ -3161,15 +4534,12 @@ async function createMessageImageBlob() {
   ctx.stroke();
 
 
-  // ========================================
-  // QUOTE
-  // ========================================
-
   ctx.fillStyle =
     "#ffffff";
 
   ctx.font =
     "italic 64px Georgia, serif";
+
 
   ctx.fillText(
     "“",
@@ -3177,11 +4547,14 @@ async function createMessageImageBlob() {
     400
   );
 
+
   ctx.font =
     "700 48px Arial, sans-serif";
 
+
   const maxWidth =
     cardW - 150;
+
 
   const lines =
     wrapCanvasText(
@@ -3190,13 +4563,16 @@ async function createMessageImageBlob() {
       maxWidth
     );
 
+
   const lineHeight =
     72;
+
 
   const startY =
     520 -
     ((lines.length - 1) *
       lineHeight) / 2;
+
 
   lines.forEach(
     (line, index) => {
@@ -3216,15 +4592,12 @@ async function createMessageImageBlob() {
   );
 
 
-  // ========================================
-  // FOOTER
-  // ========================================
-
   ctx.fillStyle =
     "rgba(255,255,255,.55)";
 
   ctx.font =
     "20px Arial, sans-serif";
+
 
   ctx.fillText(
     "Keep this message close to your heart.",
@@ -3232,11 +4605,13 @@ async function createMessageImageBlob() {
     1100
   );
 
+
   ctx.fillStyle =
     "#d9b7ff";
 
   ctx.font =
     "700 28px Arial, sans-serif";
+
 
   ctx.fillText(
     getDisplayURL(),
@@ -3244,11 +4619,13 @@ async function createMessageImageBlob() {
     1200
   );
 
+
   ctx.fillStyle =
     "rgba(255,255,255,.45)";
 
   ctx.font =
     "18px Arial, sans-serif";
+
 
   ctx.fillText(
     "Your message is waiting...",
@@ -3264,13 +4641,19 @@ async function createMessageImageBlob() {
         blob => {
 
           if (blob) {
-            resolve(blob);
+
+            resolve(
+              blob
+            );
+
           } else {
+
             reject(
               new Error(
                 "Unable to create image."
               )
             );
+
           }
 
         },
@@ -3302,6 +4685,7 @@ function wrapCanvasText(
   let current =
     "";
 
+
   for (
     const word of words
   ) {
@@ -3311,8 +4695,10 @@ function wrapCanvasText(
         ? `${current} ${word}`
         : word;
 
+
     const width =
       ctx.measureText(test).width;
+
 
     if (
       width <= maxWidth
@@ -3324,7 +4710,9 @@ function wrapCanvasText(
     } else {
 
       if (current) {
-        lines.push(current);
+        lines.push(
+          current
+        );
       }
 
       current =
@@ -3334,9 +4722,15 @@ function wrapCanvasText(
 
   }
 
+
   if (current) {
-    lines.push(current);
+
+    lines.push(
+      current
+    );
+
   }
+
 
   return lines;
 
@@ -3364,10 +4758,12 @@ async function shareInstagram() {
 
   }
 
+
   try {
 
     const blob =
       await createMessageImageBlob();
+
 
     const file =
       new File(
@@ -3410,22 +4806,29 @@ async function shareInstagram() {
         blob
       );
 
+
     const link =
       document.createElement("a");
+
 
     link.href =
       objectURL;
 
+
     link.download =
       "Universe139-message.png";
+
 
     document.body.appendChild(
       link
     );
 
+
     link.click();
 
+
     link.remove();
+
 
     window.setTimeout(() => {
 
@@ -3439,6 +4842,7 @@ async function shareInstagram() {
     showShareToast(
       "Your Universe139 image is ready to share"
     );
+
 
     window.setTimeout(() => {
 
@@ -3454,9 +4858,12 @@ async function shareInstagram() {
 
     if (
       error &&
-      error.name === "AbortError"
+      error.name ===
+      "AbortError"
     ) {
+
       return;
+
     }
 
     console.error(
@@ -3480,16 +4887,22 @@ async function shareSnapchat() {
   const text =
     getShareText();
 
-  // Same idea as TikTok: prefer the native share sheet on mobile
-  // so Snapchat receives the message + link directly.
+
   if (navigator.share) {
 
     try {
 
       await navigator.share({
-        title: "Universe139",
-        text: text,
-        url: UNIVERSE139_URL
+
+        title:
+          "Universe139",
+
+        text:
+          text,
+
+        url:
+          UNIVERSE139_URL
+
       });
 
       return;
@@ -3498,9 +4911,12 @@ async function shareSnapchat() {
 
       if (
         error &&
-        error.name === "AbortError"
+        error.name ===
+        "AbortError"
       ) {
+
         return;
+
       }
 
       console.error(
@@ -3512,7 +4928,9 @@ async function shareSnapchat() {
 
   }
 
+
   await copyShareTextWithNotice();
+
 
   window.open(
     "https://www.snapchat.com/",
@@ -3581,7 +4999,7 @@ async function shareMore() {
       if (
         error &&
         error.name !==
-          "AbortError"
+        "AbortError"
       ) {
 
         console.error(
@@ -3608,7 +5026,9 @@ async function shareMore() {
 // SHARE TOAST
 // ==========================================
 
-function showShareToast(text) {
+function showShareToast(
+  text
+) {
 
   const oldToast =
     document.getElementById(
@@ -3618,6 +5038,7 @@ function showShareToast(text) {
   if (oldToast) {
     oldToast.remove();
   }
+
 
   const toast =
     document.createElement("div");
@@ -3632,6 +5053,7 @@ function showShareToast(text) {
     toast
   );
 
+
   window.setTimeout(() => {
 
     toast.classList.add(
@@ -3640,11 +5062,13 @@ function showShareToast(text) {
 
   }, 20);
 
+
   window.setTimeout(() => {
 
     toast.classList.remove(
       "show"
     );
+
 
     window.setTimeout(() => {
 
@@ -3674,19 +5098,23 @@ function createSharePanel() {
     oldPanel.remove();
   }
 
+
   const t =
     translations[currentLanguage];
+
 
   const currentMessage =
     message
       ? message.textContent.trim()
       : "";
 
+
   const panel =
     document.createElement("div");
 
   panel.id =
     "universe139SharePanel";
+
 
   panel.innerHTML = `
 
@@ -3735,67 +5163,131 @@ function createSharePanel() {
 
       <div class="shareGrid">
 
-        <button class="shareOption" id="shareWhatsApp" type="button">
+        <button
+          class="shareOption"
+          id="shareWhatsApp"
+          type="button"
+        >
           WhatsApp
         </button>
 
-        <button class="shareOption" id="shareFacebook" type="button">
+        <button
+          class="shareOption"
+          id="shareFacebook"
+          type="button"
+        >
           Facebook
         </button>
 
-        <button class="shareOption" id="shareTelegram" type="button">
+        <button
+          class="shareOption"
+          id="shareTelegram"
+          type="button"
+        >
           Telegram
         </button>
 
-        <button class="shareOption" id="shareGmail" type="button">
+        <button
+          class="shareOption"
+          id="shareGmail"
+          type="button"
+        >
           Gmail
         </button>
 
-        <button class="shareOption" id="shareEmail" type="button">
+        <button
+          class="shareOption"
+          id="shareEmail"
+          type="button"
+        >
           Email
         </button>
 
-        <button class="shareOption" id="shareSMS" type="button">
+        <button
+          class="shareOption"
+          id="shareSMS"
+          type="button"
+        >
           SMS
         </button>
 
-        <button class="shareOption" id="shareLinkedIn" type="button">
+        <button
+          class="shareOption"
+          id="shareLinkedIn"
+          type="button"
+        >
           LinkedIn
         </button>
 
-        <button class="shareOption" id="shareReddit" type="button">
+        <button
+          class="shareOption"
+          id="shareReddit"
+          type="button"
+        >
           Reddit
         </button>
 
-        <button class="shareOption" id="shareViber" type="button">
+        <button
+          class="shareOption"
+          id="shareViber"
+          type="button"
+        >
           Viber
         </button>
 
-        <button class="shareOption" id="shareTikTok" type="button">
+        <button
+          class="shareOption"
+          id="shareTikTok"
+          type="button"
+        >
           TikTok
         </button>
 
-        <button class="shareOption" id="shareInstagram" type="button">
+        <button
+          class="shareOption"
+          id="shareInstagram"
+          type="button"
+        >
           Instagram
         </button>
 
-        <button class="shareOption" id="shareSnapchat" type="button">
+        <button
+          class="shareOption"
+          id="shareSnapchat"
+          type="button"
+        >
           Snapchat
         </button>
 
-        <button class="shareOption" id="sharePinterest" type="button">
+        <button
+          class="shareOption"
+          id="sharePinterest"
+          type="button"
+        >
           Pinterest
         </button>
 
-        <button class="shareOption" id="copyMessage" type="button">
+        <button
+          class="shareOption"
+          id="copyMessage"
+          type="button"
+        >
           ${t.copyMessage}
         </button>
 
-        <button class="shareOption" id="copyLink" type="button">
+        <button
+          class="shareOption"
+          id="copyLink"
+          type="button"
+        >
           ${t.copyLink}
         </button>
 
-        <button class="shareOption" id="shareMore" type="button">
+        <button
+          class="shareOption"
+          id="shareMore"
+          type="button"
+        >
           ${t.more}
         </button>
 
@@ -3805,9 +5297,11 @@ function createSharePanel() {
 
   `;
 
+
   document.body.appendChild(
     panel
   );
+
 
   addSharePanelStyles();
 
@@ -3816,6 +5310,7 @@ function createSharePanel() {
     document.getElementById(
       "shareClose"
     );
+
 
   if (closeButton) {
 
@@ -3831,6 +5326,7 @@ function createSharePanel() {
     panel.querySelector(
       ".shareOverlay"
     );
+
 
   if (overlay) {
 
@@ -3918,6 +5414,7 @@ function createSharePanel() {
       "copyMessage"
     );
 
+
   if (copyMessageButton) {
 
     copyMessageButton.addEventListener(
@@ -3938,6 +5435,7 @@ function createSharePanel() {
     document.getElementById(
       "copyLink"
     );
+
 
   if (copyLinkButton) {
 
@@ -3985,7 +5483,9 @@ function bindShareButton(
 // ESCAPE HTML
 // ==========================================
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   return String(value)
     .replace(
@@ -4027,9 +5527,11 @@ function closeSharePanel() {
     return;
   }
 
+
   panel.classList.add(
     "closing"
   );
+
 
   window.setTimeout(() => {
 
@@ -4056,41 +5558,55 @@ function addSharePanelStyles() {
     return;
   }
 
+
   const style =
     document.createElement("style");
 
+
   style.id =
     "universe139ShareStyles";
+
 
   style.textContent = `
 
     #universe139SharePanel {
 
-      position: fixed;
+      position:
+        fixed;
 
-      inset: 0;
+      inset:
+        0;
 
-      z-index: 10000;
+      z-index:
+        10000;
 
-      display: flex;
+      display:
+        flex;
 
-      align-items: center;
+      align-items:
+        center;
 
-      justify-content: center;
+      justify-content:
+        center;
 
-      padding: 20px;
+      padding:
+        20px;
 
       animation:
-        shareFadeIn .25s ease;
+        shareFadeIn
+        .25s
+        ease;
 
     }
 
 
     .shareOverlay {
 
-      position: absolute;
+      position:
+        absolute;
 
-      inset: 0;
+      inset:
+        0;
 
       background:
         rgba(5,2,20,.92);
@@ -4103,7 +5619,8 @@ function addSharePanelStyles() {
 
     .shareModal {
 
-      position: relative;
+      position:
+        relative;
 
       width:
         min(620px,100%);
@@ -4139,7 +5656,9 @@ function addSharePanelStyles() {
         center;
 
       animation:
-        shareModalIn .3s ease;
+        shareModalIn
+        .3s
+        ease;
 
     }
 
@@ -4190,7 +5709,8 @@ function addSharePanelStyles() {
         rgba(255,196,0,.12);
 
       border:
-        1px solid rgba(255,196,0,.35);
+        1px solid
+        rgba(255,196,0,.35);
 
       color:
         #ffd876;
@@ -4457,7 +5977,9 @@ function addSharePanelStyles() {
     #universe139SharePanel.closing {
 
       animation:
-        shareFadeOut .22s ease
+        shareFadeOut
+        .22s
+        ease
         forwards;
 
     }
@@ -4493,7 +6015,8 @@ function addSharePanelStyles() {
 
       from {
 
-        opacity: 0;
+        opacity:
+          0;
 
         transform:
           translateY(25px)
@@ -4503,7 +6026,8 @@ function addSharePanelStyles() {
 
       to {
 
-        opacity: 1;
+        opacity:
+          1;
 
         transform:
           translateY(0)
@@ -4564,6 +6088,7 @@ function addSharePanelStyles() {
 
   `;
 
+
   document.head.appendChild(
     style
   );
@@ -4596,142 +6121,11 @@ function shareMessage() {
 
   }
 
+
   createSharePanel();
 
 }
 
-
-// ==========================================
-// DAILY SUBSCRIPTION CTA
-// ADDITION ONLY — EXISTING APP UI UNCHANGED
-// ==========================================
-
-// Add your real subscription/payment URL here when ready.
-const UNIVERSE139_SUBSCRIPTION_URL = "";
-
-function createSubscriptionBox() {
-
-  if (document.getElementById("universe139SubscribeBox")) {
-    return;
-  }
-
-  const t = translations[currentLanguage];
-  const box = document.createElement("div");
-
-  box.id = "universe139SubscribeBox";
-
-  box.innerHTML = `
-    <div class="universe139SubscribeTitle">${escapeHTML(t.subscribeTitle)}</div>
-    <div class="universe139SubscribeText">${escapeHTML(t.subscribeText)}</div>
-    <button id="universe139SubscribeButton" class="universe139SubscribeButton" type="button">${escapeHTML(t.subscribeButton)}</button>
-  `;
-
-  // Add only the new subscription block; existing elements are untouched.
-  if (messageBox && messageBox.parentNode) {
-    messageBox.parentNode.insertBefore(box, messageBox.nextSibling);
-  }
-
-  subscribeBox = box;
-  subscribeButton = document.getElementById("universe139SubscribeButton");
-
-  addSubscriptionStyles();
-
-  if (subscribeButton) {
-    subscribeButton.addEventListener("click", startSubscription);
-  }
-}
-
-function startSubscription() {
-  if (UNIVERSE139_SUBSCRIPTION_URL) {
-    window.open(UNIVERSE139_SUBSCRIPTION_URL, "_blank", "noopener,noreferrer");
-    return;
-  }
-
-  showShareToast("Subscription link will be connected here.");
-}
-
-function showSubscriptionBox() {
-  createSubscriptionBox();
-  if (subscribeBox) {
-    subscribeBox.classList.remove("universe139SubscribeHidden");
-  }
-}
-
-function hideSubscriptionBox() {
-  if (subscribeBox) {
-    subscribeBox.classList.add("universe139SubscribeHidden");
-  }
-}
-
-function addSubscriptionStyles() {
-  if (document.getElementById("universe139SubscribeStyles")) {
-    return;
-  }
-
-  const style = document.createElement("style");
-  style.id = "universe139SubscribeStyles";
-  style.textContent = `
-    #universe139SubscribeBox {
-      width: min(620px, 100%);
-      margin: 18px auto 8px;
-      padding: 16px 18px;
-      box-sizing: border-box;
-      text-align: center;
-      border-radius: 18px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.12);
-      opacity: 0;
-      transform: translateY(10px);
-      animation: universe139SubscribeIn .7s ease forwards;
-    }
-    .universe139SubscribeTitle {
-      color: #ffffff;
-      font-size: 17px;
-      line-height: 1.35;
-      font-weight: 600;
-    }
-    .universe139SubscribeText {
-      margin-top: 5px;
-      color: rgba(255,255,255,.65);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .universe139SubscribeButton {
-      margin-top: 11px;
-      min-height: 42px;
-      padding: 9px 19px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      color: #ffffff;
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      transition: background .2s ease, border-color .2s ease, transform .2s ease;
-    }
-    .universe139SubscribeButton:hover {
-      background: rgba(255,255,255,.14);
-      border-color: rgba(255,255,255,.3);
-      transform: translateY(-1px);
-    }
-    .universe139SubscribeButton:active {
-      transform: scale(.97);
-    }
-    .universe139SubscribeHidden {
-      display: none !important;
-    }
-    @keyframes universe139SubscribeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width:600px) {
-      #universe139SubscribeBox { margin-top: 15px; padding: 14px 12px; }
-      .universe139SubscribeTitle { font-size: 16px; }
-    }
-  `;
-  document.head.appendChild(style);
-}
 
 // ==========================================
 // INITIALIZE EVENTS
@@ -4821,6 +6215,9 @@ function initializeState() {
     shareBtn
   );
 
+  hideSubscriptionBox();
+
+
   if (message) {
 
     message.textContent =
@@ -4852,6 +6249,7 @@ function initializeUniverse139() {
 
   initializeEvents();
 
+
   console.log(
     "Universe139 loaded successfully"
   );
@@ -4863,7 +6261,9 @@ function initializeUniverse139() {
 
   console.log(
     "Message database:",
-    Object.keys(messageTemplates)
+    Object.keys(
+      messageTemplates
+    )
   );
 
 }
@@ -4886,5 +6286,301 @@ if (
 } else {
 
   initializeUniverse139();
+
+}
+import crypto from "node:crypto";
+
+function getEnv(name) {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(
+      `${name} is not configured.`
+    );
+  }
+
+  return value.replace(/\/$/, "");
+}
+
+function normalizeEmail(value) {
+
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+
+}
+
+function validEmail(email) {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    email
+  );
+
+}
+
+function json(
+  res,
+  status,
+  body
+) {
+
+  res
+    .status(status)
+    .setHeader(
+      "Content-Type",
+      "application/json"
+    )
+    .end(
+      JSON.stringify(body)
+    );
+
+}
+
+async function supabaseRequest(
+  path,
+  options = {}
+) {
+
+  const url =
+    `${getEnv("SUPABASE_URL")}${path}`;
+
+  const key =
+    getEnv(
+      "SUPABASE_SERVICE_ROLE_KEY"
+    );
+
+  const headers = {
+
+    apikey:
+      key,
+
+    Authorization:
+      `Bearer ${key}`,
+
+    "Content-Type":
+      "application/json",
+
+    ...(options.headers || {})
+
+  };
+
+
+  const response =
+    await fetch(
+      url,
+      {
+        ...options,
+        headers
+      }
+    );
+
+
+  const text =
+    await response.text();
+
+
+  let data = null;
+
+
+  try {
+
+    data =
+      text
+        ? JSON.parse(text)
+        : null;
+
+  } catch {
+
+    data =
+      text;
+
+  }
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      typeof data === "string"
+        ? data
+        : JSON.stringify(data)
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+export default async function handler(
+  req,
+  res
+) {
+
+  if (
+    req.method !==
+    "POST"
+  ) {
+
+    return json(
+      res,
+      405,
+      {
+        error:
+          "Method not allowed."
+      }
+    );
+
+  }
+
+
+  try {
+
+    const email =
+      normalizeEmail(
+        req.body?.email
+      );
+
+
+    const language =
+      String(
+        req.body?.language ||
+        "en"
+      );
+
+
+    const allowedLanguages =
+      new Set([
+        "en",
+        "es",
+        "zh",
+        "ru",
+        "hi",
+        "th"
+      ]);
+
+
+    if (
+      !validEmail(email)
+    ) {
+
+      return json(
+        res,
+        400,
+        {
+          error:
+            "Invalid email."
+        }
+      );
+
+    }
+
+
+    if (
+      !allowedLanguages.has(
+        language
+      )
+    ) {
+
+      return json(
+        res,
+        400,
+        {
+          error:
+            "Invalid language."
+        }
+      );
+
+    }
+
+
+    const existing =
+      await supabaseRequest(
+        `/rest/v1/subscribers?select=id,active&email=eq.${encodeURIComponent(email)}&limit=1`,
+        {
+          method:
+            "GET"
+        }
+      );
+
+
+    const alreadySubscribed =
+      Array.isArray(
+        existing
+      ) &&
+      existing.length > 0 &&
+      existing[0].active ===
+        true;
+
+
+    const unsubscribeToken =
+      crypto.randomUUID();
+
+
+    await supabaseRequest(
+      `/rest/v1/subscribers?on_conflict=email`,
+      {
+
+        method:
+          "POST",
+
+        headers: {
+
+          Prefer:
+            "resolution=merge-duplicates,return=minimal"
+
+        },
+
+        body:
+          JSON.stringify({
+
+            email,
+
+            language,
+
+            active:
+              true,
+
+            unsubscribe_token:
+              unsubscribeToken
+
+          })
+
+      }
+    );
+
+
+    return json(
+      res,
+      200,
+      {
+        ok:
+          true,
+
+        alreadySubscribed
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 subscribe error:",
+      error
+    );
+
+
+    return json(
+      res,
+      500,
+      {
+        error:
+          "Unable to subscribe right now."
+      }
+    );
+
+  }
 
 }
