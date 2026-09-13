@@ -2245,75 +2245,183 @@ function closeSubscriptionForm() {
 
 async function submitSubscription() {
 
-  const emailInput = document.getElementById("universe139Email");
-  const submitButton = document.getElementById("universe139SubscribeSubmit");
-  const status = document.getElementById("universe139SubscribeStatus");
+  const emailInput =
+    document.getElementById("universe139Email");
+
+  const submitButton =
+    document.getElementById("universe139SubscribeSubmit");
+
+  const status =
+    document.getElementById("universe139SubscribeStatus");
 
   if (!emailInput) {
     return;
   }
 
-  const email = String(emailInput.value || "").trim().toLowerCase();
-  const emailIsValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+  const email =
+    String(emailInput.value || "")
+      .trim()
+      .toLowerCase();
+
+
+  // Reliable email validation
+  const atPosition =
+    email.indexOf("@");
+
+  const dotPosition =
+    email.lastIndexOf(".");
+
+  const emailIsValid =
+    email.length >= 5 &&
+    atPosition > 0 &&
+    dotPosition > atPosition + 1 &&
+    dotPosition < email.length - 1;
+
+
   if (!emailIsValid) {
+
     if (status) {
-      status.textContent = translations[currentLanguage].subscribeError;
-      status.className = "universe139SubscribeStatus universe139SubscribeError";
+
+      status.textContent =
+        translations[currentLanguage].subscribeError;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeError";
+
     }
+
     return;
   }
 
+
   if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.style.opacity = ".65";
+
+    submitButton.disabled =
+      true;
+
+    submitButton.style.opacity =
+      ".65";
+
   }
+
+
+  if (status) {
+
+    status.textContent =
+      "";
+
+    status.className =
+      "universe139SubscribeStatus";
+
+  }
+
 
   try {
 
-    const response = await fetch("/api/subscribe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        language: currentLanguage
-      })
-    });
+    const response =
+      await fetch(
+        "/api/subscribe",
+        {
+          method:
+            "POST",
 
-    const data = await response.json().catch(() => ({}));
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              email:
+                email,
+
+              language:
+                currentLanguage
+
+            })
+        }
+      );
+
+
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
+
 
     if (!response.ok) {
-      throw new Error(data.error || "Subscription failed.");
+
+      throw new Error(
+        data.error ||
+        "Subscription failed."
+      );
+
     }
+
 
     if (status) {
-      status.textContent = data.alreadySubscribed
-        ? translations[currentLanguage].subscribeAlready
-        : translations[currentLanguage].subscribeSuccess;
-      status.className = "universe139SubscribeStatus universe139SubscribeSuccess";
+
+      status.textContent =
+        data.alreadySubscribed
+          ? translations[
+              currentLanguage
+            ].subscribeAlready
+          : translations[
+              currentLanguage
+            ].subscribeSuccess;
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeSuccess";
+
     }
 
-    emailInput.value = "";
 
-    window.setTimeout(() => {
-      closeSubscriptionForm();
-    }, 2200);
+    emailInput.value =
+      "";
+
+
+    window.setTimeout(
+      () => {
+
+        closeSubscriptionForm();
+
+      },
+      2200
+    );
+
 
   } catch (error) {
 
-    console.error("Universe139 subscription error:", error);
+    console.error(
+      "Universe139 subscription error:",
+      error
+    );
+
 
     if (status) {
-      status.textContent = translations[currentLanguage].subscribeError;
-      status.className = "universe139SubscribeStatus universe139SubscribeError";
+
+      status.textContent =
+        "The subscription service is not connected yet.";
+
+      status.className =
+        "universe139SubscribeStatus universe139SubscribeError";
+
     }
 
+
     if (submitButton) {
-      submitButton.disabled = false;
-      submitButton.style.opacity = "1";
+
+      submitButton.disabled =
+        false;
+
+      submitButton.style.opacity =
+        "1";
+
     }
+
   }
+
 }
 
 function addSubscriptionStyles() {
