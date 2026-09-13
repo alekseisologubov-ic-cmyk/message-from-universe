@@ -608,7 +608,6 @@ function selectLanguage(language) {
       t.share;
   }
 
-  updateSubscriptionText();
 
   hideElement(languageBox);
   showElement(revealBtn);
