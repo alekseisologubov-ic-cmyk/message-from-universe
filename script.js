@@ -636,50 +636,86 @@ function selectLanguage(language) {
 
 function getRandomMessage() {
 
+  const language =
+    typeof currentLanguage !== "undefined"
+      ? currentLanguage
+      : "en";
+
   const messages =
-    messageTemplates[currentLanguage];
+    universe139500Messages[language] ||
+    universe139500Messages.en;
+
+  let state;
+
+  try {
+    state = JSON.parse(
+      localStorage.getItem(
+        "universe139_message_cycles_v3"
+      ) || "{}"
+    );
+  } catch (error) {
+    state = {};
+  }
 
   if (
-    !Array.isArray(messages) ||
-    messages.length === 0
+    !state[language] ||
+    !Array.isArray(state[language].order) ||
+    state[language].order.length !== 500
   ) {
-    return "";
+
+    state[language] = {
+      order: Array.from(
+        { length: 500 },
+        (_, index) => index
+      ),
+      index: 0
+    };
+
+    shuffleUniverse139(
+      state[language].order
+    );
   }
 
-  if (messages.length === 1) {
+  if (
+    state[language].index >= 500
+  ) {
 
-    lastMessage =
-      messages[0];
+    state[language] = {
+      order: Array.from(
+        { length: 500 },
+        (_, index) => index
+      ),
+      index: 0
+    };
 
-    return messages[0];
-
+    shuffleUniverse139(
+      state[language].order
+    );
   }
 
-  let newMessage = "";
+  const selectedIndex =
+    state[language].order[
+      state[language].index
+    ];
 
-  let attempts = 0;
+  state[language].index++;
 
-  do {
-
-    const randomIndex =
-      Math.floor(
-        Math.random() * messages.length
-      );
-
-    newMessage =
-      messages[randomIndex];
-
-    attempts++;
-
-  } while (
-    newMessage === lastMessage &&
-    attempts < 20
-  );
+  try {
+    localStorage.setItem(
+      "universe139_message_cycles_v3",
+      JSON.stringify(state)
+    );
+  } catch (error) {
+    console.warn(
+      "Universe139: message progress could not be saved.",
+      error
+    );
+  }
 
   lastMessage =
-    newMessage;
+    messages[selectedIndex];
 
-  return newMessage;
+  return messages[selectedIndex];
 }
 
 
