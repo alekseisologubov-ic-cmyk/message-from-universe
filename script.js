@@ -5442,3 +5442,619 @@ if (
   initializeUniverse139();
 
 }
+// ==========================================================
+// UNIVERSE139 - 500 MESSAGE NON-REPEAT SYSTEM
+// ADD THIS AT THE VERY BOTTOM OF script.js
+// ==========================================================
+
+(function installUniverse139MessageSystem() {
+
+  const STORAGE_KEY = "universe139_message_cycles_v2";
+  const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th"];
+
+  // --------------------------------------------------------
+  // 25 opening messages x 20 closing messages = 500
+  // unique messages per language.
+  // --------------------------------------------------------
+
+  const messageParts = {
+
+    en: {
+      openers: [
+        "Trust the feeling that keeps returning to your heart.",
+        "A quiet change is beginning to move through your life.",
+        "You are closer to a new beginning than you realize.",
+        "Your patience is creating space for something meaningful.",
+        "The path ahead is becoming clearer one step at a time.",
+        "Your intuition is noticing something your mind has not fully named.",
+        "A chapter that once felt uncertain is beginning to make sense.",
+        "There is more possibility around you than you can currently see.",
+        "Your energy is shifting toward something more peaceful.",
+        "A small decision today can open a surprisingly important door.",
+        "You have already learned enough to take the next step.",
+        "Something you have been waiting for is moving closer.",
+        "The pressure you have carried does not need to follow you forward.",
+        "Your heart knows when something feels right for you.",
+        "An unexpected moment may reveal a valuable direction.",
+        "You are allowed to begin again without explaining yourself.",
+        "Your recent effort is creating results beneath the surface.",
+        "A peaceful answer may arrive when you stop forcing the question.",
+        "The future is asking you to make room for something new.",
+        "Your courage is growing quietly through every experience.",
+        "What seems small today may become important later.",
+        "You do not need to know the entire road before moving forward.",
+        "A new perspective can change the way you see everything around you.",
+        "Your life is still capable of surprising you in beautiful ways.",
+        "The next step does not have to be perfect to be meaningful."
+      ],
+
+      closers: [
+        "Give yourself permission to move at your own pace.",
+        "Stay open to the opportunity that arrives naturally.",
+        "Listen carefully to what brings you peace.",
+        "Let today be lighter than yesterday.",
+        "Choose the direction that feels honest to you.",
+        "Do not dismiss the small signs that encourage you.",
+        "Make room for joy without needing a reason first.",
+        "Trust that progress can happen quietly.",
+        "Release the need to control every detail.",
+        "Take one small action and let it lead to the next.",
+        "Remember that rest can also be part of progress.",
+        "Allow yourself to notice how far you have already come.",
+        "Be patient with the timing of your own life.",
+        "Protect the energy you need for what matters most.",
+        "Let uncertainty exist without allowing it to stop you.",
+        "Give your attention to what you can build now.",
+        "Something better can begin with one simple choice.",
+        "Keep moving toward what feels meaningful.",
+        "Your story is still unfolding.",
+        "Let the next moment bring its own answer."
+      ]
+    },
+
+    es: {
+      openers: [
+        "Confía en ese sentimiento que sigue regresando a tu corazón.",
+        "Un cambio tranquilo está comenzando a moverse en tu vida.",
+        "Estás más cerca de un nuevo comienzo de lo que imaginas.",
+        "Tu paciencia está creando espacio para algo importante.",
+        "El camino que tienes delante se vuelve más claro paso a paso.",
+        "Tu intuición está notando algo que tu mente todavía no ha nombrado.",
+        "Un capítulo que parecía incierto comienza a tener sentido.",
+        "Hay más posibilidades a tu alrededor de las que puedes ver ahora.",
+        "Tu energía se está moviendo hacia algo más tranquilo.",
+        "Una pequeña decisión hoy puede abrir una puerta inesperadamente importante.",
+        "Ya has aprendido lo suficiente para dar el siguiente paso.",
+        "Algo que has estado esperando se está acercando.",
+        "La presión que has llevado contigo no tiene que seguir hacia el futuro.",
+        "Tu corazón sabe cuándo algo es correcto para ti.",
+        "Un momento inesperado puede mostrarte una dirección valiosa.",
+        "Tienes permiso para comenzar de nuevo sin dar explicaciones.",
+        "El esfuerzo reciente está creando resultados que aún no se ven.",
+        "Una respuesta tranquila puede llegar cuando dejas de forzar la pregunta.",
+        "El futuro te pide que hagas espacio para algo nuevo.",
+        "Tu valentía crece silenciosamente con cada experiencia.",
+        "Lo que hoy parece pequeño puede ser importante más adelante.",
+        "No necesitas conocer todo el camino para seguir avanzando.",
+        "Una nueva perspectiva puede cambiar la forma en que ves todo.",
+        "Tu vida todavía puede sorprenderte de maneras hermosas.",
+        "El siguiente paso no tiene que ser perfecto para tener significado."
+      ],
+
+      closers: [
+        "Date permiso para avanzar a tu propio ritmo.",
+        "Mantente abierto a la oportunidad que llegue de forma natural.",
+        "Escucha con atención lo que te trae paz.",
+        "Haz que hoy sea más ligero que ayer.",
+        "Elige la dirección que se sienta honesta para ti.",
+        "No ignores las pequeñas señales que te animan.",
+        "Haz espacio para la alegría sin necesitar una razón.",
+        "Confía en que el progreso también puede ocurrir en silencio.",
+        "Suelta la necesidad de controlar cada detalle.",
+        "Da un pequeño paso y deja que te lleve al siguiente.",
+        "Recuerda que descansar también forma parte del progreso.",
+        "Reconoce lo lejos que ya has llegado.",
+        "Sé paciente con el momento de tu propia vida.",
+        "Protege la energía que necesitas para lo que más importa.",
+        "Permite que exista la incertidumbre sin dejar que te detenga.",
+        "Pon tu atención en lo que puedes construir ahora.",
+        "Algo mejor puede comenzar con una decisión sencilla.",
+        "Sigue avanzando hacia lo que tiene significado para ti.",
+        "Tu historia todavía se está escribiendo.",
+        "Deja que el próximo momento traiga su propia respuesta."
+      ]
+    },
+
+    zh: {
+      openers: [
+        "相信那个不断回到你心里的感觉。",
+        "一个安静的变化正在你的生活中开始发生。",
+        "你比想象中更接近一个新的开始。",
+        "你的耐心正在为重要的事情创造空间。",
+        "眼前的道路正在一步一步变得更加清晰。",
+        "你的直觉正在注意到一些头脑还没有说出的事情。",
+        "曾经不确定的一段经历正在慢慢变得有意义。",
+        "你身边存在的可能性比现在看到的更多。",
+        "你的能量正在转向更加平静的方向。",
+        "今天一个小小的决定可能打开一扇重要的门。",
+        "你已经学到了足够多的东西，可以继续下一步。",
+        "你一直等待的事情正在慢慢靠近。",
+        "你曾经承受的压力不必继续陪伴你走向未来。",
+        "你的心知道什么才是真正适合你的。",
+        "一个意外的时刻可能让你看到有价值的方向。",
+        "你可以重新开始，不需要向任何人解释。",
+        "你最近的努力正在悄悄产生结果。",
+        "当你不再强迫答案时，平静的答案可能自然出现。",
+        "未来正在邀请你为新的事物腾出空间。",
+        "你的勇气正在随着每一次经历慢慢成长。",
+        "今天看似微小的事情以后可能变得重要。",
+        "你不需要知道整条路才能继续前进。",
+        "一个新的视角可以改变你看待周围一切的方式。",
+        "你的生活依然能够以美好的方式给你惊喜。",
+        "下一步不需要完美，也可以拥有意义。"
+      ],
+
+      closers: [
+        "允许自己按照自己的节奏前进。",
+        "对自然来到你身边的机会保持开放。",
+        "仔细聆听什么能带给你平静。",
+        "让今天比昨天轻盈一些。",
+        "选择那个对你来说真实的方向。",
+        "不要忽略那些鼓励你的微小信号。",
+        "不需要理由，也可以为快乐留出空间。",
+        "相信进步也可以悄悄发生。",
+        "放下必须掌控每一个细节的需要。",
+        "先迈出一个小小的步伐，再让它带来下一步。",
+        "记住，休息也是成长的一部分。",
+        "看看自己已经走了多远。",
+        "对属于你的人生时机保持耐心。",
+        "保护那些真正重要的事情所需要的能量。",
+        "允许不确定存在，但不要让它阻止你。",
+        "把注意力放在你现在能够创造的事情上。",
+        "更好的事情可能从一个简单的选择开始。",
+        "继续走向那些对你有意义的事物。",
+        "你的故事仍然在继续展开。",
+        "让下一个时刻带来属于它自己的答案。"
+      ]
+    },
+
+    ru: {
+      openers: [
+        "Доверься тому чувству, которое снова возвращается в твоё сердце.",
+        "Тихие перемены начинают проходить через твою жизнь.",
+        "Ты ближе к новому началу, чем можешь себе представить.",
+        "Твоё терпение создаёт пространство для чего-то важного.",
+        "Путь впереди становится яснее шаг за шагом.",
+        "Твоя интуиция замечает то, чему разум пока не дал названия.",
+        "Глава, которая казалась неопределённой, начинает обретать смысл.",
+        "Вокруг тебя больше возможностей, чем ты сейчас видишь.",
+        "Твоя энергия движется к чему-то более спокойному.",
+        "Маленькое решение сегодня может открыть неожиданно важную дверь.",
+        "Ты уже узнал достаточно, чтобы сделать следующий шаг.",
+        "То, чего ты ждал, становится ближе.",
+        "Давление, которое ты нёс на себе, не обязано идти с тобой дальше.",
+        "Твоё сердце знает, когда что-то действительно подходит тебе.",
+        "Неожиданный момент может показать тебе ценное направление.",
+        "Ты можешь начать заново, не объясняя себя никому.",
+        "Твои недавние усилия уже создают результаты, которые пока не видны.",
+        "Спокойный ответ может прийти, когда ты перестанешь заставлять себя его искать.",
+        "Будущее просит тебя освободить место для нового.",
+        "Твоя смелость тихо растёт благодаря каждому опыту.",
+        "То, что сегодня кажется маленьким, позже может стать важным.",
+        "Тебе не нужно знать весь путь, чтобы двигаться вперёд.",
+        "Новый взгляд может изменить то, как ты видишь всё вокруг.",
+        "Твоя жизнь всё ещё способна удивлять тебя прекрасным образом.",
+        "Следующий шаг не обязан быть идеальным, чтобы иметь значение."
+      ],
+
+      closers: [
+        "Позволь себе двигаться в своём собственном ритме.",
+        "Оставайся открытым к возможности, которая придёт естественно.",
+        "Внимательно слушай то, что приносит тебе спокойствие.",
+        "Пусть сегодняшний день будет легче вчерашнего.",
+        "Выбери направление, которое кажется тебе честным.",
+        "Не игнорируй маленькие знаки, которые поддерживают тебя.",
+        "Оставь место для радости, даже если для неё нет причины.",
+        "Поверь, что прогресс может происходить тихо.",
+        "Отпусти необходимость контролировать каждую деталь.",
+        "Сделай один маленький шаг и позволь ему привести к следующему.",
+        "Помни, что отдых тоже является частью движения вперёд.",
+        "Заметь, как далеко ты уже смог пройти.",
+        "Будь терпелив к своему собственному времени.",
+        "Береги энергию, которая нужна тебе для самого важного.",
+        "Позволь неопределённости существовать, не позволяя ей остановить тебя.",
+        "Направь внимание на то, что ты можешь создать сейчас.",
+        "Что-то лучшее может начаться с одного простого выбора.",
+        "Продолжай двигаться к тому, что имеет для тебя значение.",
+        "Твоя история всё ещё продолжается.",
+        "Позволь следующему моменту принести свой собственный ответ."
+      ]
+    },
+
+    hi: {
+      openers: [
+        "उस एहसास पर भरोसा करें जो बार-बार आपके दिल में लौटता है।",
+        "आपके जीवन में एक शांत बदलाव शुरू हो रहा है।",
+        "आप एक नई शुरुआत के जितने करीब हैं, उससे अधिक जितना आप सोचते हैं।",
+        "आपका धैर्य किसी महत्वपूर्ण चीज़ के लिए जगह बना रहा है।",
+        "आपके सामने का रास्ता हर कदम के साथ अधिक स्पष्ट हो रहा है।",
+        "आपका अंतर्ज्ञान कुछ ऐसा महसूस कर रहा है जिसे आपका मन अभी शब्द नहीं दे पाया है।",
+        "एक ऐसा अध्याय जो कभी अनिश्चित लगा था अब अर्थपूर्ण होने लगा है।",
+        "आपके आसपास जितनी संभावनाएँ हैं, वे आपकी वर्तमान कल्पना से अधिक हैं।",
+        "आपकी ऊर्जा अधिक शांत दिशा की ओर बढ़ रही है।",
+        "आज लिया गया एक छोटा निर्णय एक महत्वपूर्ण दरवाज़ा खोल सकता है।",
+        "आपने अगला कदम उठाने के लिए पर्याप्त सीख लिया है।",
+        "जिस चीज़ का आप इंतज़ार कर रहे थे वह आपके करीब आ रही है।",
+        "जिस दबाव को आपने उठाया है उसे भविष्य में अपने साथ ले जाना ज़रूरी नहीं है।",
+        "आपका दिल जानता है कि आपके लिए क्या सही महसूस होता है।",
+        "एक अप्रत्याशित क्षण आपको एक मूल्यवान दिशा दिखा सकता है।",
+        "आप बिना किसी को समझाए फिर से शुरुआत कर सकते हैं।",
+        "आपकी हाल की मेहनत ऐसे परिणाम बना रही है जो अभी दिखाई नहीं दे रहे।",
+        "जब आप उत्तर को मजबूर करना छोड़ देते हैं तब शांत उत्तर सामने आ सकता है।",
+        "भविष्य आपसे किसी नई चीज़ के लिए जगह बनाने को कह रहा है।",
+        "हर अनुभव के साथ आपका साहस धीरे-धीरे बढ़ रहा है।",
+        "जो आज छोटा लगता है वह बाद में महत्वपूर्ण बन सकता है।",
+        "आगे बढ़ने के लिए आपको पूरी राह जानना ज़रूरी नहीं है।",
+        "एक नया दृष्टिकोण आपके आसपास की हर चीज़ को देखने का तरीका बदल सकता है।",
+        "आपका जीवन अभी भी आपको सुंदर तरीकों से आश्चर्यचकित कर सकता है।",
+        "अगला कदम सही होने की जरूरत नहीं, अर्थपूर्ण होना काफी है।"
+      ],
+
+      closers: [
+        "खुद को अपनी गति से आगे बढ़ने की अनुमति दें।",
+        "उस अवसर के लिए खुले रहें जो स्वाभाविक रूप से आपके पास आए।",
+        "ध्यान से सुनें कि आपके भीतर शांति क्या लाती है।",
+        "आज को कल से थोड़ा हल्का होने दें।",
+        "वही दिशा चुनें जो आपके लिए सच्ची महसूस होती है।",
+        "उन छोटी निशानियों को नजरअंदाज न करें जो आपको आगे बढ़ाती हैं।",
+        "बिना किसी कारण की जरूरत के भी खुशी के लिए जगह बनाएं।",
+        "विश्वास रखें कि प्रगति शांत तरीके से भी हो सकती है।",
+        "हर चीज़ को नियंत्रित करने की आवश्यकता को छोड़ दें।",
+        "एक छोटा कदम उठाएं और उसे अगले कदम तक ले जाने दें।",
+        "याद रखें कि आराम भी प्रगति का हिस्सा हो सकता है।",
+        "ध्यान दें कि आप पहले ही कितनी दूर आ चुके हैं।",
+        "अपने जीवन के सही समय के प्रति धैर्य रखें।",
+        "उस ऊर्जा की रक्षा करें जिसकी आपको सबसे महत्वपूर्ण चीज़ों के लिए जरूरत है।",
+        "अनिश्चितता को रहने दें, लेकिन उसे आपको रोकने न दें।",
+        "अपना ध्यान उस चीज़ पर दें जिसे आप अभी बना सकते हैं।",
+        "कुछ बेहतर एक सरल निर्णय से शुरू हो सकता है।",
+        "उस दिशा में बढ़ते रहें जो आपके लिए अर्थपूर्ण है।",
+        "आपकी कहानी अभी भी आगे लिखी जा रही है।",
+        "अगले क्षण को अपना उत्तर स्वयं लाने दें।"
+      ]
+    },
+
+    th: {
+      openers: [
+        "เชื่อในความรู้สึกที่ยังคงกลับมาในหัวใจของคุณ",
+        "การเปลี่ยนแปลงอย่างเงียบ ๆ กำลังเริ่มเกิดขึ้นในชีวิตของคุณ",
+        "คุณใกล้จะได้เริ่มต้นบทใหม่มากกว่าที่คิด",
+        "ความอดทนของคุณกำลังสร้างพื้นที่ให้สิ่งสำคัญบางอย่าง",
+        "เส้นทางข้างหน้ากำลังชัดเจนขึ้นทีละก้าว",
+        "สัญชาตญาณของคุณกำลังสังเกตบางสิ่งที่ใจของคุณยังเรียกชื่อไม่ได้",
+        "บทหนึ่งที่เคยดูไม่แน่นอนกำลังเริ่มมีความหมาย",
+        "รอบตัวคุณมีความเป็นไปได้มากกว่าที่คุณมองเห็นในตอนนี้",
+        "พลังของคุณกำลังเคลื่อนไปสู่ความสงบมากขึ้น",
+        "การตัดสินใจเล็ก ๆ ในวันนี้อาจเปิดประตูสำคัญอย่างคาดไม่ถึง",
+        "คุณเรียนรู้มากพอที่จะก้าวไปข้างหน้าแล้ว",
+        "สิ่งที่คุณรอคอยกำลังเข้ามาใกล้",
+        "ความกดดันที่คุณแบกไว้ไม่จำเป็นต้องเดินทางไปกับคุณต่อ",
+        "หัวใจของคุณรู้ว่าอะไรเหมาะสมกับคุณ",
+        "ช่วงเวลาที่ไม่คาดคิดอาจเผยทิศทางที่มีคุณค่า",
+        "คุณสามารถเริ่มต้นใหม่ได้โดยไม่ต้องอธิบายตัวเอง",
+        "ความพยายามล่าสุดของคุณกำลังสร้างผลลัพธ์ที่ยังมองไม่เห็น",
+        "คำตอบที่สงบอาจปรากฏเมื่อคุณหยุดบังคับให้ตัวเองต้องรู้ทันที",
+        "อนาคตกำลังขอให้คุณเปิดพื้นที่สำหรับสิ่งใหม่",
+        "ความกล้าของคุณกำลังเติบโตอย่างเงียบ ๆ จากทุกประสบการณ์",
+        "สิ่งที่ดูเล็กในวันนี้อาจมีความสำคัญในภายหลัง",
+        "คุณไม่จำเป็นต้องรู้ทุกเส้นทางเพื่อก้าวไปข้างหน้า",
+        "มุมมองใหม่สามารถเปลี่ยนวิธีที่คุณมองทุกสิ่งรอบตัว",
+        "ชีวิตของคุณยังสามารถทำให้คุณประหลาดใจในแบบที่สวยงาม",
+        "ก้าวต่อไปไม่จำเป็นต้องสมบูรณ์แบบจึงจะมีความหมาย"
+      ],
+
+      closers: [
+        "อนุญาตให้ตัวเองเดินไปตามจังหวะของคุณเอง",
+        "เปิดใจให้กับโอกาสที่เข้ามาอย่างเป็นธรรมชาติ",
+        "ฟังอย่างตั้งใจว่าสิ่งใดนำความสงบมาให้คุณ",
+        "ปล่อยให้วันนี้เบากว่าเมื่อวาน",
+        "เลือกทิศทางที่รู้สึกจริงใจกับตัวคุณ",
+        "อย่ามองข้ามสัญญาณเล็ก ๆ ที่คอยสนับสนุนคุณ",
+        "สร้างพื้นที่ให้ความสุขโดยไม่ต้องมีเหตุผล",
+        "เชื่อว่าความก้าวหน้าสามารถเกิดขึ้นอย่างเงียบ ๆ ได้",
+        "ปล่อยความจำเป็นที่จะต้องควบคุมทุกรายละเอียด",
+        "ก้าวเล็ก ๆ หนึ่งก้าวแล้วปล่อยให้มันนำไปสู่ก้าวต่อไป",
+        "จำไว้ว่าการพักก็เป็นส่วนหนึ่งของความก้าวหน้า",
+        "มองเห็นว่าคุณเดินมาไกลแค่ไหนแล้ว",
+        "อดทนกับจังหวะเวลาของชีวิตของคุณเอง",
+        "ปกป้องพลังที่คุณต้องใช้กับสิ่งสำคัญที่สุด",
+        "ยอมรับความไม่แน่นอนโดยไม่ปล่อยให้มันหยุดคุณ",
+        "ใส่ใจกับสิ่งที่คุณสามารถสร้างได้ในตอนนี้",
+        "สิ่งที่ดีกว่าอาจเริ่มจากการเลือกง่าย ๆ เพียงครั้งเดียว",
+        "เดินหน้าต่อไปหาสิ่งที่มีความหมายสำหรับคุณ",
+        "เรื่องราวของคุณยังคงดำเนินต่อไป",
+        "ปล่อยให้ช่วงเวลาถัดไปนำคำตอบของมันมาเอง"
+      ]
+    }
+
+  };
+
+  // --------------------------------------------------------
+  // BUILD EXACTLY 500 UNIQUE MESSAGES PER LANGUAGE
+  // --------------------------------------------------------
+
+  const fiveHundredMessages = {};
+
+  LANGUAGES.forEach(language => {
+
+    const parts = messageParts[language];
+
+    if (!parts ||
+        parts.openers.length !== 25 ||
+        parts.closers.length !== 20) {
+      console.error(
+        "Universe139: invalid message database for",
+        language
+      );
+      return;
+    }
+
+    const list = [];
+
+    for (let a = 0; a < parts.openers.length; a++) {
+      for (let b = 0; b < parts.closers.length; b++) {
+
+        const text =
+          parts.openers[a] +
+          " " +
+          parts.closers[b];
+
+        list.push(text);
+      }
+    }
+
+    // Safety check
+    const unique = new Set(list);
+
+    if (list.length !== 500 || unique.size !== 500) {
+      console.error(
+        "Universe139: message count problem for",
+        language,
+        list.length,
+        unique.size
+      );
+      return;
+    }
+
+    fiveHundredMessages[language] = list;
+  });
+
+  // --------------------------------------------------------
+  // STORAGE
+  // --------------------------------------------------------
+
+  function loadState() {
+
+    try {
+
+      const raw =
+        localStorage.getItem(STORAGE_KEY);
+
+      if (!raw) {
+        return {};
+      }
+
+      const parsed =
+        JSON.parse(raw);
+
+      return parsed && typeof parsed === "object"
+        ? parsed
+        : {};
+
+    } catch (error) {
+
+      console.warn(
+        "Universe139: unable to load message history.",
+        error
+      );
+
+      return {};
+    }
+  }
+
+  function saveState(state) {
+
+    try {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+      );
+
+    } catch (error) {
+
+      console.warn(
+        "Universe139: unable to save message history.",
+        error
+      );
+
+    }
+  }
+
+  // --------------------------------------------------------
+  // SHUFFLE
+  // --------------------------------------------------------
+
+  function shuffle(array) {
+
+    const result =
+      [...array];
+
+    for (
+      let i = result.length - 1;
+      i > 0;
+      i--
+    ) {
+
+      const j =
+        Math.floor(
+          Math.random() * (i + 1)
+        );
+
+      const temp =
+        result[i];
+
+      result[i] =
+        result[j];
+
+      result[j] =
+        temp;
+    }
+
+    return result;
+  }
+
+  // --------------------------------------------------------
+  // GET / CREATE CURRENT CYCLE
+  // --------------------------------------------------------
+
+  function getLanguageState(state, language) {
+
+    if (
+      !state[language] ||
+      !Array.isArray(state[language].order) ||
+      state[language].order.length !== 500 ||
+      typeof state[language].index !== "number"
+    ) {
+
+      state[language] = {
+
+        order:
+          shuffle(
+            Array.from(
+              { length: 500 },
+              (_, index) => index
+            )
+          ),
+
+        index: 0
+      };
+
+      saveState(state);
+    }
+
+    // Repair invalid index
+    if (
+      state[language].index < 0 ||
+      state[language].index > 500
+    ) {
+
+      state[language].index = 0;
+      saveState(state);
+    }
+
+    return state[language];
+  }
+
+  // --------------------------------------------------------
+  // NEW getRandomMessage()
+  //
+  // IMPORTANT:
+  // This replaces the old getRandomMessage() function.
+  // --------------------------------------------------------
+
+  window.universe139GetNextMessage =
+    function() {
+
+      const language =
+        window.currentLanguage ||
+        (
+          typeof currentLanguage !== "undefined"
+            ? currentLanguage
+            : "en"
+        );
+
+      const messages =
+        fiveHundredMessages[language] ||
+        fiveHundredMessages.en;
+
+      const state =
+        loadState();
+
+      const languageState =
+        getLanguageState(
+          state,
+          fiveHundredMessages[language]
+            ? language
+            : "en"
+        );
+
+      // Start a fresh shuffled cycle after
+      // all 500 messages have been used.
+      if (
+        languageState.index >= 500
+      ) {
+
+        languageState.order =
+          shuffle(
+            Array.from(
+              { length: 500 },
+              (_, index) => index
+            )
+          );
+
+        languageState.index = 0;
+      }
+
+      const messageIndex =
+        languageState.order[
+          languageState.index
+        ];
+
+      const selectedMessage =
+        messages[messageIndex];
+
+      languageState.index++;
+
+      saveState(state);
+
+      return selectedMessage;
+    };
+
+  // --------------------------------------------------------
+  // OVERRIDE THE FUNCTION USED BY THE EXISTING APP
+  // --------------------------------------------------------
+
+  window.getRandomMessage =
+    window.universe139GetNextMessage;
+
+  // The original code calls getRandomMessage()
+  // directly. Replace it globally where possible.
+  //
+  // This function declaration is intentionally placed
+  // here so future calls use the new system.
+  getRandomMessage =
+    window.universe139GetNextMessage;
+
+  // --------------------------------------------------------
+  // DEBUG INFORMATION
+  // --------------------------------------------------------
+
+  console.log(
+    "Universe139: 500-message system installed."
+  );
+
+  LANGUAGES.forEach(language => {
+
+    console.log(
+      "Universe139:",
+      language,
+      fiveHundredMessages[language]
+        ? fiveHundredMessages[language].length
+        : 0,
+      "messages"
+    );
+
+  });
+
+})();
