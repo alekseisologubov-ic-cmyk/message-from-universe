@@ -918,6 +918,228 @@
 
     }
 
+
+
+    /* ==========================================================
+       UNIVERSE139 DYNAMIC MESSAGE EFFECTS
+       ========================================================== */
+
+    #universeMessageEffect {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 1;
+    }
+
+    /* ==========================================================
+       MONEY / WEALTH EFFECT
+       ========================================================== */
+
+    #moneyRain {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity .8s ease;
+    }
+
+    .moneyItem {
+      position: absolute;
+      top: -12vh;
+      width: 34px;
+      height: 18px;
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(255,245,160,1) 0%,
+          rgba(255,207,55,.95) 45%,
+          rgba(185,120,15,.9) 100%
+        );
+      box-shadow:
+        0 0 10px rgba(255,215,70,.9),
+        0 0 24px rgba(255,190,30,.45);
+      animation: moneyFall linear forwards;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .moneyItem::before {
+      content: "$";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(100,60,0,.9);
+    }
+
+    @keyframes moneyFall {
+      0% {
+        transform: translateY(-15vh) translateX(0) rotate(0deg) scale(.7);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: .95;
+      }
+
+      50% {
+        transform: translateY(55vh) translateX(35px) rotate(180deg) scale(1);
+      }
+
+      100% {
+        transform: translateY(120vh) translateX(-45px) rotate(420deg) scale(.75);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================================
+       PLANET EFFECT
+       ========================================================== */
+
+    #planetEffect {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .planet {
+      position: relative;
+      width: min(42vw, 390px);
+      height: min(42vw, 390px);
+      min-width: 230px;
+      min-height: 230px;
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          circle at 32% 28%,
+          rgba(255,255,255,.55) 0%,
+          rgba(150,130,220,.38) 12%,
+          rgba(70,40,140,.55) 34%,
+          rgba(20,12,55,.96) 72%,
+          rgba(3,2,10,1) 100%
+        );
+      box-shadow:
+        0 0 35px rgba(175,120,255,.55),
+        0 0 100px rgba(110,55,255,.35),
+        0 0 190px rgba(75,30,180,.22);
+      animation: planetFloat 7s ease-in-out infinite;
+      overflow: hidden;
+      will-change: transform;
+    }
+
+    .planetSurface {
+      position: absolute;
+      inset: -15%;
+      border-radius: 50%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 16px,
+          rgba(180,145,255,.12) 18px,
+          transparent 28px
+        );
+      animation: planetRotate 12s linear infinite;
+      opacity: .7;
+      will-change: transform;
+    }
+
+    .planetAtmosphere {
+      position: absolute;
+      inset: -8%;
+      border-radius: 50%;
+      border: 2px solid rgba(205,170,255,.35);
+      box-shadow:
+        inset 0 0 35px rgba(180,120,255,.35),
+        0 0 30px rgba(190,130,255,.35);
+      pointer-events: none;
+    }
+
+    .planetGlow {
+      position: absolute;
+      inset: -30%;
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(190,130,255,.18) 0%,
+          rgba(110,50,220,.12) 35%,
+          transparent 70%
+        );
+      animation: planetGlowPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes planetRotate {
+      0% {
+        transform: translateX(-10%);
+      }
+
+      50% {
+        transform: translateX(10%);
+      }
+
+      100% {
+        transform: translateX(-10%);
+      }
+    }
+
+    @keyframes planetFloat {
+      0% {
+        transform: translateY(0) scale(.95);
+      }
+
+      50% {
+        transform: translateY(-12px) scale(1);
+      }
+
+      100% {
+        transform: translateY(0) scale(.95);
+      }
+    }
+
+    @keyframes planetGlowPulse {
+      0% {
+        opacity: .45;
+        transform: scale(.9);
+      }
+
+      50% {
+        opacity: .9;
+        transform: scale(1.08);
+      }
+
+      100% {
+        opacity: .45;
+        transform: scale(.9);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .planet {
+        width: 250px;
+        height: 250px;
+        min-width: 250px;
+        min-height: 250px;
+      }
+
+      .moneyItem {
+        width: 27px;
+        height: 15px;
+      }
+    }
+
   </style>
 
 </head>
@@ -948,34 +1170,42 @@
   </video>
 
 
+  <!-- Dark readability overlay -->
+
   <div
-  id="universeBackgroundOverlay"
-  aria-hidden="true"
-></div>
+    id="universeBackgroundOverlay"
+    aria-hidden="true"
+  ></div>
 
-<!-- ===================================================
-     DYNAMIC MESSAGE EFFECT
-     =================================================== -->
 
-<div
-  id="universeMessageEffect"
-  aria-hidden="true"
->
-  <div id="moneyRain"></div>
+  <!-- ===================================================
+       DYNAMIC MESSAGE EFFECTS
+       =================================================== -->
 
-  <div id="planetEffect">
-    <div class="planet">
-      <div class="planetGlow"></div>
-      <div class="planetSurface"></div>
-      <div class="planetAtmosphere"></div>
+  <div
+    id="universeMessageEffect"
+    aria-hidden="true"
+  >
+
+    <div id="moneyRain"></div>
+
+    <div id="planetEffect">
+
+      <div class="planet">
+        <div class="planetGlow"></div>
+        <div class="planetSurface"></div>
+        <div class="planetAtmosphere"></div>
+      </div>
+
     </div>
-  </div>
-</div>
 
-<div
-  class="stars"
-  aria-hidden="true"
-></div>
+  </div>
+
+
+  <!-- Existing star layer -->
+
+  <div
+    class="stars"
     aria-hidden="true"
   ></div>
 
