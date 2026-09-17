@@ -189,10 +189,10 @@
 
 
       width:
-        100%;
+        92%;
 
       height:
-        100%;
+        92%;
 
 
       z-index:
@@ -1159,7 +1159,6 @@
 
   <video
     id="universeBackgroundVideo"
-    autoplay
     muted
     loop
     playsinline
@@ -1500,91 +1499,46 @@
 
     (function () {
 
-      const video =
-        document.getElementById(
-          "universeBackgroundVideo"
-        );
+      const video = document.getElementById("universeBackgroundVideo");
+      const revealBtn = document.getElementById("revealBtn");
+      const againBtn = document.getElementById("againBtn");
+      const messageBox = document.getElementById("messageBox");
 
+      if (!video) return;
 
-      if (!video) {
-        return;
-      }
-
-
-      video.muted =
-        true;
-
-
-      video.defaultMuted =
-        true;
-
-
-      video.playsInline =
-        true;
-
-
-      /*
-        Some mobile browsers may pause
-        autoplay after page load.
-        Try playback again without
-        interfering with the rest of
-        the application.
-      */
-
-      // Force the background video to be ready and playing as soon as
-      // the page loads. It stays muted so browsers allow autoplay.
-      video.setAttribute("autoplay", "");
-      video.setAttribute("muted", "");
-      video.setAttribute("playsinline", "");
-      video.autoplay = true;
       video.muted = true;
       video.defaultMuted = true;
       video.playsInline = true;
+      video.autoplay = false;
+      video.removeAttribute("autoplay");
+      video.pause();
+      try { video.currentTime = 0; } catch (_) {}
 
-      const playVideo = () => {
-        video.muted = true;
+      function playFromStart() {
+        try { video.currentTime = 0; } catch (_) {}
         const promise = video.play();
-        if (promise && typeof promise.catch === "function") {
-          promise.catch(() => {});
-        }
-      };
-
-      // Start immediately, and retry when the video becomes ready.
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", playVideo, { once: true });
-      } else {
-        playVideo();
+        if (promise && typeof promise.catch === "function") promise.catch(() => {});
       }
 
-      video.addEventListener("loadeddata", playVideo);
-      video.addEventListener("canplay", playVideo);
-      video.addEventListener("canplaythrough", playVideo);
+      function pauseVideo() {
+        video.pause();
+      }
 
+      if (revealBtn) revealBtn.addEventListener("click", playFromStart);
+      if (againBtn) againBtn.addEventListener("click", playFromStart);
 
-      document.addEventListener(
-        "visibilitychange",
-        () => {
+      if (messageBox) {
+        const observer = new MutationObserver(() => {
+          if (!messageBox.classList.contains("hidden")) pauseVideo();
+        });
+        observer.observe(messageBox, { attributes: true, attributeFilter: ["class"] });
+      }
 
-          if (
-            !document.hidden
-          ) {
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) pauseVideo();
+      });
 
-            playVideo();
-
-          }
-
-        }
-      );
-
-
-      /*
-        Make sure the video stays behind
-        the application when the browser
-        changes stacking contexts.
-      */
-
-      video.style.zIndex =
-        "0";
+      video.addEventListener("ended", pauseVideo);
 
     })();
 
