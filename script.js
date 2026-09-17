@@ -6094,3 +6094,730 @@ if (
   });
 
 })();
+// ==========================================================
+// UNIVERSE139 - DYNAMIC MESSAGE BACKGROUND EFFECTS
+// ADDITION ONLY - EXISTING APP PRESERVED
+// ==========================================================
+
+(function installUniverse139DynamicEffects() {
+
+  // --------------------------------------------------------
+  // Make sure the effect layer exists.
+  // This is a safe fallback even if the HTML layer is missing.
+  // --------------------------------------------------------
+
+  function ensureEffectLayer() {
+
+    let effectRoot =
+      document.getElementById("universeMessageEffect");
+
+    if (!effectRoot) {
+
+      effectRoot =
+        document.createElement("div");
+
+      effectRoot.id =
+        "universeMessageEffect";
+
+      effectRoot.innerHTML = `
+        <div id="moneyRain" aria-hidden="true"></div>
+        <div id="planetEffect" aria-hidden="true">
+          <div class="planet">
+            <div class="planetGlow"></div>
+            <div class="planetSurface"></div>
+            <div class="planetAtmosphere"></div>
+          </div>
+        </div>
+      `;
+
+      document.body.insertBefore(
+        effectRoot,
+        document.body.firstChild
+      );
+    }
+
+    let moneyRain =
+      document.getElementById("moneyRain");
+
+    if (!moneyRain) {
+
+      moneyRain =
+        document.createElement("div");
+
+      moneyRain.id =
+        "moneyRain";
+
+      effectRoot.appendChild(
+        moneyRain
+      );
+    }
+
+    let planetEffect =
+      document.getElementById("planetEffect");
+
+    if (!planetEffect) {
+
+      planetEffect =
+        document.createElement("div");
+
+      planetEffect.id =
+        "planetEffect";
+
+      planetEffect.innerHTML = `
+        <div class="planet">
+          <div class="planetGlow"></div>
+          <div class="planetSurface"></div>
+          <div class="planetAtmosphere"></div>
+        </div>
+      `;
+
+      effectRoot.appendChild(
+        planetEffect
+      );
+    }
+
+    return {
+      effectRoot,
+      moneyRain,
+      planetEffect
+    };
+  }
+
+
+  // --------------------------------------------------------
+  // CSS - injected only once.
+  // --------------------------------------------------------
+
+  function ensureEffectStyles() {
+
+    if (
+      document.getElementById(
+        "universe139DynamicEffectStyles"
+      )
+    ) {
+      return;
+    }
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "universe139DynamicEffectStyles";
+
+    style.textContent = `
+
+      /* ====================================================
+         DYNAMIC EFFECT ROOT
+         ==================================================== */
+
+      #universeMessageEffect {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: 1;
+      }
+
+      /* Keep the existing application above effects. */
+      .container {
+        position: relative;
+        z-index: 3;
+      }
+
+      /* ====================================================
+         MONEY RAIN
+         ==================================================== */
+
+      #moneyRain {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity .65s ease;
+      }
+
+      .moneyItem {
+        position: absolute;
+        top: -12vh;
+        width: 34px;
+        height: 19px;
+        border-radius: 50%;
+        background:
+          radial-gradient(
+            ellipse at center,
+            rgba(255,248,185,1) 0%,
+            rgba(255,214,70,.98) 42%,
+            rgba(188,124,12,.96) 100%
+          );
+        box-shadow:
+          0 0 8px rgba(255,225,110,.95),
+          0 0 20px rgba(255,194,35,.65),
+          0 0 38px rgba(255,171,20,.28);
+        animation:
+          universe139MoneyFall linear forwards;
+        transform-origin: center;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .moneyItem::before {
+        content: "$";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        color: rgba(103,65,0,.92);
+      }
+
+      @keyframes universe139MoneyFall {
+
+        0% {
+          opacity: 0;
+          transform:
+            translate3d(0,-15vh,0)
+            rotate(0deg)
+            scale(.72);
+        }
+
+        10% {
+          opacity: .95;
+        }
+
+        35% {
+          transform:
+            translate3d(25px,35vh,0)
+            rotate(150deg)
+            scale(1);
+        }
+
+        65% {
+          opacity: .8;
+          transform:
+            translate3d(-25px,72vh,0)
+            rotate(290deg)
+            scale(.92);
+        }
+
+        100% {
+          opacity: 0;
+          transform:
+            translate3d(35px,120vh,0)
+            rotate(520deg)
+            scale(.72);
+        }
+      }
+
+      /* ====================================================
+         PLANET
+         ==================================================== */
+
+      #planetEffect {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+
+      .planet {
+        position: relative;
+        width: min(42vw, 380px);
+        height: min(42vw, 380px);
+        min-width: 220px;
+        min-height: 220px;
+        border-radius: 50%;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 34% 27%,
+            rgba(255,255,255,.6) 0%,
+            rgba(190,155,255,.46) 10%,
+            rgba(101,61,190,.62) 34%,
+            rgba(34,16,83,.96) 68%,
+            rgba(4,2,13,1) 100%
+          );
+        box-shadow:
+          0 0 38px rgba(190,135,255,.6),
+          0 0 90px rgba(120,60,255,.35),
+          0 0 180px rgba(90,35,205,.22);
+        animation:
+          universe139PlanetFloat 7s ease-in-out infinite;
+        will-change: transform;
+      }
+
+      .planetSurface {
+        position: absolute;
+        inset: -12%;
+        width: 124%;
+        height: 124%;
+        border-radius: 50%;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            transparent 0,
+            transparent 15px,
+            rgba(221,193,255,.14) 17px,
+            transparent 27px,
+            transparent 42px
+          );
+        opacity: .7;
+        animation:
+          universe139PlanetSpin 12s linear infinite;
+        mix-blend-mode: screen;
+      }
+
+      .planetAtmosphere {
+        position: absolute;
+        inset: -7%;
+        border-radius: 50%;
+        border: 2px solid rgba(220,190,255,.38);
+        box-shadow:
+          inset 0 0 35px rgba(205,165,255,.4),
+          0 0 28px rgba(190,130,255,.38);
+      }
+
+      .planetGlow {
+        position: absolute;
+        inset: -28%;
+        border-radius: 50%;
+        background:
+          radial-gradient(
+            circle,
+            rgba(209,165,255,.2) 0%,
+            rgba(120,55,230,.1) 38%,
+            transparent 72%
+          );
+        animation:
+          universe139PlanetGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes universe139PlanetSpin {
+        0% {
+          transform: translateX(-10%) rotate(0deg) scale(1);
+        }
+        50% {
+          transform: translateX(10%) rotate(180deg) scale(1.05);
+        }
+        100% {
+          transform: translateX(-10%) rotate(360deg) scale(1);
+        }
+      }
+
+      @keyframes universe139PlanetFloat {
+        0%, 100% {
+          transform: translateY(0) scale(.95);
+        }
+        50% {
+          transform: translateY(-10px) scale(1);
+        }
+      }
+
+      @keyframes universe139PlanetGlow {
+        0%, 100% {
+          opacity: .45;
+          transform: scale(.92);
+        }
+        50% {
+          opacity: .95;
+          transform: scale(1.08);
+        }
+      }
+
+      @media (max-width: 600px) {
+
+        .planet {
+          width: 250px;
+          height: 250px;
+          min-width: 250px;
+          min-height: 250px;
+        }
+
+        .moneyItem {
+          width: 27px;
+          height: 15px;
+        }
+
+        .moneyItem::before {
+          font-size: 9px;
+        }
+      }
+
+    `;
+
+    document.head.appendChild(style);
+  }
+
+
+  // --------------------------------------------------------
+  // MONEY / WEALTH DETECTION
+  // --------------------------------------------------------
+
+  function isWealthMessage(text) {
+
+    const value =
+      String(text || "").toLowerCase();
+
+    const keywords = [
+
+      // English
+      "money",
+      "wealth",
+      "rich",
+      "financial",
+      "finance",
+      "income",
+      "abundance",
+      "prosperity",
+      "fortune",
+      "profit",
+      "earning",
+      "earnings",
+      "wealthy",
+      "riches",
+      "financially",
+
+      // Spanish
+      "dinero",
+      "riqueza",
+      "rico",
+      "financiero",
+      "finanzas",
+      "ingreso",
+      "abundancia",
+      "prosperidad",
+      "fortuna",
+      "riquezas",
+      "éxito financiero",
+
+      // Russian
+      "деньги",
+      "богатство",
+      "богатый",
+      "финансов",
+      "финансы",
+      "доход",
+      "изобилие",
+      "процветание",
+      "удача",
+      "состояние",
+
+      // Chinese
+      "财富",
+      "金钱",
+      "富裕",
+      "财务",
+      "金融",
+      "收入",
+      "富足",
+      "繁荣",
+      "好运",
+      "致富",
+
+      // Hindi
+      "पैसा",
+      "धन",
+      "धनवान",
+      "वित्तीय",
+      "वित्त",
+      "आय",
+      "समृद्धि",
+      "प्रचुरता",
+      "भाग्य",
+      "कमाई",
+
+      // Thai
+      "เงิน",
+      "ความมั่งคั่ง",
+      "ร่ำรวย",
+      "การเงิน",
+      "รายได้",
+      "ความอุดมสมบูรณ์",
+      "ความเจริญรุ่งเรือง",
+      "โชคลาภ",
+      "ความมั่งคั่ง"
+    ];
+
+    return keywords.some(
+      keyword =>
+        value.includes(keyword)
+    );
+  }
+
+
+  // --------------------------------------------------------
+  // EFFECT CONTROL
+  // --------------------------------------------------------
+
+  function stopEffects() {
+
+    const refs =
+      ensureEffectLayer();
+
+    refs.moneyRain.style.opacity =
+      "0";
+
+    refs.planetEffect.style.opacity =
+      "0";
+
+  }
+
+
+  function startMoneyEffect() {
+
+    const refs =
+      ensureEffectLayer();
+
+    refs.planetEffect.style.opacity =
+      "0";
+
+    refs.moneyRain.innerHTML =
+      "";
+
+    const count =
+      window.innerWidth <= 600
+        ? 30
+        : 48;
+
+    for (
+      let i = 0;
+      i < count;
+      i++
+    ) {
+
+      const item =
+        document.createElement("div");
+
+      item.className =
+        "moneyItem";
+
+      const scale =
+        .65 + Math.random() * .75;
+
+      item.style.left =
+        `${Math.random() * 100}%`;
+
+      item.style.animationDuration =
+        `${3.8 + Math.random() * 3.8}s`;
+
+      item.style.animationDelay =
+        `${Math.random() * 1.8}s`;
+
+      item.style.width =
+        `${34 * scale}px`;
+
+      item.style.height =
+        `${19 * scale}px`;
+
+      item.style.transform =
+        `rotate(${Math.random() * 360}deg)`;
+
+      refs.moneyRain.appendChild(
+        item
+      );
+    }
+
+    refs.moneyRain.style.opacity =
+      "1";
+  }
+
+
+  function startPlanetEffect() {
+
+    const refs =
+      ensureEffectLayer();
+
+    refs.moneyRain.style.opacity =
+      "0";
+
+    refs.planetEffect.style.opacity =
+      "1";
+  }
+
+
+  function showEffectForMessage(
+    messageText
+  ) {
+
+    ensureEffectStyles();
+
+    stopEffects();
+
+    window.setTimeout(
+      () => {
+
+        if (
+          isWealthMessage(
+            messageText
+          )
+        ) {
+
+          startMoneyEffect();
+
+          console.log(
+            "Universe139 effect: MONEY",
+            messageText
+          );
+
+        } else {
+
+          startPlanetEffect();
+
+          console.log(
+            "Universe139 effect: PLANET",
+            messageText
+          );
+        }
+
+      },
+      250
+    );
+  }
+
+
+  // --------------------------------------------------------
+  // INSTALL AFTER THE PAGE HAS A BODY
+  // --------------------------------------------------------
+
+  function initializeDynamicEffects() {
+
+    ensureEffectLayer();
+    ensureEffectStyles();
+    stopEffects();
+
+    // ------------------------------------------------------
+    // Wrap the existing showMessage() function.
+    // Nothing inside the original function is removed.
+    // ------------------------------------------------------
+
+    if (
+      typeof showMessage === "function" &&
+      !showMessage.__universe139DynamicWrapped
+    ) {
+
+      const originalShowMessage =
+        showMessage;
+
+      function wrappedShowMessage() {
+
+        originalShowMessage.apply(
+          this,
+          arguments
+        );
+
+        const messageElement =
+          document.getElementById(
+            "message"
+          );
+
+        const revealedMessage =
+          messageElement
+            ? messageElement.textContent.trim()
+            : "";
+
+        showEffectForMessage(
+          revealedMessage
+        );
+      }
+
+      wrappedShowMessage.__universe139DynamicWrapped =
+        true;
+
+      showMessage =
+        wrappedShowMessage;
+    }
+
+
+    // ------------------------------------------------------
+    // Wrap receiveAnotherMessage() so the previous effect
+    // disappears while the new message is being prepared.
+    // ------------------------------------------------------
+
+    if (
+      typeof receiveAnotherMessage === "function" &&
+      !receiveAnotherMessage.__universe139DynamicWrapped
+    ) {
+
+      const originalReceiveAnotherMessage =
+        receiveAnotherMessage;
+
+      function wrappedReceiveAnotherMessage() {
+
+        stopEffects();
+
+        return originalReceiveAnotherMessage.apply(
+          this,
+          arguments
+        );
+      }
+
+      wrappedReceiveAnotherMessage.__universe139DynamicWrapped =
+        true;
+
+      receiveAnotherMessage =
+        wrappedReceiveAnotherMessage;
+    }
+
+
+    // ------------------------------------------------------
+    // Clear effects when a language is selected.
+    // ------------------------------------------------------
+
+    if (
+      typeof selectLanguage === "function" &&
+      !selectLanguage.__universe139DynamicWrapped
+    ) {
+
+      const originalSelectLanguage =
+        selectLanguage;
+
+      function wrappedSelectLanguage() {
+
+        stopEffects();
+
+        return originalSelectLanguage.apply(
+          this,
+          arguments
+        );
+      }
+
+      wrappedSelectLanguage.__universe139DynamicWrapped =
+        true;
+
+      selectLanguage =
+        wrappedSelectLanguage;
+    }
+
+    console.log(
+      "Universe139: dynamic background effects installed."
+    );
+  }
+
+
+  if (
+    document.readyState === "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeDynamicEffects,
+      { once: true }
+    );
+
+  } else {
+
+    initializeDynamicEffects();
+  }
+
+})();
+
