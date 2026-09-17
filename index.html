@@ -135,19 +135,24 @@
       position:
         fixed;
 
-      inset:
-        0;
+      top:
+        50%;
 
+      left:
+        50%;
 
       width:
-        100%;
+        86vw;
 
       height:
-        100%;
+        86vh;
+
+      transform:
+        translate(-50%, -50%);
 
 
       object-fit:
-        cover;
+        contain;
 
 
       object-position:
@@ -1526,33 +1531,34 @@
         the application.
       */
 
-      const playVideo =
-        () => {
+      // Force the background video to be ready and playing as soon as
+      // the page loads. It stays muted so browsers allow autoplay.
+      video.setAttribute("autoplay", "");
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      video.autoplay = true;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
 
-          const promise =
-            video.play();
+      const playVideo = () => {
+        video.muted = true;
+        const promise = video.play();
+        if (promise && typeof promise.catch === "function") {
+          promise.catch(() => {});
+        }
+      };
 
+      // Start immediately, and retry when the video becomes ready.
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", playVideo, { once: true });
+      } else {
+        playVideo();
+      }
 
-          if (
-            promise &&
-            typeof promise.catch ===
-              "function"
-          ) {
-
-            promise.catch(
-              () => {
-                // Browser blocked autoplay.
-                // User interaction will normally
-                // allow playback later.
-              }
-            );
-
-          }
-
-        };
-
-
-      playVideo();
+      video.addEventListener("loadeddata", playVideo);
+      video.addEventListener("canplay", playVideo);
+      video.addEventListener("canplaythrough", playVideo);
 
 
       document.addEventListener(
