@@ -135,15 +135,20 @@
       position:
         fixed;
 
-      inset:
-        0;
+      top:
+        50%;
 
+      left:
+        50%;
 
       width:
-        100%;
+        96vw;
 
       height:
-        100%;
+        96vh;
+
+      transform:
+        translate(-50%, -50%);
 
 
       object-fit:
@@ -184,10 +189,10 @@
 
 
       width:
-        100%;
+        92%;
 
       height:
-        100%;
+        92%;
 
 
       z-index:
@@ -1154,7 +1159,6 @@
 
   <video
     id="universeBackgroundVideo"
-    autoplay
     muted
     loop
     playsinline
@@ -1495,90 +1499,81 @@
 
     (function () {
 
-      const video =
-        document.getElementById(
-          "universeBackgroundVideo"
-        );
+      const video = document.getElementById("universeBackgroundVideo");
+      const revealBtn = document.getElementById("revealBtn");
+      const againBtn = document.getElementById("againBtn");
+      const messageBox = document.getElementById("messageBox");
 
+      if (!video) return;
 
-      if (!video) {
-        return;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      video.autoplay = false;
+      video.removeAttribute("autoplay");
+      video.pause();
+      try { video.currentTime = 0; } catch (_) {}
+
+      function isMessageVisible() {
+        if (!messageBox) return false;
+        const cs = window.getComputedStyle(messageBox);
+        const rect = messageBox.getBoundingClientRect();
+        return !messageBox.classList.contains("hidden") &&
+               cs.display !== "none" &&
+               cs.visibility !== "hidden" &&
+               parseFloat(cs.opacity || "1") > 0 &&
+               rect.width > 0 && rect.height > 0;
       }
 
+      function playFromStart() {
+        if (isMessageVisible()) return;
+        try { video.currentTime = 0; } catch (_) {}
+        const promise = video.play();
+        if (promise && typeof promise.catch === "function") promise.catch(() => {});
+      }
 
-      video.muted =
-        true;
+      function pauseVideo() {
+        video.pause();
+      }
 
+      if (revealBtn) {
+        revealBtn.addEventListener("click", () => {
+          setTimeout(playFromStart, 30);
+        }, true);
+      }
 
-      video.defaultMuted =
-        true;
+      if (againBtn) {
+        againBtn.addEventListener("click", () => {
+          // Let the app hide/reset the current message first, then restart video.
+          setTimeout(playFromStart, 80);
+        }, true);
+      }
 
-
-      video.playsInline =
-        true;
-
-
-      /*
-        Some mobile browsers may pause
-        autoplay after page load.
-        Try playback again without
-        interfering with the rest of
-        the application.
-      */
-
-      const playVideo =
-        () => {
-
-          const promise =
-            video.play();
-
-
-          if (
-            promise &&
-            typeof promise.catch ===
-              "function"
-          ) {
-
-            promise.catch(
-              () => {
-                // Browser blocked autoplay.
-                // User interaction will normally
-                // allow playback later.
-              }
-            );
-
-          }
-
-        };
-
-
-      playVideo();
-
-
-      document.addEventListener(
-        "visibilitychange",
-        () => {
-
-          if (
-            !document.hidden
-          ) {
-
-            playVideo();
-
-          }
-
+      // Continuously watch the real rendered state of the message box.
+      // This also catches inline style changes or other show/hide methods.
+      const watch = () => {
+        if (isMessageVisible()) {
+          pauseVideo();
         }
-      );
+        requestAnimationFrame(watch);
+      };
+      requestAnimationFrame(watch);
 
+      if (messageBox) {
+        const observer = new MutationObserver(() => {
+          if (isMessageVisible()) pauseVideo();
+        });
+        observer.observe(messageBox, {
+          attributes: true,
+          attributeFilter: ["class", "style"]
+        });
+      }
 
-      /*
-        Make sure the video stays behind
-        the application when the browser
-        changes stacking contexts.
-      */
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) pauseVideo();
+      });
 
-      video.style.zIndex =
-        "0";
+      video.addEventListener("ended", pauseVideo);
 
     })();
 
