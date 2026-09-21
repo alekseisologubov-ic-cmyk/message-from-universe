@@ -1,32 +1,29 @@
 // ==========================================================
 // UNIVERSE139 - UNSUBSCRIBE API
+// ==========================================================
 //
 // File:
 // api/unsubscribe.js
 //
-// Endpoint:
-// GET /api/unsubscribe?email=...&token=...
+// URL:
+// /api/unsubscribe?email=...&token=...
 //
-// Required Vercel environment variables:
+// Required Vercel variables:
 //
 // SUPABASE_URL
 // SUPABASE_SERVICE_ROLE_KEY
 // UNSUBSCRIBE_SECRET
+//
 // ==========================================================
 
 import crypto from "crypto";
-
-
-// ==========================================================
-// CONFIG
-// ==========================================================
 
 const TABLE_NAME =
   "universe139_subscribers";
 
 
 // ==========================================================
-// NORMALIZE SUPABASE URL
+// SUPABASE URL
 // ==========================================================
 
 function normalizeSupabaseUrl(value) {
@@ -40,55 +37,82 @@ function normalizeSupabaseUrl(value) {
 
 
 // ==========================================================
-// CREATE HASH
+// TOKEN
+//
+// MUST MATCH subscribe.js and send-daily.js
+// ==========================================================
+
+function createUnsubscribeToken(
+  email,
+  secret
+) {
+
+  return crypto
+    .createHmac(
+      "sha256",
+      secret
+    )
+    .update(
+      email
+    )
+    .digest(
+      "hex"
+    );
+
+}
+
+
+// ==========================================================
+// SHA-256 HASH
 // ==========================================================
 
 function hashToken(token) {
 
   return crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
+    .createHash(
+      "sha256"
+    )
+    .update(
+      token
+    )
+    .digest(
+      "hex"
+    );
 
 }
 
 
 // ==========================================================
-// SAFE STRING
+// HTML PAGE
 // ==========================================================
 
-function safeString(value) {
-
-  return String(
-    value || ""
-  ).trim();
-
-}
-
-
-// ==========================================================
-// HTML RESPONSE
-// ==========================================================
-
-function htmlPage(
+function page(
   title,
   message
 ) {
 
   return `<!DOCTYPE html>
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
 <title>${title}</title>
+
 </head>
 
 <body style="
 margin:0;
 padding:0;
 background:#080314;
-color:white;
+color:#ffffff;
 font-family:Arial,Helvetica,sans-serif;
 ">
 
@@ -113,8 +137,8 @@ box-sizing:border-box;
 ">
 
 <div style="
-font-size:40px;
-margin-bottom:20px;
+font-size:42px;
+margin-bottom:18px;
 ">
 ✨
 </div>
@@ -122,7 +146,7 @@ margin-bottom:20px;
 <h1 style="
 margin:0 0 18px;
 font-size:28px;
-line-height:1.25;
+line-height:1.3;
 ">
 ${title}
 </h1>
@@ -130,7 +154,7 @@ ${title}
 <p style="
 margin:0;
 font-size:17px;
-line-height:1.65;
+line-height:1.7;
 color:rgba(255,255,255,.78);
 ">
 ${message}
@@ -141,13 +165,14 @@ ${message}
 </div>
 
 </body>
+
 </html>`;
 
 }
 
 
 // ==========================================================
-// HANDLER
+// MAIN HANDLER
 // ==========================================================
 
 export default async function handler(
@@ -177,7 +202,7 @@ export default async function handler(
     return res
       .status(405)
       .send(
-        htmlPage(
+        page(
           "Method Not Allowed",
           "Please use the unsubscribe link from your email."
         )
@@ -199,25 +224,25 @@ export default async function handler(
 
 
     const supabaseKey =
-      safeString(
-        process.env.SUPABASE_SERVICE_ROLE_KEY
-      );
+      String(
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        ""
+      ).trim();
 
 
     const unsubscribeSecret =
-      safeString(
-        process.env.UNSUBSCRIBE_SECRET
-      );
+      String(
+        process.env.UNSUBSCRIBE_SECRET ||
+        ""
+      ).trim();
 
 
-    if (
-      !supabaseUrl
-    ) {
+    if (!supabaseUrl) {
 
       return res
         .status(500)
         .send(
-          htmlPage(
+          page(
             "Configuration Error",
             "SUPABASE_URL is not configured."
           )
@@ -226,14 +251,12 @@ export default async function handler(
     }
 
 
-    if (
-      !supabaseKey
-    ) {
+    if (!supabaseKey) {
 
       return res
         .status(500)
         .send(
-          htmlPage(
+          page(
             "Configuration Error",
             "SUPABASE_SERVICE_ROLE_KEY is not configured."
           )
@@ -242,14 +265,12 @@ export default async function handler(
     }
 
 
-    if (
-      !unsubscribeSecret
-    ) {
+    if (!unsubscribeSecret) {
 
       return res
         .status(500)
         .send(
-          htmlPage(
+          page(
             "Configuration Error",
             "UNSUBSCRIBE_SECRET is not configured."
           )
@@ -259,19 +280,23 @@ export default async function handler(
 
 
     // ======================================================
-    // READ QUERY
+    // QUERY PARAMETERS
     // ======================================================
 
     const email =
-      safeString(
-        req.query?.email
-      ).toLowerCase();
+      String(
+        req.query?.email ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
 
 
     const token =
-      safeString(
-        req.query?.token
-      );
+      String(
+        req.query?.token ||
+        ""
+      ).trim();
 
 
     if (
@@ -282,7 +307,7 @@ export default async function handler(
       return res
         .status(400)
         .send(
-          htmlPage(
+          page(
             "Invalid Link",
             "This unsubscribe link is incomplete."
           )
@@ -292,76 +317,63 @@ export default async function handler(
 
 
     // ======================================================
-    // BUILD EXPECTED SIGNED TOKEN
+    // REBUILD EXPECTED TOKEN
     //
-    // The token is reproducible from:
-    //
-    // email + UNSUBSCRIBE_SECRET
-    //
-    // This allows the daily sender to create the same
-    // unsubscribe link without storing a raw token.
+    // EXACTLY THE SAME AS subscribe.js
+    // AND send-daily.js
     // ======================================================
 
     const expectedToken =
-      crypto
-        .createHmac(
-          "sha256",
-          unsubscribeSecret
-        )
-        .update(
-          email
-        )
-        .digest(
-          "hex"
-        );
+      createUnsubscribeToken(
+        email,
+        unsubscribeSecret
+      );
 
 
     // ======================================================
-    // CONSTANT-TIME TOKEN COMPARISON
+    // SECURE TOKEN COMPARISON
     // ======================================================
 
-    const receivedBuffer =
+    const received =
       Buffer.from(
         token,
         "utf8"
       );
 
 
-    const expectedBuffer =
+    const expected =
       Buffer.from(
         expectedToken,
         "utf8"
       );
 
 
-    let tokenValid =
+    let valid =
       false;
 
 
     if (
-      receivedBuffer.length ===
-      expectedBuffer.length
+      received.length ===
+      expected.length
     ) {
 
-      tokenValid =
+      valid =
         crypto.timingSafeEqual(
-          receivedBuffer,
-          expectedBuffer
+          received,
+          expected
         );
 
     }
 
 
-    if (
-      !tokenValid
-    ) {
+    if (!valid) {
 
       return res
         .status(403)
         .send(
-          htmlPage(
+          page(
             "Invalid Link",
-            "This unsubscribe link is not valid or has expired."
+            "This unsubscribe link is not valid."
           )
         );
 
@@ -379,7 +391,7 @@ export default async function handler(
 
 
     // ======================================================
-    // SUPABASE URL
+    // TABLE URL
     // ======================================================
 
     const tableUrl =
@@ -394,9 +406,6 @@ export default async function handler(
       Authorization:
         `Bearer ${supabaseKey}`,
 
-      "Content-Type":
-        "application/json",
-
       Accept:
         "application/json"
 
@@ -406,7 +415,7 @@ export default async function handler(
     // ======================================================
     // FIND SUBSCRIBER
     //
-    // Match BOTH email and token hash.
+    // Match email + stored token hash
     // ======================================================
 
     const lookupUrl =
@@ -425,12 +434,11 @@ export default async function handler(
       await fetch(
         lookupUrl,
         {
-
           method:
             "GET",
 
-          headers
-
+          headers:
+            headers
         }
       );
 
@@ -444,7 +452,7 @@ export default async function handler(
     ) {
 
       console.error(
-        "Universe139 unsubscribe lookup failed:",
+        "Universe139 unsubscribe lookup:",
         lookupResponse.status,
         lookupText
       );
@@ -453,7 +461,7 @@ export default async function handler(
       return res
         .status(502)
         .send(
-          htmlPage(
+          page(
             "Something Went Wrong",
             "We could not access the subscription database."
           )
@@ -484,7 +492,7 @@ export default async function handler(
 
 
     // ======================================================
-    // SUBSCRIBER NOT FOUND
+    // NOT FOUND
     // ======================================================
 
     if (
@@ -495,9 +503,9 @@ export default async function handler(
       return res
         .status(404)
         .send(
-          htmlPage(
+          page(
             "Subscription Not Found",
-            "This subscription could not be found or the unsubscribe link is no longer valid."
+            "This subscription could not be found."
           )
         );
 
@@ -509,7 +517,7 @@ export default async function handler(
 
 
     // ======================================================
-    // DISABLE SUBSCRIPTION
+    // DEACTIVATE
     // ======================================================
 
     const updateUrl =
@@ -530,6 +538,9 @@ export default async function handler(
           headers: {
 
             ...headers,
+
+            "Content-Type":
+              "application/json",
 
             Prefer:
               "return=minimal"
@@ -560,7 +571,7 @@ export default async function handler(
     ) {
 
       console.error(
-        "Universe139 unsubscribe update failed:",
+        "Universe139 unsubscribe update:",
         updateResponse.status,
         updateText
       );
@@ -569,7 +580,7 @@ export default async function handler(
       return res
         .status(502)
         .send(
-          htmlPage(
+          page(
             "Something Went Wrong",
             "We could not complete your unsubscribe request."
           )
@@ -591,16 +602,14 @@ export default async function handler(
     return res
       .status(200)
       .send(
-        htmlPage(
+        page(
           "You Are Unsubscribed",
           "You will no longer receive daily messages from Universe139."
         )
       );
 
 
-  } catch (
-    error
-  ) {
+  } catch (error) {
 
     console.error(
       "Universe139 unsubscribe error:",
@@ -611,7 +620,7 @@ export default async function handler(
     return res
       .status(500)
       .send(
-        htmlPage(
+        page(
           "Something Went Wrong",
           "We could not complete your unsubscribe request."
         )
