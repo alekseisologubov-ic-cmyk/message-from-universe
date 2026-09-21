@@ -2454,7 +2454,6 @@ async function submitSubscription() {
       .trim()
       .toLowerCase();
 
-  // Simple and reliable validation
   const atPosition =
     email.indexOf("@");
 
@@ -2485,7 +2484,7 @@ async function submitSubscription() {
   if (submitButton) {
 
     submitButton.disabled = true;
-    submitButton.style.opacity = ".65";
+    submitButton.style.opacity = "0.65";
 
   }
 
@@ -2499,6 +2498,12 @@ async function submitSubscription() {
 
   try {
 
+    const timezone =
+      Intl.DateTimeFormat()
+        .resolvedOptions()
+        .timeZone ||
+      "UTC";
+
     const response =
       await fetch(
         "/api/subscribe",
@@ -2511,12 +2516,9 @@ async function submitSubscription() {
           },
 
           body: JSON.stringify({
-
-            email: email,
-
-            language:
-              currentLanguage
-
+            email,
+            language: currentLanguage,
+            timezone
           })
         }
       );
@@ -2526,16 +2528,21 @@ async function submitSubscription() {
         .json()
         .catch(() => ({}));
 
+    console.log(
+      "Universe139 subscription response:",
+      response.status,
+      data
+    );
+
     if (!response.ok) {
 
       throw new Error(
         data.error ||
-        "Subscription failed."
+        `Subscription failed (HTTP ${response.status}).`
       );
 
     }
 
-    // SUCCESS
     if (status) {
 
       status.textContent =
@@ -2557,7 +2564,6 @@ async function submitSubscription() {
 
     }
 
-    // Close after showing thank-you message
     window.setTimeout(
       () => {
         closeSubscriptionForm();
@@ -2575,7 +2581,8 @@ async function submitSubscription() {
     if (status) {
 
       status.textContent =
-        "The subscription service is not connected yet.";
+        error?.message ||
+        "Unable to save your subscription.";
 
       status.className =
         "universe139SubscribeStatus universe139SubscribeError";
@@ -3596,7 +3603,7 @@ function getTikTokCopy() {
       success: "Your content was sent to TikTok.",
       draftSuccess: "Your content was sent to TikTok as a draft. Open TikTok to finish posting.",
       notConnected: "TikTok is not connected yet.",
-      error: "TikTok connection or video upload failed.",
+      error: "TikTok connection or publishing failed.",
       loginError: "TikTok authorization was not completed.",
       creatorError: "Unable to load your TikTok posting settings."
     },
@@ -3616,7 +3623,7 @@ function getTikTokCopy() {
       success: "Tu contenido se envió a TikTok.",
       draftSuccess: "Tu contenido se envió a TikTok como borrador. Abre TikTok para terminar la publicación.",
       notConnected: "TikTok aún no está conectado.",
-      error: "La conexión o el envío del video a TikTok falló.",
+      error: "La conexión o publicación en TikTok falló.",
       loginError: "La autorización de TikTok no se completó.",
       creatorError: "No se pudieron cargar las opciones de publicación de TikTok."
     },
@@ -3636,7 +3643,7 @@ function getTikTokCopy() {
       success: "你的内容已发送到 TikTok。",
       draftSuccess: "内容已作为草稿发送到 TikTok。请打开 TikTok 完成发布。",
       notConnected: "TikTok 尚未连接。",
-      error: "TikTok 连接或视频上传失败。",
+      error: "TikTok 连接或发布失败。",
       loginError: "TikTok 授权未完成。",
       creatorError: "无法加载 TikTok 发布设置。"
     },
@@ -3656,7 +3663,7 @@ function getTikTokCopy() {
       success: "Контент отправлен в TikTok.",
       draftSuccess: "Контент отправлен в TikTok как черновик. Откройте TikTok, чтобы завершить публикацию.",
       notConnected: "TikTok ещё не подключён.",
-      error: "Ошибка подключения или отправки видео в TikTok.",
+      error: "Ошибка подключения или публикации в TikTok.",
       loginError: "Авторизация TikTok не завершена.",
       creatorError: "Не удалось загрузить настройки публикации TikTok."
     },
@@ -3676,7 +3683,7 @@ function getTikTokCopy() {
       success: "आपकी सामग्री TikTok पर भेज दी गई है।",
       draftSuccess: "सामग्री TikTok पर ड्राफ्ट के रूप में भेज दी गई है। पोस्ट पूरा करने के लिए TikTok खोलें।",
       notConnected: "TikTok अभी कनेक्ट नहीं है।",
-      error: "TikTok कनेक्शन या वीडियो अपलोड विफल हुआ।",
+      error: "TikTok कनेक्शन या पोस्ट विफल हुआ।",
       loginError: "TikTok प्राधिकरण पूरा नहीं हुआ।",
       creatorError: "TikTok पोस्टिंग सेटिंग्स लोड नहीं हो सकीं।"
     },
@@ -3696,7 +3703,7 @@ function getTikTokCopy() {
       success: "ส่งเนื้อหาไปยัง TikTok แล้ว",
       draftSuccess: "ส่งเนื้อหาไปยัง TikTok เป็นแบบร่างแล้ว เปิด TikTok เพื่อโพสต์ต่อ",
       notConnected: "ยังไม่ได้เชื่อมต่อ TikTok",
-      error: "การเชื่อมต่อหรือการส่งวิดีโอไปยัง TikTok ล้มเหลว",
+      error: "การเชื่อมต่อหรือการโพสต์ TikTok ล้มเหลว",
       loginError: "การอนุญาต TikTok ยังไม่เสร็จ",
       creatorError: "ไม่สามารถโหลดการตั้งค่าการโพสต์ TikTok ได้"
     }
@@ -4255,7 +4262,7 @@ async function openTikTokExportModal(
         <button
           type="button"
           id="universe139TikTokDirectMode"
-          class="universe139TikTokMode"
+          class="universe139TikTokMode active"
         >
           ${escapeHTML(t.directPost)}
         </button>
@@ -4263,7 +4270,7 @@ async function openTikTokExportModal(
         <button
           type="button"
           id="universe139TikTokDraftMode"
-          class="universe139TikTokMode active"
+          class="universe139TikTokMode"
         >
           ${escapeHTML(t.uploadDraft)}
         </button>
@@ -4364,7 +4371,7 @@ async function openTikTokExportModal(
     );
 
   let mode =
-    "MEDIA_UPLOAD";
+    "DIRECT_POST";
 
   function refreshModeUI() {
 
@@ -4486,7 +4493,7 @@ async function openTikTokExportModal(
 
           const response =
             await fetch(
-              TIKTOK_CONFIG.uploadPath,
+              TIKTOK_CONFIG.publishPath,
               {
                 method: "POST",
                 credentials: "include",
@@ -4533,7 +4540,9 @@ async function openTikTokExportModal(
           closeTikTokExportModal();
 
           showShareToast(
-            t.draftSuccess
+            mode === "DIRECT_POST"
+              ? t.success
+              : t.draftSuccess
           );
 
         } catch (error) {
@@ -4589,359 +4598,85 @@ async function shareTikTok() {
 
   const t = getTikTokCopy();
 
-  // Prevent accidental double-clicks while an upload is active.
-  if (window.universe139TikTokUploadBusy) {
-    showShareToast(t.posting);
+  showShareToast(t.preparing);
+
+  // --------------------------------------------------------
+  // Check whether the user is already connected.
+  // --------------------------------------------------------
+
+  const status =
+    await getTikTokStatus();
+
+  if (!status.connected) {
+    if (status.error === "status_request_failed") {
+      showShareToast(t.error);
+      return;
+    }
+
+    // Sandbox currently supports video.upload, not video.publish.
+    // Start Login Kit and let the callback return to the app.
+    startTikTokLogin();
     return;
   }
 
-  window.universe139TikTokUploadBusy = true;
+  // --------------------------------------------------------
+  // Sandbox upload flow.
+  // Do NOT call creator-info here because that endpoint requires
+  // video.publish, which is not enabled in the Sandbox.
+  // --------------------------------------------------------
 
   try {
-
-    // ------------------------------------------------------
-    // 1. Check TikTok connection
-    // ------------------------------------------------------
-
-    showShareToast(t.preparing);
-
-    const status = await getTikTokStatus();
-
-    if (!status.connected) {
-
-      if (status.error === "status_request_failed") {
-        showShareToast(t.error);
-        return;
-      }
-
-      startTikTokLogin();
-      return;
-    }
-
-    // ------------------------------------------------------
-    // 2. Sandbox / video.upload flow
-    // ------------------------------------------------------
-    // This endpoint sends the video to the creator's TikTok
-    // inbox. It does NOT directly publish the video.
-    // ------------------------------------------------------
-
-    showShareToast(t.posting);
-
-    const response = await fetch(
-      TIKTOK_CONFIG.uploadPath,
-      {
-        method: "POST",
-        credentials: "include",
-        cache: "no-store",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          message: currentMessage,
-          language: currentLanguage,
-          videoUrl: TIKTOK_CONFIG.videoUrl
-        })
-      }
-    );
-
-    let data = {};
-
-    try {
-      data = await response.json();
-    } catch {
-      data = {};
-    }
-
-    console.log(
-      "Universe139 TikTok upload response:",
-      response.status,
-      data
-    );
-
-    // ------------------------------------------------------
-    // 3. Handle TikTok errors with the real reason
-    // ------------------------------------------------------
-
-    if (!response.ok || data.success === false) {
-
-      const errorCode =
-        data?.tiktokError ||
-        data?.error?.code ||
-        data?.tiktok?.error?.code ||
-        "";
-
-      const errorMessage =
-        data?.error ||
-        data?.error?.message ||
-        data?.tiktok?.error?.message ||
-        "TikTok upload failed.";
-
-      console.error(
-        "Universe139 TikTok upload failed:",
+    const response =
+      await fetch(
+        "/api/tiktok/upload",
         {
-          httpStatus: response.status,
-          errorCode,
-          errorMessage,
-          response: data
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            message: currentMessage,
+            language: currentLanguage,
+            videoUrl: TIKTOK_CONFIG.videoUrl
+          })
         }
       );
 
-      // TikTok limits pending inbox shares. This is a TikTok-side
-      // limit and does not mean the connection has failed.
-      if (
-        errorCode === "spam_risk_too_many_pending_share" ||
-        String(errorMessage).includes(
-          "spam_risk_too_many_pending_share"
-        )
-      ) {
-        showShareToast(
-          "TikTok upload limit reached. Your previous video is already waiting in TikTok."
-        );
-        return;
-      }
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
 
-      // URL verification / ownership error.
-      if (
-        errorCode === "url_ownership_unverified" ||
-        String(errorMessage).includes(
-          "url_ownership_unverified"
-        )
-      ) {
-        showShareToast(
-          "TikTok could not verify the video URL."
-        );
-        return;
-      }
-
-      // Missing or insufficient TikTok permissions.
-      if (
-        errorCode === "scope_not_authorized" ||
-        String(errorMessage).includes(
-          "scope_not_authorized"
-        )
-      ) {
-        showShareToast(
-          "TikTok upload permission is not authorized. Please reconnect TikTok."
-        );
-        return;
-      }
-
-      // Expired / invalid access token.
-      if (
-        errorCode === "access_token_invalid" ||
-        String(errorMessage).includes(
-          "access_token_invalid"
-        ) ||
-        String(errorMessage).toLowerCase().includes(
-          "access token"
-        )
-      ) {
-        showShareToast(
-          "TikTok connection expired. Please reconnect TikTok."
-        );
-        return;
-      }
-
-      showShareToast(
-        `TikTok upload failed: ${errorMessage}`
+    if (!response.ok || data.success === false) {
+      throw new Error(
+        data.error ||
+        "TikTok upload failed."
       );
-      return;
     }
 
-    // ------------------------------------------------------
-    // 4. Successful handoff to TikTok
-    // ------------------------------------------------------
-
-    const publishId =
-      data?.publishId ||
-      data?.data?.publish_id ||
-      data?.tiktok?.data?.publish_id ||
-      "";
-
-    if (publishId) {
-      console.log(
-        "Universe139 TikTok publish ID:",
-        publishId
-      );
-
-      try {
-        localStorage.setItem(
-          "universe139_tiktok_publish_id",
-          publishId
-        );
-      } catch {
-        // Ignore storage errors.
-      }
-    }
-
-    // IMPORTANT: this is an inbox/draft handoff, not a direct
-    // publication. Keep this wording in every supported language.
     showShareToast(
       t.draftSuccess
     );
 
-    // ------------------------------------------------------
-    // 5. Poll the SAME publish ID only.
-    // Never create another upload while polling.
-    // ------------------------------------------------------
-
-    if (!publishId) {
-      return;
-    }
-
-    let attempts = 0;
-    const maxAttempts = 6;
-
-    const checkStatus = async () => {
-
-      attempts += 1;
-
-      try {
-
-        const statusResponse = await fetch(
-          "/api/tiktok/post-status",
-          {
-            method: "POST",
-            credentials: "include",
-            cache: "no-store",
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-            },
-            body: JSON.stringify({
-              publishId
-            })
-          }
-        );
-
-        let statusData = {};
-
-        try {
-          statusData = await statusResponse.json();
-        } catch {
-          statusData = {};
-        }
-
-        console.log(
-          `Universe139 TikTok status ${attempts}:`,
-          statusData
-        );
-
-        if (!statusResponse.ok) {
-          return;
-        }
-
-        const currentStatus =
-          statusData?.status ||
-          statusData?.data?.status ||
-          statusData?.details?.status ||
-          "";
-
-        // TikTok has delivered the inbox notification.
-        if (
-          currentStatus === "SEND_TO_USER_INBOX"
-        ) {
-          console.log(
-            "Universe139 TikTok: SEND_TO_USER_INBOX"
-          );
-
-          showShareToast(
-            t.draftSuccess
-          );
-
-          return;
-        }
-
-        // Creator has completed the post.
-        if (
-          currentStatus === "PUBLISH_COMPLETE"
-        ) {
-          console.log(
-            "Universe139 TikTok: PUBLISH_COMPLETE"
-          );
-
-          showShareToast(
-            "Your TikTok video was posted."
-          );
-
-          return;
-        }
-
-        // TikTok reported a genuine processing failure.
-        if (
-          currentStatus === "FAILED"
-        ) {
-
-          const failReason =
-            statusData?.details?.fail_reason ||
-            statusData?.data?.fail_reason ||
-            statusData?.fail_reason ||
-            "TikTok processing failed.";
-
-          console.error(
-            "Universe139 TikTok processing failed:",
-            failReason,
-            statusData
-          );
-
-          showShareToast(
-            `TikTok processing failed: ${failReason}`
-          );
-
-          return;
-        }
-
-        // Continue polling only while TikTok is actually processing.
-        if (
-          currentStatus === "PROCESSING_DOWNLOAD" &&
-          attempts < maxAttempts
-        ) {
-          window.setTimeout(
-            checkStatus,
-            5000
-          );
-        }
-
-      } catch (error) {
-        console.error(
-          "Universe139 TikTok status check error:",
-          error
-        );
-      }
-    };
-
-    window.setTimeout(
-      checkStatus,
-      5000
+    console.log(
+      "Universe139 TikTok upload successful:",
+      data.publishId || "no publish id"
     );
 
   } catch (error) {
-
     console.error(
       "Universe139 TikTok upload error:",
       error
     );
 
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-      return;
-    }
-
     showShareToast(
-      `TikTok upload failed: ${
-        error?.message ||
-        "Unable to send the video to TikTok."
-      }`
+      t.error
     );
-
-  } finally {
-    window.universe139TikTokUploadBusy = false;
   }
-
 }
+
 
 function handleTikTokOAuthReturn() {
 
