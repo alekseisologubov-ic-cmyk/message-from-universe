@@ -1,68 +1,79 @@
 // ==========================================================
 // TikTok Login Kit - Start OAuth flow
 // Vercel Serverless Function
+//
 // Route:
 // https://message-from-universe.vercel.app/api/tiktok/login
 // ==========================================================
 
-const crypto = require("crypto");
+import crypto from "crypto";
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // --------------------------------------------------------
   // Only allow GET
   // --------------------------------------------------------
   if (req.method !== "GET") {
-    res.status(405).json({
+    return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
-    return;
   }
 
   // --------------------------------------------------------
-  // Required environment variables
+  // Environment variables
   // --------------------------------------------------------
-  const clientKey = process.env.TIKTOK_CLIENT_KEY;
+  const clientKey =
+    process.env.TIKTOK_CLIENT_KEY;
 
   const redirectUri =
     process.env.TIKTOK_REDIRECT_URI ||
     "https://message-from-universe.vercel.app/api/tiktok/callback";
 
+  // --------------------------------------------------------
+  // Check Client Key
+  // --------------------------------------------------------
   if (!clientKey) {
-    console.error("TikTok: TIKTOK_CLIENT_KEY is missing.");
-    res.status(500).json({
-      error: "TikTok client key is not configured."
+    console.error(
+      "TikTok: TIKTOK_CLIENT_KEY is missing."
+    );
+
+    return res.status(500).json({
+      success: false,
+      error:
+        "TikTok Client Key is not configured in Vercel."
     });
-    return;
   }
 
   // --------------------------------------------------------
-  // Create secure anti-forgery state
-  // TikTok requires state validation on callback.
+  // Create secure OAuth state
   // --------------------------------------------------------
-  const state = crypto.randomBytes(32).toString("hex");
+  const state =
+    crypto.randomBytes(32).toString("hex");
 
   // --------------------------------------------------------
-  // Store state in an HttpOnly cookie.
-  // SameSite=Lax works with the top-level redirect
-  // from TikTok back to our callback URL.
+  // Save state in secure HttpOnly cookie
   // --------------------------------------------------------
-  const cookie =
-    [
-      `tiktok_oauth_state=${encodeURIComponent(state)}`,
-      "HttpOnly",
-      "Secure",
-      "SameSite=Lax",
-      "Path=/",
-      "Max-Age=600"
-    ].join("; ");
+  const cookie = [
+    `tiktok_oauth_state=${encodeURIComponent(state)}`,
+    "Path=/",
+    "Max-Age=600",
+    "HttpOnly",
+    "Secure",
+    "SameSite=Lax"
+  ].join("; ");
 
-  res.setHeader("Set-Cookie", cookie);
+  res.setHeader(
+    "Set-Cookie",
+    cookie
+  );
 
   // --------------------------------------------------------
-  // TikTok OAuth authorization URL
+  // Build TikTok authorization URL
   // --------------------------------------------------------
   const authUrl =
-    new URL("https://www.tiktok.com/v2/auth/authorize/");
+    new URL(
+      "https://www.tiktok.com/v2/auth/authorize/"
+    );
 
   authUrl.searchParams.set(
     "client_key",
@@ -74,7 +85,6 @@ module.exports = async function handler(req, res) {
     "code"
   );
 
-  // Request the scopes configured for your app.
   authUrl.searchParams.set(
     "scope",
     "user.info.basic,video.publish,video.upload"
@@ -90,14 +100,16 @@ module.exports = async function handler(req, res) {
     state
   );
 
-  // --------------------------------------------------------
-  // Redirect the user to TikTok
-  // --------------------------------------------------------
-  res.statusCode = 302;
-  res.setHeader(
-    "Location",
+  console.log(
+    "TikTok OAuth redirect:",
     authUrl.toString()
   );
 
-  res.end();
-};
+  // --------------------------------------------------------
+  // Send user to TikTok
+  // --------------------------------------------------------
+  return res.redirect(
+    302,
+    authUrl.toString()
+  );
+}
