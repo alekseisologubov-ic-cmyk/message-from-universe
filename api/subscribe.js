@@ -1,29 +1,6 @@
 // ==========================================================
-// UNIVERSE139 - SUBSCRIBE API
-// ==========================================================
-
-import crypto from "crypto";
-
-
-// ==========================================================
-// CONFIG
-// ==========================================================
-
-const TABLE =
-  "universe139_subscribers";
-
-const ALLOWED_LANGUAGES = [
-  "en",
-  "es",
-  "zh",
-  "ru",
-  "hi",
-  "th"
-];
-
-
-// ==========================================================
-// HANDLER
+// UNIVERSE139 SUBSCRIBE
+// Uses Supabase Publishable Key + RLS INSERT policy
 // ==========================================================
 
 export default async function handler(req, res) {
@@ -39,10 +16,6 @@ export default async function handler(req, res) {
   );
 
 
-  // --------------------------------------------------------
-  // POST ONLY
-  // --------------------------------------------------------
-
   if (req.method !== "POST") {
 
     return res.status(405).json({
@@ -55,10 +28,6 @@ export default async function handler(req, res) {
 
   try {
 
-    // ======================================================
-    // SUPABASE CONFIG
-    // ======================================================
-
     const supabaseUrl =
       String(
         process.env.SUPABASE_URL || ""
@@ -67,9 +36,9 @@ export default async function handler(req, res) {
         .replace(/\/+$/, "");
 
 
-    const supabaseKey =
+    const publishableKey =
       String(
-        process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+        process.env.SUPABASE_PUBLISHABLE_KEY || ""
       )
         .trim();
 
@@ -79,26 +48,22 @@ export default async function handler(req, res) {
       return res.status(500).json({
         ok: false,
         error:
-          "SUPABASE_URL is missing in Vercel."
+          "SUPABASE_URL is missing."
       });
 
     }
 
 
-    if (!supabaseKey) {
+    if (!publishableKey) {
 
       return res.status(500).json({
         ok: false,
         error:
-          "SUPABASE_SERVICE_ROLE_KEY is missing in Vercel."
+          "SUPABASE_PUBLISHABLE_KEY is missing."
       });
 
     }
 
-
-    // ======================================================
-    // READ BODY
-    // ======================================================
 
     let body =
       req.body || {};
@@ -108,27 +73,11 @@ export default async function handler(req, res) {
       typeof body === "string"
     ) {
 
-      try {
-
-        body =
-          JSON.parse(body);
-
-      } catch {
-
-        return res.status(400).json({
-          ok: false,
-          error:
-            "Invalid JSON request."
-        });
-
-      }
+      body =
+        JSON.parse(body);
 
     }
 
-
-    // ======================================================
-    // EMAIL
-    // ======================================================
 
     const email =
       String(
@@ -136,6 +85,22 @@ export default async function handler(req, res) {
       )
         .trim()
         .toLowerCase();
+
+
+    const language =
+      String(
+        body.language || "en"
+      )
+        .trim()
+        .toLowerCase();
+
+
+    const timezone =
+      String(
+        body.timezone ||
+        "Europe/Tallinn"
+      )
+        .trim();
 
 
     if (
@@ -153,65 +118,89 @@ export default async function handler(req, res) {
     }
 
 
-    // ======================================================
-    // LANGUAGE
-    // ======================================================
-
-    const requestedLanguage =
-      String(
-        body.language || "en"
-      )
-        .trim()
-        .toLowerCase();
+    const allowedLanguages = [
+      "en",
+      "es",
+      "zh",
+      "ru",
+      "hi",
+      "th"
+    ];
 
 
-    const language =
-      ALLOWED_LANGUAGES.includes(
-        requestedLanguage
-      )
-        ? requestedLanguage
+    const safeLanguage =
+      allowedLanguages.includes(language)
+        ? language
         : "en";
 
 
-    // ======================================================
-    // TIMEZONE
-    // ======================================================
-
-    const timezone =
-      String(
-        body.timezone ||
-        "Europe/Tallinn"
-      ).trim() ||
-      "Europe/Tallinn";
+    const tableUrl =
+      `${supabaseUrl}/rest/v1/universe139_subscribers`;
 
 
-    // ======================================================
-    // CREATE UNSUBSCRIBE TOKEN
-    // ======================================================
+    // ------------------------------------------------------
+    // Generate required fields
+    // ------------------------------------------------------
+
+    const tokenBytes =
+      new Uint8Array(32);
+
+    crypto
+      .getRandomValues(tokenBytes);
+
 
     const unsubscribeToken =
-      crypto
-        .randomBytes(32)
-        .toString("hex");
+      Array.from(
+        tokenBytes
+      )
+        .map(
+          byte =>
+            byte
+              .toString(16)
+              .padStart(2, "0")
+        )
+        .join("");
+
+
+    const encoder =
+      new TextEncoder();
+
+
+    const hashBuffer =
+      await crypto.subtle.digest(
+        "SHA-256",
+        encoder.encode(
+          unsubscribeToken
+        )
+      );
+
+
+    const hashArray =
+      Array.from(
+        new Uint8Array(hashBuffer)
+      );
 
 
     const unsubscribeTokenHash =
-      crypto
-        .createHash("sha256")
-        .update(unsubscribeToken)
-        .digest("hex");
+      hashArray
+        .map(
+          byte =>
+            byte
+              .toString(16)
+              .padStart(2, "0")
+        )
+        .join("");
 
 
-    // ======================================================
-    // CREATE RANDOM ORDER OF ALL 500 MESSAGES
-    //
-    // 0 ... 499
-    // ======================================================
+    // ------------------------------------------------------
+    // 500-message sequence
+    // ------------------------------------------------------
 
     const messageOrder =
       Array.from(
         { length: 500 },
-        (_, index) => index
+        (_, index) =>
+          index
       );
 
 
@@ -226,83 +215,32 @@ export default async function handler(req, res) {
       i--
     ) {
 
-      const j =
-        crypto.randomInt(
-          0,
-          i + 1
+      const random =
+        Math.floor(
+          Math.random() *
+          (i + 1)
         );
 
 
       const temp =
         messageOrder[i];
 
-      messageOrder[i] =
-        messageOrder[j];
 
-      messageOrder[j] =
+      messageOrder[i] =
+        messageOrder[random];
+
+
+      messageOrder[random] =
         temp;
 
     }
 
 
-    // ======================================================
+    // ------------------------------------------------------
     // INSERT
-    // ======================================================
+    // ------------------------------------------------------
 
-    const tableUrl =
-      `${supabaseUrl}/rest/v1/${TABLE}`;
-
-
-    const headers = {
-
-      apikey:
-        supabaseKey,
-
-      Authorization:
-        `Bearer ${supabaseKey}`,
-
-      "Content-Type":
-        "application/json",
-
-      Accept:
-        "application/json",
-
-      Prefer:
-        "return=representation"
-
-    };
-
-
-    const insertPayload = {
-
-      email,
-
-      language,
-
-      timezone,
-
-      active:
-        true,
-
-      unsubscribe_token_hash:
-        unsubscribeTokenHash,
-
-      message_order:
-        messageOrder,
-
-      message_position:
-        0
-
-    };
-
-
-    console.log(
-      "Universe139: inserting subscriber",
-      email
-    );
-
-
-    const insertResponse =
+    const response =
       await fetch(
         tableUrl,
         {
@@ -310,31 +248,93 @@ export default async function handler(req, res) {
           method:
             "POST",
 
-          headers,
+          headers: {
+
+            apikey:
+              publishableKey,
+
+            "Content-Type":
+              "application/json",
+
+            Accept:
+              "application/json",
+
+            Prefer:
+              "return=representation"
+
+          },
 
           body:
-            JSON.stringify(
-              insertPayload
-            )
+            JSON.stringify({
+
+              email,
+
+              language:
+                safeLanguage,
+
+              timezone,
+
+              active:
+                true,
+
+              unsubscribe_token_hash:
+                unsubscribeTokenHash,
+
+              message_order:
+                messageOrder,
+
+              message_position:
+                0
+
+            })
 
         }
       );
 
 
-    const insertText =
-      await insertResponse.text();
+    const responseText =
+      await response.text();
 
 
-    // ======================================================
-    // INSERT FAILED
-    // ======================================================
+    // ------------------------------------------------------
+    // DUPLICATE EMAIL
+    // ------------------------------------------------------
 
-    if (!insertResponse.ok) {
+    if (
+      response.status === 409
+    ) {
+
+      return res.status(200).json({
+
+        ok:
+          true,
+
+        subscribed:
+          true,
+
+        alreadySubscribed:
+          true,
+
+        message:
+          "You are already subscribed."
+
+      });
+
+    }
+
+
+    // ------------------------------------------------------
+    // SUPABASE ERROR
+    // ------------------------------------------------------
+
+    if (
+      !response.ok
+    ) {
 
       console.error(
-        "Universe139 Supabase INSERT:",
-        insertResponse.status,
-        insertText
+        "Universe139 Supabase error:",
+        response.status,
+        responseText
       );
 
 
@@ -347,159 +347,19 @@ export default async function handler(req, res) {
           "Supabase rejected the subscription.",
 
         supabaseStatus:
-          insertResponse.status,
+          response.status,
 
         supabaseResponse:
-          insertText
+          responseText
 
       });
 
     }
 
 
-    // ======================================================
-    // PARSE INSERT RESULT
-    // ======================================================
-
-    let insertedRow =
-      null;
-
-
-    try {
-
-      const parsed =
-        insertText
-          ? JSON.parse(
-              insertText
-            )
-          : [];
-
-
-      if (
-        Array.isArray(parsed) &&
-        parsed.length > 0
-      ) {
-
-        insertedRow =
-          parsed[0];
-
-      }
-
-    } catch {
-
-      insertedRow =
-        null;
-
-    }
-
-
-    // ======================================================
-    // VERIFY
-    // ======================================================
-
-    const verifyUrl =
-      `${tableUrl}` +
-      `?select=id,email,language,timezone,active,message_position,subscribed_at` +
-      `&email=eq.${encodeURIComponent(email)}` +
-      `&limit=1`;
-
-
-    const verifyResponse =
-      await fetch(
-        verifyUrl,
-        {
-
-          method:
-            "GET",
-
-          headers
-
-        }
-      );
-
-
-    const verifyText =
-      await verifyResponse.text();
-
-
-    if (!verifyResponse.ok) {
-
-      console.error(
-        "Universe139 verification:",
-        verifyResponse.status,
-        verifyText
-      );
-
-
-      return res.status(502).json({
-
-        ok:
-          false,
-
-        error:
-          "Subscriber was inserted but could not be verified.",
-
-        supabaseStatus:
-          verifyResponse.status,
-
-        supabaseResponse:
-          verifyText
-
-      });
-
-    }
-
-
-    let verifiedRows =
-      [];
-
-
-    try {
-
-      verifiedRows =
-        verifyText
-          ? JSON.parse(
-              verifyText
-            )
-          : [];
-
-    } catch {
-
-      verifiedRows =
-        [];
-
-    }
-
-
-    if (
-      !Array.isArray(
-        verifiedRows
-      ) ||
-      verifiedRows.length === 0
-    ) {
-
-      return res.status(502).json({
-
-        ok:
-          false,
-
-        error:
-          "Supabase did not confirm the subscriber."
-
-      });
-
-    }
-
-
-    // ======================================================
+    // ------------------------------------------------------
     // SUCCESS
-    // ======================================================
-
-    console.log(
-      "Universe139 subscriber confirmed:",
-      email
-    );
-
+    // ------------------------------------------------------
 
     return res.status(200).json({
 
@@ -514,9 +374,6 @@ export default async function handler(req, res) {
 
       message:
         "You are subscribed. Your daily messages will begin soon.",
-
-      subscriber:
-        verifiedRows[0],
 
       unsubscribeToken:
         unsubscribeToken
