@@ -18,19 +18,78 @@ export default async function handler(req, res) {
     });
   }
 
-  // You can change this later to generate dynamic messages.
-  const messages = [
-    "Something you have been waiting for is closer than you think.",
-    "You do not need to have everything figured out. Take the next step.",
-    "A new beginning is quietly making its way toward you.",
-    "Trust what feels right, even when the path is not completely clear.",
-    "What is meant for you does not need to be forced.",
-    "Today may bring a small sign that changes how you see everything.",
-    "Let go of what is no longer yours. Make room for what is coming.",
-    "Your energy is shifting. Pay attention to the opportunities around you.",
-    "The answer you are looking for may arrive in an unexpected form.",
-    "You are closer to your breakthrough than you realize."
+  // --------------------------------------------------------
+  // UNIVERSE139 500-MESSAGE SYSTEM
+  // 25 openers x 20 closers = exactly 500 unique messages.
+  // This uses the same English message-building system as
+  // the main Message From The Universe application.
+  // --------------------------------------------------------
+
+  const openers = [
+    "Trust the feeling that keeps returning to your heart.",
+    "A quiet change is beginning to move through your life.",
+    "You are closer to a new beginning than you realize.",
+    "Your patience is creating space for something meaningful.",
+    "The path ahead is becoming clearer one step at a time.",
+    "Your intuition is noticing something your mind has not fully named.",
+    "A chapter that once felt uncertain is beginning to make sense.",
+    "There is more possibility around you than you can currently see.",
+    "Your energy is shifting toward something more peaceful.",
+    "A small decision today can open a surprisingly important door.",
+    "You have already learned enough to take the next step.",
+    "Something you have been waiting for is moving closer.",
+    "The pressure you have carried does not need to follow you forward.",
+    "Your heart knows when something feels right for you.",
+    "An unexpected moment may reveal a valuable direction.",
+    "You are allowed to begin again without explaining yourself.",
+    "Your recent effort is creating results beneath the surface.",
+    "A peaceful answer may arrive when you stop forcing the question.",
+    "The future is asking you to make room for something new.",
+    "Your courage is growing quietly through every experience.",
+    "What seems small today may become important later.",
+    "You do not need to know the entire road before moving forward.",
+    "A new perspective can change the way you see everything around you.",
+    "Your life is still capable of surprising you in beautiful ways.",
+    "The next step does not have to be perfect to be meaningful."
   ];
+
+  const closers = [
+    "Give yourself permission to move at your own pace.",
+    "Stay open to the opportunity that arrives naturally.",
+    "Listen carefully to what brings you peace.",
+    "Let today be lighter than yesterday.",
+    "Choose the direction that feels honest to you.",
+    "Do not dismiss the small signs that encourage you.",
+    "Make room for joy without needing a reason first.",
+    "Trust that progress can happen quietly.",
+    "Release the need to control every detail.",
+    "Take one small action and let it lead to the next.",
+    "Remember that rest can also be part of progress.",
+    "Allow yourself to notice how far you have already come.",
+    "Be patient with the timing of your own life.",
+    "Protect the energy you need for what matters most.",
+    "Let uncertainty exist without allowing it to stop you.",
+    "Give your attention to what you can build now.",
+    "Something better can begin with one simple choice.",
+    "Keep moving toward what feels meaningful.",
+    "Your story is still unfolding.",
+    "Let the next moment bring its own answer."
+  ];
+
+  const messages = [];
+
+  for (const opener of openers) {
+    for (const closer of closers) {
+      messages.push(`${opener} ${closer}`);
+    }
+  }
+
+  if (messages.length !== 500 || new Set(messages).size !== 500) {
+    return res.status(500).json({
+      success: false,
+      error: "Universe139 message database must contain exactly 500 unique messages."
+    });
+  }
 
   // Select one message based on the current day.
   const today = new Date();
