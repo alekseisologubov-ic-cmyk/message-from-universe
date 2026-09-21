@@ -3413,6 +3413,1029 @@ async function shareViber() {
 // TIKTOK
 // ==========================================
 
+// ==========================================
+// TIKTOK DEVELOPER INTEGRATION
+// Uses TikTok Login Kit + Content Posting API.
+// Front-end only: secrets/tokens stay server-side.
+// Expected Vercel endpoints:
+//   GET  /api/tiktok/login
+//   GET  /api/tiktok/status
+//   POST /api/tiktok/creator-info
+//   POST /api/tiktok/publish
+//   GET  /api/tiktok/callback
+// ==========================================
+
+const TIKTOK_CONFIG = {
+  loginPath: "/api/tiktok/login",
+  statusPath: "/api/tiktok/status",
+  creatorInfoPath: "/api/tiktok/creator-info",
+  publishPath: "/api/tiktok/publish",
+
+  // This video is already hosted by the same verified URL prefix.
+  // It is used for the Content Posting API PULL_FROM_URL flow.
+  videoUrl:
+    `${UNIVERSE139_URL}universe-background.mp4`
+};
+
+
+function getTikTokCopy() {
+
+  const copies = {
+
+    en: {
+      connect: "Connect TikTok",
+      connected: "TikTok connected",
+      account: "TikTok account",
+      post: "Post to TikTok",
+      uploadDraft: "Send to TikTok as Draft",
+      directPost: "Direct Post",
+      cancel: "Cancel",
+      confirm: "I confirm I want to send this content to TikTok.",
+      privacy: "Who can view this post?",
+      preparing: "Preparing TikTok...",
+      posting: "Sending to TikTok...",
+      success: "Your content was sent to TikTok.",
+      draftSuccess: "Your content was sent to TikTok as a draft. Open TikTok to finish posting.",
+      notConnected: "TikTok is not connected yet.",
+      error: "TikTok connection or publishing failed.",
+      loginError: "TikTok authorization was not completed.",
+      creatorError: "Unable to load your TikTok posting settings."
+    },
+
+    es: {
+      connect: "Conectar TikTok",
+      connected: "TikTok conectado",
+      account: "Cuenta de TikTok",
+      post: "Publicar en TikTok",
+      uploadDraft: "Enviar a TikTok como borrador",
+      directPost: "Publicación directa",
+      cancel: "Cancelar",
+      confirm: "Confirmo que quiero enviar este contenido a TikTok.",
+      privacy: "¿Quién puede ver esta publicación?",
+      preparing: "Preparando TikTok...",
+      posting: "Enviando a TikTok...",
+      success: "Tu contenido se envió a TikTok.",
+      draftSuccess: "Tu contenido se envió a TikTok como borrador. Abre TikTok para terminar la publicación.",
+      notConnected: "TikTok aún no está conectado.",
+      error: "La conexión o publicación en TikTok falló.",
+      loginError: "La autorización de TikTok no se completó.",
+      creatorError: "No se pudieron cargar las opciones de publicación de TikTok."
+    },
+
+    zh: {
+      connect: "连接 TikTok",
+      connected: "TikTok 已连接",
+      account: "TikTok 账号",
+      post: "发布到 TikTok",
+      uploadDraft: "发送到 TikTok 草稿",
+      directPost: "直接发布",
+      cancel: "取消",
+      confirm: "我确认要将此内容发送到 TikTok。",
+      privacy: "谁可以看到这条内容？",
+      preparing: "正在准备 TikTok...",
+      posting: "正在发送到 TikTok...",
+      success: "你的内容已发送到 TikTok。",
+      draftSuccess: "内容已作为草稿发送到 TikTok。请打开 TikTok 完成发布。",
+      notConnected: "TikTok 尚未连接。",
+      error: "TikTok 连接或发布失败。",
+      loginError: "TikTok 授权未完成。",
+      creatorError: "无法加载 TikTok 发布设置。"
+    },
+
+    ru: {
+      connect: "Подключить TikTok",
+      connected: "TikTok подключён",
+      account: "Аккаунт TikTok",
+      post: "Опубликовать в TikTok",
+      uploadDraft: "Отправить в TikTok как черновик",
+      directPost: "Прямая публикация",
+      cancel: "Отмена",
+      confirm: "Я подтверждаю, что хочу отправить этот контент в TikTok.",
+      privacy: "Кто сможет видеть эту публикацию?",
+      preparing: "Подготовка TikTok...",
+      posting: "Отправляем в TikTok...",
+      success: "Контент отправлен в TikTok.",
+      draftSuccess: "Контент отправлен в TikTok как черновик. Откройте TikTok, чтобы завершить публикацию.",
+      notConnected: "TikTok ещё не подключён.",
+      error: "Ошибка подключения или публикации в TikTok.",
+      loginError: "Авторизация TikTok не завершена.",
+      creatorError: "Не удалось загрузить настройки публикации TikTok."
+    },
+
+    hi: {
+      connect: "TikTok कनेक्ट करें",
+      connected: "TikTok कनेक्ट है",
+      account: "TikTok अकाउंट",
+      post: "TikTok पर पोस्ट करें",
+      uploadDraft: "TikTok पर ड्राफ्ट भेजें",
+      directPost: "सीधा पोस्ट",
+      cancel: "रद्द करें",
+      confirm: "मैं पुष्टि करता हूँ कि मैं यह सामग्री TikTok पर भेजना चाहता हूँ।",
+      privacy: "यह पोस्ट कौन देख सकता है?",
+      preparing: "TikTok तैयार किया जा रहा है...",
+      posting: "TikTok पर भेजा जा रहा है...",
+      success: "आपकी सामग्री TikTok पर भेज दी गई है।",
+      draftSuccess: "सामग्री TikTok पर ड्राफ्ट के रूप में भेज दी गई है। पोस्ट पूरा करने के लिए TikTok खोलें।",
+      notConnected: "TikTok अभी कनेक्ट नहीं है।",
+      error: "TikTok कनेक्शन या पोस्ट विफल हुआ।",
+      loginError: "TikTok प्राधिकरण पूरा नहीं हुआ।",
+      creatorError: "TikTok पोस्टिंग सेटिंग्स लोड नहीं हो सकीं।"
+    },
+
+    th: {
+      connect: "เชื่อมต่อ TikTok",
+      connected: "เชื่อมต่อ TikTok แล้ว",
+      account: "บัญชี TikTok",
+      post: "โพสต์ไปยัง TikTok",
+      uploadDraft: "ส่งไปยัง TikTok เป็นแบบร่าง",
+      directPost: "โพสต์โดยตรง",
+      cancel: "ยกเลิก",
+      confirm: "ฉันยืนยันว่าต้องการส่งเนื้อหานี้ไปยัง TikTok",
+      privacy: "ใครสามารถดูโพสต์นี้ได้?",
+      preparing: "กำลังเตรียม TikTok...",
+      posting: "กำลังส่งไปยัง TikTok...",
+      success: "ส่งเนื้อหาไปยัง TikTok แล้ว",
+      draftSuccess: "ส่งเนื้อหาไปยัง TikTok เป็นแบบร่างแล้ว เปิด TikTok เพื่อโพสต์ต่อ",
+      notConnected: "ยังไม่ได้เชื่อมต่อ TikTok",
+      error: "การเชื่อมต่อหรือการโพสต์ TikTok ล้มเหลว",
+      loginError: "การอนุญาต TikTok ยังไม่เสร็จ",
+      creatorError: "ไม่สามารถโหลดการตั้งค่าการโพสต์ TikTok ได้"
+    }
+
+  };
+
+  return (
+    copies[currentLanguage] ||
+    copies.en
+  );
+
+}
+
+
+async function getTikTokStatus() {
+
+  try {
+
+    const response =
+      await fetch(
+        TIKTOK_CONFIG.statusPath,
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
+
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
+
+    if (!response.ok) {
+
+      return {
+        connected: false,
+        ...data
+      };
+
+    }
+
+    return {
+      connected: Boolean(data.connected),
+      ...data
+    };
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 TikTok status error:",
+      error
+    );
+
+    return {
+      connected: false,
+      error: "status_request_failed"
+    };
+
+  }
+
+}
+
+
+function getTikTokReturnUrl() {
+
+  return (
+    window.location.origin +
+    window.location.pathname
+  );
+
+}
+
+
+function startTikTokLogin() {
+
+  const returnTo =
+    getTikTokReturnUrl();
+
+  const loginURL =
+    `${TIKTOK_CONFIG.loginPath}?returnTo=${encodeURIComponent(returnTo)}`;
+
+  window.location.assign(
+    loginURL
+  );
+
+}
+
+
+function sanitizeTikTokOptions(data) {
+
+  const options =
+    Array.isArray(
+      data &&
+      data.privacy_level_options
+    )
+      ? data.privacy_level_options
+      : [];
+
+  return options
+    .filter(
+      value =>
+        typeof value === "string" &&
+        value.trim()
+    )
+    .map(
+      value => value.trim()
+    );
+
+}
+
+
+function formatTikTokPrivacy(value) {
+
+  const labels = {
+
+    PUBLIC_TO_EVERYONE:
+      "Public",
+
+    MUTUAL_FOLLOW_FRIENDS:
+      "Friends",
+
+    FOLLOWER_OF_CREATOR:
+      "Followers",
+
+    SELF_ONLY:
+      "Only me"
+
+  };
+
+  return (
+    labels[value] ||
+    value
+      .replaceAll("_", " ")
+      .toLowerCase()
+      .replace(/\b\w/g, char => char.toUpperCase())
+  );
+
+}
+
+
+function closeTikTokExportModal() {
+
+  const modal =
+    document.getElementById(
+      "universe139TikTokExportModal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add(
+    "universe139TikTokClosing"
+  );
+
+  window.setTimeout(
+    () => {
+
+      if (modal.parentNode) {
+        modal.remove();
+      }
+
+    },
+    220
+  );
+
+}
+
+
+function addTikTokExportStyles() {
+
+  if (
+    document.getElementById(
+      "universe139TikTokExportStyles"
+    )
+  ) {
+    return;
+  }
+
+  const style =
+    document.createElement("style");
+
+  style.id =
+    "universe139TikTokExportStyles";
+
+  style.textContent = `
+
+    #universe139TikTokExportModal {
+      position: fixed;
+      inset: 0;
+      z-index: 25000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: universe139TikTokFadeIn .25s ease forwards;
+    }
+
+    .universe139TikTokOverlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(5,2,20,.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .universe139TikTokDialog {
+      position: relative;
+      width: min(500px,100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding: 28px 24px 24px;
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(48,18,86,.99),
+          rgba(17,7,38,.99)
+        );
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 30px 100px rgba(0,0,0,.75);
+      color: white;
+      text-align: center;
+      animation: universe139TikTokDialogIn .3s ease forwards;
+    }
+
+    .universe139TikTokClose {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      color: white;
+      cursor: pointer;
+      font-size: 25px;
+    }
+
+    .universe139TikTokTitle {
+      margin: 4px 38px 10px;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .universe139TikTokAccount {
+      margin: 0 auto 18px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.78);
+      font-size: 14px;
+    }
+
+    .universe139TikTokPreview {
+      margin-bottom: 18px;
+      padding: 14px;
+      text-align: left;
+      border-radius: 15px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .universe139TikTokPreviewLabel {
+      margin-bottom: 7px;
+      color: rgba(255,255,255,.48);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .universe139TikTokPreviewText {
+      color: white;
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .universe139TikTokModes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .universe139TikTokMode {
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.045);
+      color: white;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .universe139TikTokMode.active {
+      background: rgba(190,130,255,.18);
+      border-color: rgba(220,185,255,.55);
+    }
+
+    .universe139TikTokField {
+      margin: 12px 0;
+      text-align: left;
+    }
+
+    .universe139TikTokField label {
+      display: block;
+      margin-bottom: 7px;
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+    }
+
+    .universe139TikTokPrivacy {
+      width: 100%;
+      min-height: 44px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: white;
+      font: inherit;
+    }
+
+    .universe139TikTokPrivacy option {
+      color: #111;
+    }
+
+    .universe139TikTokConsent {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 14px 0;
+      text-align: left;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .universe139TikTokConsent input {
+      margin-top: 3px;
+      flex: 0 0 auto;
+    }
+
+    .universe139TikTokActions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .universe139TikTokAction {
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: white;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .universe139TikTokAction.primary {
+      background: rgba(255,255,255,.13);
+    }
+
+    .universe139TikTokBusy {
+      opacity: .65;
+      pointer-events: none;
+    }
+
+    #universe139TikTokExportModal.universe139TikTokClosing {
+      animation: universe139TikTokFadeOut .22s ease forwards;
+    }
+
+    @keyframes universe139TikTokFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes universe139TikTokFadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @keyframes universe139TikTokDialogIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width:600px) {
+
+      #universe139TikTokExportModal {
+        padding: 12px;
+      }
+
+      .universe139TikTokDialog {
+        padding: 25px 15px 16px;
+        border-radius: 21px;
+      }
+
+      .universe139TikTokModes,
+      .universe139TikTokActions {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+}
+
+
+async function openTikTokExportModal(
+  creatorData
+) {
+
+  closeTikTokExportModal();
+  addTikTokExportStyles();
+
+  const t =
+    getTikTokCopy();
+
+  const creator =
+    creatorData &&
+    creatorData.creator
+      ? creatorData.creator
+      : {};
+
+  const displayName =
+    creator.display_name ||
+    creator.nickname ||
+    "TikTok";
+
+  const privacyOptions =
+    sanitizeTikTokOptions(
+      creatorData
+    );
+
+  const defaultPrivacy =
+    creatorData &&
+    creatorData.default_privacy_level &&
+    privacyOptions.includes(
+      creatorData.default_privacy_level
+    )
+      ? creatorData.default_privacy_level
+      : (
+          privacyOptions.includes("SELF_ONLY")
+            ? "SELF_ONLY"
+            : privacyOptions[0]
+        );
+
+  const currentMessage =
+    message
+      ? message.textContent.trim()
+      : "";
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "universe139TikTokExportModal";
+
+  const privacyMarkup =
+    privacyOptions.length
+      ? `
+        <div
+          class="universe139TikTokField"
+          id="universe139TikTokPrivacyField"
+        >
+          <label for="universe139TikTokPrivacy">
+            ${escapeHTML(t.privacy)}
+          </label>
+
+          <select
+            id="universe139TikTokPrivacy"
+            class="universe139TikTokPrivacy"
+          >
+            ${privacyOptions
+              .map(
+                option => `
+                  <option
+                    value="${escapeHTML(option)}"
+                    ${option === defaultPrivacy ? "selected" : ""}
+                  >
+                    ${escapeHTML(
+                      formatTikTokPrivacy(option)
+                    )}
+                  </option>
+                `
+              )
+              .join("")}
+          </select>
+        </div>
+      `
+      : "";
+
+  modal.innerHTML = `
+
+    <div class="universe139TikTokOverlay"></div>
+
+    <div class="universe139TikTokDialog">
+
+      <button
+        class="universe139TikTokClose"
+        id="universe139TikTokClose"
+        type="button"
+        aria-label="${escapeHTML(t.cancel)}"
+      >
+        ×
+      </button>
+
+      <div class="universe139TikTokTitle">
+        ${escapeHTML(t.post)}
+      </div>
+
+      <div class="universe139TikTokAccount">
+        ${escapeHTML(t.account)}:
+        <strong>
+          ${escapeHTML(displayName)}
+        </strong>
+      </div>
+
+      <div class="universe139TikTokPreview">
+
+        <div class="universe139TikTokPreviewLabel">
+          ${escapeHTML(t.account)}
+        </div>
+
+        <div class="universe139TikTokPreviewText">
+          ${escapeHTML(currentMessage)}
+        </div>
+
+      </div>
+
+      <div
+        class="universe139TikTokModes"
+        role="tablist"
+      >
+
+        <button
+          type="button"
+          id="universe139TikTokDirectMode"
+          class="universe139TikTokMode active"
+        >
+          ${escapeHTML(t.directPost)}
+        </button>
+
+        <button
+          type="button"
+          id="universe139TikTokDraftMode"
+          class="universe139TikTokMode"
+        >
+          ${escapeHTML(t.uploadDraft)}
+        </button>
+
+      </div>
+
+      <div id="universe139TikTokPrivacyWrap">
+        ${privacyMarkup}
+      </div>
+
+      <label
+        class="universe139TikTokConsent"
+        for="universe139TikTokConsent"
+      >
+        <input
+          id="universe139TikTokConsent"
+          type="checkbox"
+        />
+
+        <span>
+          ${escapeHTML(t.confirm)}
+        </span>
+      </label>
+
+      <div
+        class="universe139TikTokActions"
+      >
+
+        <button
+          type="button"
+          id="universe139TikTokCancel"
+          class="universe139TikTokAction"
+        >
+          ${escapeHTML(t.cancel)}
+        </button>
+
+        <button
+          type="button"
+          id="universe139TikTokSubmit"
+          class="universe139TikTokAction primary"
+        >
+          ${escapeHTML(t.post)}
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(
+    modal
+  );
+
+  const overlay =
+    modal.querySelector(
+      ".universe139TikTokOverlay"
+    );
+
+  const closeButton =
+    document.getElementById(
+      "universe139TikTokClose"
+    );
+
+  const cancelButton =
+    document.getElementById(
+      "universe139TikTokCancel"
+    );
+
+  const submitButton =
+    document.getElementById(
+      "universe139TikTokSubmit"
+    );
+
+  const consent =
+    document.getElementById(
+      "universe139TikTokConsent"
+    );
+
+  const directMode =
+    document.getElementById(
+      "universe139TikTokDirectMode"
+    );
+
+  const draftMode =
+    document.getElementById(
+      "universe139TikTokDraftMode"
+    );
+
+  const privacyWrap =
+    document.getElementById(
+      "universe139TikTokPrivacyWrap"
+    );
+
+  const privacySelect =
+    document.getElementById(
+      "universe139TikTokPrivacy"
+    );
+
+  let mode =
+    "DIRECT_POST";
+
+  function refreshModeUI() {
+
+    if (mode === "DIRECT_POST") {
+
+      directMode &&
+        directMode.classList.add("active");
+
+      draftMode &&
+        draftMode.classList.remove("active");
+
+      if (privacyWrap) {
+        privacyWrap.style.display =
+          privacyOptions.length
+            ? "block"
+            : "none";
+      }
+
+      if (submitButton) {
+        submitButton.textContent =
+          t.post;
+      }
+
+    } else {
+
+      directMode &&
+        directMode.classList.remove("active");
+
+      draftMode &&
+        draftMode.classList.add("active");
+
+      if (privacyWrap) {
+        privacyWrap.style.display =
+          "none";
+      }
+
+      if (submitButton) {
+        submitButton.textContent =
+          t.uploadDraft;
+      }
+
+    }
+
+  }
+
+  if (overlay) {
+    overlay.addEventListener(
+      "click",
+      closeTikTokExportModal
+    );
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener(
+      "click",
+      closeTikTokExportModal
+    );
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      closeTikTokExportModal
+    );
+  }
+
+  if (directMode) {
+    directMode.addEventListener(
+      "click",
+      () => {
+        mode = "DIRECT_POST";
+        refreshModeUI();
+      }
+    );
+  }
+
+  if (draftMode) {
+    draftMode.addEventListener(
+      "click",
+      () => {
+        mode = "MEDIA_UPLOAD";
+        refreshModeUI();
+      }
+    );
+  }
+
+  if (submitButton) {
+
+    submitButton.addEventListener(
+      "click",
+      async () => {
+
+        if (!consent || !consent.checked) {
+
+          showShareToast(
+            t.confirm
+          );
+
+          return;
+        }
+
+        submitButton.classList.add(
+          "universe139TikTokBusy"
+        );
+
+        submitButton.disabled =
+          true;
+
+        if (cancelButton) {
+          cancelButton.disabled =
+            true;
+        }
+
+        showShareToast(
+          t.posting
+        );
+
+        try {
+
+          const response =
+            await fetch(
+              TIKTOK_CONFIG.publishPath,
+              {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                  "Accept":
+                    "application/json"
+                },
+                body:
+                  JSON.stringify({
+                    mode,
+                    message:
+                      currentMessage,
+                    language:
+                      currentLanguage,
+                    videoUrl:
+                      TIKTOK_CONFIG.videoUrl,
+                    privacyLevel:
+                      privacySelect
+                        ? privacySelect.value
+                        : undefined
+                  })
+              }
+            );
+
+          const data =
+            await response
+              .json()
+              .catch(() => ({}));
+
+          if (
+            !response.ok ||
+            data.success === false
+          ) {
+
+            throw new Error(
+              data.error ||
+              "TikTok publish failed."
+            );
+
+          }
+
+          closeTikTokExportModal();
+
+          showShareToast(
+            mode === "DIRECT_POST"
+              ? t.success
+              : t.draftSuccess
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Universe139 TikTok publish error:",
+            error
+          );
+
+          showShareToast(
+            t.error
+          );
+
+          if (submitButton) {
+            submitButton.disabled =
+              false;
+
+            submitButton.classList.remove(
+              "universe139TikTokBusy"
+            );
+          }
+
+          if (cancelButton) {
+            cancelButton.disabled =
+              false;
+          }
+
+        }
+
+      }
+    );
+
+  }
+
+  refreshModeUI();
+
+}
+
+
 async function shareTikTok() {
 
   const currentMessage =
@@ -3430,152 +4453,128 @@ async function shareTikTok() {
 
   }
 
-  try {
+  const t =
+    getTikTokCopy();
 
-    // TikTok doesn't accept a prefilled caption/link the way
-    // WhatsApp or Telegram do — but its app DOES readily accept a
-    // shared image to start a post or Story with. So we generate
-    // the same branded message image Instagram uses, and share
-    // that image straight to the TikTok app via the OS share sheet.
-    const blob =
-      await createMessageImageBlob();
+  showShareToast(
+    t.preparing
+  );
 
-    const file =
-      new File(
-        [blob],
-        "Universe139-message.png",
-        {
-          type: "image/png"
-        }
-      );
+  const status =
+    await getTikTokStatus();
+
+  if (!status.connected) {
 
     if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({
-        files: [file]
-      })
+      status.error ===
+      "status_request_failed"
     ) {
 
-      await navigator.share({
-
-        title:
-          "Universe139",
-
-        text:
-          getShareText(),
-
-        files:
-          [file]
-
-      });
+      showShareToast(
+        t.error
+      );
 
       return;
 
     }
 
-    // Some mobile browsers support navigator.share with text/url
-    // but not files — still worth trying before falling back further.
-    if (navigator.share) {
+    startTikTokLogin();
+    return;
 
-      try {
+  }
 
-        await navigator.share({
-          title: "Universe139",
-          text: getShareText(),
-          url: UNIVERSE139_URL
-        });
+  try {
 
-        return;
-
-      } catch (error) {
-
-        if (
-          error &&
-          error.name === "AbortError"
-        ) {
-          return;
+    const response =
+      await fetch(
+        TIKTOK_CONFIG.creatorInfoPath,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type":
+              "application/json",
+            "Accept":
+              "application/json"
+          }
         }
+      );
 
-        console.error(
-          "Universe139 TikTok text share error:",
-          error
-        );
+    const data =
+      await response
+        .json()
+        .catch(() => ({}));
 
-      }
+    if (!response.ok || data.success === false) {
+
+      throw new Error(
+        data.error ||
+        "Creator info unavailable."
+      );
 
     }
 
-    // Desktop fallback: there is no TikTok web-compose URL, so we
-    // download the ready-made image, copy the message + link, and
-    // send the person straight to TikTok's upload page to post it.
-    const objectURL =
-      URL.createObjectURL(
-        blob
-      );
-
-    const link =
-      document.createElement("a");
-
-    link.href =
-      objectURL;
-
-    link.download =
-      "Universe139-message.png";
-
-    document.body.appendChild(
-      link
+    await openTikTokExportModal(
+      data
     );
-
-    link.click();
-
-    link.remove();
-
-    window.setTimeout(() => {
-
-      URL.revokeObjectURL(
-        objectURL
-      );
-
-    }, 2000);
-
-    await copyShareTextWithNotice();
-
-    window.setTimeout(() => {
-
-      window.open(
-        "https://www.tiktok.com/upload",
-        "_blank",
-        "noopener,noreferrer"
-      );
-
-    }, 1200);
 
   } catch (error) {
 
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-      return;
-    }
-
     console.error(
-      "Universe139 TikTok share error:",
+      "Universe139 TikTok creator info error:",
       error
     );
 
-    // Emergency fallback if image generation itself fails —
-    // still guarantee the message + link reach the clipboard.
-    await copyShareTextWithNotice();
-
-    window.open(
-      "https://www.tiktok.com/",
-      "_blank",
-      "noopener,noreferrer"
+    showShareToast(
+      t.creatorError
     );
 
   }
+
+}
+
+
+function handleTikTokOAuthReturn() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const connected =
+    params.get("tiktok") ===
+    "connected";
+
+  const error =
+    params.get("tiktok_error");
+
+  if (connected) {
+
+    showShareToast(
+      getTikTokCopy().connected
+    );
+
+  } else if (error) {
+
+    showShareToast(
+      getTikTokCopy().loginError
+    );
+
+  } else {
+
+    return;
+
+  }
+
+  const cleanURL =
+    window.location.origin +
+    window.location.pathname;
+
+  window.history.replaceState(
+    {},
+    document.title,
+    cleanURL
+  );
 
 }
 
@@ -5442,6 +6441,8 @@ function initializeUniverse139() {
 
   initializeEvents();
 
+  handleTikTokOAuthReturn();
+
   console.log(
     "Universe139 loaded successfully"
   );
@@ -6820,4 +7821,3 @@ if (
   }
 
 })();
-
