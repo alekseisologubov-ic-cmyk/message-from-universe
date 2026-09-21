@@ -104,11 +104,11 @@ export default async function handler(req, res) {
         process.env.SUPABASE_URL
       );
 
-    const publishableKey =
-      String(
-        process.env.SUPABASE_PUBLISHABLE_KEY || ""
-      ).trim();
-
+   const supabaseKey =
+  String(
+    process.env.SUPABASE_SECRET_KEY ||
+    ""
+  ).trim();
     if (!supabaseUrl) {
       return res.status(500).json({
         ok: false,
