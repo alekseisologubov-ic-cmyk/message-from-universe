@@ -2369,33 +2369,113 @@ function openSubscriptionForm() {
   `;
 
   document.body.appendChild(modal);
-  addSubscriptionModalStyles();
 
-  const overlay = modal.querySelector(".universe139SubscriptionOverlay");
-  const closeButton = document.getElementById("universe139SubscribeClose");
-  const submitButton = document.getElementById("universe139SubscribeSubmit");
-  const emailInput = document.getElementById("universe139Email");
+  // --------------------------------------------------------
+  // Get modal controls directly from the newly-created modal.
+  // --------------------------------------------------------
+
+  const overlay =
+    modal.querySelector(
+      ".universe139SubscriptionOverlay"
+    );
+
+  const closeButton =
+    modal.querySelector(
+      "#universe139SubscribeClose"
+    );
+
+  const submitButton =
+    modal.querySelector(
+      "#universe139SubscribeSubmit"
+    );
+
+  const emailInput =
+    modal.querySelector(
+      "#universe139Email"
+    );
+
+  // --------------------------------------------------------
+  // Direct listeners
+  // --------------------------------------------------------
 
   if (overlay) {
-    overlay.addEventListener("click", closeSubscriptionForm);
+
+    overlay.addEventListener(
+      "click",
+      closeSubscriptionForm
+    );
+
   }
 
   if (closeButton) {
-    closeButton.addEventListener("click", closeSubscriptionForm);
+
+    closeButton.addEventListener(
+      "click",
+      closeSubscriptionForm
+    );
+
   }
 
   if (submitButton) {
-    submitButton.addEventListener("click", submitSubscription);
+
+    submitButton.addEventListener(
+      "click",
+      () => {
+        submitButton.dataset.universe139Handled = "1";
+        submitSubscription();
+      }
+    );
+
+    console.log(
+      "Universe139: subscription submit listener attached."
+    );
+
+  } else {
+
+    console.error(
+      "Universe139: subscription submit button not found."
+    );
+
   }
 
   if (emailInput) {
+
     emailInput.focus();
 
-    emailInput.addEventListener("keydown", event => {
-      if (event.key === "Enter") {
-        submitSubscription();
+    emailInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Enter") {
+
+          event.preventDefault();
+
+          submitSubscription();
+
+        }
+
       }
-    });
+    );
+
+  }
+
+  // --------------------------------------------------------
+  // Style setup is intentionally last.
+  // If styling fails, the functional controls above remain
+  // active.
+  // --------------------------------------------------------
+
+  try {
+
+    addSubscriptionModalStyles();
+
+  } catch (error) {
+
+    console.error(
+      "Universe139 subscription style error:",
+      error
+    );
+
   }
 }
 
@@ -2415,6 +2495,65 @@ function closeSubscriptionForm() {
     }
   }, 220);
 }
+
+// ==========================================================
+// SUBSCRIPTION CLICK FALLBACK
+//
+// The modal is created dynamically, so use event delegation as
+// a second reliable path. This survives any DOM recreation and
+// guarantees that the button can call submitSubscription().
+// ==========================================================
+
+if (
+  !window.__universe139SubscriptionDelegationInstalled
+) {
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const target =
+        event.target;
+
+      if (!target) {
+        return;
+      }
+
+      const button =
+        target.closest
+          ? target.closest(
+              "#universe139SubscribeSubmit"
+            )
+          : null;
+
+      if (!button) {
+        return;
+      }
+
+      // Prevent this delegated handler from causing a second
+      // submission when the direct listener is also present.
+      if (button.dataset.universe139Handled === "1") {
+        button.dataset.universe139Handled = "0";
+        return;
+      }
+
+      event.preventDefault();
+
+      console.log(
+        "Universe139: delegated subscription click."
+      );
+
+      submitSubscription();
+
+    },
+    true
+  );
+
+  window.__universe139SubscriptionDelegationInstalled =
+    true;
+
+}
+
 
 // ==========================================
 // SUBMIT SUBSCRIPTION
@@ -2454,6 +2593,7 @@ async function submitSubscription() {
       .trim()
       .toLowerCase();
 
+  // Simple and reliable validation
   const atPosition =
     email.indexOf("@");
 
@@ -2484,7 +2624,7 @@ async function submitSubscription() {
   if (submitButton) {
 
     submitButton.disabled = true;
-    submitButton.style.opacity = "0.65";
+    submitButton.style.opacity = ".65";
 
   }
 
@@ -2498,12 +2638,6 @@ async function submitSubscription() {
 
   try {
 
-    const timezone =
-      Intl.DateTimeFormat()
-        .resolvedOptions()
-        .timeZone ||
-      "UTC";
-
     const response =
       await fetch(
         "/api/subscribe",
@@ -2516,9 +2650,12 @@ async function submitSubscription() {
           },
 
           body: JSON.stringify({
-            email,
-            language: currentLanguage,
-            timezone
+
+            email: email,
+
+            language:
+              currentLanguage
+
           })
         }
       );
@@ -2528,21 +2665,16 @@ async function submitSubscription() {
         .json()
         .catch(() => ({}));
 
-    console.log(
-      "Universe139 subscription response:",
-      response.status,
-      data
-    );
-
     if (!response.ok) {
 
       throw new Error(
         data.error ||
-        `Subscription failed (HTTP ${response.status}).`
+        "Subscription failed."
       );
 
     }
 
+    // SUCCESS
     if (status) {
 
       status.textContent =
@@ -2564,6 +2696,7 @@ async function submitSubscription() {
 
     }
 
+    // Close after showing thank-you message
     window.setTimeout(
       () => {
         closeSubscriptionForm();
@@ -2582,7 +2715,7 @@ async function submitSubscription() {
 
       status.textContent =
         error?.message ||
-        "Unable to save your subscription.";
+        "Subscription request failed. Please try again.";
 
       status.className =
         "universe139SubscribeStatus universe139SubscribeError";
