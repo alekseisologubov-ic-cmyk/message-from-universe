@@ -95,9 +95,9 @@ export default async function handler(req, res) {
 
 
     const supabaseSecretKey =
-      String(
-        process.env.SUPABASE_SECRET_KEY || ""
-      ).trim();
+  String(
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  ).trim();
 
 
     // ======================================================
