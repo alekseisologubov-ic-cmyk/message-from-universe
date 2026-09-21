@@ -798,3 +798,455 @@ button:hover {
   }
 
 }
+/* ==========================================================
+   FINAL VISUAL POLISH
+   Message From Universe / Universe139
+   ========================================================== */
+
+
+/* ----------------------------------------------------------
+   BACKGROUND VIDEO
+   Smaller, centered, less aggressive
+   ---------------------------------------------------------- */
+
+#backgroundVideo,
+#bgVideo,
+.background-video,
+video.background-video,
+body > video {
+  position: fixed !important;
+
+  left: 50% !important;
+  top: 50% !important;
+
+  width: auto !important;
+  height: 84vh !important;
+
+  max-width: 92vw !important;
+  max-height: 84vh !important;
+
+  transform:
+    translate(-50%, -50%) !important;
+
+  object-fit: contain !important;
+  object-position: center center !important;
+
+  z-index: 0 !important;
+
+  background: #05020a !important;
+
+  pointer-events: none !important;
+}
+
+
+/* ----------------------------------------------------------
+   BACKGROUND ATMOSPHERE
+   Slightly darkens the video so text is dominant
+   ---------------------------------------------------------- */
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(20, 8, 45, 0.05) 0%,
+      rgba(5, 2, 12, 0.16) 65%,
+      rgba(5, 2, 12, 0.30) 100%
+    );
+}
+
+
+/* ----------------------------------------------------------
+   MAIN CONTENT
+   Move everything slightly upward
+   ---------------------------------------------------------- */
+
+.container {
+  position: relative;
+
+  z-index: 3;
+
+  min-height: 100vh;
+
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  text-align: center;
+
+  padding:
+    30px 20px 40px;
+
+  padding-top: 6vh;
+}
+
+
+/* ----------------------------------------------------------
+   TITLE
+   Slightly smaller and more elegant
+   ---------------------------------------------------------- */
+
+h1 {
+  font-family: 'Cinzel', serif;
+
+  font-size: 31px;
+
+  letter-spacing: 2.5px;
+
+  line-height: 1.22;
+
+  max-width: 700px;
+
+  text-shadow:
+    0 0 10px #a66cff,
+    0 0 25px #6f42c1;
+}
+
+
+/* ----------------------------------------------------------
+   SUBTITLE
+   ---------------------------------------------------------- */
+
+.subtitle {
+  margin-top: 14px;
+
+  opacity: 0.78;
+
+  font-size: 14px;
+
+  letter-spacing: 0.8px;
+}
+
+
+/* ----------------------------------------------------------
+   MESSAGE BOX
+   Better proportions and higher position
+   ---------------------------------------------------------- */
+
+.message-box {
+  width: min(
+    450px,
+    calc(100vw - 40px)
+  );
+
+  max-width: 450px;
+
+  margin-top: 28px;
+
+  padding:
+    30px 25px 26px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35, 20, 55, 0.48),
+      rgba(12, 7, 24, 0.56)
+    );
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  border:
+    1px solid
+    rgba(255,255,255,0.17);
+
+  border-radius: 25px;
+
+  box-shadow:
+    0 15px 55px
+    rgba(0,0,0,0.30),
+
+    0 0 45px
+    rgba(121,61,190,0.24);
+
+  position: relative;
+
+  z-index: 4;
+}
+
+
+/* ----------------------------------------------------------
+   DATE
+   ---------------------------------------------------------- */
+
+#universe139MessageDate {
+  margin-bottom: 9px;
+
+  font-size: 12px;
+
+  letter-spacing: 0.04em;
+
+  color:
+    rgba(255,255,255,0.62);
+}
+
+
+/* ----------------------------------------------------------
+   MESSAGE LABEL
+   ---------------------------------------------------------- */
+
+.month {
+  font-family: 'Cinzel', serif;
+
+  font-size: 12px;
+
+  letter-spacing: 2.5px;
+
+  margin-bottom: 22px;
+
+  color: #d8b4fe;
+}
+
+
+/* ----------------------------------------------------------
+   MESSAGE TEXT
+   ---------------------------------------------------------- */
+
+#message {
+  font-family: 'Cinzel', serif;
+
+  font-size: 21px;
+
+  line-height: 1.52;
+
+  margin-bottom: 22px;
+
+  max-width: 390px;
+
+  margin-left: auto;
+
+  margin-right: auto;
+}
+
+
+/* ----------------------------------------------------------
+   SMALL TEXT
+   ---------------------------------------------------------- */
+
+.small-text {
+  font-size: 12px;
+
+  opacity: 0.68;
+
+  margin-bottom: 20px;
+}
+
+
+/* ----------------------------------------------------------
+   BUTTONS
+   ---------------------------------------------------------- */
+
+#againBtn,
+#shareBtn {
+  margin:
+    4px 3px;
+
+  font-size: 10px;
+
+  padding:
+    11px 17px;
+}
+
+
+/* ----------------------------------------------------------
+   STARS
+   Keep behind content
+   ---------------------------------------------------------- */
+
+.stars {
+  z-index: 2;
+}
+
+
+/* ==========================================================
+   DESKTOP HEIGHT ADJUSTMENTS
+   ========================================================== */
+
+@media (min-width: 901px) {
+
+  .container {
+    padding-top: 5vh;
+  }
+
+  .message-box {
+    margin-top: 25px;
+  }
+
+}
+
+
+/* ==========================================================
+   SMALL LAPTOPS
+   ========================================================== */
+
+@media (
+  min-width: 501px
+) and (
+  max-height: 800px
+) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 78vh !important;
+
+    max-height: 78vh !important;
+  }
+
+  .container {
+    padding-top: 3vh;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .message-box {
+    margin-top: 20px;
+
+    padding:
+      25px 22px 22px;
+  }
+
+  #message {
+    font-size: 19px;
+
+    line-height: 1.45;
+  }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 500px) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 82vh !important;
+
+    max-height: 82vh !important;
+
+    max-width: 94vw !important;
+  }
+
+  .container {
+    min-height: 100vh;
+
+    padding:
+      18px 14px 30px;
+
+    padding-top: 4vh;
+
+    justify-content: flex-start;
+  }
+
+  h1 {
+    font-size: 25px;
+
+    letter-spacing: 2px;
+
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    margin-top: 12px;
+
+    font-size: 13px;
+  }
+
+  .message-box {
+    width:
+      calc(100vw - 28px);
+
+    max-width:
+      calc(100vw - 28px);
+
+    margin-top: 20px;
+
+    padding:
+      25px 17px 22px;
+
+    border-radius: 22px;
+  }
+
+  #message {
+    font-size: 18px;
+
+    line-height: 1.5;
+  }
+
+  .month {
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 17px;
+  }
+
+  #universe139MessageDate {
+    font-size: 11px;
+  }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL PHONES
+   ========================================================== */
+
+@media (max-width: 380px) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 78vh !important;
+
+    max-height: 78vh !important;
+  }
+
+  .container {
+    padding-top: 3vh;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  .message-box {
+    padding:
+      22px 15px 20px;
+  }
+
+  #message {
+    font-size: 17px;
+  }
+
+}
