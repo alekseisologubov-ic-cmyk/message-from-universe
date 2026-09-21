@@ -22,7 +22,7 @@
 
 import crypto from "crypto";
 
-import messages from "./universe-messages.js";
+import messages from "../lib/universe-messages.js";
 
 
 // ==========================================================
@@ -798,6 +798,7 @@ export default async function handler(
 
     const supabaseKey =
       String(
+        process.env.SUPABASE_SECRET_KEY ||
         process.env.SUPABASE_SERVICE_ROLE_KEY ||
         ""
       ).trim();
@@ -834,7 +835,7 @@ export default async function handler(
     if (!supabaseKey) {
 
       throw new Error(
-        "SUPABASE_SERVICE_ROLE_KEY is not configured."
+        "SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY is not configured."
       );
 
     }
@@ -1235,7 +1236,7 @@ export default async function handler(
 
 
         const unsubscribeUrl =
-          `${appUrl}/api/unsubscribe` +
+          `${appUrl}/api/subscribe?action=unsubscribe` +
           `?email=${encodeURIComponent(
             email
           )}` +
