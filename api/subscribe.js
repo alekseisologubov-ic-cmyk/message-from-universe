@@ -6,7 +6,24 @@ import crypto from "crypto";
 
 
 // ==========================================================
-// MAIN HANDLER
+// CONFIG
+// ==========================================================
+
+const TABLE =
+  "universe139_subscribers";
+
+const ALLOWED_LANGUAGES = [
+  "en",
+  "es",
+  "zh",
+  "ru",
+  "hi",
+  "th"
+];
+
+
+// ==========================================================
+// HANDLER
 // ==========================================================
 
 export default async function handler(req, res) {
@@ -140,16 +157,6 @@ export default async function handler(req, res) {
     // LANGUAGE
     // ======================================================
 
-    const allowedLanguages = [
-      "en",
-      "es",
-      "zh",
-      "ru",
-      "hi",
-      "th"
-    ];
-
-
     const requestedLanguage =
       String(
         body.language || "en"
@@ -159,7 +166,7 @@ export default async function handler(req, res) {
 
 
     const language =
-      allowedLanguages.includes(
+      ALLOWED_LANGUAGES.includes(
         requestedLanguage
       )
         ? requestedLanguage
@@ -174,217 +181,8 @@ export default async function handler(req, res) {
       String(
         body.timezone ||
         "Europe/Tallinn"
-      ).trim();
-
-
-    // ======================================================
-    // TABLE
-    // ======================================================
-
-    const tableUrl =
-      `${supabaseUrl}/rest/v1/universe139_subscribers`;
-
-
-    // ======================================================
-    // HEADERS
-    // ======================================================
-
-    const headers = {
-
-      apikey:
-        supabaseKey,
-
-      Authorization:
-        `Bearer ${supabaseKey}`,
-
-      "Content-Type":
-        "application/json",
-
-      Accept:
-        "application/json"
-
-    };
-
-
-    // ======================================================
-    // CHECK EXISTING SUBSCRIBER
-    // ======================================================
-
-    const lookupUrl =
-      `${tableUrl}` +
-      `?select=id,email,language,timezone,active` +
-      `&email=eq.${encodeURIComponent(email)}` +
-      `&limit=1`;
-
-
-    const lookupResponse =
-      await fetch(
-        lookupUrl,
-        {
-          method: "GET",
-          headers
-        }
-      );
-
-
-    const lookupText =
-      await lookupResponse.text();
-
-
-    if (!lookupResponse.ok) {
-
-      console.error(
-        "Universe139 lookup failed:",
-        lookupResponse.status,
-        lookupText
-      );
-
-
-      return res.status(502).json({
-
-        ok: false,
-
-        error:
-          "Supabase rejected the database request.",
-
-        supabaseStatus:
-          lookupResponse.status,
-
-        supabaseResponse:
-          lookupText
-
-      });
-
-    }
-
-
-    let existing = [];
-
-
-    try {
-
-      existing =
-        lookupText
-          ? JSON.parse(
-              lookupText
-            )
-          : [];
-
-    } catch {
-
-      return res.status(502).json({
-
-        ok: false,
-
-        error:
-          "Supabase returned invalid data."
-
-      });
-
-    }
-
-
-    // ======================================================
-    // EXISTING SUBSCRIBER
-    // ======================================================
-
-    if (
-      Array.isArray(existing) &&
-      existing.length > 0
-    ) {
-
-      const subscriber =
-        existing[0];
-
-
-      const updateUrl =
-        `${tableUrl}` +
-        `?id=eq.${encodeURIComponent(
-          subscriber.id
-        )}`;
-
-
-      const updateResponse =
-        await fetch(
-          updateUrl,
-          {
-
-            method:
-              "PATCH",
-
-            headers: {
-
-              ...headers,
-
-              Prefer:
-                "return=representation"
-
-            },
-
-            body:
-              JSON.stringify({
-
-                language,
-
-                timezone,
-
-                active:
-                  true
-
-              })
-
-          }
-        );
-
-
-      const updateText =
-        await updateResponse.text();
-
-
-      if (!updateResponse.ok) {
-
-        console.error(
-          "Universe139 update failed:",
-          updateResponse.status,
-          updateText
-        );
-
-
-        return res.status(502).json({
-
-          ok: false,
-
-          error:
-            "Supabase rejected the subscription update.",
-
-          supabaseStatus:
-            updateResponse.status,
-
-          supabaseResponse:
-            updateText
-
-        });
-
-      }
-
-
-      return res.status(200).json({
-
-        ok:
-          true,
-
-        subscribed:
-          true,
-
-        alreadySubscribed:
-          true,
-
-        message:
-          "You are already subscribed."
-
-      });
-
-    }
+      ).trim() ||
+      "Europe/Tallinn";
 
 
     // ======================================================
@@ -405,7 +203,7 @@ export default async function handler(req, res) {
 
 
     // ======================================================
-    // CREATE RANDOM ORDER OF 500 MESSAGES
+    // CREATE RANDOM ORDER OF ALL 500 MESSAGES
     //
     // 0 ... 499
     // ======================================================
@@ -413,10 +211,11 @@ export default async function handler(req, res) {
     const messageOrder =
       Array.from(
         { length: 500 },
-        (_, index) =>
-          index
+        (_, index) => index
       );
 
+
+    // Fisher-Yates shuffle
 
     for (
       let i =
@@ -437,10 +236,8 @@ export default async function handler(req, res) {
       const temp =
         messageOrder[i];
 
-
       messageOrder[i] =
         messageOrder[j];
-
 
       messageOrder[j] =
         temp;
@@ -449,21 +246,32 @@ export default async function handler(req, res) {
 
 
     // ======================================================
-    // FIRST MESSAGE POSITION
+    // INSERT
     // ======================================================
 
-    const messagePosition =
-      0;
+    const tableUrl =
+      `${supabaseUrl}/rest/v1/${TABLE}`;
 
 
-    // No message has been sent yet.
-    const lastSentDate =
-      null;
+    const headers = {
 
+      apikey:
+        supabaseKey,
 
-    // ======================================================
-    // INSERT NEW SUBSCRIBER
-    // ======================================================
+      Authorization:
+        `Bearer ${supabaseKey}`,
+
+      "Content-Type":
+        "application/json",
+
+      Accept:
+        "application/json",
+
+      Prefer:
+        "return=representation"
+
+    };
+
 
     const insertPayload = {
 
@@ -483,16 +291,14 @@ export default async function handler(req, res) {
         messageOrder,
 
       message_position:
-        messagePosition,
-
-      last_sent_date:
-        lastSentDate
+        0
 
     };
 
 
     console.log(
-      "Universe139: inserting subscriber."
+      "Universe139: inserting subscriber",
+      email
     );
 
 
@@ -504,14 +310,7 @@ export default async function handler(req, res) {
           method:
             "POST",
 
-          headers: {
-
-            ...headers,
-
-            Prefer:
-              "return=representation"
-
-          },
+          headers,
 
           body:
             JSON.stringify(
@@ -527,13 +326,13 @@ export default async function handler(req, res) {
 
 
     // ======================================================
-    // INSERT ERROR
+    // INSERT FAILED
     // ======================================================
 
     if (!insertResponse.ok) {
 
       console.error(
-        "Universe139 INSERT failed:",
+        "Universe139 Supabase INSERT:",
         insertResponse.status,
         insertText
       );
@@ -559,17 +358,55 @@ export default async function handler(req, res) {
 
 
     // ======================================================
-    // VERIFY INSERT
+    // PARSE INSERT RESULT
     // ======================================================
+
+    let insertedRow =
+      null;
+
+
+    try {
+
+      const parsed =
+        insertText
+          ? JSON.parse(
+              insertText
+            )
+          : [];
+
+
+      if (
+        Array.isArray(parsed) &&
+        parsed.length > 0
+      ) {
+
+        insertedRow =
+          parsed[0];
+
+      }
+
+    } catch {
+
+      insertedRow =
+        null;
+
+    }
+
+
+    // ======================================================
+    // VERIFY
+    // ======================================================
+
+    const verifyUrl =
+      `${tableUrl}` +
+      `?select=id,email,language,timezone,active,message_position,subscribed_at` +
+      `&email=eq.${encodeURIComponent(email)}` +
+      `&limit=1`;
+
 
     const verifyResponse =
       await fetch(
-
-        `${tableUrl}` +
-        `?select=id,email,language,timezone,active` +
-        `&email=eq.${encodeURIComponent(email)}` +
-        `&limit=1`,
-
+        verifyUrl,
         {
 
           method:
@@ -578,7 +415,6 @@ export default async function handler(req, res) {
           headers
 
         }
-
       );
 
 
@@ -588,13 +424,20 @@ export default async function handler(req, res) {
 
     if (!verifyResponse.ok) {
 
+      console.error(
+        "Universe139 verification:",
+        verifyResponse.status,
+        verifyText
+      );
+
+
       return res.status(502).json({
 
         ok:
           false,
 
         error:
-          "Subscriber was created but could not be verified.",
+          "Subscriber was inserted but could not be verified.",
 
         supabaseStatus:
           verifyResponse.status,
@@ -673,17 +516,18 @@ export default async function handler(req, res) {
         "You are subscribed. Your daily messages will begin soon.",
 
       subscriber:
-        verifiedRows[0]
+        verifiedRows[0],
+
+      unsubscribeToken:
+        unsubscribeToken
 
     });
 
-  }
 
-
-  catch (error) {
+  } catch (error) {
 
     console.error(
-      "Universe139 subscription error:",
+      "Universe139 subscribe error:",
       error
     );
 
