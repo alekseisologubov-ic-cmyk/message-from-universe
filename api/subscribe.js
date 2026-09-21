@@ -412,6 +412,7 @@ async function handleSubscribe(
     const supabaseKey =
       String(
         process.env.SUPABASE_SECRET_KEY ||
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
         ""
       ).trim();
 
@@ -457,7 +458,7 @@ async function handleSubscribe(
             false,
 
           error:
-            "SUPABASE_SECRET_KEY is not configured."
+            "SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY is not configured."
 
         });
 
@@ -860,6 +861,7 @@ async function handleUnsubscribe(
     const supabaseKey =
       String(
         process.env.SUPABASE_SECRET_KEY ||
+        process.env.SUPABASE_SERVICE_ROLE_KEY ||
         ""
       ).trim();
 
@@ -895,7 +897,7 @@ async function handleUnsubscribe(
         .send(
           htmlPage(
             "Configuration Error",
-            "SUPABASE_SECRET_KEY is not configured."
+            "SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY is not configured."
           )
         );
 
