@@ -1,28 +1,8 @@
 // ==========================================================
-// UNIVERSE139 SUBSCRIPTION API
-//
-// Route:
-// POST /api/subscribe
-//
-// Database:
-// public.universe139_subscribers
-//
-// Required Vercel environment variables:
-//
-// SUPABASE_URL
-// SUPABASE_SERVICE_ROLE_KEY
-//
-// Optional:
-// SUPABASE_SECRET_KEY
-//
+// UNIVERSE139 SUBSCRIBE API - DIAGNOSTIC VERSION
 // ==========================================================
 
-
 export default async function handler(req, res) {
-
-  // --------------------------------------------------------
-  // RESPONSE HEADERS
-  // --------------------------------------------------------
 
   res.setHeader(
     "Content-Type",
@@ -31,41 +11,25 @@ export default async function handler(req, res) {
 
   res.setHeader(
     "Cache-Control",
-    "no-store, no-cache, must-revalidate"
+    "no-store"
   );
 
 
-  // --------------------------------------------------------
-  // ALLOW OPTIONS
-  // --------------------------------------------------------
-
   if (req.method === "OPTIONS") {
 
-    return res
-      .status(200)
-      .json({
-        ok: true
-      });
+    return res.status(200).json({
+      ok: true
+    });
 
   }
 
 
-  // --------------------------------------------------------
-  // POST ONLY
-  // --------------------------------------------------------
-
   if (req.method !== "POST") {
 
-    return res
-      .status(405)
-      .json({
-
-        ok: false,
-
-        error:
-          "Method not allowed. Use POST."
-
-      });
+    return res.status(405).json({
+      ok: false,
+      error: "Method not allowed. Use POST."
+    });
 
   }
 
@@ -79,60 +43,41 @@ export default async function handler(req, res) {
     const supabaseUrl =
       String(
         process.env.SUPABASE_URL || ""
-      ).replace(
-        /\/+$/,
-        ""
-      );
+      ).trim().replace(/\/+$/, "");
 
 
     const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ||
-      process.env.SUPABASE_SECRET_KEY ||
-      "";
+      String(
+        process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+      ).trim();
 
+
+    // ------------------------------------------------------
+    // CHECK VARIABLES
+    // ------------------------------------------------------
 
     if (!supabaseUrl) {
 
-      console.error(
-        "Universe139: SUPABASE_URL missing."
-      );
-
-      return res
-        .status(500)
-        .json({
-
-          ok: false,
-
-          error:
-            "SUPABASE_URL is missing in Vercel."
-
-        });
+      return res.status(500).json({
+        ok: false,
+        error: "SUPABASE_URL is missing."
+      });
 
     }
 
 
     if (!supabaseKey) {
 
-      console.error(
-        "Universe139: Supabase server key missing."
-      );
-
-      return res
-        .status(500)
-        .json({
-
-          ok: false,
-
-          error:
-            "SUPABASE_SERVICE_ROLE_KEY is missing in Vercel."
-
-        });
+      return res.status(500).json({
+        ok: false,
+        error: "SUPABASE_SERVICE_ROLE_KEY is missing."
+      });
 
     }
 
 
     // ======================================================
-    // READ BODY
+    // BODY
     // ======================================================
 
     let body =
@@ -146,22 +91,14 @@ export default async function handler(req, res) {
       try {
 
         body =
-          JSON.parse(
-            body
-          );
+          JSON.parse(body);
 
       } catch {
 
-        return res
-          .status(400)
-          .json({
-
-            ok: false,
-
-            error:
-              "Invalid JSON request."
-
-          });
+        return res.status(400).json({
+          ok: false,
+          error: "Invalid JSON request."
+        });
 
       }
 
@@ -178,6 +115,22 @@ export default async function handler(req, res) {
       )
         .trim()
         .toLowerCase();
+
+
+    const emailValid =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email
+      );
+
+
+    if (!emailValid) {
+
+      return res.status(400).json({
+        ok: false,
+        error: "Please enter a valid email address."
+      });
+
+    }
 
 
     // ======================================================
@@ -216,68 +169,18 @@ export default async function handler(req, res) {
 
     const timezone =
       String(
-        body.timezone || "UTC"
-      ).trim() ||
-      "UTC";
+        body.timezone ||
+        "Europe/Tallinn"
+      ).trim();
 
 
     // ======================================================
-    // EMAIL VALIDATION
-    // ======================================================
-
-    const validEmail =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        .test(
-          email
-        );
-
-
-    if (!validEmail) {
-
-      return res
-        .status(400)
-        .json({
-
-          ok: false,
-
-          error:
-            "Please enter a valid email address."
-
-        });
-
-    }
-
-
-    // ======================================================
-    // SUPABASE TABLE
-    //
-    // This is the table we created.
+    // SUPABASE URL
     // ======================================================
 
     const table =
       "universe139_subscribers";
 
-
-    const headers = {
-
-      apikey:
-        supabaseKey,
-
-      Authorization:
-        `Bearer ${supabaseKey}`,
-
-      "Content-Type":
-        "application/json",
-
-      Accept:
-        "application/json"
-
-    };
-
-
-    // ======================================================
-    // CHECK EXISTING EMAIL
-    // ======================================================
 
     const lookupUrl =
       `${supabaseUrl}/rest/v1/${table}` +
@@ -286,47 +189,121 @@ export default async function handler(req, res) {
       `&limit=1`;
 
 
-    const lookupResponse =
-      await fetch(
-        lookupUrl,
-        {
-          method:
-            "GET",
+    console.log(
+      "Universe139 Supabase URL:",
+      supabaseUrl
+    );
 
-          headers
-        }
+
+    console.log(
+      "Universe139 lookup URL:",
+      lookupUrl
+    );
+
+
+    // ======================================================
+    // SUPABASE LOOKUP
+    // ======================================================
+
+    let lookupResponse;
+
+
+    try {
+
+      lookupResponse =
+        await fetch(
+          lookupUrl,
+          {
+
+            method: "GET",
+
+            headers: {
+
+              apikey:
+                supabaseKey,
+
+              Authorization:
+                `Bearer ${supabaseKey}`,
+
+              Accept:
+                "application/json"
+
+            }
+
+          }
+        );
+
+    } catch (networkError) {
+
+      console.error(
+        "Universe139 Supabase NETWORK ERROR:",
+        networkError
       );
 
+
+      return res.status(502).json({
+
+        ok: false,
+
+        error:
+          "Could not connect to Supabase.",
+
+        diagnostic:
+          networkError?.message ||
+          String(networkError)
+
+      });
+
+    }
+
+
+    // ======================================================
+    // READ SUPABASE RESPONSE
+    // ======================================================
 
     const lookupText =
       await lookupResponse.text();
 
 
+    console.log(
+      "Universe139 Supabase HTTP:",
+      lookupResponse.status
+    );
+
+
+    console.log(
+      "Universe139 Supabase response:",
+      lookupText
+    );
+
+
+    // ======================================================
+    // SUPABASE ERROR
+    // ======================================================
+
     if (!lookupResponse.ok) {
 
-      console.error(
-        "Universe139 Supabase lookup error:",
-        lookupResponse.status,
-        lookupText
-      );
+      return res.status(502).json({
 
+        ok: false,
 
-      return res
-        .status(502)
-        .json({
+        error:
+          "Supabase rejected the database request.",
 
-          ok: false,
+        supabaseStatus:
+          lookupResponse.status,
 
-          error:
-            "Unable to check the subscription database.",
+        supabaseResponse:
+          lookupText
 
-          details:
-            lookupText
-
-        });
+      });
 
     }
 
+
+    // ======================================================
+    // PARSE RESULT
+    // ======================================================
 
     let existing = [];
 
@@ -335,14 +312,22 @@ export default async function handler(req, res) {
 
       existing =
         lookupText
-          ? JSON.parse(
-              lookupText
-            )
+          ? JSON.parse(lookupText)
           : [];
 
     } catch {
 
-      existing = [];
+      return res.status(502).json({
+
+        ok: false,
+
+        error:
+          "Supabase returned invalid JSON.",
+
+        response:
+          lookupText
+
+      });
 
     }
 
@@ -360,10 +345,6 @@ export default async function handler(req, res) {
         existing[0];
 
 
-      // ----------------------------------------------------
-      // Reactivate / update language
-      // ----------------------------------------------------
-
       const updateUrl =
         `${supabaseUrl}/rest/v1/${table}` +
         `?id=eq.${encodeURIComponent(
@@ -371,37 +352,70 @@ export default async function handler(req, res) {
         )}`;
 
 
-      const updateResponse =
-        await fetch(
-          updateUrl,
-          {
+      let updateResponse;
 
-            method:
-              "PATCH",
 
-            headers: {
+      try {
 
-              ...headers,
+        updateResponse =
+          await fetch(
+            updateUrl,
+            {
 
-              Prefer:
-                "return=minimal"
+              method: "PATCH",
 
-            },
+              headers: {
 
-            body:
-              JSON.stringify({
+                apikey:
+                  supabaseKey,
 
-                language,
+                Authorization:
+                  `Bearer ${supabaseKey}`,
 
-                timezone,
+                "Content-Type":
+                  "application/json",
 
-                active:
-                  true
+                Prefer:
+                  "return=minimal"
 
-              })
+              },
 
-          }
+              body:
+                JSON.stringify({
+
+                  language,
+
+                  timezone,
+
+                  active: true
+
+                })
+
+            }
+          );
+
+      } catch (error) {
+
+        console.error(
+          "Universe139 Supabase UPDATE network error:",
+          error
         );
+
+
+        return res.status(502).json({
+
+          ok: false,
+
+          error:
+            "Could not connect to Supabase while updating your subscription.",
+
+          diagnostic:
+            error?.message ||
+            String(error)
+
+        });
+
+      }
 
 
       const updateText =
@@ -410,52 +424,36 @@ export default async function handler(req, res) {
 
       if (!updateResponse.ok) {
 
-        console.error(
-          "Universe139 Supabase update error:",
-          updateResponse.status,
-          updateText
-        );
+        return res.status(502).json({
 
+          ok: false,
 
-        return res
-          .status(502)
-          .json({
+          error:
+            "Supabase rejected the subscription update.",
 
-            ok: false,
+          supabaseStatus:
+            updateResponse.status,
 
-            error:
-              "Unable to update your subscription.",
+          supabaseResponse:
+            updateText
 
-            details:
-              updateText
-
-          });
+        });
 
       }
 
 
-      console.log(
-        "Universe139 existing subscriber updated:",
-        email
-      );
+      return res.status(200).json({
 
+        ok: true,
 
-      return res
-        .status(200)
-        .json({
+        subscribed: true,
 
-          ok: true,
+        alreadySubscribed: true,
 
-          subscribed:
-            true,
+        message:
+          "You are already subscribed."
 
-          alreadySubscribed:
-            true,
-
-          message:
-            "You are already subscribed."
-
-        });
+      });
 
     }
 
@@ -468,39 +466,72 @@ export default async function handler(req, res) {
       `${supabaseUrl}/rest/v1/${table}`;
 
 
-    const insertResponse =
-      await fetch(
-        insertUrl,
-        {
+    let insertResponse;
 
-          method:
-            "POST",
 
-          headers: {
+    try {
 
-            ...headers,
+      insertResponse =
+        await fetch(
+          insertUrl,
+          {
 
-            Prefer:
-              "return=representation"
+            method: "POST",
 
-          },
+            headers: {
 
-          body:
-            JSON.stringify({
+              apikey:
+                supabaseKey,
 
-              email,
+              Authorization:
+                `Bearer ${supabaseKey}`,
 
-              language,
+              "Content-Type":
+                "application/json",
 
-              timezone,
+              Prefer:
+                "return=representation"
 
-              active:
-                true
+            },
 
-            })
+            body:
+              JSON.stringify({
 
-        }
+                email,
+
+                language,
+
+                timezone,
+
+                active: true
+
+              })
+
+          }
+        );
+
+    } catch (error) {
+
+      console.error(
+        "Universe139 Supabase INSERT network error:",
+        error
       );
+
+
+      return res.status(502).json({
+
+        ok: false,
+
+        error:
+          "Could not connect to Supabase while saving the subscription.",
+
+        diagnostic:
+          error?.message ||
+          String(error)
+
+      });
+
+    }
 
 
     const insertText =
@@ -509,60 +540,20 @@ export default async function handler(req, res) {
 
     if (!insertResponse.ok) {
 
-      console.error(
-        "Universe139 Supabase insert error:",
-        insertResponse.status,
-        insertText
-      );
+      return res.status(502).json({
 
+        ok: false,
 
-      // ----------------------------------------------------
-      // Duplicate race condition
-      // ----------------------------------------------------
+        error:
+          "Supabase rejected the subscription.",
 
-      if (
-        insertResponse.status === 409 ||
-        insertText.includes(
-          "duplicate"
-        ) ||
-        insertText.includes(
-          "unique"
-        )
-      ) {
+        supabaseStatus:
+          insertResponse.status,
 
-        return res
-          .status(200)
-          .json({
+        supabaseResponse:
+          insertText
 
-            ok: true,
-
-            subscribed:
-              true,
-
-            alreadySubscribed:
-              true,
-
-            message:
-              "You are already subscribed."
-
-          });
-
-      }
-
-
-      return res
-        .status(502)
-        .json({
-
-          ok: false,
-
-          error:
-            "Unable to save your subscription.",
-
-          details:
-            insertText
-
-        });
+      });
 
     }
 
@@ -572,50 +563,46 @@ export default async function handler(req, res) {
     // ======================================================
 
     console.log(
-      "Universe139 new subscriber:",
-      email,
-      language,
-      timezone
+      "Universe139 subscription saved:",
+      email
     );
 
 
-    return res
-      .status(200)
-      .json({
+    return res.status(200).json({
 
-        ok: true,
+      ok: true,
 
-        subscribed:
-          true,
+      subscribed: true,
 
-        alreadySubscribed:
-          false,
+      alreadySubscribed: false,
 
-        message:
-          "Subscription saved successfully."
+      message:
+        "Subscription saved successfully."
 
-      });
+    });
 
 
   } catch (error) {
 
     console.error(
-      "Universe139 /api/subscribe error:",
+      "Universe139 subscribe fatal error:",
       error
     );
 
 
-    return res
-      .status(500)
-      .json({
+    return res.status(500).json({
 
-        ok: false,
+      ok: false,
 
-        error:
-          error?.message ||
-          "Subscription request failed."
+      error:
+        error?.message ||
+        "Subscription request failed.",
 
-      });
+      diagnostic:
+        error?.stack ||
+        String(error)
+
+    });
 
   }
 
