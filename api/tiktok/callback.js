@@ -1,32 +1,28 @@
 // ==========================================================
 // TikTok Login Kit - OAuth callback
+// Message From Universe
+//
 // Vercel Serverless Function
 //
 // Route:
 // https://message-from-universe.vercel.app/api/tiktok/callback
 //
-// Receives the authorization code from TikTok,
-// validates the OAuth state, exchanges the code for
-// access_token + refresh_token, and stores an encrypted
-// session in an HttpOnly cookie.
+// Flow:
+// TikTok -> authorization code -> token exchange ->
+// encrypted HttpOnly session cookie -> app
 // ==========================================================
 
-const crypto = require("crypto");
-
-// ----------------------------------------------------------
-// Environment / configuration
-// ----------------------------------------------------------
+import crypto from "crypto";
 
 const DEFAULT_REDIRECT_URI =
   "https://message-from-universe.vercel.app/api/tiktok/callback";
 
 // ----------------------------------------------------------
-// Cookie helpers
+// Parse cookies
 // ----------------------------------------------------------
 
 function parseCookies(req) {
   const header = req.headers.cookie || "";
-
   const result = {};
 
   header.split(";").forEach((part) => {
@@ -52,6 +48,10 @@ function parseCookies(req) {
 
   return result;
 }
+
+// ----------------------------------------------------------
+// Serialize cookie
+// ----------------------------------------------------------
 
 function serializeCookie(name, value, options = {}) {
   const parts = [
@@ -82,13 +82,7 @@ function serializeCookie(name, value, options = {}) {
 }
 
 // ----------------------------------------------------------
-// Encryption
-//
-// We never put the TikTok client secret or raw access token
-// into browser-visible JavaScript.
-//
-// The OAuth result is encrypted with AES-256-GCM and placed
-// in an HttpOnly cookie.
+// Encryption key
 // ----------------------------------------------------------
 
 function getEncryptionKey() {
@@ -97,7 +91,7 @@ function getEncryptionKey() {
 
   if (!secret) {
     throw new Error(
-      "TIKTOK_SESSION_SECRET is not configured."
+      "TIKTOK_SESSION_SECRET is not configured in Vercel."
     );
   }
 
@@ -107,8 +101,13 @@ function getEncryptionKey() {
     .digest();
 }
 
+// ----------------------------------------------------------
+// Encrypt session
+// ----------------------------------------------------------
+
 function encryptSession(data) {
-  const key = getEncryptionKey();
+  const key =
+    getEncryptionKey();
 
   const iv =
     crypto.randomBytes(12);
@@ -143,20 +142,32 @@ function encryptSession(data) {
 }
 
 // ----------------------------------------------------------
+// Build application error redirect
+// ----------------------------------------------------------
+
+function redirectWithError(res, message) {
+  return res.redirect(
+    302,
+    `/?tiktok=error&message=${encodeURIComponent(
+      message
+    )}`
+  );
+}
+
+// ----------------------------------------------------------
 // Main handler
 // ----------------------------------------------------------
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // --------------------------------------------------------
-  // Only GET is valid for the OAuth callback
+  // OAuth callback is GET
   // --------------------------------------------------------
 
   if (req.method !== "GET") {
-    res.status(405).json({
+    return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
-
-    return;
   }
 
   try {
@@ -171,18 +182,30 @@ module.exports = async function handler(req, res) {
       process.env.TIKTOK_CLIENT_SECRET;
 
     const redirectUri =
-      process.env.TIKTOK_REDIRECT_URI ||
-      DEFAULT_REDIRECT_URI;
+      (
+        process.env.TIKTOK_REDIRECT_URI ||
+        DEFAULT_REDIRECT_URI
+      ).trim();
 
     if (!clientKey) {
-      throw new Error(
-        "TIKTOK_CLIENT_KEY is not configured."
+      console.error(
+        "TikTok callback: TIKTOK_CLIENT_KEY missing."
+      );
+
+      return redirectWithError(
+        res,
+        "TikTok Client Key is not configured."
       );
     }
 
     if (!clientSecret) {
-      throw new Error(
-        "TIKTOK_CLIENT_SECRET is not configured."
+      console.error(
+        "TikTok callback: TIKTOK_CLIENT_SECRET missing."
+      );
+
+      return redirectWithError(
+        res,
+        "TikTok Client Secret is not configured."
       );
     }
 
@@ -200,55 +223,56 @@ module.exports = async function handler(req, res) {
         ? req.query.state
         : "";
 
-    const error =
+    const returnedScopes =
+      typeof req.query.scopes === "string"
+        ? req.query.scopes
+        : "";
+
+    const oauthError =
       typeof req.query.error === "string"
         ? req.query.error
         : "";
 
-    const errorDescription =
+    const oauthErrorDescription =
       typeof req.query.error_description === "string"
         ? req.query.error_description
         : "";
 
     // ------------------------------------------------------
-    // TikTok can return an authorization error
+    // TikTok authorization was denied / failed
     // ------------------------------------------------------
 
-    if (error) {
+    if (oauthError) {
       console.error(
         "TikTok authorization error:",
-        error,
-        errorDescription
+        {
+          error: oauthError,
+          error_description:
+            oauthErrorDescription
+        }
       );
 
-      const message =
-        errorDescription ||
-        error ||
-        "TikTok authorization was not completed.";
-
-      res.redirect(
-        `/?tiktok=error&message=${encodeURIComponent(
-          message
-        )}`
+      return redirectWithError(
+        res,
+        oauthErrorDescription ||
+          oauthError ||
+          "TikTok authorization was not completed."
       );
-
-      return;
     }
 
     // ------------------------------------------------------
-    // Authorization code is required
+    // Authorization code required
     // ------------------------------------------------------
 
     if (!code) {
-      res.redirect(
-        "/?tiktok=error&message=No%20authorization%20code%20was%20returned%20by%20TikTok."
+      return redirectWithError(
+        res,
+        "TikTok did not return an authorization code."
       );
-
-      return;
     }
 
     // ------------------------------------------------------
-    // Validate OAuth state
+    // Validate state
     // ------------------------------------------------------
 
     const cookies =
@@ -266,13 +290,14 @@ module.exports = async function handler(req, res) {
         "TikTok OAuth state validation failed."
       );
 
-      res.status(400).send(`
+      return res.status(400).send(`
         <!doctype html>
         <html>
           <head>
             <meta charset="utf-8">
-            <title>TikTok Authorization Error</title>
+            <title>TikTok Connection Error</title>
           </head>
+
           <body style="
             margin:0;
             min-height:100vh;
@@ -286,23 +311,55 @@ module.exports = async function handler(req, res) {
             padding:30px;
             box-sizing:border-box;
           ">
+
             <div>
               <h2>TikTok connection could not be verified.</h2>
-              <p>Please close this window and try connecting TikTok again.</p>
+              <p>
+                Please return to Message From The Universe
+                and try connecting TikTok again.
+              </p>
             </div>
+
           </body>
         </html>
       `);
-
-      return;
     }
 
     // ------------------------------------------------------
-    // Exchange authorization code for TikTok tokens
-    //
-    // TikTok current endpoint:
-    // POST https://open.tiktokapis.com/v2/oauth/token/
+    // Exchange authorization code for access token
     // ------------------------------------------------------
+
+    const tokenBody =
+      new URLSearchParams();
+
+    tokenBody.set(
+      "client_key",
+      clientKey
+    );
+
+    tokenBody.set(
+      "client_secret",
+      clientSecret
+    );
+
+    tokenBody.set(
+      "code",
+      code
+    );
+
+    tokenBody.set(
+      "grant_type",
+      "authorization_code"
+    );
+
+    tokenBody.set(
+      "redirect_uri",
+      redirectUri
+    );
+
+    console.log(
+      "TikTok token exchange starting."
+    );
 
     const tokenResponse =
       await fetch(
@@ -316,14 +373,7 @@ module.exports = async function handler(req, res) {
           },
 
           body:
-            new URLSearchParams({
-              client_key: clientKey,
-              client_secret: clientSecret,
-              code: code,
-              grant_type:
-                "authorization_code",
-              redirect_uri: redirectUri
-            }).toString()
+            tokenBody.toString()
         }
       );
 
@@ -333,7 +383,7 @@ module.exports = async function handler(req, res) {
         .catch(() => ({}));
 
     // ------------------------------------------------------
-    // TikTok token exchange failed
+    // Token exchange failed
     // ------------------------------------------------------
 
     if (
@@ -342,8 +392,12 @@ module.exports = async function handler(req, res) {
     ) {
       console.error(
         "TikTok token exchange failed:",
-        tokenResponse.status,
-        tokenData
+        {
+          httpStatus:
+            tokenResponse.status,
+          data:
+            tokenData
+        }
       );
 
       const description =
@@ -351,23 +405,26 @@ module.exports = async function handler(req, res) {
         tokenData.error ||
         "TikTok token exchange failed.";
 
-      res.redirect(
-        `/?tiktok=error&message=${encodeURIComponent(
-          description
-        )}`
+      return redirectWithError(
+        res,
+        description
       );
-
-      return;
     }
 
     // ------------------------------------------------------
-    // Store only the information needed by our backend.
-    //
-    // IMPORTANT:
-    // access_token and refresh_token remain inside the
-    // encrypted HttpOnly cookie and are never exposed
-    // to client-side JavaScript.
+    // Create encrypted session
     // ------------------------------------------------------
+
+    const expiresIn =
+      Number(
+        tokenData.expires_in || 86400
+      );
+
+    const refreshExpiresIn =
+      Number(
+        tokenData.refresh_expires_in ||
+        31536000
+      );
 
     const session = {
       open_id:
@@ -381,31 +438,27 @@ module.exports = async function handler(req, res) {
 
       expires_at:
         Date.now() +
-        Number(
-          tokenData.expires_in || 86400
-        ) *
-          1000,
+        expiresIn * 1000,
 
       refresh_expires_at:
         Date.now() +
-        Number(
-          tokenData.refresh_expires_in ||
-          31536000
-        ) *
-          1000,
+        refreshExpiresIn * 1000,
 
       scope:
-        tokenData.scope || "",
+        tokenData.scope ||
+        returnedScopes ||
+        "",
 
       token_type:
-        tokenData.token_type || "Bearer"
+        tokenData.token_type ||
+        "Bearer"
     };
 
     const encryptedSession =
       encryptSession(session);
 
     // ------------------------------------------------------
-    // Set session cookie
+    // Session cookie
     // ------------------------------------------------------
 
     const sessionCookie =
@@ -422,7 +475,7 @@ module.exports = async function handler(req, res) {
       );
 
     // ------------------------------------------------------
-    // Clear the one-time OAuth state cookie
+    // Clear OAuth state cookie
     // ------------------------------------------------------
 
     const clearStateCookie =
@@ -447,20 +500,31 @@ module.exports = async function handler(req, res) {
     );
 
     // ------------------------------------------------------
-    // Return the user to the main application
+    // Successful connection
     // ------------------------------------------------------
 
-    res.redirect(
+    console.log(
+      "TikTok OAuth connection successful.",
+      {
+        openId:
+          session.open_id,
+        scope:
+          session.scope
+      }
+    );
+
+    return res.redirect(
+      302,
       "/?tiktok=connected"
     );
 
   } catch (error) {
     console.error(
-      "TikTok callback error:",
+      "TikTok callback unexpected error:",
       error
     );
 
-    res.status(500).send(`
+    return res.status(500).send(`
       <!doctype html>
       <html>
         <head>
@@ -482,7 +546,7 @@ module.exports = async function handler(req, res) {
           box-sizing:border-box;
         ">
 
-          <div>
+          <div style="max-width:600px;">
             <h2>TikTok connection failed.</h2>
 
             <p>
@@ -495,4 +559,4 @@ module.exports = async function handler(req, res) {
       </html>
     `);
   }
-};
+}
