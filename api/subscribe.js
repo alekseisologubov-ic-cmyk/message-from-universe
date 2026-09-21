@@ -22,11 +22,11 @@ function normalizeSupabaseUrl(value) {
     .replace(/\/rest\/v1$/, "");
 }
 
-function validEmail(email) {
+function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function validTimezone(value) {
+function normalizeTimezone(value) {
   const timezone =
     String(value || "Europe/Tallinn").trim();
 
@@ -39,6 +39,22 @@ function validTimezone(value) {
   } catch {
     return "Europe/Tallinn";
   }
+}
+
+// IMPORTANT:
+// This must match send-daily.js and unsubscribe.js.
+function createUnsubscribeToken(email, secret) {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(email)
+    .digest("hex");
+}
+
+function hashToken(token) {
+  return crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
 }
 
 function createMessageOrder() {
@@ -56,22 +72,6 @@ function createMessageOrder() {
   }
 
   return order;
-}
-
-function createTokenHash() {
-  const token =
-    crypto.randomBytes(32).toString("hex");
-
-  const hash =
-    crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
-
-  return {
-    token,
-    hash
-  };
 }
 
 export default async function handler(req, res) {
@@ -112,7 +112,8 @@ export default async function handler(req, res) {
     if (!supabaseUrl) {
       return res.status(500).json({
         ok: false,
-        error: "SUPABASE_URL is missing."
+        error:
+          "SUPABASE_URL is not configured."
       });
     }
 
@@ -120,7 +121,24 @@ export default async function handler(req, res) {
       return res.status(500).json({
         ok: false,
         error:
-          "SUPABASE_PUBLISHABLE_KEY is missing."
+          "SUPABASE_PUBLISHABLE_KEY is not configured."
+      });
+    }
+
+    // ======================================================
+    // UNSUBSCRIBE SECRET
+    // ======================================================
+
+    const unsubscribeSecret =
+      String(
+        process.env.UNSUBSCRIBE_SECRET || ""
+      ).trim();
+
+    if (!unsubscribeSecret) {
+      return res.status(500).json({
+        ok: false,
+        error:
+          "UNSUBSCRIBE_SECRET is not configured."
       });
     }
 
@@ -136,7 +154,8 @@ export default async function handler(req, res) {
       } catch {
         return res.status(400).json({
           ok: false,
-          error: "Invalid JSON request."
+          error:
+            "Invalid JSON request."
         });
       }
     }
@@ -150,10 +169,11 @@ export default async function handler(req, res) {
         .trim()
         .toLowerCase();
 
-    if (!validEmail(email)) {
+    if (!isValidEmail(email)) {
       return res.status(400).json({
         ok: false,
-        error: "Please enter a valid email address."
+        error:
+          "Please enter a valid email address."
       });
     }
 
@@ -178,38 +198,51 @@ export default async function handler(req, res) {
     // ======================================================
 
     const timezone =
-      validTimezone(body.timezone);
+      normalizeTimezone(
+        body.timezone
+      );
 
     // ======================================================
-    // UNSUBSCRIBE TOKEN
+    // SUBSCRIBER'S PERMANENT TOKEN
+    //
+    // Same token method used by:
+    // subscribe.js
+    // send-daily.js
+    // unsubscribe.js
     // ======================================================
 
-    const {
-      token,
-      hash
-    } = createTokenHash();
+    const unsubscribeToken =
+      createUnsubscribeToken(
+        email,
+        unsubscribeSecret
+      );
+
+    const unsubscribeTokenHash =
+      hashToken(
+        unsubscribeToken
+      );
 
     // ======================================================
-    // 500 MESSAGE ORDER
+    // PERSONAL 500-MESSAGE ORDER
     // ======================================================
 
     const messageOrder =
       createMessageOrder();
 
     // ======================================================
-    // REST URL
+    // SUPABASE REST TABLE URL
     // ======================================================
 
     const tableUrl =
       `${supabaseUrl}/rest/v1/${TABLE_NAME}`;
 
     // ======================================================
-    // PUBLIC SUPABASE REQUEST
+    // PUBLIC INSERT
     //
+    // No lookup.
     // No SELECT.
-    // No service-role lookup.
     //
-    // The anon INSERT policy controls access.
+    // The anon INSERT policy handles authorization.
     // ======================================================
 
     const response =
@@ -234,6 +267,7 @@ export default async function handler(req, res) {
 
           body:
             JSON.stringify({
+
               email,
 
               language,
@@ -244,13 +278,14 @@ export default async function handler(req, res) {
                 true,
 
               unsubscribe_token_hash:
-                hash,
+                unsubscribeTokenHash,
 
               message_order:
                 messageOrder,
 
               message_position:
                 0
+
             })
         }
       );
@@ -259,7 +294,7 @@ export default async function handler(req, res) {
       await response.text();
 
     // ======================================================
-    // DUPLICATE
+    // DUPLICATE EMAIL
     // ======================================================
 
     if (
@@ -268,13 +303,23 @@ export default async function handler(req, res) {
         responseText
       )
     ) {
+
       return res.status(200).json({
-        ok: true,
-        subscribed: true,
-        alreadySubscribed: true,
+
+        ok:
+          true,
+
+        subscribed:
+          true,
+
+        alreadySubscribed:
+          true,
+
         message:
           "You are already subscribed."
+
       });
+
     }
 
     // ======================================================
@@ -291,7 +336,8 @@ export default async function handler(req, res) {
 
       return res.status(502).json({
 
-        ok: false,
+        ok:
+          false,
 
         error:
           "Supabase rejected the subscription.",
@@ -303,30 +349,26 @@ export default async function handler(req, res) {
           responseText
 
       });
+
     }
 
     // ======================================================
     // SUCCESS
     // ======================================================
 
-    console.log(
-      "Universe139 subscription saved:",
-      email
-    );
-
     return res.status(200).json({
 
-      ok: true,
+      ok:
+        true,
 
-      subscribed: true,
+      subscribed:
+        true,
 
-      alreadySubscribed: false,
+      alreadySubscribed:
+        false,
 
       message:
-        "You are subscribed. Your daily messages will begin soon.",
-
-      unsubscribeToken:
-        token
+        "You are subscribed. Your daily messages will begin soon."
 
     });
 
@@ -339,7 +381,8 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
 
-      ok: false,
+      ok:
+        false,
 
       error:
         error?.message ||
