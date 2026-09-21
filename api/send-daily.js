@@ -1,46 +1,32 @@
 // ==========================================================
-// UNIVERSE139 - DAILY MESSAGE EMAIL SENDER
+// UNIVERSE139 - DAILY MESSAGE SENDER
+// ==========================================================
 //
 // File:
 // api/send-daily.js
 //
-// Purpose:
-// Send one new message per active subscriber each day.
-//
-// Required Vercel variables:
+// Required Vercel Environment Variables:
 //
 // SUPABASE_URL
 // SUPABASE_SERVICE_ROLE_KEY
 // RESEND_API_KEY
 // RESEND_FROM_EMAIL
 // UNSUBSCRIBE_SECRET
-// CRON_SECRET              optional
-// APP_URL                   optional
 //
-// Message database:
+// Optional:
 //
-// lib/universe-messages.js
-//
-// Expected export:
-//
-// export default {
-//   en: [500 messages],
-//   es: [500 messages],
-//   zh: [500 messages],
-//   ru: [500 messages],
-//   hi: [500 messages],
-//   th: [500 messages]
-// };
+// CRON_SECRET
+// APP_URL
 //
 // ==========================================================
 
 import crypto from "crypto";
-import messages from ".
-  universe-messages.js";
+
+import messages from "./universe-messages.js";
 
 
 // ==========================================================
-// CONFIG
+// CONFIGURATION
 // ==========================================================
 
 const TABLE_NAME =
@@ -71,48 +57,33 @@ function normalizeSupabaseUrl(value) {
 
 
 // ==========================================================
-// GET LOCAL DATE
+// LOCAL DATE FOR SUBSCRIBER
 // ==========================================================
 
 function getLocalDate(timezone) {
 
   try {
 
-    const parts =
+    const formatter =
       new Intl.DateTimeFormat(
         "en-CA",
         {
           timeZone:
             timezone,
+
           year:
             "numeric",
+
           month:
             "2-digit",
+
           day:
             "2-digit"
         }
-      ).formatToParts(
-        new Date()
       );
 
-    const values = {};
-
-    for (const part of parts) {
-
-      if (
-        part.type !==
-        "literal"
-      ) {
-
-        values[part.type] =
-          part.value;
-
-      }
-
-    }
-
-    return (
-      `${values.year}-${values.month}-${values.day}`
+    return formatter.format(
+      new Date()
     );
 
   } catch {
@@ -130,7 +101,7 @@ function getLocalDate(timezone) {
 
 
 // ==========================================================
-// CREATE A RANDOM 500-MESSAGE ORDER
+// CREATE NEW RANDOM 500 MESSAGE ORDER
 // ==========================================================
 
 function createMessageOrder() {
@@ -184,82 +155,44 @@ function createMessageOrder() {
 
 function validateMessageDatabase() {
 
-  if (
-    !messages ||
-    typeof messages !==
-      "object"
-  ) {
-
-    throw new Error(
-      "Universe139 message database could not be loaded."
-    );
-
-  }
-
-
   for (
     const language of
     LANGUAGES
   ) {
 
-    const list =
-      messages[language];
-
-
     if (
-      !Array.isArray(list)
+      !Array.isArray(
+        messages[language]
+      )
     ) {
 
       throw new Error(
-        `Universe139 message database is missing language: ${language}`
+        `Missing language ${language} in universe-messages.js`
       );
 
     }
 
 
     if (
-      list.length !== 500
+      messages[language].length !== 500
     ) {
 
       throw new Error(
-        `Universe139 ${language} must contain exactly 500 messages. Found ${list.length}.`
+        `${language} must contain exactly 500 messages.`
       );
 
     }
-
-
-    const unique =
-      new Set(list);
 
 
     if (
-      unique.size !== 500
+      new Set(
+        messages[language]
+      ).size !== 500
     ) {
 
       throw new Error(
-        `Universe139 ${language} must contain 500 unique messages. Found ${unique.size}.`
+        `${language} contains duplicate messages.`
       );
-
-    }
-
-
-    for (
-      let i = 0;
-      i < list.length;
-      i++
-    ) {
-
-      if (
-        typeof list[i] !==
-        "string" ||
-        !list[i].trim()
-      ) {
-
-        throw new Error(
-          `Universe139 ${language} message ${i} is empty.`
-        );
-
-      }
 
     }
 
@@ -269,12 +202,14 @@ function validateMessageDatabase() {
 
 
 // ==========================================================
-// CREATE DETERMINISTIC UNSUBSCRIBE TOKEN
+// UNSUBSCRIBE TOKEN
 //
 // IMPORTANT:
 //
-// subscribe.js must create the SAME token from the same
-// email + UNSUBSCRIBE_SECRET and store its SHA-256 hash.
+// This MUST be exactly the same method used by
+// subscribe.js.
+//
+// token = HMAC-SHA256(email, UNSUBSCRIBE_SECRET)
 //
 // ==========================================================
 
@@ -332,10 +267,10 @@ function escapeHtml(value) {
 
 
 // ==========================================================
-// EMAIL TRANSLATIONS
+// EMAIL TEXT
 // ==========================================================
 
-const emailCopy = {
+const EMAIL_TEXT = {
 
   en: {
 
@@ -442,10 +377,10 @@ const emailCopy = {
 
 
 // ==========================================================
-// BUILD EMAIL
+// BUILD EMAIL HTML
 // ==========================================================
 
-function buildEmail({
+function buildEmailHtml({
 
   language,
   message,
@@ -454,8 +389,8 @@ function buildEmail({
 }) {
 
   const copy =
-    emailCopy[language] ||
-    emailCopy.en;
+    EMAIL_TEXT[language] ||
+    EMAIL_TEXT.en;
 
 
   return `<!DOCTYPE html>
@@ -491,21 +426,21 @@ padding:40px 20px;
 
 <div style="
 background:#241044;
-border:1px solid rgba(255,255,255,.14);
+border:1px solid rgba(255,255,255,.15);
 border-radius:24px;
 padding:36px 26px;
 text-align:center;
 ">
 
 <div style="
-font-size:38px;
-margin-bottom:20px;
+font-size:40px;
+margin-bottom:18px;
 ">
 ✨
 </div>
 
 <h1 style="
-margin:0 0 16px;
+margin:0 0 18px;
 font-size:28px;
 line-height:1.3;
 color:#ffffff;
@@ -514,7 +449,7 @@ ${escapeHtml(copy.title)}
 </h1>
 
 <p style="
-margin:0 0 26px;
+margin:0 0 28px;
 font-size:16px;
 line-height:1.6;
 color:rgba(255,255,255,.72);
@@ -525,7 +460,7 @@ ${escapeHtml(copy.intro)}
 <div style="
 background:rgba(255,255,255,.07);
 border-radius:18px;
-padding:24px 20px;
+padding:26px 20px;
 ">
 
 <p style="
@@ -552,7 +487,7 @@ color:rgba(255,255,255,.45);
 <a
 href="${escapeHtml(unsubscribeUrl)}"
 style="
-color:rgba(255,255,255,.62);
+color:rgba(255,255,255,.65);
 text-decoration:underline;
 "
 >
@@ -571,7 +506,7 @@ ${escapeHtml(copy.unsubscribe)}
 
 
 // ==========================================================
-// SEND EMAIL THROUGH RESEND
+// SEND THROUGH RESEND
 // ==========================================================
 
 async function sendEmail({
@@ -653,7 +588,7 @@ async function sendEmail({
     );
 
 
-  const text =
+  const responseText =
     await response.text();
 
 
@@ -662,7 +597,7 @@ async function sendEmail({
   ) {
 
     throw new Error(
-      `Resend error ${response.status}: ${text}`
+      `Resend rejected email: ${response.status} ${responseText}`
     );
 
   }
@@ -671,7 +606,7 @@ async function sendEmail({
   try {
 
     return JSON.parse(
-      text
+      responseText
     );
 
   } catch {
@@ -703,7 +638,8 @@ async function supabaseGet(
         method:
           "GET",
 
-        headers
+        headers:
+          headers
 
       }
     );
@@ -718,17 +654,24 @@ async function supabaseGet(
   ) {
 
     throw new Error(
-      `Supabase GET ${response.status}: ${text}`
+      `Supabase GET failed: ${response.status} ${text}`
     );
+
+  }
+
+
+  if (!text) {
+
+    return [];
 
   }
 
 
   try {
 
-    return text
-      ? JSON.parse(text)
-      : [];
+    return JSON.parse(
+      text
+    );
 
   } catch {
 
@@ -789,7 +732,7 @@ async function supabasePatch(
   ) {
 
     throw new Error(
-      `Supabase PATCH ${response.status}: ${text}`
+      `Supabase PATCH failed: ${response.status} ${text}`
     );
 
   }
@@ -798,7 +741,7 @@ async function supabasePatch(
 
 
 // ==========================================================
-// MAIN HANDLER
+// MAIN VERCEL HANDLER
 // ==========================================================
 
 export default async function handler(
@@ -818,7 +761,7 @@ export default async function handler(
 
 
   // ========================================================
-  // ALLOW GET AND POST
+  // METHODS
   // ========================================================
 
   if (
@@ -867,59 +810,47 @@ export default async function handler(
       ).trim();
 
 
+    const appUrl =
+      String(
+        process.env.APP_URL ||
+        "https://message-from-universe.vercel.app"
+      )
+        .trim()
+        .replace(
+          /\/+$/,
+          ""
+        );
+
+
     if (!supabaseUrl) {
 
-      return res
-        .status(500)
-        .json({
-
-          ok:
-            false,
-
-          error:
-            "SUPABASE_URL is not configured."
-
-        });
+      throw new Error(
+        "SUPABASE_URL is not configured."
+      );
 
     }
 
 
     if (!supabaseKey) {
 
-      return res
-        .status(500)
-        .json({
-
-          ok:
-            false,
-
-          error:
-            "SUPABASE_SERVICE_ROLE_KEY is not configured."
-
-        });
+      throw new Error(
+        "SUPABASE_SERVICE_ROLE_KEY is not configured."
+      );
 
     }
 
 
     if (!unsubscribeSecret) {
 
-      return res
-        .status(500)
-        .json({
-
-          ok:
-            false,
-
-          error:
-            "UNSUBSCRIBE_SECRET is not configured."
-
-        });
+      throw new Error(
+        "UNSUBSCRIBE_SECRET is not configured."
+      );
 
     }
 
 
     // ======================================================
-    // CRON SECURITY
+    // OPTIONAL CRON SECURITY
     // ======================================================
 
     const cronSecret =
@@ -951,14 +882,14 @@ export default async function handler(
 
 
     // ======================================================
-    // VALIDATE MESSAGE DATABASE
+    // VALIDATE MESSAGES
     // ======================================================
 
     validateMessageDatabase();
 
 
     // ======================================================
-    // SUPABASE
+    // SUPABASE REST
     // ======================================================
 
     const tableUrl =
@@ -980,9 +911,7 @@ export default async function handler(
 
 
     // ======================================================
-    // LOAD ACTIVE SUBSCRIBERS
-    //
-    // Only fields actually present in your table.
+    // GET ACTIVE SUBSCRIBERS
     // ======================================================
 
     const subscribersUrl =
@@ -1005,14 +934,14 @@ export default async function handler(
     ) {
 
       throw new Error(
-        "Supabase subscriber response is not an array."
+        "Supabase subscriber result is not an array."
       );
 
     }
 
 
     // ======================================================
-    // PROCESSING
+    // COUNTERS
     // ======================================================
 
     let sent =
@@ -1030,7 +959,7 @@ export default async function handler(
 
 
     // ======================================================
-    // EACH SUBSCRIBER
+    // PROCESS SUBSCRIBERS
     // ======================================================
 
     for (
@@ -1039,6 +968,10 @@ export default async function handler(
     ) {
 
       try {
+
+        // --------------------------------------------------
+        // EMAIL
+        // --------------------------------------------------
 
         const email =
           String(
@@ -1054,11 +987,15 @@ export default async function handler(
         ) {
 
           throw new Error(
-            "Subscriber email is empty."
+            "Subscriber has no email."
           );
 
         }
 
+
+        // --------------------------------------------------
+        // LANGUAGE
+        // --------------------------------------------------
 
         const language =
           LANGUAGES.includes(
@@ -1068,12 +1005,20 @@ export default async function handler(
             : "en";
 
 
+        // --------------------------------------------------
+        // TIMEZONE
+        // --------------------------------------------------
+
         const timezone =
           String(
             subscriber.timezone ||
             "Europe/Tallinn"
           );
 
+
+        // --------------------------------------------------
+        // LOCAL DATE
+        // --------------------------------------------------
 
         const today =
           getLocalDate(
@@ -1082,7 +1027,7 @@ export default async function handler(
 
 
         // --------------------------------------------------
-        // Prevent duplicate daily emails.
+        // DO NOT SEND TWICE IN SAME LOCAL DAY
         // --------------------------------------------------
 
         if (
@@ -1127,27 +1072,8 @@ export default async function handler(
         }
 
 
-        let position =
-          Number(
-            subscriber.message_position
-          );
-
-
-        if (
-          !Number.isInteger(
-            position
-          ) ||
-          position < 0
-        ) {
-
-          position =
-            0;
-
-        }
-
-
         // --------------------------------------------------
-        // Repair invalid message order.
+        // REPAIR INVALID ORDER
         // --------------------------------------------------
 
         if (
@@ -1157,10 +1083,6 @@ export default async function handler(
 
           order =
             createMessageOrder();
-
-
-          position =
-            0;
 
 
           await supabasePatch(
@@ -1188,7 +1110,30 @@ export default async function handler(
 
 
         // --------------------------------------------------
-        // Start new cycle after 500.
+        // POSITION
+        // --------------------------------------------------
+
+        let position =
+          Number(
+            subscriber.message_position
+          );
+
+
+        if (
+          !Number.isInteger(
+            position
+          ) ||
+          position < 0
+        ) {
+
+          position =
+            0;
+
+        }
+
+
+        // --------------------------------------------------
+        // START NEW CYCLE
         // --------------------------------------------------
 
         if (
@@ -1231,7 +1176,7 @@ export default async function handler(
 
 
         // --------------------------------------------------
-        // Validate selected index.
+        // GET MESSAGE INDEX
         // --------------------------------------------------
 
         const messageIndex =
@@ -1249,11 +1194,15 @@ export default async function handler(
         ) {
 
           throw new Error(
-            `Invalid message index ${messageIndex}.`
+            `Invalid message index: ${messageIndex}`
           );
 
         }
 
+
+        // --------------------------------------------------
+        // MESSAGE
+        // --------------------------------------------------
 
         const message =
           messages[language][
@@ -1268,16 +1217,14 @@ export default async function handler(
         ) {
 
           throw new Error(
-            `Message ${messageIndex} is missing for ${language}.`
+            `Message ${messageIndex} is empty for ${language}.`
           );
 
         }
 
 
         // ==================================================
-        // UNSUBSCRIBE TOKEN
-        //
-        // MUST MATCH subscribe.js
+        // UNSUBSCRIBE URL
         // ==================================================
 
         const unsubscribeToken =
@@ -1285,18 +1232,6 @@ export default async function handler(
             email,
             unsubscribeSecret
           );
-
-
-        const appUrl =
-          String(
-            process.env.APP_URL ||
-            "https://message-from-universe.vercel.app"
-          )
-            .trim()
-            .replace(
-              /\/+$/,
-              ""
-            );
 
 
         const unsubscribeUrl =
@@ -1314,27 +1249,33 @@ export default async function handler(
         // ==================================================
 
         const copy =
-          emailCopy[language] ||
-          emailCopy.en;
+          EMAIL_TEXT[language] ||
+          EMAIL_TEXT.en;
 
 
         const html =
-          buildEmail({
+          buildEmailHtml({
 
-            language,
+            language:
 
-            message,
+              language,
 
-            unsubscribeUrl
+            message:
+
+              message,
+
+            unsubscribeUrl:
+
+              unsubscribeUrl
 
           });
 
 
         // ==================================================
-        // SEND EMAIL
+        // SEND
         // ==================================================
 
-        const result =
+        const emailResult =
           await sendEmail({
 
             to:
@@ -1343,18 +1284,17 @@ export default async function handler(
             subject:
               copy.subject,
 
-            html
+            html:
+              html
 
           });
 
 
         // ==================================================
-        // ONLY ADVANCE AFTER SUCCESS
+        // ADVANCE MESSAGE POSITION
+        //
+        // ONLY AFTER EMAIL SUCCESS
         // ==================================================
-
-        const nextPosition =
-          position + 1;
-
 
         await supabasePatch(
 
@@ -1366,7 +1306,7 @@ export default async function handler(
           {
 
             message_position:
-              nextPosition,
+              position + 1,
 
             last_sent_date:
               today,
@@ -1382,7 +1322,7 @@ export default async function handler(
 
 
         console.log(
-          "Universe139 daily email sent:",
+          "Universe139 sent:",
           email,
           "message:",
           messageIndex,
@@ -1390,8 +1330,8 @@ export default async function handler(
           language,
           "date:",
           today,
-          "resend:",
-          result?.id ||
+          "emailId:",
+          emailResult?.id ||
             "ok"
         );
 
@@ -1406,22 +1346,27 @@ export default async function handler(
         failed++;
 
 
+        const errorMessage =
+          subscriberError?.message ||
+          "Unknown subscriber error.";
+
+
         errors.push({
 
           email:
-            subscriber.email,
+            subscriber.email ||
+            "",
 
           error:
-            subscriberError?.message ||
-            "Unknown error."
+            errorMessage
 
         });
 
 
         console.error(
-          "Universe139 daily email failed:",
+          "Universe139 subscriber error:",
           subscriber.email,
-          subscriberError
+          errorMessage
         );
 
       }
@@ -1430,7 +1375,7 @@ export default async function handler(
 
 
     // ======================================================
-    // RESULT
+    // SUCCESS RESPONSE
     // ======================================================
 
     return res
@@ -1443,13 +1388,17 @@ export default async function handler(
         total:
           subscribers.length,
 
-        sent,
+        sent:
+          sent,
 
-        skipped,
+        skipped:
+          skipped,
 
-        failed,
+        failed:
+          failed,
 
-        errors
+        errors:
+          errors
 
       });
 
