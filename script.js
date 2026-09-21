@@ -27,6 +27,121 @@ function getDisplayURL() {
 // so sharing can silently fail there no matter how the code is
 // written. This lets us detect it and tell the person how to get
 // around it, instead of a share button that just does nothing.
+// ==========================================
+// CURRENT DATE
+// Uses the visitor's current local date.
+// The date is formatted according to the selected language.
+// ==========================================
+
+function getCurrentDateLocale() {
+
+  const locales = {
+    en: "en-US",
+    es: "es-ES",
+    zh: "zh-CN",
+    ru: "ru-RU",
+    hi: "hi-IN",
+    th: "th-TH"
+  };
+
+  return locales[currentLanguage] || "en-US";
+}
+
+function getCurrentDateText() {
+
+  try {
+
+    return new Intl.DateTimeFormat(
+      getCurrentDateLocale(),
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }
+    ).format(new Date());
+
+  } catch (error) {
+
+    console.warn(
+      "Universe139: date formatting fallback.",
+      error
+    );
+
+    const now = new Date();
+
+    return `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, "0")}-${String(
+      now.getDate()
+    ).padStart(2, "0")}`;
+  }
+}
+
+function ensureMessageDateElement() {
+
+  if (!messageBox) {
+    return null;
+  }
+
+  let dateElement =
+    document.getElementById(
+      "universe139MessageDate"
+    );
+
+  if (!dateElement) {
+
+    dateElement =
+      document.createElement("div");
+
+    dateElement.id =
+      "universe139MessageDate";
+
+    dateElement.setAttribute(
+      "aria-label",
+      "Current date"
+    );
+
+    dateElement.style.textAlign =
+      "center";
+
+    dateElement.style.color =
+      "rgba(255,255,255,.58)";
+
+    dateElement.style.fontSize =
+      "13px";
+
+    dateElement.style.lineHeight =
+      "1.4";
+
+    dateElement.style.fontWeight =
+      "500";
+
+    dateElement.style.letterSpacing =
+      ".04em";
+
+    dateElement.style.margin =
+      "0 0 10px";
+
+    dateElement.style.opacity =
+      "0";
+
+    dateElement.style.transition =
+      "opacity .6s ease";
+
+    // Put the date before the message text so the visual order is:
+    // date -> message -> share/subscription content.
+    messageBox.insertBefore(
+      dateElement,
+      messageBox.firstChild
+    );
+  }
+
+  dateElement.textContent =
+    getCurrentDateText();
+
+  return dateElement;
+}
+
 function isInAppBrowser() {
 
   const ua =
@@ -611,6 +726,16 @@ function selectLanguage(language) {
   }
 
   updateSubscriptionText();
+
+  const existingMessageDate =
+    document.getElementById(
+      "universe139MessageDate"
+    );
+
+  if (existingMessageDate) {
+    existingMessageDate.textContent =
+      getCurrentDateText();
+  }
 
   hideElement(languageBox);
   showElement(revealBtn);
@@ -1660,6 +1785,16 @@ function showMessage() {
 
   message.textContent =
     finalMessage;
+
+  const messageDate =
+    ensureMessageDateElement();
+
+  if (messageDate) {
+    messageDate.textContent =
+      getCurrentDateText();
+    messageDate.style.opacity =
+      "1";
+  }
 
 
   // ----------------------------------------
@@ -2730,7 +2865,12 @@ function getShareText() {
   const t =
     translations[currentLanguage];
 
+  const currentDate =
+    getCurrentDateText();
+
   return `✨ A Message From The Universe ✨
+
+${currentDate}
 
 “${currentMessage}”
 
@@ -4773,6 +4913,18 @@ async function createMessageImageBlob() {
     155
   );
 
+  ctx.fillStyle =
+    "rgba(255,255,255,.5)";
+
+  ctx.font =
+    "500 18px Arial, sans-serif";
+
+  ctx.fillText(
+    getCurrentDateText(),
+    width / 2,
+    195
+  );
+
 
   // ========================================
   // MESSAGE CARD
@@ -5444,6 +5596,10 @@ function createSharePanel() {
           A Message From The Universe
         </div>
 
+        <div class="sharePreviewDate">
+          ${escapeHTML(getCurrentDateText())}
+        </div>
+
         <div class="sharePreviewMessage">
           “${escapeHTML(currentMessage)}”
         </div>
@@ -6004,6 +6160,21 @@ function addSharePanelStyles() {
     }
 
 
+    .sharePreviewDate {
+
+      margin-bottom: 8px;
+
+      color: rgba(255,255,255,.48);
+
+      font-size: 12px;
+
+      font-weight: 500;
+
+      letter-spacing: .04em;
+
+    }
+
+
     .sharePreviewMessage {
 
       color:
@@ -6480,18 +6651,36 @@ if (
 
 }
 // ==========================================================
-// UNIVERSE139 - 500 MESSAGE NON-REPEAT SYSTEM
-// ADD THIS AT THE VERY BOTTOM OF script.js
+// UNIVERSE139 - 500 MESSAGE SYSTEM PER LANGUAGE
+//
+// Each language has its own independent pool of exactly
+// 500 unique messages. Messages are selected randomly from
+// the remaining unused messages for that language.
+//
+// Rules:
+// 1. English = 500 messages
+// 2. Spanish = 500 messages
+// 3. Chinese = 500 messages
+// 4. Russian = 500 messages
+// 5. Hindi = 500 messages
+// 6. Thai = 500 messages
+// 7. A language never borrows a message from another language.
+// 8. The first message is random.
+// 9. Every "Receive Another Message" is random among the
+//    remaining messages in the current language.
+// 10. A message is not repeated until all 500 in that language
+//     have been used; then a new random cycle starts.
 // ==========================================================
 
 (function installUniverse139MessageSystem() {
 
-  const STORAGE_KEY = "universe139_message_cycles_v2";
+  const STORAGE_KEY = "universe139_message_cycles_v4";
   const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th"];
 
   // --------------------------------------------------------
-  // 25 opening messages x 20 closing messages = 500
-  // unique messages per language.
+  // Source material already used by the app:
+  // 25 openers x 20 closers = 500 complete messages
+  // per language.
   // --------------------------------------------------------
 
   const messageParts = {
@@ -6524,7 +6713,6 @@ if (
         "Your life is still capable of surprising you in beautiful ways.",
         "The next step does not have to be perfect to be meaningful."
       ],
-
       closers: [
         "Give yourself permission to move at your own pace.",
         "Stay open to the opportunity that arrives naturally.",
@@ -6577,7 +6765,6 @@ if (
         "Tu vida todavía puede sorprenderte de maneras hermosas.",
         "El siguiente paso no tiene que ser perfecto para tener significado."
       ],
-
       closers: [
         "Date permiso para avanzar a tu propio ritmo.",
         "Mantente abierto a la oportunidad que llegue de forma natural.",
@@ -6630,7 +6817,6 @@ if (
         "你的生活依然能够以美好的方式给你惊喜。",
         "下一步不需要完美，也可以拥有意义。"
       ],
-
       closers: [
         "允许自己按照自己的节奏前进。",
         "对自然来到你身边的机会保持开放。",
@@ -6683,7 +6869,6 @@ if (
         "Твоя жизнь всё ещё способна удивлять тебя прекрасным образом.",
         "Следующий шаг не обязан быть идеальным, чтобы иметь значение."
       ],
-
       closers: [
         "Позволь себе двигаться в своём собственном ритме.",
         "Оставайся открытым к возможности, которая придёт естественно.",
@@ -6736,7 +6921,6 @@ if (
         "आपका जीवन अभी भी आपको सुंदर तरीकों से आश्चर्यचकित कर सकता है।",
         "अगला कदम सही होने की जरूरत नहीं, अर्थपूर्ण होना काफी है।"
       ],
-
       closers: [
         "खुद को अपनी गति से आगे बढ़ने की अनुमति दें।",
         "उस अवसर के लिए खुले रहें जो स्वाभाविक रूप से आपके पास आए।",
@@ -6789,7 +6973,6 @@ if (
         "ชีวิตของคุณยังสามารถทำให้คุณประหลาดใจในแบบที่สวยงาม",
         "ก้าวต่อไปไม่จำเป็นต้องสมบูรณ์แบบจึงจะมีความหมาย"
       ],
-
       closers: [
         "อนุญาตให้ตัวเองเดินไปตามจังหวะของคุณเอง",
         "เปิดใจให้กับโอกาสที่เข้ามาอย่างเป็นธรรมชาติ",
@@ -6813,24 +6996,20 @@ if (
         "ปล่อยให้ช่วงเวลาถัดไปนำคำตอบของมันมาเอง"
       ]
     }
-
   };
 
   // --------------------------------------------------------
-  // BUILD EXACTLY 500 UNIQUE MESSAGES PER LANGUAGE
+  // BUILD EXACTLY 500 COMPLETE MESSAGES PER LANGUAGE.
   // --------------------------------------------------------
 
-  const fiveHundredMessages = {};
+  const messages500 = {};
 
-  LANGUAGES.forEach(language => {
-
+  LANGUAGES.forEach((language) => {
     const parts = messageParts[language];
 
-    if (!parts ||
-        parts.openers.length !== 25 ||
-        parts.closers.length !== 20) {
+    if (!parts || parts.openers.length !== 25 || parts.closers.length !== 20) {
       console.error(
-        "Universe139: invalid message database for",
+        "Universe139: invalid 500-message source for",
         language
       );
       return;
@@ -6838,60 +7017,55 @@ if (
 
     const list = [];
 
-    for (let a = 0; a < parts.openers.length; a++) {
-      for (let b = 0; b < parts.closers.length; b++) {
-
-        const text =
-          parts.openers[a] +
-          " " +
-          parts.closers[b];
-
-        list.push(text);
+    for (let openerIndex = 0; openerIndex < parts.openers.length; openerIndex++) {
+      for (let closerIndex = 0; closerIndex < parts.closers.length; closerIndex++) {
+        list.push(
+          `${parts.openers[openerIndex]} ${parts.closers[closerIndex]}`
+        );
       }
     }
 
-    // Safety check
-    const unique = new Set(list);
+    const uniqueMessages = new Set(list);
 
-    if (list.length !== 500 || unique.size !== 500) {
+    if (list.length !== 500 || uniqueMessages.size !== 500) {
       console.error(
-        "Universe139: message count problem for",
+        "Universe139: expected 500 unique messages for",
         language,
+        "received",
         list.length,
-        unique.size
+        "unique:",
+        uniqueMessages.size
       );
       return;
     }
 
-    fiveHundredMessages[language] = list;
+    messages500[language] = list;
   });
 
+  // Make the per-language 500-message database available to
+  // the rest of the app and to the browser console for testing.
+  window.universe139Messages500 = messages500;
+
   // --------------------------------------------------------
-  // STORAGE
+  // LOAD / SAVE USER PROGRESS
   // --------------------------------------------------------
 
   function loadState() {
-
     try {
-
-      const raw =
-        localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY);
 
       if (!raw) {
         return {};
       }
 
-      const parsed =
-        JSON.parse(raw);
+      const parsed = JSON.parse(raw);
 
       return parsed && typeof parsed === "object"
         ? parsed
         : {};
-
     } catch (error) {
-
       console.warn(
-        "Universe139: unable to load message history.",
+        "Universe139: unable to load 500-message history.",
         error
       );
 
@@ -6900,201 +7074,138 @@ if (
   }
 
   function saveState(state) {
-
     try {
-
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(state)
       );
-
     } catch (error) {
-
       console.warn(
-        "Universe139: unable to save message history.",
+        "Universe139: unable to save 500-message history.",
         error
       );
-
     }
   }
 
   // --------------------------------------------------------
-  // SHUFFLE
-  // --------------------------------------------------------
-
-  function shuffle(array) {
-
-    const result =
-      [...array];
-
-    for (
-      let i = result.length - 1;
-      i > 0;
-      i--
-    ) {
-
-      const j =
-        Math.floor(
-          Math.random() * (i + 1)
-        );
-
-      const temp =
-        result[i];
-
-      result[i] =
-        result[j];
-
-      result[j] =
-        temp;
-    }
-
-    return result;
-  }
-
-  // --------------------------------------------------------
-  // GET / CREATE CURRENT CYCLE
+  // GET STATE FOR ONE LANGUAGE
   // --------------------------------------------------------
 
   function getLanguageState(state, language) {
+    const existing = state[language];
 
     if (
-      !state[language] ||
-      !Array.isArray(state[language].order) ||
-      state[language].order.length !== 500 ||
-      typeof state[language].index !== "number"
+      !existing ||
+      !Array.isArray(existing.remaining) ||
+      existing.remaining.some(
+        (index) =>
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= 500
+      )
     ) {
-
       state[language] = {
-
-        order:
-          shuffle(
-            Array.from(
-              { length: 500 },
-              (_, index) => index
-            )
-          ),
-
-        index: 0
+        remaining: Array.from(
+          { length: 500 },
+          (_, index) => index
+        )
       };
-
-      saveState(state);
-    }
-
-    // Repair invalid index
-    if (
-      state[language].index < 0 ||
-      state[language].index > 500
-    ) {
-
-      state[language].index = 0;
-      saveState(state);
     }
 
     return state[language];
   }
 
   // --------------------------------------------------------
-  // NEW getRandomMessage()
+  // RANDOMLY SELECT ONE UNUSED MESSAGE.
   //
-  // IMPORTANT:
-  // This replaces the old getRandomMessage() function.
+  // This makes the FIRST message random too. Every subsequent
+  // message is also random because we randomly remove one item
+  // from the remaining pool.
   // --------------------------------------------------------
 
-  window.universe139GetNextMessage =
-    function() {
+  function getNextRandomMessage(language) {
+    const safeLanguage =
+      messages500[language]
+        ? language
+        : "en";
 
-      const language =
-        window.currentLanguage ||
-        (
-          typeof currentLanguage !== "undefined"
-            ? currentLanguage
-            : "en"
-        );
+    const messages =
+      messages500[safeLanguage];
 
-      const messages =
-        fiveHundredMessages[language] ||
-        fiveHundredMessages.en;
+    const state = loadState();
+    const languageState =
+      getLanguageState(
+        state,
+        safeLanguage
+      );
 
-      const state =
-        loadState();
+    // Start a fresh random cycle after all 500 have been used.
+    if (languageState.remaining.length === 0) {
+      languageState.remaining = Array.from(
+        { length: 500 },
+        (_, index) => index
+      );
+    }
 
-      const languageState =
-        getLanguageState(
-          state,
-          fiveHundredMessages[language]
-            ? language
-            : "en"
-        );
-
-      // Start a fresh shuffled cycle after
-      // all 500 messages have been used.
-      if (
-        languageState.index >= 500
-      ) {
-
-        languageState.order =
-          shuffle(
-            Array.from(
-              { length: 500 },
-              (_, index) => index
-            )
-          );
-
-        languageState.index = 0;
-      }
-
-      const messageIndex =
-        languageState.order[
-          languageState.index
-        ];
-
-      const selectedMessage =
-        messages[messageIndex];
-
-      languageState.index++;
-
-      saveState(state);
-
-      return selectedMessage;
-    };
-
-  // --------------------------------------------------------
-  // OVERRIDE THE FUNCTION USED BY THE EXISTING APP
-  // --------------------------------------------------------
-
-  window.getRandomMessage =
-    window.universe139GetNextMessage;
-
-  // The original code calls getRandomMessage()
-  // directly. Replace it globally where possible.
-  //
-  // This function declaration is intentionally placed
-  // here so future calls use the new system.
-  getRandomMessage =
-    window.universe139GetNextMessage;
-
-  // --------------------------------------------------------
-  // DEBUG INFORMATION
-  // --------------------------------------------------------
-
-  console.log(
-    "Universe139: 500-message system installed."
-  );
-
-  LANGUAGES.forEach(language => {
-
-    console.log(
-      "Universe139:",
-      language,
-      fiveHundredMessages[language]
-        ? fiveHundredMessages[language].length
-        : 0,
-      "messages"
+    // Pick ANY remaining message at random.
+    const randomPosition = Math.floor(
+      Math.random() * languageState.remaining.length
     );
 
+    const selectedIndex =
+      languageState.remaining[randomPosition];
+
+    // Remove the selected message so it cannot repeat during
+    // the current 500-message cycle.
+    languageState.remaining.splice(
+      randomPosition,
+      1
+    );
+
+    saveState(state);
+
+    lastMessage =
+      messages[selectedIndex];
+
+    return lastMessage;
+  }
+
+  // --------------------------------------------------------
+  // OVERRIDE THE APP'S MESSAGE PICKER
+  // --------------------------------------------------------
+
+  getRandomMessage = function () {
+    const language =
+      typeof currentLanguage !== "undefined"
+        ? currentLanguage
+        : "en";
+
+    return getNextRandomMessage(language);
+  };
+
+  window.universe139GetNextMessage =
+    getRandomMessage;
+
+  // --------------------------------------------------------
+  // DEBUG / VERIFICATION
+  // --------------------------------------------------------
+
+  LANGUAGES.forEach((language) => {
+    console.log(
+      `Universe139: ${language} = ${
+        messages500[language]
+          ? messages500[language].length
+          : 0
+      } messages`
+    );
   });
 
+  console.log(
+    "Universe139: independent 500-message random system installed."
+  );
+
 })();
+
 // ==========================================================
 // UNIVERSE139 - DYNAMIC MESSAGE BACKGROUND EFFECTS
 // ADDITION ONLY - EXISTING APP PRESERVED
