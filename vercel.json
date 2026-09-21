@@ -1,8 +1,10 @@
 {
+  "version": 2,
+  "cleanUrls": true,
   "crons": [
     {
-      "path": "/api/daily-tiktoks",
-      "schedule": "0 9 * * *"
+      "path": "/api/send-daily",
+      "schedule": "0 8 * * *"
     }
   ]
 }
