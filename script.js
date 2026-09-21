@@ -3568,8 +3568,7 @@ async function shareViber() {
 const TIKTOK_CONFIG = {
   loginPath: "/api/tiktok/login",
   statusPath: "/api/tiktok/status",
-  creatorInfoPath: "/api/tiktok/creator-info",
-  publishPath: "/api/tiktok/publish",
+  uploadPath: "/api/tiktok/upload",
 
   // This video is already hosted by the same verified URL prefix.
   // It is used for the Content Posting API PULL_FROM_URL flow.
@@ -4584,59 +4583,57 @@ async function shareTikTok() {
       : "";
 
   if (!currentMessage) {
-
     showShareToast(
       translations[currentLanguage].noMessage
     );
-
     return;
-
   }
 
-  const t =
-    getTikTokCopy();
+  const t = getTikTokCopy();
 
-  showShareToast(
-    t.preparing
-  );
+  showShareToast(t.preparing);
+
+  // --------------------------------------------------------
+  // Check whether the user is already connected.
+  // --------------------------------------------------------
 
   const status =
     await getTikTokStatus();
 
   if (!status.connected) {
-
-    if (
-      status.error ===
-      "status_request_failed"
-    ) {
-
-      showShareToast(
-        t.error
-      );
-
+    if (status.error === "status_request_failed") {
+      showShareToast(t.error);
       return;
-
     }
 
+    // Sandbox currently supports video.upload, not video.publish.
+    // Start Login Kit and let the callback return to the app.
     startTikTokLogin();
     return;
-
   }
 
-  try {
+  // --------------------------------------------------------
+  // Sandbox upload flow.
+  // Do NOT call creator-info here because that endpoint requires
+  // video.publish, which is not enabled in the Sandbox.
+  // --------------------------------------------------------
 
+  try {
     const response =
       await fetch(
-        TIKTOK_CONFIG.creatorInfoPath,
+        "/api/tiktok/upload",
         {
           method: "POST",
           credentials: "include",
           headers: {
-            "Content-Type":
-              "application/json",
-            "Accept":
-              "application/json"
-          }
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            message: currentMessage,
+            language: currentLanguage,
+            videoUrl: TIKTOK_CONFIG.videoUrl
+          })
         }
       );
 
@@ -4646,31 +4643,31 @@ async function shareTikTok() {
         .catch(() => ({}));
 
     if (!response.ok || data.success === false) {
-
       throw new Error(
         data.error ||
-        "Creator info unavailable."
+        "TikTok upload failed."
       );
-
     }
 
-    await openTikTokExportModal(
-      data
+    showShareToast(
+      t.draftSuccess
+    );
+
+    console.log(
+      "Universe139 TikTok upload successful:",
+      data.publishId || "no publish id"
     );
 
   } catch (error) {
-
     console.error(
-      "Universe139 TikTok creator info error:",
+      "Universe139 TikTok upload error:",
       error
     );
 
     showShareToast(
-      t.creatorError
+      t.error
     );
-
   }
-
 }
 
 
