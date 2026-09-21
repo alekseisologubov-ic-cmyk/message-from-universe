@@ -2638,6 +2638,25 @@ async function submitSubscription() {
 
   try {
 
+    const timezone =
+      (() => {
+        try {
+          return (
+            Intl.DateTimeFormat()
+              .resolvedOptions()
+              .timeZone ||
+            "Europe/Tallinn"
+          );
+        } catch (error) {
+          console.warn(
+            "Universe139: timezone detection failed.",
+            error
+          );
+
+          return "Europe/Tallinn";
+        }
+      })();
+
     const response =
       await fetch(
         "/api/subscribe",
@@ -2646,6 +2665,9 @@ async function submitSubscription() {
 
           headers: {
             "Content-Type":
+              "application/json",
+
+            "Accept":
               "application/json"
           },
 
@@ -2654,22 +2676,58 @@ async function submitSubscription() {
             email: email,
 
             language:
-              currentLanguage
+              currentLanguage,
+
+            timezone:
+              timezone
 
           })
         }
       );
 
-    const data =
-      await response
-        .json()
-        .catch(() => ({}));
+    const rawResponse =
+      await response.text();
 
-    if (!response.ok) {
+    let data = {};
+
+    try {
+      data =
+        rawResponse
+          ? JSON.parse(rawResponse)
+          : {};
+    } catch (parseError) {
+      data = {
+        raw: rawResponse
+      };
+    }
+
+    console.log(
+      "UNIVERSE139 SUBSCRIBE RESPONSE",
+      {
+        httpStatus:
+          response.status,
+
+        ok:
+          response.ok,
+
+        data:
+          data
+      }
+    );
+
+    if (
+      !response.ok ||
+      data.ok === false
+    ) {
+
+      const detailedError =
+        data.supabaseResponse ||
+        data.error ||
+        data.raw ||
+        "Subscription failed.";
 
       throw new Error(
-        data.error ||
-        "Subscription failed."
+        `Subscription failed (${response.status}): ${detailedError}`
       );
 
     }
