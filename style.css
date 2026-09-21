@@ -1,11 +1,35 @@
+/* ==========================================================
+   UNIVERSE139 — MESSAGE FROM THE UNIVERSE
+   COMPLETE STYLE
+   Background video optimized for full-screen viewing
+   without excessive zoom/cropping.
+   ========================================================== */
+
+
+/* ==========================================================
+   GLOBAL RESET
+   ========================================================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+
+/* ==========================================================
+   BODY
+   ========================================================== */
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
 body {
   min-height: 100vh;
+
   background:
     radial-gradient(
       circle at top,
@@ -21,21 +45,128 @@ body {
   overflow-x: hidden;
 }
 
+
+/* ==========================================================
+   BACKGROUND VIDEO
+   IMPORTANT:
+   Keeps the portrait video visible without excessive zoom.
+   ========================================================== */
+
+#backgroundVideo,
+#bgVideo,
+.background-video,
+video.background-video {
+  position: fixed;
+
+  left: 50%;
+  top: 50%;
+
+  width: auto;
+  height: 92vh;
+
+  max-width: 100vw;
+  max-height: 92vh;
+
+  transform:
+    translate(-50%, -50%);
+
+  object-fit: contain;
+  object-position: center center;
+
+  background: #05020a;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================
+   FALLBACK FOR A VIDEO ELEMENT USED AS THE FIRST BACKGROUND
+   ========================================================== */
+
+body > video {
+  position: fixed;
+
+  left: 50%;
+  top: 50%;
+
+  width: auto;
+  height: 92vh;
+
+  max-width: 100vw;
+  max-height: 92vh;
+
+  transform:
+    translate(-50%, -50%);
+
+  object-fit: contain;
+  object-position: center center;
+
+  background: #05020a;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================
+   SUBTLE DARK OVERLAY
+   Keeps the text readable without hiding the background.
+   ========================================================== */
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(5, 2, 10, 0.16),
+      rgba(5, 2, 10, 0.08) 45%,
+      rgba(5, 2, 10, 0.24)
+    );
+}
+
+
+/* ==========================================================
+   MAIN CONTAINER
+   ========================================================== */
+
 .container {
   position: relative;
-  z-index: 2;
+
+  z-index: 3;
 
   min-height: 100vh;
 
+  width: 100%;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   justify-content: center;
 
   text-align: center;
 
   padding: 30px 20px;
 }
+
+
+/* ==========================================================
+   MOON
+   ========================================================== */
 
 .moon {
   font-size: 60px;
@@ -44,8 +175,14 @@ body {
 
   margin-bottom: 15px;
 
-  animation: float 4s ease-in-out infinite;
+  animation:
+    float 4s ease-in-out infinite;
 }
+
+
+/* ==========================================================
+   MAIN TITLE
+   ========================================================== */
 
 h1 {
   font-family: 'Cinzel', serif;
@@ -61,6 +198,11 @@ h1 {
     0 0 30px #6f42c1;
 }
 
+
+/* ==========================================================
+   SUBTITLE
+   ========================================================== */
+
 .subtitle {
   margin-top: 20px;
 
@@ -71,16 +213,29 @@ h1 {
   letter-spacing: 1px;
 }
 
+
+/* ==========================================================
+   CRYSTAL
+   ========================================================== */
+
 .crystal {
   font-size: 90px;
 
   margin: 40px 0 25px;
 
-  animation: glow 3s ease-in-out infinite;
+  animation:
+    glow 3s ease-in-out infinite;
 }
 
+
+/* ==========================================================
+   BUTTONS
+   ========================================================== */
+
 button {
-  border: 1px solid rgba(255,255,255,0.4);
+  border:
+    1px solid
+    rgba(255,255,255,0.4);
 
   background:
     linear-gradient(
@@ -101,44 +256,79 @@ button {
 
   cursor: pointer;
 
-  transition: 0.3s;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 
   box-shadow:
     0 0 20px rgba(140, 70, 255, 0.4);
 }
 
 button:hover {
-  transform: scale(1.05);
+  transform:
+    scale(1.05);
 
   box-shadow:
     0 0 35px rgba(180, 100, 255, 0.8);
 }
 
+
+/* ==========================================================
+   HIDDEN
+   ========================================================== */
+
 .hidden {
   display: none !important;
 }
+
+
+/* ==========================================================
+   LOADING
+   ========================================================== */
 
 .loading {
   margin-top: 30px;
 }
 
+
+/* ==========================================================
+   SPINNER
+   ========================================================== */
+
 .spinner {
   width: 45px;
+
   height: 45px;
 
-  border: 3px solid rgba(255,255,255,0.2);
+  border:
+    3px solid
+    rgba(255,255,255,0.2);
 
   border-top:
-    3px solid #c69cff;
+    3px solid
+    #c69cff;
 
   border-radius: 50%;
 
-  margin: 0 auto 20px;
+  margin:
+    0 auto 20px;
 
-  animation: spin 1s linear infinite;
+  animation:
+    spin 1s linear infinite;
 }
 
+
+/* ==========================================================
+   MESSAGE BOX
+   ========================================================== */
+
 .message-box {
+  width: min(
+    500px,
+    calc(100vw - 40px)
+  );
+
   max-width: 500px;
 
   margin-top: 30px;
@@ -146,18 +336,52 @@ button:hover {
   padding: 35px 25px;
 
   background:
-    rgba(255,255,255,0.06);
+    rgba(20, 10, 35, 0.42);
 
-  backdrop-filter: blur(15px);
+  backdrop-filter:
+    blur(15px);
+
+  -webkit-backdrop-filter:
+    blur(15px);
 
   border:
-    1px solid rgba(255,255,255,0.15);
+    1px solid
+    rgba(255,255,255,0.15);
 
   border-radius: 25px;
 
   box-shadow:
-    0 0 50px rgba(121, 61, 190, 0.3);
+    0 0 50px
+    rgba(121, 61, 190, 0.3);
 }
+
+
+/* ==========================================================
+   MESSAGE DATE / DATE CREATED BY SCRIPT.JS
+   ========================================================== */
+
+#universe139MessageDate {
+  text-align: center;
+
+  color:
+    rgba(255,255,255,0.65);
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
+
+  margin:
+    0 0 10px;
+}
+
+
+/* ==========================================================
+   MESSAGE HEADER
+   ========================================================== */
 
 .month {
   font-family: 'Cinzel', serif;
@@ -171,6 +395,11 @@ button:hover {
   margin-bottom: 25px;
 }
 
+
+/* ==========================================================
+   MESSAGE TEXT
+   ========================================================== */
+
 #message {
   font-family: 'Cinzel', serif;
 
@@ -180,14 +409,29 @@ button:hover {
 
   margin-bottom: 25px;
 
-  animation: fadeIn 1s ease;
+  animation:
+    fadeIn 1s ease;
+
+  word-wrap: break-word;
+
+  overflow-wrap: anywhere;
 }
+
+
+/* ==========================================================
+   DIVIDER
+   ========================================================== */
 
 .divider {
   color: #c084fc;
 
   margin: 20px 0;
 }
+
+
+/* ==========================================================
+   SMALL TEXT
+   ========================================================== */
 
 .small-text {
   font-size: 13px;
@@ -196,6 +440,11 @@ button:hover {
 
   margin-bottom: 25px;
 }
+
+
+/* ==========================================================
+   AGAIN / SHARE BUTTONS
+   ========================================================== */
 
 #againBtn,
 #shareBtn {
@@ -206,14 +455,23 @@ button:hover {
   padding: 12px 18px;
 }
 
+
+/* ==========================================================
+   STARS
+   ========================================================== */
+
 .stars {
   position: fixed;
 
   width: 100%;
+
   height: 100%;
 
   top: 0;
+
   left: 0;
+
+  z-index: 2;
 
   background-image:
     radial-gradient(
@@ -221,7 +479,8 @@ button:hover {
       transparent 1px
     );
 
-  background-size: 50px 50px;
+  background-size:
+    50px 50px;
 
   opacity: 0.25;
 
@@ -231,40 +490,74 @@ button:hover {
   pointer-events: none;
 }
 
+
+/* ==========================================================
+   COSMIC GLOW
+   ========================================================== */
+
 @keyframes glow {
 
-  0%, 100% {
-    transform: scale(1);
+  0%,
+  100% {
+    transform:
+      scale(1);
 
     filter:
-      drop-shadow(0 0 10px #a855f7);
+      drop-shadow(
+        0 0 10px #a855f7
+      );
   }
 
   50% {
-    transform: scale(1.15);
+    transform:
+      scale(1.15);
 
     filter:
-      drop-shadow(0 0 35px #c084fc);
+      drop-shadow(
+        0 0 35px #c084fc
+      );
   }
+
 }
+
+
+/* ==========================================================
+   FLOAT
+   ========================================================== */
 
 @keyframes float {
 
-  0%, 100% {
-    transform: translateY(0);
+  0%,
+  100% {
+    transform:
+      translateY(0);
   }
 
   50% {
-    transform: translateY(-10px);
+    transform:
+      translateY(-10px);
   }
+
 }
+
+
+/* ==========================================================
+   SPIN
+   ========================================================== */
 
 @keyframes spin {
 
   to {
-    transform: rotate(360deg);
+    transform:
+      rotate(360deg);
   }
+
 }
+
+
+/* ==========================================================
+   MESSAGE FADE
+   ========================================================== */
 
 @keyframes fadeIn {
 
@@ -281,26 +574,227 @@ button:hover {
     transform:
       translateY(0);
   }
+
 }
+
+
+/* ==========================================================
+   STAR MOVEMENT
+   ========================================================== */
 
 @keyframes moveStars {
 
   from {
-    background-position: 0 0;
+    background-position:
+      0 0;
   }
 
   to {
-    background-position: 100px 200px;
+    background-position:
+      100px 200px;
   }
+
 }
+
+
+/* ==========================================================
+   TABLET
+   ========================================================== */
+
+@media (max-width: 900px) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 90vh;
+
+    max-height: 90vh;
+  }
+
+  .container {
+    padding:
+      25px 18px;
+  }
+
+  .message-box {
+    width:
+      min(
+        500px,
+        calc(100vw - 36px)
+      );
+  }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
 
 @media (max-width: 500px) {
 
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 88vh;
+
+    max-height: 88vh;
+
+    width: auto;
+
+    max-width: 100vw;
+
+    object-fit: contain;
+  }
+
+  .container {
+    min-height: 100vh;
+
+    padding:
+      20px 14px;
+  }
+
+  .moon {
+    font-size: 48px;
+
+    margin-bottom: 10px;
+  }
+
   h1 {
     font-size: 27px;
+
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    margin-top: 14px;
+
+    font-size: 14px;
+  }
+
+  .crystal {
+    font-size: 72px;
+
+    margin:
+      25px 0 20px;
+  }
+
+  .message-box {
+    width:
+      calc(100vw - 28px);
+
+    max-width:
+      calc(100vw - 28px);
+
+    margin-top: 20px;
+
+    padding:
+      28px 18px;
+
+    border-radius: 22px;
   }
 
   #message {
     font-size: 19px;
+
+    line-height: 1.55;
+
+    margin-bottom: 20px;
   }
+
+  #universe139MessageDate {
+    font-size: 12px;
+
+    margin-bottom: 8px;
+  }
+
+  .month {
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 18px;
+  }
+
+  .small-text {
+    font-size: 12px;
+
+    margin-bottom: 20px;
+  }
+
+  #againBtn,
+  #shareBtn {
+    font-size: 10px;
+
+    padding:
+      11px 15px;
+
+    margin:
+      4px 2px;
+  }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL PHONES
+   ========================================================== */
+
+@media (max-width: 380px) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 85vh;
+
+    max-height: 85vh;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .message-box {
+    padding:
+      24px 15px;
+  }
+
+  #message {
+    font-size: 18px;
+  }
+
+}
+
+
+/* ==========================================================
+   LANDSCAPE PHONES
+   ========================================================== */
+
+@media (
+  max-width: 900px
+) and (
+  orientation: landscape
+) {
+
+  #backgroundVideo,
+  #bgVideo,
+  .background-video,
+  video.background-video,
+  body > video {
+    height: 94vh;
+
+    max-height: 94vh;
+  }
+
+  .container {
+    padding:
+      12px;
+  }
+
 }
