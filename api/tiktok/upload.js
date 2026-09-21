@@ -2,21 +2,16 @@
 // TikTok Upload to Inbox
 // Message From Universe
 //
-// Vercel Serverless Function
+// Sandbox / video.upload
 //
 // Route:
 // POST /api/tiktok/upload
-//
-// Uses:
-// video.upload
-//
-// The video is sent to TikTok using PULL_FROM_URL.
 // ==========================================================
 
 import crypto from "crypto";
 
 // ----------------------------------------------------------
-// Cookie parser
+// Parse cookies
 // ----------------------------------------------------------
 
 function parseCookies(req) {
@@ -48,8 +43,7 @@ function parseCookies(req) {
 }
 
 // ----------------------------------------------------------
-// Encryption key
-// Must match callback.js
+// Get encryption key
 // ----------------------------------------------------------
 
 function getEncryptionKey() {
@@ -69,7 +63,7 @@ function getEncryptionKey() {
 }
 
 // ----------------------------------------------------------
-// Decrypt TikTok session
+// Decrypt session
 // ----------------------------------------------------------
 
 function decryptSession(value) {
@@ -77,7 +71,8 @@ function decryptSession(value) {
     return null;
   }
 
-  const parts = String(value).split(".");
+  const parts =
+    String(value).split(".");
 
   if (parts.length !== 3) {
     return null;
@@ -85,21 +80,27 @@ function decryptSession(value) {
 
   try {
     const iv =
-      Buffer.from(parts[0], "base64url");
+      Buffer.from(
+        parts[0],
+        "base64url"
+      );
 
     const authTag =
-      Buffer.from(parts[1], "base64url");
+      Buffer.from(
+        parts[1],
+        "base64url"
+      );
 
     const encrypted =
-      Buffer.from(parts[2], "base64url");
-
-    const key =
-      getEncryptionKey();
+      Buffer.from(
+        parts[2],
+        "base64url"
+      );
 
     const decipher =
       crypto.createDecipheriv(
         "aes-256-gcm",
-        key,
+        getEncryptionKey(),
         iv
       );
 
@@ -130,9 +131,6 @@ function decryptSession(value) {
 // ----------------------------------------------------------
 
 export default async function handler(req, res) {
-  // --------------------------------------------------------
-  // POST only
-  // --------------------------------------------------------
 
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -148,12 +146,13 @@ export default async function handler(req, res) {
 
   res.setHeader(
     "Cache-Control",
-    "no-store"
+    "no-store, no-cache, must-revalidate"
   );
 
   try {
+
     // ------------------------------------------------------
-    // Read TikTok session
+    // Session
     // ------------------------------------------------------
 
     const cookies =
@@ -167,7 +166,7 @@ export default async function handler(req, res) {
         success: false,
         connected: false,
         error:
-          "TikTok is not connected. Please connect TikTok first."
+          "TikTok session not found."
       });
     }
 
@@ -181,7 +180,7 @@ export default async function handler(req, res) {
         success: false,
         connected: false,
         error:
-          "TikTok session is invalid. Please reconnect TikTok."
+          "TikTok session could not be decrypted."
       });
     }
 
@@ -190,12 +189,12 @@ export default async function handler(req, res) {
         success: false,
         connected: false,
         error:
-          "TikTok access token is missing. Please reconnect TikTok."
+          "TikTok access token is missing."
       });
     }
 
     // ------------------------------------------------------
-    // Parse optional request body
+    // Request body
     // ------------------------------------------------------
 
     let body = {};
@@ -213,13 +212,7 @@ export default async function handler(req, res) {
     }
 
     // ------------------------------------------------------
-    // Default verified video URL
-    //
-    // This file already exists in your project root and is
-    // served from the verified message-from-universe domain.
-    //
-    // Later we can replace this with the completed
-    // Shotstack-rendered video URL.
+    // Video URL
     // ------------------------------------------------------
 
     const defaultVideoUrl =
@@ -231,22 +224,24 @@ export default async function handler(req, res) {
         ? body.videoUrl.trim()
         : defaultVideoUrl;
 
-    // ------------------------------------------------------
-    // SECURITY:
-    // Only allow URLs from our verified domain.
-    // ------------------------------------------------------
-
     let videoUrl;
 
     try {
       videoUrl =
-        new URL(requestedVideoUrl);
+        new URL(
+          requestedVideoUrl
+        );
     } catch {
       return res.status(400).json({
         success: false,
-        error: "Invalid video URL."
+        error:
+          "The supplied video URL is invalid."
       });
     }
+
+    // ------------------------------------------------------
+    // Only our verified HTTPS domain
+    // ------------------------------------------------------
 
     if (
       videoUrl.protocol !== "https:" ||
@@ -256,16 +251,15 @@ export default async function handler(req, res) {
       return res.status(400).json({
         success: false,
         error:
-          "Video URL must use the verified Message From Universe domain."
+          "The video URL must use the verified Message From Universe domain."
       });
     }
 
     // ------------------------------------------------------
-    // Initialize TikTok Inbox Upload
+    // TikTok Inbox Upload
     //
-    // TikTok endpoint:
-    // POST
-    // /v2/post/publish/inbox/video/init/
+    // Current TikTok endpoint:
+    // POST /v2/post/publish/inbox/video/init/
     //
     // Scope:
     // video.upload
@@ -297,82 +291,64 @@ export default async function handler(req, res) {
         }
       );
 
-    const data =
-      await response
-        .json()
-        .catch(() => ({}));
+    const rawText =
+      await response.text();
+
+    let data = {};
+
+    try {
+      data =
+        JSON.parse(rawText);
+    } catch {
+      data = {
+        raw_response:
+          rawText
+      };
+    }
 
     // ------------------------------------------------------
-    // TikTok HTTP error
+    // Log everything EXCEPT access token
+    // ------------------------------------------------------
+
+    console.log(
+      "TikTok upload response:",
+      JSON.stringify(
+        {
+          httpStatus:
+            response.status,
+          data
+        },
+        null,
+        2
+      )
+    );
+
+    // ------------------------------------------------------
+    // HTTP error
     // ------------------------------------------------------
 
     if (!response.ok) {
-      console.error(
-        "TikTok upload initialization error:",
-        response.status,
-        data
-      );
-
-      return res
-        .status(response.status)
-        .json({
-          success: false,
-          error:
-            data?.error?.message ||
-            "TikTok rejected the video upload request.",
-
-          tiktokError:
-            data?.error?.code || null,
-
-          logId:
-            data?.error?.log_id || null
-        });
-    }
-
-    // ------------------------------------------------------
-    // TikTok API-level error
-    // ------------------------------------------------------
-
-    if (
-      data?.error?.code &&
-      data.error.code !== "ok"
-    ) {
-      console.error(
-        "TikTok upload API error:",
-        data
-      );
-
-      return res.status(400).json({
+      return res.status(
+        response.status
+      ).json({
         success: false,
+        step:
+          "tiktok_upload_init",
+
+        httpStatus:
+          response.status,
+
         error:
-          data.error.message ||
-          "TikTok rejected the video upload request.",
+          data?.error?.message ||
+          "TikTok rejected the upload request.",
 
         tiktokError:
-          data.error.code,
+          data?.error?.code ||
+          null,
 
         logId:
-          data.error.log_id || null
-      });
-    }
-
-    // ------------------------------------------------------
-    // publish_id should be returned for status checking
-    // ------------------------------------------------------
-
-    const publishId =
-      data?.data?.publish_id || null;
-
-    if (!publishId) {
-      console.error(
-        "TikTok did not return publish_id:",
-        data
-      );
-
-      return res.status(502).json({
-        success: false,
-        error:
-          "TikTok did not return a publish ID.",
+          data?.error?.log_id ||
+          null,
 
         tiktok:
           data
@@ -380,16 +356,69 @@ export default async function handler(req, res) {
     }
 
     // ------------------------------------------------------
-    // PULL_FROM_URL does not return an upload_url because
-    // TikTok downloads the video itself.
+    // API-level error
+    // ------------------------------------------------------
+
+    if (
+      data?.error?.code &&
+      data.error.code !== "ok"
+    ) {
+      return res.status(400).json({
+        success: false,
+        step:
+          "tiktok_upload_init",
+
+        error:
+          data.error.message ||
+          "TikTok rejected the upload request.",
+
+        tiktokError:
+          data.error.code,
+
+        logId:
+          data.error.log_id ||
+          null,
+
+        tiktok:
+          data
+      });
+    }
+
+    // ------------------------------------------------------
+    // Publish ID
+    // ------------------------------------------------------
+
+    const publishId =
+      data?.data?.publish_id ||
+      null;
+
+    if (!publishId) {
+      return res.status(502).json({
+        success: false,
+        step:
+          "tiktok_upload_init",
+
+        error:
+          "TikTok accepted the request but did not return a publish ID.",
+
+        tiktok:
+          data
+      });
+    }
+
+    // ------------------------------------------------------
+    // Success
     // ------------------------------------------------------
 
     return res.status(200).json({
       success: true,
       connected: true,
 
+      step:
+        "tiktok_upload_init",
+
       message:
-        "Video sent to TikTok successfully. Open the TikTok inbox notification to continue editing and posting.",
+        "TikTok accepted the video upload.",
 
       publishId,
 
@@ -401,16 +430,20 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
+
     console.error(
-      "TikTok upload error:",
+      "TikTok upload server error:",
       error
     );
 
     return res.status(500).json({
       success: false,
+      step:
+        "server",
+
       error:
         error?.message ||
-        "Unable to upload video to TikTok."
+        "Unexpected TikTok upload error."
     });
   }
 }
