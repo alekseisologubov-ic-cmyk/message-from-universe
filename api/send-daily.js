@@ -35,7 +35,8 @@
 // ==========================================================
 
 import crypto from "crypto";
-import messages from "../lib/universe-messages.js";
+import messages from ".
+  universe-messages.js";
 
 
 // ==========================================================
