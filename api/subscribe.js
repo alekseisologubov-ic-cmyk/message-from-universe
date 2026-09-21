@@ -1,8 +1,39 @@
 // ==========================================================
-// UNIVERSE139 SUBSCRIBE API - DIAGNOSTIC VERSION
+// UNIVERSE139 - SUBSCRIBE API
+//
+// File:
+// api/subscribe.js
+//
+// Endpoint:
+// POST /api/subscribe
+//
+// Supabase:
+// public.universe139_subscribers
+//
+// REQUIRED VERCEL VARIABLES:
+//
+// SUPABASE_URL
+// SUPABASE_SECRET_KEY
+//
+// IMPORTANT:
+// SUPABASE_SECRET_KEY must be the new Supabase secret key:
+//
+// sb_secret_...
+//
+// Do NOT put the secret key in script.js.
+// Do NOT put it in GitHub.
+// ==========================================================
+
+
+// ==========================================================
+// MAIN HANDLER
 // ==========================================================
 
 export default async function handler(req, res) {
+
+  // --------------------------------------------------------
+  // RESPONSE HEADERS
+  // --------------------------------------------------------
 
   res.setHeader(
     "Content-Type",
@@ -15,6 +46,10 @@ export default async function handler(req, res) {
   );
 
 
+  // --------------------------------------------------------
+  // CORS / PREFLIGHT
+  // --------------------------------------------------------
+
   if (req.method === "OPTIONS") {
 
     return res.status(200).json({
@@ -24,11 +59,19 @@ export default async function handler(req, res) {
   }
 
 
+  // --------------------------------------------------------
+  // POST ONLY
+  // --------------------------------------------------------
+
   if (req.method !== "POST") {
 
     return res.status(405).json({
+
       ok: false,
-      error: "Method not allowed. Use POST."
+
+      error:
+        "Method not allowed. Use POST."
+
     });
 
   }
@@ -37,47 +80,112 @@ export default async function handler(req, res) {
   try {
 
     // ======================================================
-    // ENVIRONMENT
+    // SUPABASE ENVIRONMENT VARIABLES
     // ======================================================
 
     const supabaseUrl =
       String(
         process.env.SUPABASE_URL || ""
-      ).trim().replace(/\/+$/, "");
+      )
+        .trim()
+        .replace(
+          /\/+$/,
+          ""
+        );
 
 
-    const supabaseKey =
+    const supabaseSecretKey =
       String(
-        process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+        process.env.SUPABASE_SECRET_KEY || ""
       ).trim();
 
 
-    // ------------------------------------------------------
-    // CHECK VARIABLES
-    // ------------------------------------------------------
+    // ======================================================
+    // CHECK CONFIGURATION
+    // ======================================================
 
     if (!supabaseUrl) {
 
+      console.error(
+        "Universe139: SUPABASE_URL is missing."
+      );
+
       return res.status(500).json({
+
         ok: false,
-        error: "SUPABASE_URL is missing."
+
+        error:
+          "SUPABASE_URL is not configured in Vercel."
+
       });
 
     }
 
 
-    if (!supabaseKey) {
+    if (!supabaseSecretKey) {
+
+      console.error(
+        "Universe139: SUPABASE_SECRET_KEY is missing."
+      );
 
       return res.status(500).json({
+
         ok: false,
-        error: "SUPABASE_SERVICE_ROLE_KEY is missing."
+
+        error:
+          "SUPABASE_SECRET_KEY is not configured in Vercel."
+
       });
 
     }
 
 
     // ======================================================
-    // BODY
+    // BASIC URL VALIDATION
+    // ======================================================
+
+    let parsedSupabaseUrl;
+
+    try {
+
+      parsedSupabaseUrl =
+        new URL(
+          supabaseUrl
+        );
+
+    } catch {
+
+      return res.status(500).json({
+
+        ok: false,
+
+        error:
+          "SUPABASE_URL is invalid."
+
+      });
+
+    }
+
+
+    if (
+      parsedSupabaseUrl.protocol !==
+      "https:"
+    ) {
+
+      return res.status(500).json({
+
+        ok: false,
+
+        error:
+          "SUPABASE_URL must use HTTPS."
+
+      });
+
+    }
+
+
+    // ======================================================
+    // REQUEST BODY
     // ======================================================
 
     let body =
@@ -85,19 +193,26 @@ export default async function handler(req, res) {
 
 
     if (
-      typeof body === "string"
+      typeof body ===
+      "string"
     ) {
 
       try {
 
         body =
-          JSON.parse(body);
+          JSON.parse(
+            body
+          );
 
       } catch {
 
         return res.status(400).json({
+
           ok: false,
-          error: "Invalid JSON request."
+
+          error:
+            "Invalid JSON request."
+
         });
 
       }
@@ -117,17 +232,22 @@ export default async function handler(req, res) {
         .toLowerCase();
 
 
-    const emailValid =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email
-      );
+    const emailIsValid =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(
+          email
+        );
 
 
-    if (!emailValid) {
+    if (!emailIsValid) {
 
       return res.status(400).json({
+
         ok: false,
-        error: "Please enter a valid email address."
+
+        error:
+          "Please enter a valid email address."
+
       });
 
     }
@@ -149,7 +269,8 @@ export default async function handler(req, res) {
 
     const requestedLanguage =
       String(
-        body.language || "en"
+        body.language ||
+        "en"
       )
         .trim()
         .toLowerCase();
@@ -171,39 +292,74 @@ export default async function handler(req, res) {
       String(
         body.timezone ||
         "Europe/Tallinn"
-      ).trim();
+      )
+        .trim() ||
+      "Europe/Tallinn";
 
 
     // ======================================================
-    // SUPABASE URL
+    // TABLE
     // ======================================================
 
     const table =
       "universe139_subscribers";
 
 
+    // ======================================================
+    // SUPABASE REST BASE
+    // ======================================================
+
+    const restBase =
+      `${supabaseUrl}/rest/v1`;
+
+
+    const tableUrl =
+      `${restBase}/${table}`;
+
+
+    // ======================================================
+    // IMPORTANT SUPABASE HEADERS
+    //
+    // The new sb_secret key belongs in "apikey".
+    //
+    // We intentionally DO NOT send:
+    //
+    // Authorization: Bearer sb_secret_...
+    //
+    // because the new secret key is not a JWT.
+    // ======================================================
+
+    const supabaseHeaders = {
+
+      "apikey":
+        supabaseSecretKey,
+
+      "Content-Type":
+        "application/json",
+
+      "Accept":
+        "application/json"
+
+    };
+
+
+    // ======================================================
+    // TEST SUPABASE CONNECTION
+    //
+    // First perform a simple request to the table.
+    // ======================================================
+
     const lookupUrl =
-      `${supabaseUrl}/rest/v1/${table}` +
+      `${tableUrl}` +
       `?select=id,email,language,timezone,active` +
       `&email=eq.${encodeURIComponent(email)}` +
       `&limit=1`;
 
 
     console.log(
-      "Universe139 Supabase URL:",
-      supabaseUrl
+      "Universe139: checking Supabase subscriber..."
     );
 
-
-    console.log(
-      "Universe139 lookup URL:",
-      lookupUrl
-    );
-
-
-    // ======================================================
-    // SUPABASE LOOKUP
-    // ======================================================
 
     let lookupResponse;
 
@@ -215,29 +371,20 @@ export default async function handler(req, res) {
           lookupUrl,
           {
 
-            method: "GET",
+            method:
+              "GET",
 
-            headers: {
-
-              apikey:
-                supabaseKey,
-
-              Authorization:
-                `Bearer ${supabaseKey}`,
-
-              Accept:
-                "application/json"
-
-            }
+            headers:
+              supabaseHeaders
 
           }
         );
 
-    } catch (networkError) {
+    } catch (error) {
 
       console.error(
-        "Universe139 Supabase NETWORK ERROR:",
-        networkError
+        "Universe139: Supabase connection failed:",
+        error
       );
 
 
@@ -249,39 +396,32 @@ export default async function handler(req, res) {
           "Could not connect to Supabase.",
 
         diagnostic:
-          networkError?.message ||
-          String(networkError)
+          error?.message ||
+          String(error)
 
       });
 
     }
 
 
-    // ======================================================
-    // READ SUPABASE RESPONSE
-    // ======================================================
-
     const lookupText =
       await lookupResponse.text();
 
 
-    console.log(
-      "Universe139 Supabase HTTP:",
-      lookupResponse.status
-    );
-
-
-    console.log(
-      "Universe139 Supabase response:",
-      lookupText
-    );
-
-
     // ======================================================
-    // SUPABASE ERROR
+    // SUPABASE LOOKUP ERROR
     // ======================================================
 
-    if (!lookupResponse.ok) {
+    if (
+      !lookupResponse.ok
+    ) {
+
+      console.error(
+        "Universe139: Supabase lookup rejected.",
+        lookupResponse.status,
+        lookupText
+      );
+
 
       return res.status(502).json({
 
@@ -302,17 +442,19 @@ export default async function handler(req, res) {
 
 
     // ======================================================
-    // PARSE RESULT
+    // PARSE LOOKUP
     // ======================================================
 
-    let existing = [];
+    let existingSubscribers;
 
 
     try {
 
-      existing =
+      existingSubscribers =
         lookupText
-          ? JSON.parse(lookupText)
+          ? JSON.parse(
+              lookupText
+            )
           : [];
 
     } catch {
@@ -324,7 +466,7 @@ export default async function handler(req, res) {
         error:
           "Supabase returned invalid JSON.",
 
-        response:
+        supabaseResponse:
           lookupText
 
       });
@@ -337,16 +479,22 @@ export default async function handler(req, res) {
     // ======================================================
 
     if (
-      Array.isArray(existing) &&
-      existing.length > 0
+      Array.isArray(
+        existingSubscribers
+      ) &&
+      existingSubscribers.length > 0
     ) {
 
       const subscriber =
-        existing[0];
+        existingSubscribers[0];
 
+
+      // ----------------------------------------------------
+      // Update existing subscriber
+      // ----------------------------------------------------
 
       const updateUrl =
-        `${supabaseUrl}/rest/v1/${table}` +
+        `${tableUrl}` +
         `?id=eq.${encodeURIComponent(
           subscriber.id
         )}`;
@@ -362,20 +510,14 @@ export default async function handler(req, res) {
             updateUrl,
             {
 
-              method: "PATCH",
+              method:
+                "PATCH",
 
               headers: {
 
-                apikey:
-                  supabaseKey,
+                ...supabaseHeaders,
 
-                Authorization:
-                  `Bearer ${supabaseKey}`,
-
-                "Content-Type":
-                  "application/json",
-
-                Prefer:
+                "Prefer":
                   "return=minimal"
 
               },
@@ -387,7 +529,8 @@ export default async function handler(req, res) {
 
                   timezone,
 
-                  active: true
+                  active:
+                    true
 
                 })
 
@@ -397,7 +540,7 @@ export default async function handler(req, res) {
       } catch (error) {
 
         console.error(
-          "Universe139 Supabase UPDATE network error:",
+          "Universe139: Supabase update connection failed:",
           error
         );
 
@@ -422,7 +565,16 @@ export default async function handler(req, res) {
         await updateResponse.text();
 
 
-      if (!updateResponse.ok) {
+      if (
+        !updateResponse.ok
+      ) {
+
+        console.error(
+          "Universe139: Supabase update rejected.",
+          updateResponse.status,
+          updateText
+        );
+
 
         return res.status(502).json({
 
@@ -442,13 +594,21 @@ export default async function handler(req, res) {
       }
 
 
+      console.log(
+        "Universe139: subscriber updated."
+      );
+
+
       return res.status(200).json({
 
-        ok: true,
+        ok:
+          true,
 
-        subscribed: true,
+        subscribed:
+          true,
 
-        alreadySubscribed: true,
+        alreadySubscribed:
+          true,
 
         message:
           "You are already subscribed."
@@ -462,8 +622,18 @@ export default async function handler(req, res) {
     // NEW SUBSCRIBER
     // ======================================================
 
-    const insertUrl =
-      `${supabaseUrl}/rest/v1/${table}`;
+    const insertPayload = {
+
+      email,
+
+      language,
+
+      timezone,
+
+      active:
+        true
+
+    };
 
 
     let insertResponse;
@@ -473,39 +643,25 @@ export default async function handler(req, res) {
 
       insertResponse =
         await fetch(
-          insertUrl,
+          tableUrl,
           {
 
-            method: "POST",
+            method:
+              "POST",
 
             headers: {
 
-              apikey:
-                supabaseKey,
+              ...supabaseHeaders,
 
-              Authorization:
-                `Bearer ${supabaseKey}`,
-
-              "Content-Type":
-                "application/json",
-
-              Prefer:
+              "Prefer":
                 "return=representation"
 
             },
 
             body:
-              JSON.stringify({
-
-                email,
-
-                language,
-
-                timezone,
-
-                active: true
-
-              })
+              JSON.stringify(
+                insertPayload
+              )
 
           }
         );
@@ -513,7 +669,7 @@ export default async function handler(req, res) {
     } catch (error) {
 
       console.error(
-        "Universe139 Supabase INSERT network error:",
+        "Universe139: Supabase insert connection failed:",
         error
       );
 
@@ -523,7 +679,7 @@ export default async function handler(req, res) {
         ok: false,
 
         error:
-          "Could not connect to Supabase while saving the subscription.",
+          "Could not connect to Supabase while saving your subscription.",
 
         diagnostic:
           error?.message ||
@@ -538,11 +694,57 @@ export default async function handler(req, res) {
       await insertResponse.text();
 
 
-    if (!insertResponse.ok) {
+    // ======================================================
+    // INSERT ERROR
+    // ======================================================
+
+    if (
+      !insertResponse.ok
+    ) {
+
+      console.error(
+        "Universe139: Supabase insert rejected.",
+        insertResponse.status,
+        insertText
+      );
+
+
+      // -----------------------------------------------
+      // Duplicate
+      // -----------------------------------------------
+
+      const duplicate =
+        insertResponse.status === 409 ||
+        /duplicate|unique/i.test(
+          insertText
+        );
+
+
+      if (duplicate) {
+
+        return res.status(200).json({
+
+          ok:
+            true,
+
+          subscribed:
+            true,
+
+          alreadySubscribed:
+            true,
+
+          message:
+            "You are already subscribed."
+
+        });
+
+      }
+
 
       return res.status(502).json({
 
-        ok: false,
+        ok:
+          false,
 
         error:
           "Supabase rejected the subscription.",
@@ -562,37 +764,80 @@ export default async function handler(req, res) {
     // SUCCESS
     // ======================================================
 
+    let insertedSubscriber =
+      null;
+
+
+    try {
+
+      const parsed =
+        insertText
+          ? JSON.parse(
+              insertText
+            )
+          : null;
+
+
+      if (
+        Array.isArray(parsed) &&
+        parsed.length > 0
+      ) {
+
+        insertedSubscriber =
+          parsed[0];
+
+      }
+
+    } catch {
+
+      insertedSubscriber =
+        null;
+
+    }
+
+
     console.log(
-      "Universe139 subscription saved:",
-      email
+      "Universe139: subscription saved."
     );
 
 
     return res.status(200).json({
 
-      ok: true,
+      ok:
+        true,
 
-      subscribed: true,
+      subscribed:
+        true,
 
-      alreadySubscribed: false,
+      alreadySubscribed:
+        false,
 
       message:
-        "Subscription saved successfully."
+        "Subscription saved successfully.",
+
+      subscriberId:
+        insertedSubscriber?.id ||
+        null
 
     });
 
 
   } catch (error) {
 
+    // ======================================================
+    // FINAL ERROR
+    // ======================================================
+
     console.error(
-      "Universe139 subscribe fatal error:",
+      "Universe139: fatal subscribe error:",
       error
     );
 
 
     return res.status(500).json({
 
-      ok: false,
+      ok:
+        false,
 
       error:
         error?.message ||
