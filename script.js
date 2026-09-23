@@ -1845,6 +1845,14 @@ function showMessage() {
   hideElement(loading);
   hideElement(revealBtn);
 
+  if (window.universe139EnsureSecondaryControls) {
+    window.universe139EnsureSecondaryControls();
+  }
+
+  if (window.universe139ShowSecondaryControls) {
+    window.universe139ShowSecondaryControls();
+  }
+
 
   // ----------------------------------------
   // SHOW BUTTONS
@@ -1939,6 +1947,10 @@ function revealMessage() {
   hideElement(shareBtn);
   hideElement(revealBtn);
   hideSubscriptionBox();
+
+  if (window.universe139HideSecondaryControls) {
+    window.universe139HideSecondaryControls();
+  }
 
 
   // ----------------------------------------
@@ -2079,6 +2091,10 @@ function receiveAnotherMessage() {
   hideElement(againBtn);
   hideElement(shareBtn);
   hideSubscriptionBox();
+
+  if (window.universe139HideSecondaryControls) {
+    window.universe139HideSecondaryControls();
+  }
 
 
   // ----------------------------------------
@@ -2222,6 +2238,20 @@ function createSubscriptionBox() {
 
   const t = translations[currentLanguage];
 
+  // Keep the subscription CTA OUTSIDE the message card.
+  // It is placed in the separate top-left controls panel.
+  let sidePanel =
+    document.getElementById("universe139SideControls");
+
+  if (!sidePanel) {
+
+    sidePanel = document.createElement("div");
+    sidePanel.id = "universe139SideControls";
+    sidePanel.className = "universe139SideControls";
+
+    document.body.appendChild(sidePanel);
+  }
+
   const box = document.createElement("div");
   box.id = "universe139SubscribeBox";
 
@@ -2243,20 +2273,22 @@ function createSubscriptionBox() {
     </button>
   `;
 
-  if (messageBox) {
-    messageBox.appendChild(box);
-  }
+  sidePanel.appendChild(box);
 
   subscribeBox = box;
-  subscribeButton = document.getElementById("universe139SubscribeButton");
+  subscribeButton =
+    document.getElementById("universe139SubscribeButton");
 
   addSubscriptionStyles();
 
   if (subscribeButton) {
-    subscribeButton.addEventListener("click", openSubscriptionForm);
+    subscribeButton.addEventListener(
+      "click",
+      openSubscriptionForm
+    );
   }
-
 }
+
 
 function updateSubscriptionText() {
 
@@ -8130,22 +8162,78 @@ if (
 // ==========================================================
 // UNIVERSE139 - MAIN SCREEN VISUAL UPGRADE
 //
-// SAFE VERSION
-// This replaces the previous hero add-on.
-//
-// IMPORTANT:
-// - No orbit rings are created.
-// - No pseudo-element is attached to #crystalBallWrap.
-// - No transform is applied to #crystalBallWrap.
-// - Existing crystal-ball hurricane remains untouched.
-// - Existing money / planet effects remain untouched.
+// CLEAN VERSION
+// - Removes the oversized orbit elements that created the
+//   unwanted rectangular/stray frame around the screen.
+// - Makes the message typography smaller and easier to read.
+// - Keeps ONLY Share under the message card.
+// - Moves Receive Another Message + Daily Subscription to a
+//   separate compact control rail in the top-left corner.
+// - Keeps the existing crystal-ball hurricane untouched.
 // ==========================================================
 
 (function installUniverse139HeroUpgrade() {
 
-  // --------------------------------------------------------
-  // INJECT SAFE VISUAL STYLES
-  // --------------------------------------------------------
+  function ensureSecondaryControls() {
+
+    let panel =
+      document.getElementById(
+        "universe139SideControls"
+      );
+
+    if (!panel) {
+
+      panel = document.createElement("div");
+      panel.id = "universe139SideControls";
+      panel.className = "universe139SideControls";
+
+      document.body.appendChild(panel);
+    }
+
+    // Move the existing "Receive Another Message" button
+    // out of the message card and into the left control rail.
+    if (
+      againBtn &&
+      againBtn.parentElement !== panel
+    ) {
+      panel.insertBefore(
+        againBtn,
+        panel.firstChild
+      );
+    }
+
+    return panel;
+  }
+
+
+  function setSecondaryControlsVisible(visible) {
+
+    const panel =
+      ensureSecondaryControls();
+
+    if (visible) {
+      panel.classList.add(
+        "universe139SideControlsVisible"
+      );
+    } else {
+      panel.classList.remove(
+        "universe139SideControlsVisible"
+      );
+    }
+  }
+
+
+  // Expose only the tiny hooks needed by the existing message
+  // functions above. No application logic is moved or replaced.
+  window.universe139EnsureSecondaryControls =
+    ensureSecondaryControls;
+
+  window.universe139ShowSecondaryControls =
+    () => setSecondaryControlsVisible(true);
+
+  window.universe139HideSecondaryControls =
+    () => setSecondaryControlsVisible(false);
+
 
   function installStyles() {
 
@@ -8166,165 +8254,101 @@ if (
     style.textContent = `
 
       /* =====================================================
-         AMBIENT COSMIC GLOW
-         Kept completely independent from #crystalBallWrap.
+         BACKGROUND ATMOSPHERE
          ===================================================== */
 
-      .universe139HeroAmbientGlow {
-
+      body.universe139-hero-active::before {
+        content: "";
         position: fixed;
-
-        left: 50%;
-
-        top: 38%;
-
-        width: min(620px, 72vw);
-
-        aspect-ratio: 1 / 1;
-
-        transform:
-          translate(-50%, -50%);
-
+        inset: -12%;
         pointer-events: none;
-
         z-index: 1;
-
-        border-radius: 50%;
-
         background:
           radial-gradient(
-            circle,
-            rgba(187,120,255,.16) 0%,
-            rgba(133,72,230,.10) 28%,
-            rgba(90,45,180,.045) 52%,
-            transparent 72%
+            circle at 50% 40%,
+            rgba(150,77,255,.13),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 20% 22%,
+            rgba(72,177,255,.07),
+            transparent 29%
+          ),
+          radial-gradient(
+            circle at 82% 70%,
+            rgba(255,76,201,.06),
+            transparent 31%
           );
-
-        filter: blur(18px);
-
         opacity: .82;
-
         animation:
-          universe139AmbientGlowPulse
-          6.5s
+          universe139AmbientPulse
+          9s
           ease-in-out
           infinite;
-
       }
 
-
-      @keyframes universe139AmbientGlowPulse {
-
-        0%,
-        100% {
-
-          opacity: .55;
-
-          transform:
-            translate(-50%, -50%)
-            scale(.94);
-
+      @keyframes universe139AmbientPulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: .70;
         }
-
         50% {
-
-          opacity: .92;
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.06);
-
+          transform: scale(1.035);
+          opacity: .95;
         }
-
       }
 
 
       /* =====================================================
-         COSMIC DUST
+         AMBIENT PARTICLES
          ===================================================== */
 
       .universe139HeroParticles {
-
         position: fixed;
-
         inset: 0;
-
         pointer-events: none;
-
         z-index: 2;
-
         overflow: hidden;
-
       }
 
-
       .universe139HeroParticle {
-
         position: absolute;
-
         width: 3px;
-
         height: 3px;
-
         border-radius: 50%;
-
-        background:
-          rgba(255,255,255,.90);
-
+        background: rgba(255,255,255,.86);
         box-shadow:
-          0 0 7px rgba(255,255,255,.85),
-          0 0 16px rgba(180,120,255,.65);
-
+          0 0 7px rgba(255,255,255,.78),
+          0 0 15px rgba(180,120,255,.52);
         opacity: 0;
-
         animation:
           universe139ParticleFloat
           var(--p-duration)
           ease-in-out
           infinite;
-
-        animation-delay:
-          var(--p-delay);
-
+        animation-delay: var(--p-delay);
       }
 
-
       @keyframes universe139ParticleFloat {
-
         0% {
-
           transform:
-            translate3d(0,30px,0)
+            translate3d(0,28px,0)
             scale(.4);
-
           opacity: 0;
-
         }
-
         18% {
-          opacity: .75;
+          opacity: .72;
         }
-
         50% {
-
           transform:
-            translate3d(
-              var(--p-x),
-              var(--p-y),
-              0
-            )
+            translate3d(var(--p-x),var(--p-y),0)
             scale(var(--p-scale));
-
-          opacity: 1;
-
+          opacity: .92;
         }
-
         82% {
-          opacity: .55;
+          opacity: .46;
         }
-
         100% {
-
           transform:
             translate3d(
               calc(var(--p-x) * -1),
@@ -8332,11 +8356,8 @@ if (
               0
             )
             scale(.3);
-
           opacity: 0;
-
         }
-
       }
 
 
@@ -8345,9 +8366,7 @@ if (
          ===================================================== */
 
       #title {
-
         position: relative;
-
         background:
           linear-gradient(
             110deg,
@@ -8357,79 +8376,92 @@ if (
             #cda7ff 78%,
             #ffffff 100%
           );
-
-        background-size:
-          250% auto;
-
+        background-size: 250% auto;
         -webkit-background-clip: text;
-
         background-clip: text;
-
         color: transparent;
-
         text-shadow:
           0 0 18px rgba(186,133,255,.24),
-          0 0 42px rgba(139,92,246,.12);
-
+          0 0 40px rgba(139,92,246,.12);
         animation:
           universe139TitleShimmer
-          8s
+          7s
           linear
           infinite;
-
       }
-
 
       @keyframes universe139TitleShimmer {
-
-        0% {
+        from {
           background-position: 0% 50%;
         }
-
-        100% {
+        to {
           background-position: 250% 50%;
         }
-
       }
 
-
       #subtitle {
-
-        opacity: .86;
-
+        opacity: .80;
         text-shadow:
           0 0 12px rgba(165,120,255,.20);
-
       }
 
 
       /* =====================================================
-         CRYSTAL BALL
-         Only visual filter; no extra DOM/effect geometry.
+         CRYSTAL BALL GLOW
+         IMPORTANT: NO EXTRA ORBIT ELEMENTS.
+         This avoids the rectangular artifact shown in the
+         screenshot while preserving the actual hurricane.
          ===================================================== */
 
       #crystalBallWrap {
-
         position: relative;
-
+        isolation: isolate;
         filter:
           drop-shadow(
-            0 0 16px rgba(154,96,255,.16)
+            0 0 18px rgba(154,96,255,.18)
           );
-
-        transition:
-          filter .35s ease;
-
       }
 
-
-      body.universe139-revealing #crystalBallWrap {
-
-        filter:
-          drop-shadow(
-            0 0 24px rgba(167,98,255,.30)
+      #crystalBallWrap::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 112%;
+        height: 112%;
+        transform: translate(-50%,-50%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        background:
+          radial-gradient(
+            circle,
+            rgba(150,88,255,.18) 0%,
+            rgba(130,72,255,.08) 38%,
+            transparent 70%
           );
+        filter: blur(18px);
+        opacity: .68;
+        animation:
+          universe139BallAura
+          4.5s
+          ease-in-out
+          infinite;
+      }
 
+      @keyframes universe139BallAura {
+        0%, 100% {
+          transform:
+            translate(-50%,-50%)
+            scale(.96);
+          opacity: .44;
+        }
+        50% {
+          transform:
+            translate(-50%,-50%)
+            scale(1.05);
+          opacity: .82;
+        }
       }
 
 
@@ -8438,235 +8470,357 @@ if (
          ===================================================== */
 
       #revealBtn {
-
         position: relative;
-
         overflow: hidden;
-
         isolation: isolate;
-
-        box-shadow:
-          0 0 0 rgba(0,0,0,0);
-
         transition:
           transform .3s ease,
           box-shadow .3s ease;
-
       }
 
-
       #revealBtn::before {
-
         content: "";
-
         position: absolute;
-
         top: 0;
-
         left: -110%;
-
         width: 70%;
-
         height: 100%;
-
-        transform:
-          skewX(-22deg);
-
+        transform: skewX(-22deg);
         background:
           linear-gradient(
             90deg,
             transparent,
-            rgba(255,255,255,.24),
+            rgba(255,255,255,.22),
             transparent
           );
-
         animation:
           universe139ButtonSweep
-          4.8s
+          4.5s
           ease-in-out
           infinite;
-
         pointer-events: none;
-
       }
-
 
       #revealBtn:hover {
-
-        transform:
-          translateY(-2px)
-          scale(1.015);
-
+        transform: translateY(-2px) scale(1.015);
         box-shadow:
-          0 10px 34px rgba(120,70,220,.24),
+          0 10px 34px rgba(120,70,220,.22),
           0 0 22px rgba(196,138,255,.14);
-
       }
 
-
       @keyframes universe139ButtonSweep {
-
         0% {
           left: -110%;
         }
-
-        35%,
-        100% {
+        35%, 100% {
           left: 145%;
         }
-
       }
 
 
       /* =====================================================
          MESSAGE CARD
+         Smaller, tighter, cleaner.
          ===================================================== */
 
       #messageBox {
-
         position: relative;
-
         isolation: isolate;
-
+        width: min(720px, calc(100vw - 40px)) !important;
+        max-width: 720px !important;
+        box-sizing: border-box !important;
+        padding: 26px 32px 28px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         background:
           linear-gradient(
             145deg,
             rgba(255,255,255,.085),
             rgba(255,255,255,.028)
           );
-
         border:
-          1px solid
-          rgba(255,255,255,.15);
-
+          1px solid rgba(255,255,255,.15);
         box-shadow:
-          0 24px 80px rgba(0,0,0,.28),
+          0 24px 70px rgba(0,0,0,.28),
           inset 0 1px 0 rgba(255,255,255,.08);
-
-        backdrop-filter:
-          blur(18px);
-
-        -webkit-backdrop-filter:
-          blur(18px);
-
+        backdrop-filter: blur(17px);
+        -webkit-backdrop-filter: blur(17px);
         overflow: hidden;
-
       }
 
+      #messageBox::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        padding: 1px;
+        background:
+          linear-gradient(
+            120deg,
+            rgba(255,255,255,.22),
+            transparent 27%,
+            rgba(190,130,255,.14) 55%,
+            transparent 78%,
+            rgba(255,255,255,.16)
+          );
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+      }
+
+
+      /* =====================================================
+         DATE / LABEL
+         ===================================================== */
+
+      #universe139MessageDate {
+        font-size: 12px !important;
+        margin-bottom: 7px !important;
+        letter-spacing: .04em;
+      }
+
+      #month {
+        font-size: 13px !important;
+        margin-bottom: 8px !important;
+        letter-spacing: .08em;
+      }
+
+
+      /* =====================================================
+         MESSAGE TEXT
+         ===================================================== */
 
       #message {
-
+        display: block !important;
+        max-width: 620px !important;
+        margin: 10px auto 16px !important;
+        font-size: clamp(20px, 2.0vw, 31px) !important;
+        line-height: 1.45 !important;
+        font-weight: 500 !important;
+        letter-spacing: -.01em;
+        text-align: center !important;
         text-shadow:
-          0 0 20px rgba(255,255,255,.08);
-
+          0 0 18px rgba(255,255,255,.06);
       }
 
 
       /* =====================================================
-         SUBSCRIPTION BOX
+         ONLY SHARE UNDER THE MESSAGE
          ===================================================== */
 
-      #universe139SubscribeBox,
-      .subscribeBox,
-      #subscribeBox {
-
-        backdrop-filter:
-          blur(16px);
-
-        -webkit-backdrop-filter:
-          blur(16px);
-
+      #messageBox > #shareBtn {
+        display: block !important;
+        margin: 12px auto 0 !important;
+        width: min(250px, 100%) !important;
       }
 
 
       /* =====================================================
-         ACCESSIBILITY
+         LEFT CONTROL RAIL
+         Receive Another Message + Subscription
          ===================================================== */
 
-      @media (prefers-reduced-motion: reduce) {
+      #universe139SideControls {
+        position: fixed !important;
+        top: 92px !important;
+        left: 22px !important;
+        z-index: 12000 !important;
+        width: 215px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translateX(-12px) !important;
+        transition:
+          opacity .35s ease,
+          transform .35s ease,
+          visibility .35s ease !important;
+      }
 
-        .universe139HeroAmbientGlow,
-        .universe139HeroParticle,
-        #title,
-        #revealBtn::before {
+      #universe139SideControls.universe139SideControlsVisible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translateX(0) !important;
+      }
 
-          animation: none !important;
 
+      /* Move the existing button visually into a compact control. */
+
+      #universe139SideControls > #againBtn {
+        display: block !important;
+        width: 100% !important;
+        min-height: 44px !important;
+        margin: 0 !important;
+        padding: 9px 14px !important;
+        box-sizing: border-box !important;
+        border-radius: 14px !important;
+        background: rgba(35,16,67,.72) !important;
+        border: 1px solid rgba(255,255,255,.16) !important;
+        color: #ffffff !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 14px 35px rgba(0,0,0,.20) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+      }
+
+      #universe139SideControls > #againBtn:hover {
+        background: rgba(63,31,105,.82) !important;
+        transform: translateY(-1px);
+      }
+
+
+      /* Subscription card is now completely outside messageBox. */
+
+      #universe139SideControls #universe139SubscribeBox {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 14px 14px 13px !important;
+        box-sizing: border-box !important;
+        border-radius: 15px !important;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(43,19,80,.86),
+            rgba(17,7,37,.82)
+          ) !important;
+        border: 1px solid rgba(255,255,255,.14) !important;
+        box-shadow: 0 16px 42px rgba(0,0,0,.28) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      #universe139SideControls .universe139SubscribeTitle {
+        font-size: 14px !important;
+        line-height: 1.3 !important;
+      }
+
+      #universe139SideControls .universe139SubscribeText {
+        margin-top: 5px !important;
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      #universe139SideControls .universe139SubscribeButton {
+        width: 100% !important;
+        min-height: 38px !important;
+        margin-top: 9px !important;
+        padding: 7px 12px !important;
+        border-radius: 12px !important;
+        font-size: 12px !important;
+      }
+
+
+      /* =====================================================
+         REVEAL STATE
+         ===================================================== */
+
+      body.universe139-revealing #crystalBallWrap {
+        filter:
+          drop-shadow(
+            0 0 26px rgba(167,98,255,.32)
+          );
+      }
+
+      body.universe139-revealing #crystalBallWrap::before {
+        animation:
+          universe139RevealAura
+          2s
+          ease-in-out
+          infinite;
+      }
+
+      @keyframes universe139RevealAura {
+        0%, 100% {
+          transform:
+            translate(-50%,-50%)
+            scale(.94);
+          opacity: .38;
         }
-
+        50% {
+          transform:
+            translate(-50%,-50%)
+            scale(1.08);
+          opacity: .82;
+        }
       }
 
 
       /* =====================================================
-         MOBILE
+         SAFETY: no legacy orbit elements anywhere.
          ===================================================== */
+
+      .universe139BallOrbit,
+      #universe139SideControls .universe139BallOrbit {
+        display: none !important;
+      }
+
 
       @media (max-width: 700px) {
 
-        .universe139HeroAmbientGlow {
-
-          top: 34%;
-
-          width: 92vw;
-
-          filter: blur(20px);
-
+        .universe139HeroParticle {
+          width: 2px;
+          height: 2px;
         }
 
-        .universe139HeroParticle {
+        #messageBox {
+          width: calc(100vw - 24px) !important;
+          max-width: calc(100vw - 24px) !important;
+          padding: 22px 18px 24px !important;
+        }
 
-          width: 2px;
+        #message {
+          max-width: 100% !important;
+          font-size: clamp(18px, 5vw, 25px) !important;
+          line-height: 1.42 !important;
+          margin-top: 8px !important;
+        }
 
-          height: 2px;
+        #universe139SideControls {
+          top: 76px !important;
+          left: 12px !important;
+          width: min(190px, calc(100vw - 24px)) !important;
+        }
 
+        #universe139SideControls > #againBtn {
+          min-height: 42px !important;
+          font-size: 12px !important;
+        }
+
+        #universe139SideControls #universe139SubscribeBox {
+          padding: 12px 11px !important;
+        }
+
+      }
+
+
+      @media (prefers-reduced-motion: reduce) {
+
+        #title,
+        #revealBtn::before,
+        .universe139HeroParticle,
+        #crystalBallWrap::before,
+        body.universe139-hero-active::before {
+          animation: none !important;
         }
 
       }
 
     `;
 
-    document.head.appendChild(
-      style
-    );
-
+    document.head.appendChild(style);
   }
 
-
-  // --------------------------------------------------------
-  // AMBIENT GLOW
-  // --------------------------------------------------------
-
-  function createAmbientGlow() {
-
-    if (
-      document.querySelector(
-        ".universe139HeroAmbientGlow"
-      )
-    ) {
-      return;
-    }
-
-    const glow =
-      document.createElement("div");
-
-    glow.className =
-      "universe139HeroAmbientGlow";
-
-    glow.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    document.body.appendChild(
-      glow
-    );
-
-  }
-
-
-  // --------------------------------------------------------
-  // PARTICLES
-  // --------------------------------------------------------
 
   function createParticleField() {
 
@@ -8684,15 +8838,10 @@ if (
     field.className =
       "universe139HeroParticles";
 
-    field.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
     const particleCount =
       window.innerWidth < 700
-        ? 34
-        : 58;
+        ? 30
+        : 52;
 
     for (
       let i = 0;
@@ -8714,22 +8863,22 @@ if (
 
       particle.style.setProperty(
         "--p-x",
-        `${-80 + Math.random() * 160}px`
+        `${-70 + Math.random() * 140}px`
       );
 
       particle.style.setProperty(
         "--p-y",
-        `${-110 + Math.random() * 220}px`
+        `${-100 + Math.random() * 200}px`
       );
 
       particle.style.setProperty(
         "--p-scale",
-        `${0.55 + Math.random() * 1.55}`
+        `${0.55 + Math.random() * 1.35}`
       );
 
       particle.style.setProperty(
         "--p-duration",
-        `${4.5 + Math.random() * 7}s`
+        `${5 + Math.random() * 7}s`
       );
 
       particle.style.setProperty(
@@ -8740,100 +8889,159 @@ if (
       field.appendChild(
         particle
       );
-
     }
 
     document.body.appendChild(
       field
     );
-
   }
 
 
-  // --------------------------------------------------------
-  // BUTTON REACTIVITY
-  // --------------------------------------------------------
+  function attachBallInteraction() {
 
-  function attachRevealHook() {
-
-    const button =
+    const ball =
       document.getElementById(
-        "revealBtn"
+        "crystalBallWrap"
       );
 
-    if (!button) {
+    if (!ball) {
       return;
     }
 
     if (
-      button.dataset
-        .universe139HeroHook ===
-      "1"
+      ball.dataset
+        .universe139Interaction === "1"
     ) {
       return;
     }
 
-    button.dataset
-      .universe139HeroHook =
-      "1";
+    ball.dataset
+      .universe139Interaction = "1";
 
-    button.addEventListener(
-      "click",
-      () => {
+    ball.addEventListener(
+      "pointermove",
+      event => {
 
-        document.body.classList.add(
-          "universe139-revealing"
+        const rect =
+          ball.getBoundingClientRect();
+
+        if (!rect.width || !rect.height) {
+          return;
+        }
+
+        const x =
+          (event.clientX - rect.left) /
+          rect.width;
+
+        const y =
+          (event.clientY - rect.top) /
+          rect.height;
+
+        ball.style.setProperty(
+          "--hero-rx",
+          `${(.5 - y) * 4}deg`
         );
 
-        window.setTimeout(
-          () => {
-
-            document.body.classList.remove(
-              "universe139-revealing"
-            );
-
-          },
-          2700
+        ball.style.setProperty(
+          "--hero-ry",
+          `${(x - .5) * 4}deg`
         );
-
       }
     );
 
+    ball.addEventListener(
+      "pointerleave",
+      () => {
+        ball.style.removeProperty(
+          "--hero-rx"
+        );
+        ball.style.removeProperty(
+          "--hero-ry"
+        );
+      }
+    );
   }
 
 
-  // --------------------------------------------------------
-  // SAFE INITIALIZATION
-  // --------------------------------------------------------
+  function installBallTiltStyle() {
+
+    if (
+      document.getElementById(
+        "universe139BallTiltCSS"
+      )
+    ) {
+      return;
+    }
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "universe139BallTiltCSS";
+
+    style.textContent = `
+      #crystalBallWrap {
+        transform:
+          perspective(1000px)
+          rotateX(var(--hero-rx, 0deg))
+          rotateY(var(--hero-ry, 0deg));
+        transition: transform .35s ease;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #crystalBallWrap {
+          transform: none !important;
+        }
+      }
+    `;
+
+    document.head.appendChild(
+      style
+    );
+  }
+
+
+  function removeLegacyOrbitNodes() {
+
+    document
+      .querySelectorAll(
+        ".universe139BallOrbit"
+      )
+      .forEach(
+        element => element.remove()
+      );
+  }
+
 
   function initialize() {
 
     installStyles();
+    installBallTiltStyle();
+    removeLegacyOrbitNodes();
 
-    createAmbientGlow();
-
-    createParticleField();
-
-    attachRevealHook();
-
-    console.log(
-      "Universe139: safe enhanced main screen visuals installed."
+    document.body.classList.add(
+      "universe139-hero-active"
     );
 
+    createParticleField();
+    ensureSecondaryControls();
+    setSecondaryControlsVisible(false);
+    attachBallInteraction();
+
+    console.log(
+      "Universe139: clean main screen visual upgrade installed."
+    );
   }
 
 
   if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
   ) {
 
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
-      {
-        once: true
-      }
+      { once: true }
     );
 
   } else {
@@ -8843,3 +9051,4 @@ if (
   }
 
 })();
+
