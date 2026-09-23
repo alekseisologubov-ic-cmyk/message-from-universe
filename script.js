@@ -8130,15 +8130,22 @@ if (
 // ==========================================================
 // UNIVERSE139 - MAIN SCREEN VISUAL UPGRADE
 //
-// SAFE ADD-ON
-// Add this block at the VERY BOTTOM of script.js.
+// SAFE VERSION
+// This replaces the previous hero add-on.
 //
-// Does not replace the existing reveal system.
-// Does not replace createWindEffect().
-// Does not replace createBallHurricane().
+// IMPORTANT:
+// - No orbit rings are created.
+// - No pseudo-element is attached to #crystalBallWrap.
+// - No transform is applied to #crystalBallWrap.
+// - Existing crystal-ball hurricane remains untouched.
+// - Existing money / planet effects remain untouched.
 // ==========================================================
 
 (function installUniverse139HeroUpgrade() {
+
+  // --------------------------------------------------------
+  // INJECT SAFE VISUAL STYLES
+  // --------------------------------------------------------
 
   function installStyles() {
 
@@ -8159,67 +8166,81 @@ if (
     style.textContent = `
 
       /* =====================================================
-         HERO ATMOSPHERE
+         AMBIENT COSMIC GLOW
+         Kept completely independent from #crystalBallWrap.
          ===================================================== */
 
-      body.universe139-hero-active::before {
-
-        content: "";
+      .universe139HeroAmbientGlow {
 
         position: fixed;
 
-        inset: -15%;
+        left: 50%;
+
+        top: 38%;
+
+        width: min(620px, 72vw);
+
+        aspect-ratio: 1 / 1;
+
+        transform:
+          translate(-50%, -50%);
 
         pointer-events: none;
 
         z-index: 1;
 
+        border-radius: 50%;
+
         background:
           radial-gradient(
-            circle at 50% 42%,
-            rgba(150, 77, 255, .18),
-            transparent 24%
-          ),
-          radial-gradient(
-            circle at 20% 20%,
-            rgba(72, 177, 255, .10),
-            transparent 28%
-          ),
-          radial-gradient(
-            circle at 82% 70%,
-            rgba(255, 76, 201, .08),
-            transparent 30%
+            circle,
+            rgba(187,120,255,.16) 0%,
+            rgba(133,72,230,.10) 28%,
+            rgba(90,45,180,.045) 52%,
+            transparent 72%
           );
 
-        opacity: .9;
+        filter: blur(18px);
+
+        opacity: .82;
 
         animation:
-          universe139AmbientPulse
-          8s ease-in-out infinite;
+          universe139AmbientGlowPulse
+          6.5s
+          ease-in-out
+          infinite;
 
       }
 
 
-      @keyframes universe139AmbientPulse {
+      @keyframes universe139AmbientGlowPulse {
 
         0%,
         100% {
+
+          opacity: .55;
+
           transform:
-            scale(1)
-            rotate(0deg);
+            translate(-50%, -50%)
+            scale(.94);
+
         }
 
         50% {
+
+          opacity: .92;
+
           transform:
-            scale(1.06)
-            rotate(1deg);
+            translate(-50%, -50%)
+            scale(1.06);
+
         }
 
       }
 
 
       /* =====================================================
-         PARTICLE FIELD
+         COSMIC DUST
          ===================================================== */
 
       .universe139HeroParticles {
@@ -8273,11 +8294,7 @@ if (
         0% {
 
           transform:
-            translate3d(
-              0,
-              30px,
-              0
-            )
+            translate3d(0,30px,0)
             scale(.4);
 
           opacity: 0;
@@ -8285,7 +8302,7 @@ if (
         }
 
         18% {
-          opacity: .8;
+          opacity: .75;
         }
 
         50% {
@@ -8296,16 +8313,14 @@ if (
               var(--p-y),
               0
             )
-            scale(
-              var(--p-scale)
-            );
+            scale(var(--p-scale));
 
           opacity: 1;
 
         }
 
         82% {
-          opacity: .6;
+          opacity: .55;
         }
 
         100% {
@@ -8326,7 +8341,7 @@ if (
 
 
       /* =====================================================
-         TITLE ENHANCEMENT
+         TITLE
          ===================================================== */
 
       #title {
@@ -8347,17 +8362,20 @@ if (
           250% auto;
 
         -webkit-background-clip: text;
+
         background-clip: text;
 
         color: transparent;
 
         text-shadow:
-          0 0 18px rgba(186,133,255,.28),
-          0 0 42px rgba(139,92,246,.16);
+          0 0 18px rgba(186,133,255,.24),
+          0 0 42px rgba(139,92,246,.12);
 
         animation:
           universe139TitleShimmer
-          7s linear infinite;
+          8s
+          linear
+          infinite;
 
       }
 
@@ -8365,221 +8383,52 @@ if (
       @keyframes universe139TitleShimmer {
 
         0% {
-          background-position:
-            0% 50%;
+          background-position: 0% 50%;
         }
 
         100% {
-          background-position:
-            250% 50%;
+          background-position: 250% 50%;
         }
 
       }
 
 
-      /* =====================================================
-         SUBTITLE
-         ===================================================== */
-
       #subtitle {
 
-        opacity: .82;
+        opacity: .86;
 
         text-shadow:
-          0 0 12px
-          rgba(165,120,255,.22);
+          0 0 12px rgba(165,120,255,.20);
 
       }
 
 
       /* =====================================================
-         CRYSTAL BALL OUTER AURA
+         CRYSTAL BALL
+         Only visual filter; no extra DOM/effect geometry.
          ===================================================== */
 
       #crystalBallWrap {
 
         position: relative;
 
-        isolation: isolate;
+        filter:
+          drop-shadow(
+            0 0 16px rgba(154,96,255,.16)
+          );
+
+        transition:
+          filter .35s ease;
+
+      }
+
+
+      body.universe139-revealing #crystalBallWrap {
 
         filter:
           drop-shadow(
-            0 0 18px
-            rgba(154,96,255,.18)
+            0 0 24px rgba(167,98,255,.30)
           );
-
-      }
-
-
-      #crystalBallWrap::before {
-
-        content: "";
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 118%;
-
-        aspect-ratio: 1;
-
-        transform:
-          translate(-50%, -50%);
-
-        border-radius: 50%;
-
-        pointer-events: none;
-
-        z-index: -1;
-
-        background:
-          radial-gradient(
-            circle,
-            rgba(150,88,255,.22)
-            0%,
-            rgba(130,72,255,.11)
-            35%,
-            transparent 69%
-          );
-
-        filter:
-          blur(18px);
-
-        opacity: .75;
-
-        animation:
-          universe139BallAura
-          4.5s ease-in-out infinite;
-
-      }
-
-
-      @keyframes universe139BallAura {
-
-        0%,
-        100% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(.96);
-
-          opacity: .48;
-
-        }
-
-        50% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.08);
-
-          opacity: .90;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         EXTRA ORBIT RINGS
-         ===================================================== */
-
-      .universe139BallOrbit {
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 120%;
-
-        height: 120%;
-
-        border-radius: 50%;
-
-        pointer-events: none;
-
-        border:
-          1px solid
-          rgba(210,174,255,.15);
-
-        transform:
-          translate(-50%, -50%)
-          rotateX(68deg)
-          rotateZ(0deg);
-
-        box-shadow:
-          0 0 18px
-          rgba(161,105,255,.10);
-
-        animation:
-          universe139OrbitRotate
-          13s
-          linear
-          infinite;
-
-      }
-
-
-      .universe139BallOrbit.two {
-
-        width: 108%;
-
-        height: 108%;
-
-        transform:
-          translate(-50%, -50%)
-          rotateX(72deg)
-          rotateZ(38deg);
-
-        animation-duration:
-          17s;
-
-        animation-direction:
-          reverse;
-
-      }
-
-
-      .universe139BallOrbit.three {
-
-        width: 132%;
-
-        height: 132%;
-
-        transform:
-          translate(-50%, -50%)
-          rotateY(66deg)
-          rotateZ(-24deg);
-
-        animation-duration:
-          21s;
-
-      }
-
-
-      @keyframes universe139OrbitRotate {
-
-        from {
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(0deg);
-
-        }
-
-        to {
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(360deg);
-
-        }
 
       }
 
@@ -8633,7 +8482,7 @@ if (
 
         animation:
           universe139ButtonSweep
-          4.5s
+          4.8s
           ease-in-out
           infinite;
 
@@ -8649,10 +8498,8 @@ if (
           scale(1.015);
 
         box-shadow:
-          0 10px 34px
-          rgba(120,70,220,.25),
-          0 0 22px
-          rgba(196,138,255,.16);
+          0 10px 34px rgba(120,70,220,.24),
+          0 0 22px rgba(196,138,255,.14);
 
       }
 
@@ -8672,7 +8519,7 @@ if (
 
 
       /* =====================================================
-         MESSAGE CARD GLASS
+         MESSAGE CARD
          ===================================================== */
 
       #messageBox {
@@ -8684,19 +8531,17 @@ if (
         background:
           linear-gradient(
             145deg,
-            rgba(255,255,255,.105),
-            rgba(255,255,255,.035)
+            rgba(255,255,255,.085),
+            rgba(255,255,255,.028)
           );
 
         border:
           1px solid
-          rgba(255,255,255,.17);
+          rgba(255,255,255,.15);
 
         box-shadow:
-          0 24px 80px
-          rgba(0,0,0,.30),
-          inset 0 1px 0
-          rgba(255,255,255,.10);
+          0 24px 80px rgba(0,0,0,.28),
+          inset 0 1px 0 rgba(255,255,255,.08);
 
         backdrop-filter:
           blur(18px);
@@ -8709,61 +8554,19 @@ if (
       }
 
 
-      #messageBox::before {
-
-        content: "";
-
-        position: absolute;
-
-        inset: 0;
-
-        pointer-events: none;
-
-        border-radius: inherit;
-
-        padding: 1px;
-
-        background:
-          linear-gradient(
-            120deg,
-            rgba(255,255,255,.28),
-            transparent 25%,
-            rgba(190,130,255,.18) 55%,
-            transparent 78%,
-            rgba(255,255,255,.20)
-          );
-
-        -webkit-mask:
-          linear-gradient(#fff 0 0)
-          content-box,
-          linear-gradient(#fff 0 0);
-
-        -webkit-mask-composite:
-          xor;
-
-        mask-composite:
-          exclude;
-
-      }
-
-
-      /* =====================================================
-         MESSAGE TEXT
-         ===================================================== */
-
       #message {
 
         text-shadow:
-          0 0 20px
-          rgba(255,255,255,.08);
+          0 0 20px rgba(255,255,255,.08);
 
       }
 
 
       /* =====================================================
-         SUBSCRIBE BOX
+         SUBSCRIPTION BOX
          ===================================================== */
 
+      #universe139SubscribeBox,
       .subscribeBox,
       #subscribeBox {
 
@@ -8773,86 +8576,21 @@ if (
         -webkit-backdrop-filter:
           blur(16px);
 
-        border:
-          1px solid
-          rgba(255,255,255,.13);
-
-        box-shadow:
-          0 18px 55px
-          rgba(0,0,0,.20);
-
       }
 
 
       /* =====================================================
-         ACTIVE REVEAL STATE
+         ACCESSIBILITY
          ===================================================== */
 
-      body.universe139-revealing
-      #crystalBallWrap::before {
+      @media (prefers-reduced-motion: reduce) {
 
-        animation:
-          universe139RevealAura
-          2s
-          ease-in-out
-          infinite;
-
-      }
-
-
-      body.universe139-revealing
-      #crystalBallWrap {
-
-        filter:
-          drop-shadow(
-            0 0 28px
-            rgba(167,98,255,.38)
-          );
-
-      }
-
-
-      @keyframes universe139RevealAura {
-
-        0%,
-        100% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(.92);
-
-          opacity: .45;
-
-        }
-
-        50% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.16);
-
-          opacity: 1;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         REDUCE-MOTION SUPPORT
-         ===================================================== */
-
-      @media
-      (prefers-reduced-motion: reduce) {
-
-        #title,
-        #revealBtn::before,
+        .universe139HeroAmbientGlow,
         .universe139HeroParticle,
-        .universe139BallOrbit,
-        #crystalBallWrap::before {
+        #title,
+        #revealBtn::before {
 
-          animation:
-            none !important;
+          animation: none !important;
 
         }
 
@@ -8863,40 +8601,23 @@ if (
          MOBILE
          ===================================================== */
 
-      @media
-      (max-width: 700px) {
+      @media (max-width: 700px) {
+
+        .universe139HeroAmbientGlow {
+
+          top: 34%;
+
+          width: 92vw;
+
+          filter: blur(20px);
+
+        }
 
         .universe139HeroParticle {
 
           width: 2px;
+
           height: 2px;
-
-        }
-
-        #crystalBallWrap::before {
-
-          width: 126%;
-
-        }
-
-        .universe139BallOrbit {
-
-          width: 116%;
-          height: 116%;
-
-        }
-
-        .universe139BallOrbit.two {
-
-          width: 106%;
-          height: 106%;
-
-        }
-
-        .universe139BallOrbit.three {
-
-          width: 128%;
-          height: 128%;
 
         }
 
@@ -8904,14 +8625,48 @@ if (
 
     `;
 
-    document.head.appendChild(style);
+    document.head.appendChild(
+      style
+    );
 
   }
 
 
-  // ========================================================
-  // CREATE PARTICLES
-  // ========================================================
+  // --------------------------------------------------------
+  // AMBIENT GLOW
+  // --------------------------------------------------------
+
+  function createAmbientGlow() {
+
+    if (
+      document.querySelector(
+        ".universe139HeroAmbientGlow"
+      )
+    ) {
+      return;
+    }
+
+    const glow =
+      document.createElement("div");
+
+    glow.className =
+      "universe139HeroAmbientGlow";
+
+    glow.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    document.body.appendChild(
+      glow
+    );
+
+  }
+
+
+  // --------------------------------------------------------
+  // PARTICLES
+  // --------------------------------------------------------
 
   function createParticleField() {
 
@@ -8928,6 +8683,11 @@ if (
 
     field.className =
       "universe139HeroParticles";
+
+    field.setAttribute(
+      "aria-hidden",
+      "true"
+    );
 
     const particleCount =
       window.innerWidth < 700
@@ -8990,88 +8750,9 @@ if (
   }
 
 
-  // ========================================================
-  // ADD BALL ORBITS
-  // ========================================================
-
-  function addBallOrbits() {
-
-    const ball =
-      document.getElementById(
-        "crystalBallWrap"
-      );
-
-    if (!ball) {
-      return;
-    }
-
-    if (
-      ball.querySelector(
-        ".universe139BallOrbit"
-      )
-    ) {
-      return;
-    }
-
-    const orbit1 =
-      document.createElement("div");
-
-    orbit1.className =
-      "universe139BallOrbit";
-
-    const orbit2 =
-      document.createElement("div");
-
-    orbit2.className =
-      "universe139BallOrbit two";
-
-    const orbit3 =
-      document.createElement("div");
-
-    orbit3.className =
-      "universe139BallOrbit three";
-
-    ball.appendChild(
-      orbit1
-    );
-
-    ball.appendChild(
-      orbit2
-    );
-
-    ball.appendChild(
-      orbit3
-    );
-
-  }
-
-
-  // ========================================================
-  // REACTIVE STATE
-  // ========================================================
-
-  function setRevealState(active) {
-
-    if (active) {
-
-      document.body.classList.add(
-        "universe139-revealing"
-      );
-
-    } else {
-
-      document.body.classList.remove(
-        "universe139-revealing"
-      );
-
-    }
-
-  }
-
-
-  // ========================================================
-  // BUTTON HOOK
-  // ========================================================
+  // --------------------------------------------------------
+  // BUTTON REACTIVITY
+  // --------------------------------------------------------
 
   function attachRevealHook() {
 
@@ -9100,15 +8781,17 @@ if (
       "click",
       () => {
 
-        setRevealState(
-          true
+        document.body.classList.add(
+          "universe139-revealing"
         );
 
         window.setTimeout(
           () => {
-            setRevealState(
-              false
+
+            document.body.classList.remove(
+              "universe139-revealing"
             );
+
           },
           2700
         );
@@ -9119,183 +8802,26 @@ if (
   }
 
 
-  // ========================================================
-  // GENERAL POINTER REACTIVITY
-  // ========================================================
-
-  function attachBallInteraction() {
-
-    const ball =
-      document.getElementById(
-        "crystalBallWrap"
-      );
-
-    if (!ball) {
-      return;
-    }
-
-    if (
-      ball.dataset
-        .universe139Interaction ===
-      "1"
-    ) {
-      return;
-    }
-
-    ball.dataset
-      .universe139Interaction =
-      "1";
-
-    ball.addEventListener(
-      "pointermove",
-      (event) => {
-
-        const rect =
-          ball.getBoundingClientRect();
-
-        const x =
-          (
-            event.clientX -
-            rect.left
-          ) /
-          rect.width;
-
-        const y =
-          (
-            event.clientY -
-            rect.top
-          ) /
-          rect.height;
-
-        const rotateY =
-          (x - .5) * 5;
-
-        const rotateX =
-          (.5 - y) * 5;
-
-        ball.style.setProperty(
-          "--hero-rx",
-          `${rotateX}deg`
-        );
-
-        ball.style.setProperty(
-          "--hero-ry",
-          `${rotateY}deg`
-        );
-
-      }
-    );
-
-
-    ball.addEventListener(
-      "pointerleave",
-      () => {
-
-        ball.style.removeProperty(
-          "--hero-rx"
-        );
-
-        ball.style.removeProperty(
-          "--hero-ry"
-        );
-
-      }
-    );
-
-  }
-
-
-  // ========================================================
-  // BALL TRANSFORM
-  // ========================================================
-
-  function installBallTiltStyle() {
-
-    if (
-      document.getElementById(
-        "universe139BallTiltCSS"
-      )
-    ) {
-      return;
-    }
-
-    const style =
-      document.createElement("style");
-
-    style.id =
-      "universe139BallTiltCSS";
-
-    style.textContent = `
-
-      #crystalBallWrap {
-
-        transform:
-          perspective(1000px)
-          rotateX(
-            var(--hero-rx, 0deg)
-          )
-          rotateY(
-            var(--hero-ry, 0deg)
-          );
-
-        transition:
-          transform .35s ease;
-
-      }
-
-      @media
-      (prefers-reduced-motion: reduce) {
-
-        #crystalBallWrap {
-
-          transform:
-            none !important;
-
-        }
-
-      }
-
-    `;
-
-    document.head.appendChild(
-      style
-    );
-
-  }
-
-
-  // ========================================================
-  // INITIALIZE
-  // ========================================================
+  // --------------------------------------------------------
+  // SAFE INITIALIZATION
+  // --------------------------------------------------------
 
   function initialize() {
 
     installStyles();
 
-    installBallTiltStyle();
-
-    document.body.classList.add(
-      "universe139-hero-active"
-    );
+    createAmbientGlow();
 
     createParticleField();
 
-    addBallOrbits();
-
     attachRevealHook();
 
-    attachBallInteraction();
-
     console.log(
-      "Universe139: enhanced main screen visuals installed."
+      "Universe139: safe enhanced main screen visuals installed."
     );
 
   }
 
-
-  // ========================================================
-  // DOM READY
-  // ========================================================
 
   if (
     document.readyState ===
