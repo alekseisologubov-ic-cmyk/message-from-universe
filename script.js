@@ -8130,13 +8130,16 @@ if (
 
 // ==========================================================
 // UNIVERSE139 - SIMPLE MESSAGE ACTION LAYOUT
-// DESKTOP + MOBILE IDENTICAL
+// FINAL STABLE VERSION
 //
-// After every revealed message:
-//   [ Subscribe ] [ Share ]
-//   [ Receive Another Message ]
+// EXACT SAME UI ON DESKTOP AND MOBILE:
 //
-// This block replaces all previous action-layout overrides.
+//        [ Subscribe ] [ Share My Message ]
+//
+//        [ Receive Another Message ]
+//
+// The action area is deliberately independent from the
+// legacy #againBtn / #shareBtn / subscription panel.
 // ==========================================================
 
 (function installUniverse139SimpleMessageActionsFinal() {
@@ -8147,8 +8150,9 @@ if (
   const ACTION_ID =
     "universe139SimpleMessageActions";
 
-  let receiveTimer = null;
-  let actionTimer = null;
+  let refreshTimer = null;
+  let receivePollTimer = null;
+
 
   function addStyles() {
 
@@ -8161,138 +8165,168 @@ if (
 
     style.textContent = `
 
-      /* Hide only the OLD controls. */
+      /* -----------------------------------------------
+         HIDE OLD ACTION CONTROLS ONLY
+         ----------------------------------------------- */
+
       #againBtn,
       #shareBtn,
       #universe139SubscribeBox {
         display: none !important;
       }
 
-      /* One layout for desktop and mobile. */
+
+      /* -----------------------------------------------
+         NEW ACTION AREA
+         ----------------------------------------------- */
+
       #${ACTION_ID} {
         width: min(430px, calc(100vw - 36px));
-        margin: 12px auto 20px;
+        margin: 12px auto 22px;
         display: none;
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
         position: relative;
-        z-index: 1000;
+        z-index: 10000;
         box-sizing: border-box;
+        opacity: 1;
       }
 
       #${ACTION_ID}.visible {
         display: flex !important;
       }
 
-      .universe139SimpleSecondary {
+      #${ACTION_ID}.hidden {
+        display: none !important;
+      }
+
+
+      /* -----------------------------------------------
+         SUBSCRIBE / SHARE
+         ----------------------------------------------- */
+
+      #${ACTION_ID} .universe139SimpleSecondary {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
       }
 
-      .universe139SimpleSecondary button,
-      .universe139SimpleReceive {
+      #${ACTION_ID} .universe139SimpleSecondary button {
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 12px;
         box-sizing: border-box;
         border: 1px solid rgba(255,255,255,.20);
+        border-radius: 999px;
+        background: rgba(255,255,255,.08);
         color: #ffffff;
         font-family: inherit;
+        font-size: 10px;
         font-weight: 600;
+        line-height: 1.15;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
         transition:
           transform .18s ease,
           background .18s ease,
-          box-shadow .18s ease,
-          opacity .18s ease;
+          box-shadow .18s ease;
       }
 
-      .universe139SimpleSecondary button {
-        width: 100%;
-        min-height: 38px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: rgba(255,255,255,.08);
-        font-size: 10px;
-        line-height: 1.15;
-      }
-
-      .universe139SimpleSecondary button:hover {
+      #${ACTION_ID} .universe139SimpleSecondary button:hover {
         background: rgba(255,255,255,.14);
         transform: translateY(-1px);
       }
 
-      .universe139SimpleReceive {
+
+      /* -----------------------------------------------
+         RECEIVE ANOTHER MESSAGE
+         ----------------------------------------------- */
+
+      #${ACTION_ID} .universe139SimpleReceive {
         width: 100%;
         min-height: 44px;
         padding: 10px 18px;
+        box-sizing: border-box;
+        border: 1px solid rgba(255,255,255,.24);
         border-radius: 999px;
         background: linear-gradient(
           135deg,
-          rgba(138,78,230,.95),
-          rgba(79,35,155,.95)
+          rgba(138,78,230,.96),
+          rgba(79,35,155,.96)
         );
+        color: #ffffff;
+        font-family: inherit;
         font-size: 12px;
+        font-weight: 600;
         line-height: 1.2;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
         box-shadow:
-          0 8px 25px rgba(66,28,125,.22),
-          0 0 18px rgba(175,110,255,.10);
+          0 8px 25px rgba(66,28,125,.24),
+          0 0 18px rgba(175,110,255,.12);
+        transition:
+          transform .18s ease,
+          box-shadow .18s ease,
+          opacity .18s ease;
       }
 
-      .universe139SimpleReceive:hover {
+      #${ACTION_ID} .universe139SimpleReceive:hover {
         transform: translateY(-1px);
         box-shadow:
-          0 10px 28px rgba(66,28,125,.30),
-          0 0 22px rgba(175,110,255,.16);
+          0 10px 28px rgba(66,28,125,.32),
+          0 0 22px rgba(175,110,255,.18);
       }
 
-      .universe139SimpleReceive:active,
-      .universe139SimpleSecondary button:active {
+      #${ACTION_ID} button:active {
         transform: scale(.98);
       }
 
-      #${ACTION_ID}.transitioning {
-        opacity: 0;
-        pointer-events: none;
-      }
+
+      /* -----------------------------------------------
+         MOBILE = SAME LAYOUT, ONLY SMALLER
+         ----------------------------------------------- */
 
       @media (max-width: 600px) {
+
         #${ACTION_ID} {
           width: calc(100vw - 36px);
           margin: 10px auto 16px;
           gap: 7px;
         }
 
-        .universe139SimpleSecondary {
+        #${ACTION_ID} .universe139SimpleSecondary {
           gap: 7px;
         }
 
-        .universe139SimpleSecondary button {
+        #${ACTION_ID} .universe139SimpleSecondary button {
           min-height: 34px;
           padding: 7px 8px;
           font-size: 9px;
         }
 
-        .universe139SimpleReceive {
+        #${ACTION_ID} .universe139SimpleReceive {
           min-height: 42px;
           padding: 9px 13px;
           font-size: 10px;
         }
       }
 
+
       @media (max-width: 380px) {
+
         #${ACTION_ID} {
           width: calc(100vw - 26px);
           margin-top: 8px;
         }
 
-        .universe139SimpleSecondary button {
+        #${ACTION_ID} .universe139SimpleSecondary button {
           min-height: 32px;
           font-size: 8px;
         }
 
-        .universe139SimpleReceive {
+        #${ACTION_ID} .universe139SimpleReceive {
           min-height: 40px;
           font-size: 9px;
         }
@@ -8301,6 +8335,7 @@ if (
 
     document.head.appendChild(style);
   }
+
 
   function createActionArea() {
 
@@ -8315,6 +8350,7 @@ if (
 
     area.innerHTML = `
       <div class="universe139SimpleSecondary">
+
         <button
           type="button"
           id="universe139SimpleSubscribe"
@@ -8328,6 +8364,7 @@ if (
         >
           Share My Message
         </button>
+
       </div>
 
       <button
@@ -8342,7 +8379,10 @@ if (
     const messageBox =
       document.getElementById("messageBox");
 
-    if (messageBox && messageBox.parentNode) {
+    if (
+      messageBox &&
+      messageBox.parentNode
+    ) {
       messageBox.parentNode.insertBefore(
         area,
         messageBox.nextSibling
@@ -8353,6 +8393,7 @@ if (
 
     return area;
   }
+
 
   function updateTexts() {
 
@@ -8370,29 +8411,39 @@ if (
     }
 
     const receive =
-      document.getElementById("universe139SimpleReceive");
+      document.getElementById(
+        "universe139SimpleReceive"
+      );
 
     const subscribe =
-      document.getElementById("universe139SimpleSubscribe");
+      document.getElementById(
+        "universe139SimpleSubscribe"
+      );
 
     const share =
-      document.getElementById("universe139SimpleShare");
+      document.getElementById(
+        "universe139SimpleShare"
+      );
 
     if (receive) {
       receive.textContent =
-        t.again || "Receive Another Message";
+        t.again ||
+        "Receive Another Message";
     }
 
     if (subscribe) {
       subscribe.textContent =
-        t.subscribeButton || "Subscribe";
+        t.subscribeButton ||
+        "Subscribe";
     }
 
     if (share) {
       share.textContent =
-        t.share || "Share My Message";
+        t.share ||
+        "Share My Message";
     }
   }
+
 
   function hideLegacyControls() {
 
@@ -8411,6 +8462,7 @@ if (
     });
   }
 
+
   function showActions() {
 
     const area =
@@ -8420,12 +8472,17 @@ if (
       return;
     }
 
-    area.classList.remove("transitioning");
-    area.classList.add("visible");
-
     updateTexts();
     hideLegacyControls();
+
+    area.classList.remove("hidden");
+    area.classList.add("visible");
+    area.style.display = "flex";
+    area.style.visibility = "visible";
+    area.style.opacity = "1";
+    area.style.pointerEvents = "auto";
   }
+
 
   function hideActions() {
 
@@ -8437,117 +8494,77 @@ if (
     }
 
     area.classList.remove("visible");
-    area.classList.add("transitioning");
+    area.classList.add("hidden");
+    area.style.display = "none";
   }
 
-  /*
-     IMPORTANT:
-     Never test messageBox.classList here.
-     showMessage() already makes the message box visible.
-     Waiting a little after the function returns works for
-     both the first reveal and every subsequent message.
-  */
-  function scheduleActions(delay = 120) {
 
-    if (actionTimer) {
-      window.clearTimeout(actionTimer);
+  function scheduleShow(delay) {
+
+    if (refreshTimer) {
+      window.clearTimeout(refreshTimer);
     }
 
-    actionTimer =
+    refreshTimer =
       window.setTimeout(() => {
         showActions();
       }, delay);
   }
 
-  function hookShowMessage() {
+
+  function runReceiveAgain() {
+
+    hideActions();
 
     if (
-      typeof showMessage !== "function" ||
-      showMessage.__universe139SimpleWrapped
+      typeof receiveAnotherMessage !==
+      "function"
     ) {
+      console.error(
+        "Universe139: receiveAnotherMessage() is unavailable."
+      );
       return;
     }
 
-    const originalShowMessage =
-      showMessage;
+    /*
+      Call the real existing function.
+      We do not replace its reveal animation.
+    */
 
-    const wrappedShowMessage =
-      function universe139WrappedShowMessage() {
+    receiveAnotherMessage();
 
-        const result =
-          originalShowMessage.apply(
-            this,
-            arguments
-          );
+    /*
+      The existing reveal takes about 2.4 seconds.
+      Polling for a few seconds makes the desktop and
+      mobile result independent of browser timing.
+    */
 
-        scheduleActions(180);
-
-        return result;
-      };
-
-    wrappedShowMessage
-      .__universe139SimpleWrapped = true;
-
-    wrappedShowMessage
-      .__universe139SimpleOriginal =
-        originalShowMessage;
-
-    showMessage =
-      wrappedShowMessage;
-  }
-
-  function hookReceiveAnotherMessage() {
-
-    if (
-      typeof receiveAnotherMessage !== "function" ||
-      receiveAnotherMessage.__universe139SimpleWrapped
-    ) {
-      return;
+    if (receivePollTimer) {
+      window.clearInterval(
+        receivePollTimer
+      );
     }
 
-    const originalReceiveAnotherMessage =
-      receiveAnotherMessage;
+    let attempts = 0;
 
-    const wrappedReceiveAnotherMessage =
-      function universe139WrappedReceiveAnotherMessage() {
+    receivePollTimer =
+      window.setInterval(() => {
 
-        hideActions();
+        attempts += 1;
 
-        const result =
-          originalReceiveAnotherMessage.apply(
-            this,
-            arguments
+        showActions();
+
+        if (attempts >= 32) {
+          window.clearInterval(
+            receivePollTimer
           );
 
-        if (receiveTimer) {
-          window.clearTimeout(receiveTimer);
+          receivePollTimer = null;
         }
 
-        /*
-          The original function calls showMessage()
-          after its loading animation. Our wrapped
-          showMessage() will schedule the buttons itself.
-          This fallback keeps the UI synchronized if the
-          original timing changes.
-        */
-        receiveTimer =
-          window.setTimeout(() => {
-            showActions();
-          }, 2800);
-
-        return result;
-      };
-
-    wrappedReceiveAnotherMessage
-      .__universe139SimpleWrapped = true;
-
-    wrappedReceiveAnotherMessage
-      .__universe139SimpleOriginal =
-        originalReceiveAnotherMessage;
-
-    receiveAnotherMessage =
-      wrappedReceiveAnotherMessage;
+      }, 250);
   }
+
 
   function subscribe() {
 
@@ -8556,12 +8573,9 @@ if (
       "function"
     ) {
       openSubscriptionForm();
-    } else {
-      console.error(
-        "Universe139: openSubscriptionForm() is unavailable."
-      );
     }
   }
+
 
   function share() {
 
@@ -8570,36 +8584,19 @@ if (
       "function"
     ) {
       shareMessage();
-    } else {
-      console.error(
-        "Universe139: shareMessage() is unavailable."
-      );
     }
   }
 
-  function receiveAnother() {
-
-    if (
-      typeof receiveAnotherMessage ===
-      "function"
-    ) {
-      receiveAnotherMessage();
-    } else {
-      console.error(
-        "Universe139: receiveAnotherMessage() is unavailable."
-      );
-    }
-  }
 
   function initialize() {
 
     addStyles();
-    createActionArea();
-    hideLegacyControls();
-    updateTexts();
 
-    hookShowMessage();
-    hookReceiveAnotherMessage();
+    createActionArea();
+
+    hideLegacyControls();
+
+    updateTexts();
 
     const receive =
       document.getElementById(
@@ -8619,7 +8616,7 @@ if (
     if (receive) {
       receive.addEventListener(
         "click",
-        receiveAnother
+        runReceiveAgain
       );
     }
 
@@ -8638,32 +8635,95 @@ if (
     }
 
     /*
-      If the page is already showing a message when
-      this initializer runs, immediately show all three.
+      Observe only the message container's attributes.
+      We never modify messageBox from this observer,
+      so there is no recursive MutationObserver loop.
     */
+
     const messageBox =
       document.getElementById("messageBox");
+
+    if (messageBox) {
+
+      const observer =
+        new MutationObserver(() => {
+
+          if (
+            !messageBox.classList.contains(
+              "hidden"
+            )
+          ) {
+            scheduleShow(80);
+          }
+        });
+
+      observer.observe(
+        messageBox,
+        {
+          attributes: true,
+          attributeFilter: [
+            "class",
+            "style"
+          ]
+        }
+      );
+    }
+
+    /*
+      Initial message / first reveal.
+    */
 
     if (
       messageBox &&
       !messageBox.classList.contains("hidden")
     ) {
-      scheduleActions(100);
+      scheduleShow(100);
     }
 
+    /*
+      Keep the custom action area visible after any
+      legacy function changes the old buttons.
+    */
+
+    window.setInterval(() => {
+
+      const box =
+        document.getElementById(
+          "universe139SimpleActions"
+        );
+
+      if (!box) {
+        return;
+      }
+
+      updateTexts();
+      hideLegacyControls();
+
+      if (
+        messageBox &&
+        !messageBox.classList.contains("hidden")
+      ) {
+        showActions();
+      }
+
+    }, 500);
+
     console.log(
-      "Universe139: identical desktop/mobile message actions installed."
+      "Universe139: final identical desktop/mobile action layout installed."
     );
   }
+
 
   if (
     document.readyState === "loading"
   ) {
+
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
       { once: true }
     );
+
   } else {
     initialize();
   }
