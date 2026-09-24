@@ -1250,3 +1250,64 @@ h1 {
   }
 
 }
+/* ==========================================================
+   UNIVERSE139 - FULL SCREEN VIDEO BACKGROUND
+   ========================================================== */
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#backgroundVideo,
+#bgVideo,
+video.background-video,
+body > video {
+  position: fixed !important;
+
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  max-width: none !important;
+  max-height: none !important;
+
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+
+  transform: none !important;
+
+  object-fit: cover !important;
+  object-position: center center !important;
+
+  display: block !important;
+
+  z-index: 0 !important;
+
+  pointer-events: none !important;
+}
+
+/* Keep all app content above the video */
+
+body::after {
+  z-index: 1 !important;
+}
+
+.container,
+#languageBox,
+#crystalBallWrap,
+#messageBox,
+#loading,
+#revealBtn,
+#againBtn,
+#shareBtn {
+  position: relative;
+  z-index: 3 !important;
+}
