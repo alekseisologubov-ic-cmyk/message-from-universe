@@ -1,1585 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#07020f">
+  <meta name="description" content="A Message From The Universe — receive a message for today.">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>A Message From The Universe</title>
 
-  <meta
-    name="description"
-    content="Universe139 — A message from the universe for today."
-  >
+  <!-- Existing visual system -->
+  <link rel="stylesheet" href="style.css">
 
-  <meta
-    name="theme-color"
-    content="#080512"
-  >
-
-  <title>
-    Universe139 — Message From The Universe
-  </title>
-
-
-  <!-- Vercel Web Analytics -->
-
-  <script>
-
-    window.va =
-      window.va ||
-      function () {
-
-        (window.vaq =
-          window.vaq ||
-          []
-        ).push(arguments);
-
-      };
-
-  </script>
-
-
-  <script
-    defer
-    src="/_vercel/insights/script.js"
-  ></script>
-
+  <!-- Fonts used by the existing app -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-
-    * {
-
-      box-sizing:
-        border-box;
-
-      margin:
-        0;
-
-      padding:
-        0;
-
-    }
-
+    /* ======================================================
+       UNIVERSE139 - TRUE FULL-SCREEN VIDEO BACKGROUND
+       ====================================================== */
 
     html,
     body {
-
-      width:
-        100%;
-
-      min-height:
-        100%;
-
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #05020a;
+      overflow-x: hidden;
     }
-
 
     body {
-
-      min-height:
-        100vh;
-
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      color:
-        white;
-
-
-      display:
-        flex;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-
-      overflow-x:
-        hidden;
-
-
-      /*
-        Fallback background.
-        The video sits behind everything.
-      */
-
-      background:
-        radial-gradient(
-          circle at 50% 10%,
-          #4b3470 0%,
-          #261541 28%,
-          #11091e 58%,
-          #050309 100%
-        );
-
-
-      position:
-        relative;
-
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
     }
 
-
-    /* =====================================================
-       UNIVERSE139 VIDEO BACKGROUND
-       ===================================================== */
-
-    #universeBackgroundVideo {
-
-      position:
-        fixed;
-
-      top:
-        50%;
-
-      left:
-        50%;
-
-      width:
-        96vw;
-
-      height:
-        96vh;
-
-      transform:
-        translate(-50%, -50%);
-
-
-      object-fit:
-        cover;
-
-
-      object-position:
-        center center;
-
-
-      z-index:
-        0;
-
-
-      pointer-events:
-        none;
-
-
-      background:
-        #050309;
-
+    #backgroundVideo {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      min-width: 100vw !important;
+      min-height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      display: block !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+      background: #05020a !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+      opacity: 1 !important;
     }
 
-
-    /*
-      Dark translucent layer above the video.
-      This keeps your existing text and buttons readable
-      without changing their design.
-    */
-
-    #universeBackgroundOverlay {
-
-      position:
-        fixed;
-
-      inset:
-        0;
-
-
-      width:
-        92%;
-
-      height:
-        92%;
-
-
-      z-index:
-        1;
-
-
-      pointer-events:
-        none;
-
-
-      background:
-        rgba(4, 1, 15, 0.42);
-
-    }
-
-
-    .stars {
-
-      position:
-        fixed;
-
-      inset:
-        0;
-
-      pointer-events:
-        none;
-
-      opacity:
-        0.45;
-
-
-      background-image:
-        radial-gradient(
-          circle,
-          rgba(255,255,255,0.8) 1px,
-          transparent 1.5px
-        );
-
-
-      background-size:
-        75px 75px;
-
-
-      /*
-        Stars remain above the video but below
-        the actual app content.
-      */
-
-      z-index:
-        2;
-
-    }
-
-
-    .container {
-
-      width:
-        100%;
-
-      max-width:
-        760px;
-
-      min-height:
-        100vh;
-
-
-      padding:
-        35px 20px;
-
-
-      display:
-        flex;
-
-      flex-direction:
-        column;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-
-      text-align:
-        center;
-
-
-      position:
-        relative;
-
-
-      /*
-        Above:
-        video
-        overlay
-        stars
-      */
-
-      z-index:
-        3;
-
-    }
-
-
-    .logo {
-
-      font-size:
-        13px;
-
-      letter-spacing:
-        7px;
-
-      text-transform:
-        uppercase;
-
-      opacity:
-        0.55;
-
-      margin-bottom:
-        22px;
-
-    }
-
-
-    #title {
-
-      font-size:
-        clamp(38px, 8vw, 68px);
-
-      line-height:
-        1.05;
-
-      letter-spacing:
-        3px;
-
-      font-weight:
-        700;
-
-      margin-bottom:
-        18px;
-
-    }
-
-
-    #subtitle {
-
-      font-size:
-        18px;
-
-      line-height:
-        1.5;
-
-      opacity:
-        0.75;
-
-      margin-bottom:
-        35px;
-
-    }
-
-
-    #languageBox {
-
-      width:
-        100%;
-
-      max-width:
-        650px;
-
-
-      display:
-        grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-
-      justify-items:
-        center;
-
-      align-items:
-        center;
-
-
-      column-gap:
-        20px;
-
-      row-gap:
-        20px;
-
-
-      margin-bottom:
-        20px;
-
-    }
-
-
-    #chooseLanguage {
-
-      grid-column:
-        1 / -1;
-
-
-      font-size:
-        14px;
-
-      letter-spacing:
-        2px;
-
-      text-transform:
-        uppercase;
-
-
-      opacity:
-        0.55;
-
-    }
-
-
-    /*
-      Wraps each diamond button. A square rotated 45°
-      has a visual footprint larger than its layout box.
-      This wrapper reserves that footprint so the diamonds
-      do not overlap.
-    */
-
-    .diamondSlot {
-
-      width:
-        198px;
-
-      height:
-        198px;
-
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-    }
-
-
-    .languageBtn {
-
-      width:
-        140px;
-
-      height:
-        140px;
-
-
-      border:
-        1px solid
-        rgba(255,255,255,0.35);
-
-      border-radius:
-        18px;
-
-
-      cursor:
-        pointer;
-
-      color:
-        white;
-
-
-      display:
-        flex;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.23),
-          rgba(170,110,255,0.10) 45%,
-          rgba(255,255,255,0.035)
-        );
-
-
-      backdrop-filter:
-        blur(8px);
-
-
-      box-shadow:
-        inset
-        0 1px 4px
-        rgba(255,255,255,0.55),
-
-        inset
-        0 -3px 8px
-        rgba(0,0,0,0.25),
-
-        0 15px 35px
-        rgba(0,0,0,0.35);
-
-
-      transform:
-        rotate(45deg);
-
-    }
-
-
-    .diamondContent {
-
-      transform:
-        rotate(-45deg);
-
-
-      width:
-        100%;
-
-      height:
-        100%;
-
-
-      display:
-        flex;
-
-      flex-direction:
-        column;
-
-      justify-content:
-        center;
-
-      align-items:
-        center;
-
-    }
-
-
-    .flag {
-
-      display:
-        block;
-
-      font-size:
-        30px;
-
-      margin-bottom:
-        7px;
-
-    }
-
-
-    .languageName {
-
-      font-size:
-        15px;
-
-      font-weight:
-        600;
-
-    }
-
-
-    #revealBtn {
-
-      border:
-        none;
-
-      border-radius:
-        50px;
-
-
-      padding:
-        16px 32px;
-
-
-      font-size:
-        16px;
-
-      font-weight:
-        700;
-
-
-      color:
-        white;
-
-      cursor:
-        pointer;
-
-
-      background:
-        linear-gradient(
-          135deg,
-          #b276ff,
-          #6934c9
-        );
-
-
-      box-shadow:
-        0 10px 30px
-        rgba(120,60,255,0.4);
-
-    }
-
-
-    #loading {
-
-      margin-top:
-        25px;
-
-    }
-
-
-    #loadingText {
-
-      font-size:
-        18px;
-
-      opacity:
-        0.8;
-
-    }
-
-
-    #messageBox {
-
-      width:
-        100%;
-
-      max-width:
-        620px;
-
-
-      padding:
-        40px 28px;
-
-
-      border-radius:
-        30px;
-
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,0.13),
-          rgba(255,255,255,0.04)
-        );
-
-
-      border:
-        1px solid
-        rgba(255,255,255,0.2);
-
-
-      backdrop-filter:
-        blur(14px);
-
-
-      box-shadow:
-        inset
-        0 1px 3px
-        rgba(255,255,255,0.35),
-
-        0 20px 55px
-        rgba(0,0,0,0.4);
-
-    }
-
-
-    #month {
-
-      font-size:
-        13px;
-
-      letter-spacing:
-        2px;
-
-      opacity:
-        0.58;
-
-      margin-bottom:
-        25px;
-
-    }
-
-
-    #message {
-
-      font-size:
-        clamp(24px, 5vw, 36px);
-
-      line-height:
-        1.45;
-
-      font-weight:
-        500;
-
-      margin-bottom:
-        30px;
-
-    }
-
-
-    #smallText {
-
-      font-size:
-        14px;
-
-      opacity:
-        0.52;
-
-      margin-bottom:
-        25px;
-
-    }
-
-
-    .buttons {
-
-      display:
-        flex;
-
-      flex-direction:
-        column;
-
-      gap:
-        12px;
-
-      align-items:
-        center;
-
-    }
-
-
-    #againBtn,
-    #shareBtn {
-
-      border:
-        none;
-
-      border-radius:
-        50px;
-
-
-      padding:
-        14px 26px;
-
-
-      font-size:
-        15px;
-
-      font-weight:
-        700;
-
-
-      color:
-        white;
-
-      cursor:
-        pointer;
-
-    }
-
-
-    #againBtn {
-
-      background:
-        linear-gradient(
-          135deg,
-          #a968ff,
-          #6731c7
-        );
-
-    }
-
-
-    #shareBtn {
-
-      background:
-        rgba(255,255,255,0.09);
-
-      border:
-        1px solid
-        rgba(255,255,255,0.18);
-
-    }
-
-
-    /*
-      IMPORTANT
-      Keep this exactly.
-    */
-
-    .hidden {
-
-      display:
-        none !important;
-
-    }
-
-
-    @media (max-width: 650px) {
-
-      .container {
-
-        padding:
-          30px 15px;
-
-      }
-
-
-      #title {
-
-        font-size:
-          clamp(32px, 10vw, 46px);
-
-        letter-spacing:
-          0.5px;
-
-      }
-
-
-      #languageBox {
-
-        grid-template-columns:
-          repeat(2, 1fr);
-
-        column-gap:
-          12px;
-
-        row-gap:
-          12px;
-
-      }
-
-
-      .diamondSlot {
-
-        width:
-          172px;
-
-        height:
-          172px;
-
-      }
-
-
-      .languageBtn {
-
-        width:
-          120px;
-
-        height:
-          120px;
-
-      }
-
-
-      #messageBox {
-
-        padding:
-          32px 18px;
-
-      }
-
-
-      #message {
-
-        font-size:
-          24px;
-
-      }
-
-    }
-
-
-    /*
-      Phones (portrait)
-      A fixed 172px diamond slot doesn't fit
-      two per row below approximately 430px.
-    */
-
-    @media (max-width: 430px) {
-
-      #languageBox {
-
-        grid-template-columns:
-          1fr;
-
-      }
-
-    }
-
-
-    /*
-      =====================================================
-      VIDEO MOBILE ADJUSTMENT
-      =====================================================
-    */
-
-    @media (max-width: 768px) {
-
-      #universeBackgroundVideo {
-
-        object-position:
-          center center;
-
-      }
-
-    }
-
-
-    /*
-      =====================================================
-      VIDEO FALLBACK
-      =====================================================
-      If the video fails to load, the original
-      background remains underneath it.
-    */
-
-    #universeBackgroundVideo:not(:defined) {
-
-      display:
-        none;
-
-    }
-
-
-
-    /* ==========================================================
-       UNIVERSE139 DYNAMIC MESSAGE EFFECTS
-       ========================================================== */
-
-    #universeMessageEffect {
+    #universe139VideoOverlay {
       position: fixed;
       inset: 0;
-      z-index: 2;
+      z-index: 1;
       pointer-events: none;
-      overflow: hidden;
-      opacity: 1;
-    }
-
-    /* ==========================================================
-       MONEY / WEALTH EFFECT
-       ========================================================== */
-
-    #moneyRain {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity .8s ease;
-    }
-
-    .moneyItem {
-      position: absolute;
-      top: -12vh;
-      width: 34px;
-      height: 18px;
-      border-radius: 50%;
       background:
-        radial-gradient(
-          ellipse at center,
-          rgba(255,245,160,1) 0%,
-          rgba(255,207,55,.95) 45%,
-          rgba(185,120,15,.9) 100%
+        linear-gradient(
+          to bottom,
+          rgba(5, 2, 16, 0.18),
+          rgba(5, 2, 16, 0.08) 45%,
+          rgba(5, 2, 16, 0.26) 100%
         );
-      box-shadow:
-        0 0 10px rgba(255,215,70,.9),
-        0 0 24px rgba(255,190,30,.45);
-      animation: moneyFall linear forwards;
-      opacity: 0;
-      will-change: transform, opacity;
     }
 
-    .moneyItem::before {
-      content: "$";
-      position: absolute;
-      inset: 0;
+    .stars {
+      z-index: 2 !important;
+      pointer-events: none !important;
+    }
+
+    .container {
+      position: relative !important;
+      z-index: 3 !important;
+    }
+
+    /* ======================================================
+       TOP CONTROLS - kept outside the message card
+       ====================================================== */
+
+    #universe139TopControls {
+      position: fixed;
+      top: max(18px, env(safe-area-inset-top));
+      left: max(18px, env(safe-area-inset-left));
+      z-index: 20;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      color: rgba(100,60,0,.9);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 9px;
+      pointer-events: none;
     }
 
-    @keyframes moneyFall {
-      0% {
-        transform: translateY(-15vh) translateX(0) rotate(0deg) scale(.7);
-        opacity: 0;
-      }
-
-      10% {
-        opacity: .95;
-      }
-
-      50% {
-        transform: translateY(55vh) translateX(35px) rotate(180deg) scale(1);
-      }
-
-      100% {
-        transform: translateY(120vh) translateX(-45px) rotate(420deg) scale(.75);
-        opacity: 0;
-      }
+    #universe139TopControls > * {
+      pointer-events: auto;
     }
 
-    /* ==========================================================
-       PLANET EFFECT
-       ========================================================== */
-
-    #planetEffect {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 1s ease;
+    #universe139TopControls button {
+      border: 1px solid rgba(255,255,255,.20);
+      background: rgba(18, 7, 35, .58);
+      color: #fff;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 28px rgba(0,0,0,.20);
     }
 
-    .planet {
+    #universe139TopControls .hidden {
+      display: none !important;
+    }
+
+    /* ======================================================
+       SMALLER MESSAGE TEXT
+       ====================================================== */
+
+    #messageBox {
       position: relative;
-      width: min(42vw, 390px);
-      height: min(42vw, 390px);
-      min-width: 230px;
-      min-height: 230px;
-      border-radius: 50%;
-      background:
-        radial-gradient(
-          circle at 32% 28%,
-          rgba(255,255,255,.55) 0%,
-          rgba(150,130,220,.38) 12%,
-          rgba(70,40,140,.55) 34%,
-          rgba(20,12,55,.96) 72%,
-          rgba(3,2,10,1) 100%
-        );
-      box-shadow:
-        0 0 35px rgba(175,120,255,.55),
-        0 0 100px rgba(110,55,255,.35),
-        0 0 190px rgba(75,30,180,.22);
-      animation: planetFloat 7s ease-in-out infinite;
-      overflow: hidden;
-      will-change: transform;
+      z-index: 6;
+      width: min(430px, calc(100vw - 34px));
     }
 
-    .planetSurface {
-      position: absolute;
-      inset: -15%;
-      border-radius: 50%;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          transparent 0,
-          transparent 16px,
-          rgba(180,145,255,.12) 18px,
-          transparent 28px
-        );
-      animation: planetRotate 12s linear infinite;
-      opacity: .7;
-      will-change: transform;
+    #message {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(17px, 1.7vw, 20px) !important;
+      line-height: 1.48 !important;
+      max-width: 350px !important;
+      margin: 0 auto 18px !important;
     }
 
-    .planetAtmosphere {
-      position: absolute;
-      inset: -8%;
-      border-radius: 50%;
-      border: 2px solid rgba(205,170,255,.35);
-      box-shadow:
-        inset 0 0 35px rgba(180,120,255,.35),
-        0 0 30px rgba(190,130,255,.35);
-      pointer-events: none;
+    #againBtn {
+      position: fixed;
+      left: max(18px, env(safe-area-inset-left));
+      top: 118px;
+      z-index: 20;
     }
 
-    .planetGlow {
-      position: absolute;
-      inset: -30%;
-      border-radius: 50%;
-      background:
-        radial-gradient(
-          circle,
-          rgba(190,130,255,.18) 0%,
-          rgba(110,50,220,.12) 35%,
-          transparent 70%
-        );
-      animation: planetGlowPulse 4s ease-in-out infinite;
-      pointer-events: none;
+    #shareBtn {
+      display: inline-flex;
+      position: relative;
+      z-index: 8;
     }
 
-    @keyframes planetRotate {
-      0% {
-        transform: translateX(-10%);
-      }
+    /* ======================================================
+       DYNAMIC SUBSCRIPTION BOX
+       The existing script creates this element.
+       Move it completely outside the message card.
+       ====================================================== */
 
-      50% {
-        transform: translateX(10%);
-      }
-
-      100% {
-        transform: translateX(-10%);
-      }
+    #universe139SubscribeBox {
+      position: fixed !important;
+      left: max(18px, env(safe-area-inset-left)) !important;
+      top: 176px !important;
+      width: min(280px, calc(100vw - 36px)) !important;
+      margin: 0 !important;
+      z-index: 20 !important;
+      padding: 15px 16px !important;
+      border-radius: 18px !important;
+      background: rgba(20, 8, 40, .66) !important;
+      border: 1px solid rgba(255,255,255,.16) !important;
+      box-shadow: 0 15px 45px rgba(0,0,0,.25) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
     }
 
-    @keyframes planetFloat {
-      0% {
-        transform: translateY(0) scale(.95);
-      }
-
-      50% {
-        transform: translateY(-12px) scale(1);
-      }
-
-      100% {
-        transform: translateY(0) scale(.95);
-      }
+    #universe139SubscribeBox .universe139SubscribeTitle {
+      font-size: 14px !important;
     }
 
-    @keyframes planetGlowPulse {
-      0% {
-        opacity: .45;
-        transform: scale(.9);
-      }
-
-      50% {
-        opacity: .9;
-        transform: scale(1.08);
-      }
-
-      100% {
-        opacity: .45;
-        transform: scale(.9);
-      }
+    #universe139SubscribeBox .universe139SubscribeText {
+      font-size: 12px !important;
+      line-height: 1.45 !important;
     }
+
+    #universe139SubscribeBox .universe139SubscribeButton {
+      font-size: 11px !important;
+      padding: 9px 14px !important;
+    }
+
+    /* ======================================================
+       KEEP THE MESSAGE CARD CLEAN
+       ====================================================== */
+
+    #messageBox #universe139SubscribeBox {
+      position: fixed !important;
+      left: max(18px, env(safe-area-inset-left)) !important;
+      top: 176px !important;
+    }
+
+    /* ======================================================
+       MOBILE
+       ====================================================== */
 
     @media (max-width: 600px) {
-      .planet {
-        width: 250px;
-        height: 250px;
-        min-width: 250px;
-        min-height: 250px;
+      #againBtn {
+        top: 102px;
+        left: max(14px, env(safe-area-inset-left));
       }
 
-      .moneyItem {
-        width: 27px;
-        height: 15px;
+      #universe139SubscribeBox,
+      #messageBox #universe139SubscribeBox {
+        left: max(14px, env(safe-area-inset-left)) !important;
+        top: 155px !important;
+        width: min(250px, calc(100vw - 28px)) !important;
+      }
+
+      #messageBox {
+        width: calc(100vw - 28px) !important;
+      }
+
+      #message {
+        font-size: 17px !important;
+        max-width: 320px !important;
       }
     }
 
+    @media (max-width: 380px) {
+      #againBtn {
+        top: 96px;
+      }
+
+      #message {
+        font-size: 16px !important;
+        max-width: 300px !important;
+      }
+    }
+
+    /* ======================================================
+       REDUCE MOTION
+       ====================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+      #backgroundVideo {
+        animation: none !important;
+      }
+    }
   </style>
-
 </head>
-
 
 <body>
 
-
-  <!-- ===================================================
-       UNIVERSE139 VIDEO BACKGROUND
-       =================================================== -->
-
+  <!-- ====================================================
+       TRUE MOVING BACKGROUND VIDEO
+       IMPORTANT:
+       - autoplay: starts automatically
+       - muted: required for autoplay in modern browsers
+       - loop: repeats continuously
+       - playsinline: keeps video inline on mobile
+       ==================================================== -->
   <video
-    id="universeBackgroundVideo"
+    id="backgroundVideo"
+    autoplay
     muted
     loop
     playsinline
     preload="auto"
     aria-hidden="true"
   >
-
-    <source
-      src="/universe-background.mp4"
-      type="video/mp4"
-    >
-
+    <source src="universe-background.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
   </video>
 
+  <div id="universe139VideoOverlay" aria-hidden="true"></div>
 
-  <!-- Dark readability overlay -->
+  <!-- Existing animated stars layer -->
+  <div class="stars" aria-hidden="true"></div>
 
-  <div
-    id="universeBackgroundOverlay"
-    aria-hidden="true"
-  ></div>
-
-
-  <!-- ===================================================
-       DYNAMIC MESSAGE EFFECTS
-       =================================================== -->
-
-  <div
-    id="universeMessageEffect"
-    aria-hidden="true"
-  >
-
-    <div id="moneyRain"></div>
-
-    <div id="planetEffect">
-
-      <div class="planet">
-        <div class="planetGlow"></div>
-        <div class="planetSurface"></div>
-        <div class="planetAtmosphere"></div>
-      </div>
-
-    </div>
-
+  <!-- ====================================================
+       TOP-LEFT CONTROLS
+       ==================================================== -->
+  <div id="universe139TopControls" aria-label="Universe controls">
+    <!-- Receive Another Message is also moved here visually.
+         The real #againBtn is styled into this position. -->
   </div>
 
-
-  <!-- Existing star layer -->
-
-  <div
-    class="stars"
-    aria-hidden="true"
-  ></div>
-
-
-  <!-- ===================================================
-       EXISTING UNIVERSE139 APP
-       =================================================== -->
-
+  <!-- ====================================================
+       MAIN APPLICATION
+       ==================================================== -->
   <main class="container">
 
+    <!-- Language selection -->
+    <section id="languageBox" aria-label="Language selection">
+      <div id="chooseLanguage">Choose your language</div>
 
-    <div class="logo">
-
-      Universe139
-
-    </div>
-
-
-    <h1 id="title">
-
-      MESSAGE FROM<br>
-      THE UNIVERSE
-
-    </h1>
-
-
-    <p id="subtitle">
-
-      You were guided here for a reason.
-
-    </p>
-
-
-    <div id="languageBox">
-
-
-      <div id="chooseLanguage">
-
-        Choose your language
-
+      <div class="languageGrid" role="group" aria-label="Choose language">
+        <button class="languageBtn" data-language="en" type="button">English</button>
+        <button class="languageBtn" data-language="es" type="button">Español</button>
+        <button class="languageBtn" data-language="zh" type="button">中文</button>
+        <button class="languageBtn" data-language="ru" type="button">Русский</button>
+        <button class="languageBtn" data-language="hi" type="button">हिन्दी</button>
+        <button class="languageBtn" data-language="th" type="button">ไทย</button>
       </div>
+    </section>
 
+    <!-- Main title -->
+    <header>
+      <div class="moon" aria-hidden="true">✦</div>
 
-      <div class="diamondSlot">
+      <h1 id="title">A Message From The Universe</h1>
 
-        <button
-          class="languageBtn"
-          data-language="en"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇺🇸
-            </span>
-
-            <span class="languageName">
-              English
-            </span>
-
-          </div>
-
-        </button>
-
+      <div id="subtitle" class="subtitle">
+        Your message is waiting...
       </div>
+    </header>
 
+    <!-- Existing crystal-ball loading/reveal area -->
+    <section
+      id="crystalBallWrap"
+      class="hidden"
+      aria-hidden="true"
+    >
+      <div id="ballHurricane" aria-hidden="true"></div>
+    </section>
 
-      <div class="diamondSlot">
-
-        <button
-          class="languageBtn"
-          data-language="es"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇪🇸
-            </span>
-
-            <span class="languageName">
-              Español
-            </span>
-
-          </div>
-
-        </button>
-
+    <!-- Loading -->
+    <section id="loading" class="hidden" aria-live="polite">
+      <div id="loadingText">
+        The Universe is preparing your message...
       </div>
+    </section>
 
-
-      <div class="diamondSlot">
-
-        <button
-          class="languageBtn"
-          data-language="zh"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇨🇳
-            </span>
-
-            <span class="languageName">
-              中文
-            </span>
-
-          </div>
-
-        </button>
-
-      </div>
-
-
-      <div class="diamondSlot">
-
-        <button
-          class="languageBtn"
-          data-language="ru"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇷🇺
-            </span>
-
-            <span class="languageName">
-              Русский
-            </span>
-
-          </div>
-
-        </button>
-
-      </div>
-
-
-      <div class="diamondSlot">
-
-        <button
-          class="languageBtn"
-          data-language="hi"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇮🇳
-            </span>
-
-            <span class="languageName">
-              हिन्दी
-            </span>
-
-          </div>
-
-        </button>
-
-      </div>
-
-
-      <div class="diamondSlot">
-
-        <button
-          class="languageBtn"
-          data-language="th"
-          type="button"
-        >
-
-          <div class="diamondContent">
-
-            <span class="flag">
-              🇹🇭
-            </span>
-
-            <span class="languageName">
-              ไทย
-            </span>
-
-          </div>
-
-        </button>
-
-      </div>
-
-
-    </div>
-
-
+    <!-- Reveal button -->
     <button
       id="revealBtn"
+      type="button"
+    >
+      Reveal My Message
+    </button>
+
+    <!-- ==================================================
+         MESSAGE CARD
+         Only the message + Share remain here.
+         Subscribe is removed from the card by JS/CSS.
+         Receive Another Message is moved to the left side.
+         ================================================== -->
+    <article
+      id="messageBox"
+      class="message-box hidden"
+      aria-live="polite"
+    >
+      <div id="month" class="month">Your Message</div>
+
+      <div id="message" role="status"></div>
+
+      <div id="smallText" class="small-text">
+        Keep this message close to your heart.
+      </div>
+
+      <!-- Only Share remains directly under the message -->
+      <button
+        id="shareBtn"
+        type="button"
+      >
+        Share My Message
+      </button>
+    </article>
+
+    <!-- Existing second-message control.
+         CSS moves this visually to the top-left area. -->
+    <button
+      id="againBtn"
       class="hidden"
       type="button"
     >
-
-      ✨ REVEAL MY MESSAGE
-
+      Receive Another Message
     </button>
 
-
-    <div
-      id="loading"
-      class="hidden"
-    >
-
-      <div id="loadingText">
-
-        Connecting to the universe...
-
-      </div>
-
-    </div>
-
-
-    <section
-      id="messageBox"
-      class="hidden"
-    >
-
-
-      <div id="month">
-
-        YOUR MESSAGE FOR TODAY
-
-      </div>
-
-
-      <div id="message"></div>
-
-
-      <div id="smallText">
-
-        Keep this message close to your heart.
-
-      </div>
-
-
-      <div class="buttons">
-
-
-        <button
-          id="againBtn"
-          type="button"
-        >
-
-          🔮 RECEIVE ANOTHER MESSAGE
-
-        </button>
-
-
-        <button
-          id="shareBtn"
-          type="button"
-        >
-
-          ✨ SHARE
-
-        </button>
-
-
-      </div>
-
-
-    </section>
-
+    <!-- Existing dynamic subscription system uses this variable.
+         JavaScript creates the actual subscription panel. -->
+    <div id="universe139SubscriptionMount" aria-hidden="true"></div>
 
   </main>
 
-
-  <!-- Existing application script -->
-
-  <script src="script.js"></script>
-
-
-  <!-- ===================================================
-       VIDEO PLAYBACK SAFETY
-       =================================================== -->
-
+  <!-- ====================================================
+       BACKGROUND VIDEO PLAYBACK SAFETY
+       ==================================================== -->
   <script>
-
     (function () {
+      const video = document.getElementById("backgroundVideo");
 
-      const video = document.getElementById("universeBackgroundVideo");
-      const revealBtn = document.getElementById("revealBtn");
-      const againBtn = document.getElementById("againBtn");
-      const messageBox = document.getElementById("messageBox");
-
-      if (!video) return;
+      if (!video) {
+        return;
+      }
 
       video.muted = true;
       video.defaultMuted = true;
+      video.loop = true;
       video.playsInline = true;
-      video.autoplay = false;
-      video.removeAttribute("autoplay");
-      video.pause();
-      try { video.currentTime = 0; } catch (_) {}
 
-      function isMessageVisible() {
-        if (!messageBox) return false;
-        const cs = window.getComputedStyle(messageBox);
-        const rect = messageBox.getBoundingClientRect();
-        return !messageBox.classList.contains("hidden") &&
-               cs.display !== "none" &&
-               cs.visibility !== "hidden" &&
-               parseFloat(cs.opacity || "1") > 0 &&
-               rect.width > 0 && rect.height > 0;
-      }
-
-      function playFromStart() {
-        if (isMessageVisible()) return;
-        try { video.currentTime = 0; } catch (_) {}
+      function startBackgroundVideo() {
         const promise = video.play();
-        if (promise && typeof promise.catch === "function") promise.catch(() => {});
-      }
 
-      function pauseVideo() {
-        video.pause();
-      }
-
-      if (revealBtn) {
-        revealBtn.addEventListener("click", () => {
-          setTimeout(playFromStart, 30);
-        }, true);
-      }
-
-      if (againBtn) {
-        againBtn.addEventListener("click", () => {
-          // Let the app hide/reset the current message first, then restart video.
-          setTimeout(playFromStart, 80);
-        }, true);
-      }
-
-      // Continuously watch the real rendered state of the message box.
-      // This also catches inline style changes or other show/hide methods.
-      const watch = () => {
-        if (isMessageVisible()) {
-          pauseVideo();
+        if (promise && typeof promise.catch === "function") {
+          promise.catch(function (error) {
+            console.warn(
+              "Universe139 background video autoplay was blocked:",
+              error
+            );
+          });
         }
-        requestAnimationFrame(watch);
-      };
-      requestAnimationFrame(watch);
-
-      if (messageBox) {
-        const observer = new MutationObserver(() => {
-          if (isMessageVisible()) pauseVideo();
-        });
-        observer.observe(messageBox, {
-          attributes: true,
-          attributeFilter: ["class", "style"]
-        });
       }
 
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) pauseVideo();
-      });
+      if (video.readyState >= 2) {
+        startBackgroundVideo();
+      } else {
+        video.addEventListener(
+          "loadeddata",
+          startBackgroundVideo,
+          { once: true }
+        );
+      }
 
-      video.addEventListener("ended", pauseVideo);
+      video.addEventListener(
+        "canplay",
+        startBackgroundVideo,
+        { once: true }
+      );
+
+      document.addEventListener(
+        "visibilitychange",
+        function () {
+          if (!document.hidden) {
+            startBackgroundVideo();
+          }
+        }
+      );
 
     })();
-
   </script>
 
+  <!-- Existing application logic -->
+  <script src="script.js"></script>
 
 </body>
-
 </html>
