@@ -9581,3 +9581,495 @@ if (
   }
 
 })();
+// ==========================================================
+// UNIVERSE139 - FLOATING CORNER CONTROLS
+//
+// Receive Another Message -> bottom left
+// Get a Message Every Day -> bottom right
+//
+// Share My Message remains under the message.
+// ==========================================================
+
+(function installUniverse139FloatingControls() {
+
+  function addFloatingStyles() {
+
+    if (
+      document.getElementById(
+        "universe139FloatingControlsCSS"
+      )
+    ) {
+      return;
+    }
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "universe139FloatingControlsCSS";
+
+    style.textContent = `
+
+      /* =====================================================
+         RECEIVE ANOTHER MESSAGE
+         ===================================================== */
+
+      #againBtn {
+
+        position: fixed !important;
+
+        left: 22px !important;
+        bottom: 22px !important;
+
+        z-index: 1200 !important;
+
+        width: auto !important;
+        min-width: 190px !important;
+
+        max-width: 250px !important;
+
+        margin: 0 !important;
+
+        padding: 13px 20px !important;
+
+        border-radius: 999px !important;
+
+        font-size: 12px !important;
+
+        line-height: 1.25 !important;
+
+        box-shadow:
+          0 10px 35px
+          rgba(0,0,0,.25),
+          0 0 20px
+          rgba(150,90,255,.18) !important;
+
+      }
+
+
+      /* =====================================================
+         SUBSCRIPTION CARD
+         ===================================================== */
+
+      #universe139SubscribeBox {
+
+        position: fixed !important;
+
+        right: 22px !important;
+        bottom: 22px !important;
+
+        z-index: 1200 !important;
+
+        width: 250px !important;
+
+        max-width: calc(
+          100vw - 44px
+        ) !important;
+
+        margin: 0 !important;
+
+        padding: 13px 15px !important;
+
+        border-radius: 18px !important;
+
+        box-sizing: border-box !important;
+
+        text-align: center !important;
+
+        background:
+          linear-gradient(
+            145deg,
+            rgba(37,18,67,.94),
+            rgba(17,8,35,.94)
+          ) !important;
+
+        border:
+          1px solid
+          rgba(255,255,255,.17) !important;
+
+        box-shadow:
+          0 12px 40px
+          rgba(0,0,0,.30),
+          0 0 22px
+          rgba(142,80,255,.16) !important;
+
+        backdrop-filter:
+          blur(16px) !important;
+
+        -webkit-backdrop-filter:
+          blur(16px) !important;
+
+      }
+
+
+      #universe139SubscribeBox
+      .universe139SubscribeTitle {
+
+        font-size: 15px !important;
+
+        line-height: 1.25 !important;
+
+      }
+
+
+      #universe139SubscribeBox
+      .universe139SubscribeText {
+
+        margin-top: 5px !important;
+
+        font-size: 11px !important;
+
+        line-height: 1.4 !important;
+
+      }
+
+
+      #universe139SubscribeBox
+      .universe139SubscribeButton {
+
+        margin-top: 9px !important;
+
+        min-height: 36px !important;
+
+        padding: 7px 18px !important;
+
+        font-size: 12px !important;
+
+      }
+
+
+      /* =====================================================
+         HIDDEN STATE
+         ===================================================== */
+
+      #againBtn.hidden {
+
+        display: none !important;
+
+      }
+
+
+      #universe139SubscribeBox
+      .universe139SubscribeHidden {
+
+        display: none !important;
+
+      }
+
+
+      #universe139SubscribeBox.universe139SubscribeHidden {
+
+        display: none !important;
+
+      }
+
+
+      /* =====================================================
+         TABLETS
+         ===================================================== */
+
+      @media (max-width: 900px) {
+
+        #againBtn {
+
+          left: 14px !important;
+          bottom: 16px !important;
+
+          min-width: 170px !important;
+
+          font-size: 11px !important;
+
+          padding:
+            12px 16px !important;
+
+        }
+
+
+        #universe139SubscribeBox {
+
+          right: 14px !important;
+          bottom: 16px !important;
+
+          width: 220px !important;
+
+          padding:
+            12px 13px !important;
+
+        }
+
+      }
+
+
+      /* =====================================================
+         MOBILE
+         ===================================================== */
+
+      @media (max-width: 600px) {
+
+        #againBtn {
+
+          left: 10px !important;
+          bottom: 12px !important;
+
+          min-width: 145px !important;
+
+          max-width: 46vw !important;
+
+          padding:
+            10px 12px !important;
+
+          font-size: 10px !important;
+
+          white-space: normal !important;
+
+        }
+
+
+        #universe139SubscribeBox {
+
+          right: 10px !important;
+          bottom: 12px !important;
+
+          width: 180px !important;
+
+          max-width: 48vw !important;
+
+          padding:
+            10px 10px !important;
+
+          border-radius: 15px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeTitle {
+
+          font-size: 12px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeText {
+
+          font-size: 9px !important;
+
+          line-height: 1.35 !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeButton {
+
+          min-height: 31px !important;
+
+          padding:
+            5px 13px !important;
+
+          font-size: 10px !important;
+
+        }
+
+      }
+
+
+      /* =====================================================
+         VERY SMALL PHONES
+         ===================================================== */
+
+      @media (max-width: 380px) {
+
+        #againBtn {
+
+          left: 7px !important;
+          bottom: 9px !important;
+
+          min-width: 125px !important;
+
+          max-width: 43vw !important;
+
+          font-size: 9px !important;
+
+          padding:
+            9px 10px !important;
+
+        }
+
+
+        #universe139SubscribeBox {
+
+          right: 7px !important;
+          bottom: 9px !important;
+
+          width: 155px !important;
+
+          max-width: 45vw !important;
+
+          padding:
+            8px 8px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeTitle {
+
+          font-size: 10px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeText {
+
+          font-size: 8px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeButton {
+
+          font-size: 9px !important;
+
+          padding:
+            5px 10px !important;
+
+        }
+
+      }
+
+    `;
+
+    document.head.appendChild(style);
+
+  }
+
+
+  // ========================================================
+  // MOVE "ANOTHER MESSAGE" OUTSIDE MESSAGE CARD
+  // ========================================================
+
+  function moveAgainButton() {
+
+    const button =
+      document.getElementById(
+        "againBtn"
+      );
+
+    if (!button) {
+      return;
+    }
+
+    if (
+      button.parentElement !==
+      document.body
+    ) {
+
+      document.body.appendChild(
+        button
+      );
+
+    }
+
+    button.classList.add(
+      "universe139FloatingAgain"
+    );
+
+  }
+
+
+  // ========================================================
+  // MOVE SUBSCRIPTION CARD OUTSIDE MESSAGE CARD
+  // ========================================================
+
+  function moveSubscribeBox() {
+
+    const box =
+      document.getElementById(
+        "universe139SubscribeBox"
+      );
+
+    if (!box) {
+      return;
+    }
+
+    if (
+      box.parentElement !==
+      document.body
+    ) {
+
+      document.body.appendChild(
+        box
+      );
+
+    }
+
+  }
+
+
+  // ========================================================
+  // WATCH FOR SUBSCRIPTION BOX CREATION
+  // ========================================================
+
+  function watchSubscriptionBox() {
+
+    const observer =
+      new MutationObserver(
+        () => {
+
+          moveSubscribeBox();
+
+        }
+      );
+
+    observer.observe(
+      document.body,
+      {
+        childList: true,
+        subtree: true
+      }
+    );
+
+  }
+
+
+  // ========================================================
+  // START
+  // ========================================================
+
+  function initialize() {
+
+    addFloatingStyles();
+
+    moveAgainButton();
+
+    moveSubscribeBox();
+
+    watchSubscriptionBox();
+
+  }
+
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize,
+      {
+        once: true
+      }
+    );
+
+  } else {
+
+    initialize();
+
+  }
+
+})();
