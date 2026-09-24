@@ -8395,16 +8395,8 @@ if (
 
     area.innerHTML = `
 
-      <button
-        type="button"
-        class="universe139MainAction"
-        id="universe139CleanAgain"
-      >
-        Receive Another Message
-      </button>
-
       <div
-        class="universe139SecondaryActions"
+        class="universe139SecondaryActions visible"
         id="universe139CleanSecondary"
       >
 
@@ -8425,6 +8417,14 @@ if (
         </button>
 
       </div>
+
+      <button
+        type="button"
+        class="universe139MainAction"
+        id="universe139CleanAgain"
+      >
+        Receive Another Message
+      </button>
 
     `;
 
@@ -8604,6 +8604,10 @@ if (
             secondary.classList.add("visible");
           }
 
+          if (main) {
+            main.classList.remove("hiddenAction");
+          }
+
         },
         3000
       );
@@ -8671,7 +8675,7 @@ if (
     }
 
     main.classList.remove("hiddenAction");
-    secondary.classList.remove("visible");
+    secondary.classList.add("visible");
 
     if (actionArea) {
       actionArea.classList.add("visible");
