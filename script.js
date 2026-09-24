@@ -41,10 +41,7 @@ function getCurrentDateLocale() {
     zh: "zh-CN",
     ru: "ru-RU",
     hi: "hi-IN",
-    th: "th-TH",
-    de: "de-DE",
-    fr: "fr-FR",
-    it: "it-IT"
+    th: "th-TH"
   };
 
   return locales[currentLanguage] || "en-US";
@@ -368,108 +365,6 @@ const translations = {
     subscribeError: "कृपया सही ईमेल दर्ज करें और फिर से प्रयास करें।",
     subscribeAlready: "आप पहले से सदस्य हैं। हम आपके दैनिक संदेश भेजते रहेंगे।",
     subscribeNote: "अभी मुफ्त है। आप कभी भी सदस्यता समाप्त कर सकते हैं।"
-  },
-
-  de: {
-    chooseLanguage: "Wähle deine Sprache",
-    title: "Eine Botschaft aus dem Universum",
-    subtitle: "Deine Botschaft wartet...",
-    reveal: "Meine Botschaft enthüllen",
-    loading: "Das Universum bereitet deine Botschaft vor...",
-    month: "Deine Botschaft",
-    again: "Eine weitere Botschaft erhalten",
-    share: "Meine Botschaft teilen",
-    shareTitle: "Teile deine Universe139-Botschaft",
-    close: "Schließen",
-    copyMessage: "Botschaft kopieren",
-    copyLink: "Link kopieren",
-    more: "Mehr...",
-    copied: "Kopiert!",
-    copiedShare: "Botschaft und Link wurden kopiert! Füge sie zum Teilen in die App ein.",
-    noMessage: "Enthülle zuerst deine Botschaft.",
-    inAppBrowserNotice: `Du befindest dich in einem App-Browser — tippe auf ⋯ oder ⋮ und wähle "Im Browser öffnen", um alle Teilen-Optionen zu nutzen.`,
-    shareInstructions: "Wähle, wo du deine Botschaft teilen möchtest.",
-    shareLink: "👆 Universe139 — Drücke hier, um deine heutige Botschaft zu sehen",
-    subscribeTitle: "✨ Erhalte jeden Tag eine Botschaft",
-    subscribeText: "Erhalte jeden Tag eine neue Botschaft aus dem Universum.",
-    subscribeButton: "Abonnieren",
-    subscribeFormTitle: "✉️ Erhalte deine tägliche Botschaft",
-    subscribeFormText: "Gib deine E-Mail-Adresse ein und erhalte jeden Tag eine neue Botschaft aus dem Universum.",
-    subscribeEmailPlaceholder: "Deine E-Mail-Adresse",
-    subscribeSubmit: "Tägliche Botschaften starten",
-    subscribeClose: "Schließen",
-    subscribeSuccess: "✨ Du bist jetzt angemeldet! Deine täglichen Botschaften beginnen bald.",
-    subscribeError: "Bitte gib eine gültige E-Mail-Adresse ein und versuche es erneut.",
-    subscribeAlready: "Du bist bereits angemeldet. Wir senden dir weiterhin deine täglichen Botschaften.",
-    subscribeNote: "Derzeit kostenlos. Du kannst dich jederzeit abmelden."
-  },
-
-  fr: {
-    chooseLanguage: "Choisissez votre langue",
-    title: "Un Message de l’Univers",
-    subtitle: "Votre message vous attend...",
-    reveal: "Révéler mon message",
-    loading: "L’Univers prépare votre message...",
-    month: "Votre message",
-    again: "Recevoir un autre message",
-    share: "Partager mon message",
-    shareTitle: "Partagez votre message Universe139",
-    close: "Fermer",
-    copyMessage: "Copier le message",
-    copyLink: "Copier le lien",
-    more: "Plus...",
-    copied: "Copié !",
-    copiedShare: "Message et lien copiés ! Collez-les dans l’application pour partager.",
-    noMessage: "Révélez d’abord votre message.",
-    inAppBrowserNotice: `Vous êtes dans le navigateur intégré d’une application — touchez ⋯ ou ⋮ puis choisissez "Ouvrir dans le navigateur" pour accéder à toutes les options de partage.`,
-    shareInstructions: "Choisissez où vous souhaitez partager votre message.",
-    shareLink: "👆 Universe139 — Appuyez ici pour voir votre message du jour",
-    subscribeTitle: "✨ Recevez un message chaque jour",
-    subscribeText: "Recevez chaque jour un nouveau message de l’Univers.",
-    subscribeButton: "S’abonner",
-    subscribeFormTitle: "✉️ Recevez votre message quotidien",
-    subscribeFormText: "Entrez votre e-mail et recevez chaque jour un nouveau message de l’Univers.",
-    subscribeEmailPlaceholder: "Votre adresse e-mail",
-    subscribeSubmit: "Commencer les messages quotidiens",
-    subscribeClose: "Fermer",
-    subscribeSuccess: "✨ Vous êtes abonné ! Vos messages quotidiens commenceront bientôt.",
-    subscribeError: "Veuillez saisir une adresse e-mail valide et réessayer.",
-    subscribeAlready: "Vous êtes déjà abonné. Nous continuerons à vous envoyer vos messages quotidiens.",
-    subscribeNote: "Gratuit pour le moment. Vous pouvez vous désabonner à tout moment."
-  },
-
-  it: {
-    chooseLanguage: "Scegli la tua lingua",
-    title: "Un Messaggio dall’Universo",
-    subtitle: "Il tuo messaggio ti sta aspettando...",
-    reveal: "Rivela il mio messaggio",
-    loading: "L’Universo sta preparando il tuo messaggio...",
-    month: "Il tuo messaggio",
-    again: "Ricevi un altro messaggio",
-    share: "Condividi il mio messaggio",
-    shareTitle: "Condividi il tuo messaggio Universe139",
-    close: "Chiudi",
-    copyMessage: "Copia messaggio",
-    copyLink: "Copia link",
-    more: "Altro...",
-    copied: "Copiato!",
-    copiedShare: "Messaggio e link copiati! Incollali nell’app per condividere.",
-    noMessage: "Prima rivela il tuo messaggio.",
-    inAppBrowserNotice: `Sei nel browser integrato di un’app — tocca ⋯ o ⋮ e scegli "Apri nel browser" per utilizzare tutte le opzioni di condivisione.`,
-    shareInstructions: "Scegli dove vuoi condividere il tuo messaggio.",
-    shareLink: "👆 Universe139 — Premi qui per vedere il tuo messaggio di oggi",
-    subscribeTitle: "✨ Ricevi un messaggio ogni giorno",
-    subscribeText: "Ricevi ogni giorno un nuovo messaggio dall’Universo.",
-    subscribeButton: "Iscriviti",
-    subscribeFormTitle: "✉️ Ricevi il tuo messaggio quotidiano",
-    subscribeFormText: "Inserisci la tua e-mail e ricevi ogni giorno un nuovo messaggio dall’Universo.",
-    subscribeEmailPlaceholder: "Il tuo indirizzo e-mail",
-    subscribeSubmit: "Inizia a ricevere i messaggi quotidiani",
-    subscribeClose: "Chiudi",
-    subscribeSuccess: "✨ Ti sei iscritto! I tuoi messaggi quotidiani inizieranno presto.",
-    subscribeError: "Inserisci un indirizzo e-mail valido e riprova.",
-    subscribeAlready: "Sei già iscritto. Continueremo a inviarti i tuoi messaggi quotidiani.",
-    subscribeNote: "Gratis per ora. Puoi annullare l’iscrizione in qualsiasi momento."
   },
 
   th: {
@@ -6964,9 +6859,6 @@ if (
 // 4. Russian = 500 messages
 // 5. Hindi = 500 messages
 // 6. Thai = 500 messages
-// 7. German = 500 messages
-// 8. French = 500 messages
-// 9. Italian = 500 messages
 // 7. A language never borrows a message from another language.
 // 8. The first message is random.
 // 9. Every "Receive Another Message" is random among the
@@ -6978,7 +6870,7 @@ if (
 (function installUniverse139MessageSystem() {
 
   const STORAGE_KEY = "universe139_message_cycles_v4";
-  const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th", "de", "fr", "it"];
+  const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th"];
 
   // --------------------------------------------------------
   // Source material already used by the app:
@@ -7297,162 +7189,6 @@ if (
         "เดินหน้าต่อไปหาสิ่งที่มีความหมายสำหรับคุณ",
         "เรื่องราวของคุณยังคงดำเนินต่อไป",
         "ปล่อยให้ช่วงเวลาถัดไปนำคำตอบของมันมาเอง"
-      ]
-    },
-
-    de: {
-      openers: [
-        "Vertraue dem Gefühl, das immer wieder in dein Herz zurückkehrt.",
-        "Eine stille Veränderung beginnt, sich durch dein Leben zu bewegen.",
-        "Du bist einem neuen Anfang näher, als du denkst.",
-        "Deine Geduld schafft Raum für etwas Bedeutungsvolles.",
-        "Der Weg vor dir wird Schritt für Schritt klarer.",
-        "Deine Intuition bemerkt etwas, das dein Verstand noch nicht benannt hat.",
-        "Ein Kapitel, das einst unsicher wirkte, beginnt einen Sinn zu ergeben.",
-        "Um dich herum gibt es mehr Möglichkeiten, als du im Moment sehen kannst.",
-        "Deine Energie bewegt sich auf etwas Friedlicheres zu.",
-        "Eine kleine Entscheidung heute kann eine überraschend wichtige Tür öffnen.",
-        "Du hast bereits genug gelernt, um den nächsten Schritt zu gehen.",
-        "Etwas, worauf du gewartet hast, kommt näher.",
-        "Der Druck, den du getragen hast, muss dich nicht in die Zukunft begleiten.",
-        "Dein Herz weiß, wann sich etwas für dich richtig anfühlt.",
-        "Ein unerwarteter Moment kann dir eine wertvolle Richtung zeigen.",
-        "Du darfst neu beginnen, ohne dich erklären zu müssen.",
-        "Deine jüngsten Anstrengungen bringen im Verborgenen Ergebnisse hervor.",
-        "Eine friedliche Antwort kann kommen, wenn du aufhörst, die Frage zu erzwingen.",
-        "Die Zukunft bittet dich, Platz für etwas Neues zu schaffen.",
-        "Dein Mut wächst still mit jeder Erfahrung.",
-        "Was heute klein erscheint, kann später wichtig werden.",
-        "Du musst nicht den ganzen Weg kennen, bevor du weitergehst.",
-        "Eine neue Perspektive kann verändern, wie du alles um dich herum siehst.",
-        "Dein Leben kann dich weiterhin auf schöne Weise überraschen.",
-        "Der nächste Schritt muss nicht perfekt sein, um bedeutsam zu sein."
-      ],
-      closers: [
-        "Erlaube dir, in deinem eigenen Tempo voranzugehen.",
-        "Bleibe offen für die Gelegenheit, die ganz natürlich kommt.",
-        "Höre aufmerksam auf das, was dir Frieden bringt.",
-        "Lass den heutigen Tag leichter sein als den gestrigen.",
-        "Wähle die Richtung, die sich für dich ehrlich anfühlt.",
-        "Übersehe nicht die kleinen Zeichen, die dich ermutigen.",
-        "Schaffe Raum für Freude, ohne zuerst einen Grund dafür zu brauchen.",
-        "Vertraue darauf, dass Fortschritt auch leise geschehen kann.",
-        "Lass das Bedürfnis los, jedes Detail kontrollieren zu müssen.",
-        "Tu einen kleinen Schritt und lass ihn zum nächsten führen.",
-        "Denke daran, dass Ruhe ebenfalls Teil des Fortschritts sein kann.",
-        "Erlaube dir zu sehen, wie weit du bereits gekommen bist.",
-        "Sei geduldig mit dem richtigen Zeitpunkt deines Lebens.",
-        "Bewahre die Energie, die du für das Wichtigste brauchst.",
-        "Lass Unsicherheit da sein, ohne dass sie dich aufhält.",
-        "Richte deine Aufmerksamkeit auf das, was du jetzt aufbauen kannst.",
-        "Etwas Besseres kann mit einer einfachen Entscheidung beginnen.",
-        "Gehe weiter auf das zu, was für dich bedeutungsvoll ist.",
-        "Deine Geschichte entfaltet sich noch.",
-        "Lass der nächste Moment seine eigene Antwort bringen."
-      ]
-    },
-
-    fr: {
-      openers: [
-        "Faites confiance à ce sentiment qui revient sans cesse dans votre cœur.",
-        "Un changement paisible commence à traverser votre vie.",
-        "Vous êtes plus proche d’un nouveau départ que vous ne le pensez.",
-        "Votre patience crée de la place pour quelque chose de précieux.",
-        "Le chemin devant vous devient plus clair, un pas après l’autre.",
-        "Votre intuition remarque quelque chose que votre esprit n’a pas encore nommé.",
-        "Un chapitre autrefois incertain commence à prendre sens.",
-        "Il y a autour de vous plus de possibilités que vous ne pouvez en voir aujourd’hui.",
-        "Votre énergie se dirige vers quelque chose de plus paisible.",
-        "Une petite décision aujourd’hui peut ouvrir une porte étonnamment importante.",
-        "Vous avez déjà appris suffisamment pour faire le prochain pas.",
-        "Quelque chose que vous attendez se rapproche.",
-        "La pression que vous avez portée n’a pas besoin de vous suivre dans l’avenir.",
-        "Votre cœur sait quand quelque chose est juste pour vous.",
-        "Un moment inattendu peut révéler une direction précieuse.",
-        "Vous avez le droit de recommencer sans vous justifier.",
-        "Vos efforts récents créent des résultats en profondeur.",
-        "Une réponse apaisée peut arriver lorsque vous cessez de forcer la question.",
-        "L’avenir vous demande de faire de la place à quelque chose de nouveau.",
-        "Votre courage grandit doucement à travers chaque expérience.",
-        "Ce qui semble petit aujourd’hui peut devenir important plus tard.",
-        "Vous n’avez pas besoin de connaître toute la route pour avancer.",
-        "Une nouvelle perspective peut changer votre manière de voir tout ce qui vous entoure.",
-        "Votre vie peut encore vous surprendre de belles façons.",
-        "Le prochain pas n’a pas besoin d’être parfait pour avoir du sens."
-      ],
-      closers: [
-        "Donnez-vous la permission d’avancer à votre propre rythme.",
-        "Restez ouvert à l’occasion qui arrive naturellement.",
-        "Écoutez attentivement ce qui vous apporte de la paix.",
-        "Laissez aujourd’hui être plus léger qu’hier.",
-        "Choisissez la direction qui vous semble honnête.",
-        "Ne négligez pas les petits signes qui vous encouragent.",
-        "Faites de la place à la joie sans avoir besoin d’une raison.",
-        "Ayez confiance : le progrès peut aussi se faire discrètement.",
-        "Relâchez le besoin de contrôler chaque détail.",
-        "Faites une petite action et laissez-la vous guider vers la suivante.",
-        "Souvenez-vous que le repos peut aussi faire partie du progrès.",
-        "Permettez-vous de voir le chemin déjà parcouru.",
-        "Soyez patient avec le rythme de votre propre vie.",
-        "Protégez l’énergie dont vous avez besoin pour ce qui compte le plus.",
-        "Laissez l’incertitude exister sans lui permettre de vous arrêter.",
-        "Donnez votre attention à ce que vous pouvez construire maintenant.",
-        "Quelque chose de meilleur peut commencer par un choix simple.",
-        "Continuez vers ce qui a du sens pour vous.",
-        "Votre histoire est toujours en train de s’écrire.",
-        "Laissez au prochain instant le soin d’apporter sa propre réponse."
-      ]
-    },
-
-    it: {
-      openers: [
-        "Fidati di quella sensazione che continua a tornare nel tuo cuore.",
-        "Un cambiamento silenzioso sta iniziando a muoversi nella tua vita.",
-        "Sei più vicino a un nuovo inizio di quanto immagini.",
-        "La tua pazienza sta creando spazio per qualcosa di importante.",
-        "La strada davanti a te diventa più chiara, un passo alla volta.",
-        "La tua intuizione nota qualcosa che la tua mente non ha ancora nominato.",
-        "Un capitolo che sembrava incerto sta iniziando ad avere senso.",
-        "Intorno a te ci sono più possibilità di quante tu riesca a vedere ora.",
-        "La tua energia si sta spostando verso qualcosa di più sereno.",
-        "Una piccola decisione oggi può aprire una porta sorprendentemente importante.",
-        "Hai già imparato abbastanza per fare il prossimo passo.",
-        "Qualcosa che stavi aspettando si sta avvicinando.",
-        "La pressione che hai portato con te non deve seguirti nel futuro.",
-        "Il tuo cuore sa quando qualcosa è giusto per te.",
-        "Un momento inaspettato può rivelare una direzione preziosa.",
-        "Puoi ricominciare senza doverti spiegare.",
-        "I tuoi sforzi recenti stanno creando risultati sotto la superficie.",
-        "Una risposta serena può arrivare quando smetti di forzare la domanda.",
-        "Il futuro ti chiede di fare spazio a qualcosa di nuovo.",
-        "Il tuo coraggio cresce silenziosamente attraverso ogni esperienza.",
-        "Ciò che oggi sembra piccolo potrebbe diventare importante più avanti.",
-        "Non devi conoscere tutta la strada prima di andare avanti.",
-        "Una nuova prospettiva può cambiare il modo in cui vedi tutto ciò che ti circonda.",
-        "La tua vita può ancora sorprenderti in modi bellissimi.",
-        "Il prossimo passo non deve essere perfetto per avere significato."
-      ],
-      closers: [
-        "Permettiti di procedere al tuo ritmo.",
-        "Resta aperto all’opportunità che arriva naturalmente.",
-        "Ascolta con attenzione ciò che ti porta pace.",
-        "Lascia che oggi sia più leggero di ieri.",
-        "Scegli la direzione che senti autentica per te.",
-        "Non ignorare i piccoli segnali che ti incoraggiano.",
-        "Fai spazio alla gioia senza aver bisogno prima di un motivo.",
-        "Abbi fiducia: il progresso può avvenire anche in silenzio.",
-        "Lascia andare il bisogno di controllare ogni dettaglio.",
-        "Fai una piccola azione e lascia che ti conduca alla successiva.",
-        "Ricorda che anche il riposo può essere parte del progresso.",
-        "Permettiti di notare quanta strada hai già percorso.",
-        "Sii paziente con i tempi della tua vita.",
-        "Proteggi l’energia che ti serve per ciò che conta di più.",
-        "Lascia che l’incertezza esista senza permetterle di fermarti.",
-        "Dai la tua attenzione a ciò che puoi costruire ora.",
-        "Qualcosa di migliore può iniziare con una scelta semplice.",
-        "Continua verso ciò che per te ha significato.",
-        "La tua storia si sta ancora svolgendo.",
-        "Lascia che il prossimo momento porti la sua risposta."
       ]
     }
   };
@@ -8391,25 +8127,31 @@ if (
   }
 
 })();
+
 // ==========================================================
-// UNIVERSE139 - MAIN SCREEN VISUAL UPGRADE
+// UNIVERSE139 - CLEAN FINAL VISUAL + ACTION LAYOUT
 //
-// SAFE ADD-ON
-// Add this block at the VERY BOTTOM of script.js.
-//
-// Does not replace the existing reveal system.
-// Does not replace createWindEffect().
-// Does not replace createBallHurricane().
+// Background video and main app remain unchanged.
+// Message stays centered and unobstructed.
+// One action appears below the message:
+//     Receive Another Message
+// After it is pressed and the next message is shown:
+//     Subscribe | Share
+// No floating corner panels.
 // ==========================================================
 
-(function installUniverse139HeroUpgrade() {
+(function installUniverse139CleanLayout() {
 
-  function installStyles() {
+  const STYLE_ID =
+    "universe139CleanLayoutCSS";
+
+  const ACTION_ID =
+    "universe139CleanActions";
+
+  function addStyles() {
 
     if (
-      document.getElementById(
-        "universe139HeroUpgradeCSS"
-      )
+      document.getElementById(STYLE_ID)
     ) {
       return;
     }
@@ -8417,626 +8159,340 @@ if (
     const style =
       document.createElement("style");
 
-    style.id =
-      "universe139HeroUpgradeCSS";
+    style.id = STYLE_ID;
 
     style.textContent = `
 
-      /* =====================================================
-         HERO ATMOSPHERE
-         ===================================================== */
+      /* ====================================================
+         REMOVE ANY OLD FLOATING CORNER LAYOUT
+         ==================================================== */
 
-      body.universe139-hero-active::before {
+      #againBtn,
+      #shareBtn,
+      #universe139SubscribeBox {
 
-        content: "";
-
-        position: fixed;
-
-        inset: -15%;
-
-        pointer-events: none;
-
-        z-index: 1;
-
-        background:
-          radial-gradient(
-            circle at 50% 42%,
-            rgba(150, 77, 255, .18),
-            transparent 24%
-          ),
-          radial-gradient(
-            circle at 20% 20%,
-            rgba(72, 177, 255, .10),
-            transparent 28%
-          ),
-          radial-gradient(
-            circle at 82% 70%,
-            rgba(255, 76, 201, .08),
-            transparent 30%
-          );
-
-        opacity: .9;
-
-        animation:
-          universe139AmbientPulse
-          8s ease-in-out infinite;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
 
       }
 
 
-      @keyframes universe139AmbientPulse {
+      /* ====================================================
+         HIDE LEGACY CONTROLS
+         The clean controls below replace them.
+         ==================================================== */
 
-        0%,
-        100% {
-          transform:
-            scale(1)
-            rotate(0deg);
-        }
+      #againBtn,
+      #shareBtn,
+      #universe139SubscribeBox {
 
-        50% {
-          transform:
-            scale(1.06)
-            rotate(1deg);
-        }
+        display: none !important;
 
       }
 
 
-      /* =====================================================
-         PARTICLE FIELD
-         ===================================================== */
+      /* ====================================================
+         CLEAN ACTION AREA
+         ==================================================== */
 
-      .universe139HeroParticles {
+      #${ACTION_ID} {
 
-        position: fixed;
+        width: min(
+          430px,
+          calc(100vw - 40px)
+        );
 
-        inset: 0;
+        margin:
+          14px auto 24px;
 
-        pointer-events: none;
+        display: none;
 
-        z-index: 2;
+        flex-direction: column;
 
-        overflow: hidden;
+        align-items: center;
 
-      }
+        justify-content: center;
 
-
-      .universe139HeroParticle {
-
-        position: absolute;
-
-        width: 3px;
-
-        height: 3px;
-
-        border-radius: 50%;
-
-        background:
-          rgba(255,255,255,.90);
-
-        box-shadow:
-          0 0 7px rgba(255,255,255,.85),
-          0 0 16px rgba(180,120,255,.65);
-
-        opacity: 0;
-
-        animation:
-          universe139ParticleFloat
-          var(--p-duration)
-          ease-in-out
-          infinite;
-
-        animation-delay:
-          var(--p-delay);
-
-      }
-
-
-      @keyframes universe139ParticleFloat {
-
-        0% {
-
-          transform:
-            translate3d(
-              0,
-              30px,
-              0
-            )
-            scale(.4);
-
-          opacity: 0;
-
-        }
-
-        18% {
-          opacity: .8;
-        }
-
-        50% {
-
-          transform:
-            translate3d(
-              var(--p-x),
-              var(--p-y),
-              0
-            )
-            scale(
-              var(--p-scale)
-            );
-
-          opacity: 1;
-
-        }
-
-        82% {
-          opacity: .6;
-        }
-
-        100% {
-
-          transform:
-            translate3d(
-              calc(var(--p-x) * -1),
-              calc(var(--p-y) * -1),
-              0
-            )
-            scale(.3);
-
-          opacity: 0;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         TITLE ENHANCEMENT
-         ===================================================== */
-
-      #title {
+        gap: 9px;
 
         position: relative;
+
+        z-index: 20;
+
+        text-align: center;
+
+      }
+
+
+      #${ACTION_ID}.visible {
+
+        display: flex;
+
+      }
+
+
+      /* ====================================================
+         MAIN BUTTON
+         ==================================================== */
+
+      #${ACTION_ID}
+      .universe139MainAction {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 100%;
+
+        min-height: 44px;
+
+        padding:
+          10px 20px;
+
+        border:
+          1px solid
+          rgba(255,255,255,.25);
+
+        border-radius: 999px;
 
         background:
           linear-gradient(
-            110deg,
-            #ffffff 8%,
-            #e6d4ff 35%,
-            #ffffff 52%,
-            #cda7ff 78%,
-            #ffffff 100%
+            135deg,
+            rgba(138,78,230,.94),
+            rgba(79,35,155,.94)
           );
 
-        background-size:
-          250% auto;
+        color: #ffffff;
 
-        -webkit-background-clip: text;
-        background-clip: text;
+        font-family: inherit;
 
-        color: transparent;
+        font-size: 12px;
 
-        text-shadow:
-          0 0 18px rgba(186,133,255,.28),
-          0 0 42px rgba(139,92,246,.16);
+        font-weight: 600;
 
-        animation:
-          universe139TitleShimmer
-          7s linear infinite;
+        line-height: 1.2;
 
-      }
+        letter-spacing: .25px;
 
-
-      @keyframes universe139TitleShimmer {
-
-        0% {
-          background-position:
-            0% 50%;
-        }
-
-        100% {
-          background-position:
-            250% 50%;
-        }
-
-      }
-
-
-      /* =====================================================
-         SUBTITLE
-         ===================================================== */
-
-      #subtitle {
-
-        opacity: .82;
-
-        text-shadow:
-          0 0 12px
-          rgba(165,120,255,.22);
-
-      }
-
-
-      /* =====================================================
-         CRYSTAL BALL OUTER AURA
-         ===================================================== */
-
-      #crystalBallWrap {
-
-        position: relative;
-
-        isolation: isolate;
-
-        filter:
-          drop-shadow(
-            0 0 18px
-            rgba(154,96,255,.18)
-          );
-
-      }
-
-
-      #crystalBallWrap::before {
-
-        content: "";
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 118%;
-
-        aspect-ratio: 1;
-
-        transform:
-          translate(-50%, -50%);
-
-        border-radius: 50%;
-
-        pointer-events: none;
-
-        z-index: -1;
-
-        background:
-          radial-gradient(
-            circle,
-            rgba(150,88,255,.22)
-            0%,
-            rgba(130,72,255,.11)
-            35%,
-            transparent 69%
-          );
-
-        filter:
-          blur(18px);
-
-        opacity: .75;
-
-        animation:
-          universe139BallAura
-          4.5s ease-in-out infinite;
-
-      }
-
-
-      @keyframes universe139BallAura {
-
-        0%,
-        100% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(.96);
-
-          opacity: .48;
-
-        }
-
-        50% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.08);
-
-          opacity: .90;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         REVEAL BUTTON
-         ===================================================== */
-
-      #revealBtn {
-
-        position: relative;
-
-        overflow: hidden;
-
-        isolation: isolate;
+        cursor: pointer;
 
         box-shadow:
-          0 0 0 rgba(0,0,0,0);
+          0 9px 25px
+          rgba(40,15,90,.25),
+          0 0 18px
+          rgba(175,105,255,.11);
 
         transition:
-          transform .3s ease,
-          box-shadow .3s ease;
+          transform .2s ease,
+          box-shadow .2s ease,
+          opacity .2s ease;
 
       }
 
 
-      #revealBtn::before {
-
-        content: "";
-
-        position: absolute;
-
-        top: 0;
-
-        left: -110%;
-
-        width: 70%;
-
-        height: 100%;
+      #${ACTION_ID}
+      .universe139MainAction:hover {
 
         transform:
-          skewX(-22deg);
-
-        background:
-          linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.24),
-            transparent
-          );
-
-        animation:
-          universe139ButtonSweep
-          4.5s
-          ease-in-out
-          infinite;
-
-        pointer-events: none;
-
-      }
-
-
-      #revealBtn:hover {
-
-        transform:
-          translateY(-2px)
-          scale(1.015);
+          translateY(-1px);
 
         box-shadow:
-          0 10px 34px
-          rgba(120,70,220,.25),
-          0 0 22px
-          rgba(196,138,255,.16);
+          0 11px 30px
+          rgba(40,15,90,.32),
+          0 0 24px
+          rgba(175,105,255,.17);
 
       }
 
 
-      @keyframes universe139ButtonSweep {
+      #${ACTION_ID}
+      .universe139MainAction:active {
 
-        0% {
-          left: -110%;
-        }
-
-        35%,
-        100% {
-          left: 145%;
-        }
+        transform:
+          scale(.98);
 
       }
 
 
-      /* =====================================================
-         MESSAGE CARD GLASS
-         ===================================================== */
+      #${ACTION_ID}
+      .universe139MainAction.hiddenAction {
 
-      #messageBox {
+        display: none;
 
-        position: relative;
+      }
 
-        isolation: isolate;
 
-        background:
-          linear-gradient(
-            145deg,
-            rgba(255,255,255,.105),
-            rgba(255,255,255,.035)
-          );
+      /* ====================================================
+         SECONDARY BUTTONS
+         Hidden until Receive Another Message is pressed.
+         ==================================================== */
+
+      #${ACTION_ID}
+      .universe139SecondaryActions {
+
+        width: 100%;
+
+        display: none;
+
+        grid-template-columns:
+          1fr 1fr;
+
+        gap: 8px;
+
+      }
+
+
+      #${ACTION_ID}
+      .universe139SecondaryActions.visible {
+
+        display: grid;
+
+      }
+
+
+      #${ACTION_ID}
+      .universe139SecondaryAction {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        min-height: 36px;
+
+        padding:
+          8px 13px;
 
         border:
           1px solid
           rgba(255,255,255,.17);
 
-        box-shadow:
-          0 24px 80px
-          rgba(0,0,0,.30),
-          inset 0 1px 0
-          rgba(255,255,255,.10);
-
-        backdrop-filter:
-          blur(18px);
-
-        -webkit-backdrop-filter:
-          blur(18px);
-
-        overflow: hidden;
-
-      }
-
-
-      #messageBox::before {
-
-        content: "";
-
-        position: absolute;
-
-        inset: 0;
-
-        pointer-events: none;
-
-        border-radius: inherit;
-
-        padding: 1px;
+        border-radius: 999px;
 
         background:
-          linear-gradient(
-            120deg,
-            rgba(255,255,255,.28),
-            transparent 25%,
-            rgba(190,130,255,.18) 55%,
-            transparent 78%,
-            rgba(255,255,255,.20)
-          );
-
-        -webkit-mask:
-          linear-gradient(#fff 0 0)
-          content-box,
-          linear-gradient(#fff 0 0);
-
-        -webkit-mask-composite:
-          xor;
-
-        mask-composite:
-          exclude;
-
-      }
-
-
-      /* =====================================================
-         MESSAGE TEXT
-         ===================================================== */
-
-      #message {
-
-        text-shadow:
-          0 0 20px
           rgba(255,255,255,.08);
 
-      }
+        color: #ffffff;
 
+        font-family: inherit;
 
-      /* =====================================================
-         SUBSCRIBE BOX
-         ===================================================== */
+        font-size: 10px;
 
-      .subscribeBox,
-      #subscribeBox {
+        font-weight: 600;
 
-        backdrop-filter:
-          blur(16px);
+        line-height: 1.15;
 
-        -webkit-backdrop-filter:
-          blur(16px);
+        cursor: pointer;
 
-        border:
-          1px solid
-          rgba(255,255,255,.13);
-
-        box-shadow:
-          0 18px 55px
-          rgba(0,0,0,.20);
+        transition:
+          background .2s ease,
+          transform .2s ease;
 
       }
 
 
-      /* =====================================================
-         ACTIVE REVEAL STATE
-         ===================================================== */
+      #${ACTION_ID}
+      .universe139SecondaryAction:hover {
 
-      body.universe139-revealing
-      #crystalBallWrap::before {
+        background:
+          rgba(255,255,255,.14);
 
-        animation:
-          universe139RevealAura
-          2s
-          ease-in-out
-          infinite;
+        transform:
+          translateY(-1px);
 
       }
 
 
-      body.universe139-revealing
-      #crystalBallWrap {
+      #${ACTION_ID}
+      .universe139SecondaryAction:active {
 
-        filter:
-          drop-shadow(
-            0 0 28px
-            rgba(167,98,255,.38)
-          );
+        transform:
+          scale(.98);
 
       }
 
 
-      @keyframes universe139RevealAura {
-
-        0%,
-        100% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(.92);
-
-          opacity: .45;
-
-        }
-
-        50% {
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.16);
-
-          opacity: 1;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         REDUCE-MOTION SUPPORT
-         ===================================================== */
-
-      @media
-      (prefers-reduced-motion: reduce) {
-
-        #title,
-        #revealBtn::before,
-        .universe139HeroParticle,
-        #crystalBallWrap::before {
-
-          animation:
-            none !important;
-
-        }
-
-      }
-
-
-      /* =====================================================
+      /* ====================================================
          MOBILE
-         ===================================================== */
+         ==================================================== */
 
-      @media
-      (max-width: 700px) {
+      @media (max-width: 600px) {
 
-        .universe139HeroParticle {
+        #${ACTION_ID} {
 
-          width: 2px;
-          height: 2px;
+          width:
+            calc(100vw - 36px);
+
+          margin:
+            12px auto 20px;
+
+          gap: 8px;
 
         }
 
-        #crystalBallWrap::before {
+        #${ACTION_ID}
+        .universe139MainAction {
 
-          width: 126%;
+          min-height: 42px;
+
+          padding:
+            9px 15px;
+
+          font-size: 11px;
+
+        }
+
+        #${ACTION_ID}
+        .universe139SecondaryAction {
+
+          min-height: 34px;
+
+          padding:
+            7px 8px;
+
+          font-size: 9px;
+
+        }
+
+      }
+
+
+      /* ====================================================
+         VERY SMALL PHONES
+         ==================================================== */
+
+      @media (max-width: 380px) {
+
+        #${ACTION_ID} {
+
+          width:
+            calc(100vw - 26px);
+
+          margin-top: 10px;
+
+        }
+
+        #${ACTION_ID}
+        .universe139MainAction {
+
+          min-height: 40px;
+
+          font-size: 10px;
+
+        }
+
+        #${ACTION_ID}
+        .universe139SecondaryAction {
+
+          min-height: 32px;
+
+          font-size: 8px;
 
         }
 
@@ -9050,102 +8506,174 @@ if (
 
 
   // ========================================================
-  // CREATE PARTICLES
+  // CREATE ACTION AREA
   // ========================================================
 
-  function createParticleField() {
+  function createActionArea() {
 
-    if (
-      document.querySelector(
-        ".universe139HeroParticles"
-      )
-    ) {
-      return;
+    let area =
+      document.getElementById(ACTION_ID);
+
+    if (area) {
+      return area;
     }
 
-    const field =
+    area =
       document.createElement("div");
 
-    field.className =
-      "universe139HeroParticles";
+    area.id = ACTION_ID;
 
-    const particleCount =
-      window.innerWidth < 700
-        ? 34
-        : 58;
+    area.innerHTML = `
 
-    for (
-      let i = 0;
-      i < particleCount;
-      i++
+      <button
+        type="button"
+        class="universe139MainAction"
+        id="universe139CleanAgain"
+      >
+        Receive Another Message
+      </button>
+
+      <div
+        class="universe139SecondaryActions"
+        id="universe139CleanSecondary"
+      >
+
+        <button
+          type="button"
+          class="universe139SecondaryAction"
+          id="universe139CleanSubscribe"
+        >
+          Subscribe
+        </button>
+
+        <button
+          type="button"
+          class="universe139SecondaryAction"
+          id="universe139CleanShare"
+        >
+          Share
+        </button>
+
+      </div>
+
+    `;
+
+    const messageBox =
+      document.getElementById("messageBox");
+
+    if (
+      messageBox &&
+      messageBox.parentNode
     ) {
 
-      const particle =
-        document.createElement("span");
-
-      particle.className =
-        "universe139HeroParticle";
-
-      particle.style.left =
-        `${Math.random() * 100}%`;
-
-      particle.style.top =
-        `${Math.random() * 100}%`;
-
-      particle.style.setProperty(
-        "--p-x",
-        `${-80 + Math.random() * 160}px`
-      );
-
-      particle.style.setProperty(
-        "--p-y",
-        `${-110 + Math.random() * 220}px`
-      );
-
-      particle.style.setProperty(
-        "--p-scale",
-        `${0.55 + Math.random() * 1.55}`
-      );
-
-      particle.style.setProperty(
-        "--p-duration",
-        `${4.5 + Math.random() * 7}s`
-      );
-
-      particle.style.setProperty(
-        "--p-delay",
-        `${Math.random() * -10}s`
-      );
-
-      field.appendChild(
-        particle
-      );
-
-    }
-
-    document.body.appendChild(
-      field
-    );
-
-  }
-
-
-  // ========================================================
-  // REACTIVE STATE
-  // ========================================================
-
-  function setRevealState(active) {
-
-    if (active) {
-
-      document.body.classList.add(
-        "universe139-revealing"
+      messageBox.parentNode.insertBefore(
+        area,
+        messageBox.nextSibling
       );
 
     } else {
 
-      document.body.classList.remove(
-        "universe139-revealing"
+      document.body.appendChild(area);
+
+    }
+
+    return area;
+
+  }
+
+
+  // ========================================================
+  // TEXTS
+  // ========================================================
+
+  function updateTexts() {
+
+    const main =
+      document.getElementById(
+        "universe139CleanAgain"
+      );
+
+    const subscribe =
+      document.getElementById(
+        "universe139CleanSubscribe"
+      );
+
+    const share =
+      document.getElementById(
+        "universe139CleanShare"
+      );
+
+    if (
+      typeof translations ===
+      "undefined" ||
+      typeof currentLanguage ===
+      "undefined"
+    ) {
+      return;
+    }
+
+    const t =
+      translations[currentLanguage];
+
+    if (!t) {
+      return;
+    }
+
+    if (main) {
+      main.textContent =
+        t.again ||
+        "Receive Another Message";
+    }
+
+    if (subscribe) {
+      subscribe.textContent =
+        t.subscribeButton ||
+        "Subscribe";
+    }
+
+    if (share) {
+      share.textContent =
+        t.share ||
+        "Share";
+    }
+
+  }
+
+
+  // ========================================================
+  // SYNC VISIBILITY WITH MESSAGE
+  // ========================================================
+
+  function syncVisibility() {
+
+    const area =
+      document.getElementById(
+        ACTION_ID
+      );
+
+    const messageBox =
+      document.getElementById(
+        "messageBox"
+      );
+
+    if (!area || !messageBox) {
+      return;
+    }
+
+    if (
+      messageBox.classList.contains(
+        "hidden"
+      )
+    ) {
+
+      area.classList.remove(
+        "visible"
+      );
+
+    } else {
+
+      area.classList.add(
+        "visible"
       );
 
     }
@@ -9154,196 +8682,234 @@ if (
 
 
   // ========================================================
-  // BUTTON HOOK
+  // REQUEST ANOTHER MESSAGE
   // ========================================================
 
-  function attachRevealHook() {
+  function requestAnotherMessage() {
 
-    const button =
+    const main =
       document.getElementById(
-        "revealBtn"
+        "universe139CleanAgain"
       );
 
-    if (!button) {
+    const secondary =
+      document.getElementById(
+        "universe139CleanSecondary"
+      );
+
+    if (!main) {
       return;
     }
 
     if (
-      button.dataset
-        .universe139HeroHook ===
-      "1"
+      typeof receiveAnotherMessage !==
+      "function"
     ) {
+
+      console.error(
+        "Universe139: receiveAnotherMessage() is unavailable."
+      );
+
       return;
+
     }
 
-    button.dataset
-      .universe139HeroHook =
-      "1";
+    main.classList.add(
+      "hiddenAction"
+    );
 
-    button.addEventListener(
-      "click",
+    if (secondary) {
+      secondary.classList.remove(
+        "visible"
+      );
+    }
+
+    /*
+      Existing app handles the actual message transition.
+      We deliberately reuse it instead of duplicating the logic.
+    */
+
+    receiveAnotherMessage();
+
+    /*
+      Wait for the existing reveal animation to finish,
+      then present the two optional actions.
+    */
+
+    window.setTimeout(
       () => {
 
-        setRevealState(
-          true
-        );
+        const currentMessageBox =
+          document.getElementById(
+            "messageBox"
+          );
 
-        window.setTimeout(
-          () => {
-            setRevealState(
-              false
+        if (
+          currentMessageBox &&
+          !currentMessageBox.classList.contains(
+            "hidden"
+          )
+        ) {
+
+          if (secondary) {
+
+            secondary.classList.add(
+              "visible"
             );
-          },
-          2700
-        );
 
-      }
+          }
+
+        }
+
+      },
+      2850
     );
 
   }
 
 
   // ========================================================
-  // GENERAL POINTER REACTIVITY
+  // SUBSCRIBE
   // ========================================================
 
-  function attachBallInteraction() {
+  function subscribe() {
 
-    const ball =
+    if (
+      typeof openSubscriptionForm ===
+      "function"
+    ) {
+
+      openSubscriptionForm();
+
+      return;
+
+    }
+
+    console.error(
+      "Universe139: openSubscriptionForm() is unavailable."
+    );
+
+  }
+
+
+  // ========================================================
+  // SHARE
+  // ========================================================
+
+  function share() {
+
+    if (
+      typeof shareMessage ===
+      "function"
+    ) {
+
+      shareMessage();
+
+      return;
+
+    }
+
+    console.error(
+      "Universe139: shareMessage() is unavailable."
+    );
+
+  }
+
+
+  // ========================================================
+  // RESET AFTER A FRESH MESSAGE REVEAL
+  // ========================================================
+
+  function resetToMainAction() {
+
+    const area =
       document.getElementById(
-        "crystalBallWrap"
+        ACTION_ID
       );
 
-    if (!ball) {
-      return;
-    }
-
-    if (
-      ball.dataset
-        .universe139Interaction ===
-      "1"
-    ) {
-      return;
-    }
-
-    ball.dataset
-      .universe139Interaction =
-      "1";
-
-    ball.addEventListener(
-      "pointermove",
-      (event) => {
-
-        const rect =
-          ball.getBoundingClientRect();
-
-        const x =
-          (
-            event.clientX -
-            rect.left
-          ) /
-          rect.width;
-
-        const y =
-          (
-            event.clientY -
-            rect.top
-          ) /
-          rect.height;
-
-        const rotateY =
-          (x - .5) * 5;
-
-        const rotateX =
-          (.5 - y) * 5;
-
-        ball.style.setProperty(
-          "--hero-rx",
-          `${rotateX}deg`
-        );
-
-        ball.style.setProperty(
-          "--hero-ry",
-          `${rotateY}deg`
-        );
-
-      }
-    );
-
-
-    ball.addEventListener(
-      "pointerleave",
-      () => {
-
-        ball.style.removeProperty(
-          "--hero-rx"
-        );
-
-        ball.style.removeProperty(
-          "--hero-ry"
-        );
-
-      }
-    );
-
-  }
-
-
-  // ========================================================
-  // BALL TRANSFORM
-  // ========================================================
-
-  function installBallTiltStyle() {
-
-    if (
+    const main =
       document.getElementById(
-        "universe139BallTiltCSS"
+        "universe139CleanAgain"
+      );
+
+    const secondary =
+      document.getElementById(
+        "universe139CleanSecondary"
+      );
+
+    const messageBox =
+      document.getElementById(
+        "messageBox"
+      );
+
+    if (!area || !messageBox) {
+      return;
+    }
+
+    if (
+      messageBox.classList.contains(
+        "hidden"
       )
     ) {
       return;
     }
 
-    const style =
-      document.createElement("style");
+    if (!main || !secondary) {
+      return;
+    }
 
-    style.id =
-      "universe139BallTiltCSS";
+    /*
+      If secondary choices are not currently visible,
+      keep the single main action visible.
+    */
 
-    style.textContent = `
+    if (
+      !secondary.classList.contains(
+        "visible"
+      )
+    ) {
 
-      #crystalBallWrap {
+      main.classList.remove(
+        "hiddenAction"
+      );
 
-        transform:
-          perspective(1000px)
-          rotateX(
-            var(--hero-rx, 0deg)
-          )
-          rotateY(
-            var(--hero-ry, 0deg)
-          );
+    }
 
-        transition:
-          transform .35s ease;
-
-      }
-
-      @media
-      (prefers-reduced-motion: reduce) {
-
-        #crystalBallWrap {
-
-          transform:
-            none !important;
-
-        }
-
-      }
-
-    `;
-
-    document.head.appendChild(
-      style
+    area.classList.add(
+      "visible"
     );
+
+  }
+
+
+  // ========================================================
+  // HIDE LEGACY CONTROLS AGAIN
+  // ========================================================
+
+  function hideLegacyControls() {
+
+    const again =
+      document.getElementById("againBtn");
+
+    const shareButton =
+      document.getElementById("shareBtn");
+
+    const subscribeBox =
+      document.getElementById(
+        "universe139SubscribeBox"
+      );
+
+    if (again) {
+      again.style.display = "none";
+    }
+
+    if (shareButton) {
+      shareButton.style.display = "none";
+    }
+
+    if (subscribeBox) {
+      subscribeBox.style.display = "none";
+    }
 
   }
 
@@ -9354,515 +8920,69 @@ if (
 
   function initialize() {
 
-    installStyles();
+    addStyles();
 
-    installBallTiltStyle();
+    const area =
+      createActionArea();
 
-    document.body.classList.add(
-      "universe139-hero-active"
-    );
+    updateTexts();
 
-    createParticleField();
+    hideLegacyControls();
 
+    syncVisibility();
 
-    attachRevealHook();
-
-    attachBallInteraction();
-
-    console.log(
-      "Universe139: enhanced main screen visuals installed."
-    );
-
-  }
-
-
-  // ========================================================
-  // DOM READY
-  // ========================================================
-
-  if (
-    document.readyState ===
-    "loading"
-  ) {
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initialize,
-      {
-        once: true
-      }
-    );
-
-  } else {
-
-    initialize();
-
-  }
-
-})();
-
-// ==========================================================
-// UNIVERSE139 - COMPACT CORNER CONTROLS
-//
-// Receive Another Message -> bottom left
-// Get a Message Every Day -> bottom right
-// Share My Message remains under the message.
-// ==========================================================
-
-(function installUniverse139CompactCornerControls() {
-
-  function addStyles() {
-
-    if (
+    const main =
       document.getElementById(
-        "universe139CompactCornerCSS"
-      )
-    ) {
-      return;
-    }
-
-    const style =
-      document.createElement("style");
-
-    style.id =
-      "universe139CompactCornerCSS";
-
-    style.textContent = `
-
-      /* =====================================================
-         RECEIVE ANOTHER MESSAGE
-         ===================================================== */
-
-      #againBtn {
-
-        position: fixed !important;
-
-        left: 18px !important;
-        bottom: 18px !important;
-
-        width: 185px !important;
-        min-width: 0 !important;
-        max-width: 185px !important;
-
-        height: auto !important;
-        min-height: 42px !important;
-        max-height: 56px !important;
-
-        margin: 0 !important;
-        padding: 10px 14px !important;
-
-        box-sizing: border-box !important;
-
-        border-radius: 999px !important;
-
-        font-family: inherit !important;
-        font-size: 11px !important;
-        line-height: 1.2 !important;
-
-        white-space: normal !important;
-
-        z-index: 5000 !important;
-
-        box-shadow:
-          0 8px 28px
-          rgba(0,0,0,.28),
-          0 0 18px
-          rgba(150,90,255,.18) !important;
-
-      }
-
-
-      /* =====================================================
-         SUBSCRIPTION CARD
-         ===================================================== */
-
-      #universe139SubscribeBox {
-
-        position: fixed !important;
-
-        right: 18px !important;
-        bottom: 18px !important;
-
-        left: auto !important;
-        top: auto !important;
-
-        width: 205px !important;
-        min-width: 0 !important;
-        max-width: 205px !important;
-
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-
-        margin: 0 !important;
-        padding: 11px 13px !important;
-
-        box-sizing: border-box !important;
-
-        border-radius: 17px !important;
-
-        background:
-          rgba(24, 10, 45, .94) !important;
-
-        border:
-          1px solid
-          rgba(255,255,255,.16) !important;
-
-        box-shadow:
-          0 8px 30px
-          rgba(0,0,0,.30),
-          0 0 20px
-          rgba(142,80,255,.16) !important;
-
-        backdrop-filter:
-          blur(14px) !important;
-
-        -webkit-backdrop-filter:
-          blur(14px) !important;
-
-        text-align: center !important;
-
-        z-index: 5000 !important;
-
-        overflow: visible !important;
-
-      }
-
-
-      #universe139SubscribeBox
-      .universe139SubscribeTitle {
-
-        margin: 0 !important;
-        padding: 0 !important;
-
-        font-size: 14px !important;
-        line-height: 1.2 !important;
-
-        font-weight: 600 !important;
-
-      }
-
-
-      #universe139SubscribeBox
-      .universe139SubscribeText {
-
-        margin: 4px 0 0 !important;
-        padding: 0 !important;
-
-        font-size: 10px !important;
-        line-height: 1.3 !important;
-
-        color:
-          rgba(255,255,255,.66) !important;
-
-      }
-
-
-      #universe139SubscribeBox
-      .universe139SubscribeButton {
-
-        display: inline-flex !important;
-
-        align-items: center !important;
-        justify-content: center !important;
-
-        margin: 8px 0 0 !important;
-
-        min-height: 32px !important;
-        height: 32px !important;
-
-        padding: 5px 15px !important;
-
-        font-size: 10px !important;
-        line-height: 1 !important;
-
-        border-radius: 999px !important;
-
-      }
-
-
-      #universe139SubscribeBox * {
-
-        max-height: none !important;
-
-      }
-
-
-      #againBtn.hidden,
-      #universe139SubscribeBox.universe139SubscribeHidden {
-
-        display: none !important;
-
-      }
-
-
-      /* =====================================================
-         TABLET
-         ===================================================== */
-
-      @media (max-width: 900px) {
-
-        #againBtn {
-
-          left: 12px !important;
-          bottom: 12px !important;
-
-          width: 165px !important;
-          max-width: 165px !important;
-
-          min-height: 40px !important;
-
-          font-size: 10px !important;
-
-        }
-
-
-        #universe139SubscribeBox {
-
-          right: 12px !important;
-          bottom: 12px !important;
-
-          width: 180px !important;
-          max-width: 180px !important;
-
-          padding: 9px 10px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeTitle {
-
-          font-size: 12px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeText {
-
-          font-size: 9px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeButton {
-
-          min-height: 29px !important;
-          height: 29px !important;
-
-          font-size: 9px !important;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         MOBILE
-         ===================================================== */
-
-      @media (max-width: 600px) {
-
-        #againBtn {
-
-          left: 9px !important;
-          bottom: 10px !important;
-
-          width: 145px !important;
-          max-width: 145px !important;
-
-          min-height: 38px !important;
-          max-height: 48px !important;
-
-          padding:
-            8px 10px !important;
-
-          font-size: 9px !important;
-
-          letter-spacing: .2px !important;
-
-        }
-
-
-        #universe139SubscribeBox {
-
-          right: 9px !important;
-          bottom: 10px !important;
-
-          width: 155px !important;
-          max-width: 155px !important;
-
-          padding:
-            8px 9px !important;
-
-          border-radius: 14px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeTitle {
-
-          font-size: 10px !important;
-          line-height: 1.15 !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeText {
-
-          font-size: 8px !important;
-          line-height: 1.25 !important;
-
-          margin-top: 3px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeButton {
-
-          margin-top: 6px !important;
-
-          min-height: 27px !important;
-          height: 27px !important;
-
-          padding:
-            4px 11px !important;
-
-          font-size: 9px !important;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         VERY SMALL PHONES
-         ===================================================== */
-
-      @media (max-width: 380px) {
-
-        #againBtn {
-
-          left: 7px !important;
-          bottom: 8px !important;
-
-          width: 125px !important;
-          max-width: 125px !important;
-
-          font-size: 8px !important;
-
-          padding:
-            7px 8px !important;
-
-        }
-
-
-        #universe139SubscribeBox {
-
-          right: 7px !important;
-          bottom: 8px !important;
-
-          width: 140px !important;
-          max-width: 140px !important;
-
-          padding:
-            7px 7px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeTitle {
-
-          font-size: 9px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeText {
-
-          font-size: 7px !important;
-
-        }
-
-
-        #universe139SubscribeBox
-        .universe139SubscribeButton {
-
-          min-height: 25px !important;
-          height: 25px !important;
-
-          font-size: 8px !important;
-
-          padding:
-            4px 9px !important;
-
-        }
-
-      }
-
-    `;
-
-    document.head.appendChild(style);
-
-  }
-
-
-  function moveControlsToBody() {
-
-    const again =
-      document.getElementById(
-        "againBtn"
+        "universe139CleanAgain"
       );
 
-    const subscribe =
+    const subscribeButton =
       document.getElementById(
-        "universe139SubscribeBox"
+        "universe139CleanSubscribe"
       );
 
-    if (
-      again &&
-      again.parentElement !==
-      document.body
-    ) {
+    const shareButton =
+      document.getElementById(
+        "universe139CleanShare"
+      );
 
-      document.body.appendChild(
-        again
+    if (main) {
+
+      main.addEventListener(
+        "click",
+        requestAnotherMessage
       );
 
     }
 
-    if (
-      subscribe &&
-      subscribe.parentElement !==
-      document.body
-    ) {
+    if (subscribeButton) {
 
-      document.body.appendChild(
+      subscribeButton.addEventListener(
+        "click",
         subscribe
       );
 
     }
 
-  }
+    if (shareButton) {
 
+      shareButton.addEventListener(
+        "click",
+        share
+      );
 
-  function initialize() {
-
-    addStyles();
-
-    moveControlsToBody();
+    }
 
     const observer =
       new MutationObserver(
         () => {
-          moveControlsToBody();
+
+          hideLegacyControls();
+
+          updateTexts();
+
+          syncVisibility();
+
         }
       );
 
@@ -9870,8 +8990,31 @@ if (
       document.body,
       {
         childList: true,
-        subtree: true
+        subtree: true,
+        attributes: true,
+        attributeFilter: [
+          "class",
+          "style"
+        ]
       }
+    );
+
+    /*
+      Give the message system time to reveal its first message,
+      then show our single clean action underneath it.
+    */
+
+    window.setTimeout(
+      () => {
+        hideLegacyControls();
+        updateTexts();
+        resetToMainAction();
+      },
+      3000
+    );
+
+    console.log(
+      "Universe139: clean message action layout installed."
     );
 
   }
@@ -9885,9 +9028,7 @@ if (
     document.addEventListener(
       "DOMContentLoaded",
       initialize,
-      {
-        once: true
-      }
+      { once: true }
     );
 
   } else {
@@ -9897,4 +9038,3 @@ if (
   }
 
 })();
-
