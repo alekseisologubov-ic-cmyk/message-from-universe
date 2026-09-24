@@ -8132,23 +8132,20 @@ if (
 // ==========================================================
 // ==========================================================
 // UNIVERSE139 - SIMPLE MESSAGE ACTION LAYOUT
-// DESKTOP + MOBILE IDENTICAL
+// DESKTOP + MOBILE EXACTLY THE SAME
 //
-// After a message is shown:
-//     Subscribe | Share
-//     Receive Another Message
+// Layout after every revealed message:
+//   [ Subscribe ] [ Share ]
+//   [ Receive Another Message ]
 //
-// All three actions remain visible under the message.
-// During a new-message transition they temporarily hide and
-// return automatically after the new message is displayed.
-// No floating corner controls.
-// No MutationObserver loops.
+// The same three actions remain available after every message.
+// No corner panels. No floating cards. No MutationObserver.
 // ==========================================================
 
-(function installUniverse139SimpleMessageActions() {
+(function installUniverse139SimpleMessageActionsFinal() {
 
   const STYLE_ID =
-    "universe139SimpleMessageActionsCSS";
+    "universe139SimpleMessageActionsFinalCSS";
 
   const ACTION_ID =
     "universe139SimpleMessageActions";
@@ -8175,9 +8172,9 @@ if (
 
     style.textContent = `
 
-      /* --------------------------------------------------
-         Disable legacy controls completely.
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         Legacy buttons are hidden.
+         ----------------------------------------------- */
 
       #againBtn,
       #shareBtn,
@@ -8188,19 +8185,15 @@ if (
       }
 
 
-      /* --------------------------------------------------
-         Main action area
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         One common action area for desktop + mobile.
+         ----------------------------------------------- */
 
       #${ACTION_ID} {
 
-        width: min(
-          430px,
-          calc(100vw - 40px)
-        );
+        width: min(430px, calc(100vw - 40px));
 
-        margin:
-          12px auto 24px;
+        margin: 12px auto 24px;
 
         display: none;
 
@@ -8212,7 +8205,7 @@ if (
 
         position: relative;
 
-        z-index: 50;
+        z-index: 1000;
 
         box-sizing: border-box;
 
@@ -8221,14 +8214,14 @@ if (
 
       #${ACTION_ID}.visible {
 
-        display: flex;
+        display: flex !important;
 
       }
 
 
-      /* --------------------------------------------------
-         Subscribe + Share row
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         Subscribe + Share
+         ----------------------------------------------- */
 
       .universe139SimpleSecondary {
 
@@ -8236,8 +8229,7 @@ if (
 
         display: grid;
 
-        grid-template-columns:
-          1fr 1fr;
+        grid-template-columns: 1fr 1fr;
 
         gap: 8px;
 
@@ -8266,6 +8258,8 @@ if (
           background .18s ease,
           box-shadow .18s ease;
 
+        -webkit-tap-highlight-color: transparent;
+
       }
 
 
@@ -8275,8 +8269,7 @@ if (
 
         min-height: 38px;
 
-        padding:
-          8px 12px;
+        padding: 8px 12px;
 
         border-radius: 999px;
 
@@ -8301,10 +8294,9 @@ if (
       }
 
 
-      /* --------------------------------------------------
-         Receive Another Message
-         Always underneath the two secondary buttons.
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         Receive another message is ALWAYS last.
+         ----------------------------------------------- */
 
       .universe139SimpleReceive {
 
@@ -8312,16 +8304,15 @@ if (
 
         min-height: 44px;
 
-        padding:
-          10px 18px;
+        padding: 10px 18px;
 
         border-radius: 999px;
 
         background:
           linear-gradient(
             135deg,
-            rgba(138,78,230,.94),
-            rgba(79,35,155,.94)
+            rgba(138,78,230,.95),
+            rgba(79,35,155,.95)
           );
 
         font-size: 12px;
@@ -8360,20 +8351,22 @@ if (
       }
 
 
-      /* --------------------------------------------------
-         Transition state
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         During transition, hide only the action area.
+         ----------------------------------------------- */
 
       #${ACTION_ID}.transitioning {
 
-        visibility: hidden;
+        opacity: 0;
+
+        pointer-events: none;
 
       }
 
 
-      /* --------------------------------------------------
-         Mobile
-         -------------------------------------------------- */
+      /* -----------------------------------------------
+         Mobile uses exactly the same order.
+         ----------------------------------------------- */
 
       @media (max-width: 600px) {
 
@@ -8389,13 +8382,11 @@ if (
 
         }
 
-
         .universe139SimpleSecondary {
 
           gap: 7px;
 
         }
-
 
         .universe139SimpleSecondary button {
 
@@ -8407,7 +8398,6 @@ if (
           font-size: 9px;
 
         }
-
 
         .universe139SimpleReceive {
 
@@ -8423,10 +8413,6 @@ if (
       }
 
 
-      /* --------------------------------------------------
-         Very small phones
-         -------------------------------------------------- */
-
       @media (max-width: 380px) {
 
         #${ACTION_ID} {
@@ -8438,7 +8424,6 @@ if (
 
         }
 
-
         .universe139SimpleSecondary button {
 
           min-height: 32px;
@@ -8446,7 +8431,6 @@ if (
           font-size: 8px;
 
         }
-
 
         .universe139SimpleReceive {
 
@@ -8472,9 +8456,7 @@ if (
   function createActionArea() {
 
     let area =
-      document.getElementById(
-        ACTION_ID
-      );
+      document.getElementById(ACTION_ID);
 
     if (area) {
       return area;
@@ -8487,9 +8469,7 @@ if (
 
     area.innerHTML = `
 
-      <div
-        class="universe139SimpleSecondary"
-      >
+      <div class="universe139SimpleSecondary">
 
         <button
           type="button"
@@ -8518,9 +8498,7 @@ if (
     `;
 
     const messageBox =
-      document.getElementById(
-        "messageBox"
-      );
+      document.getElementById("messageBox");
 
     if (
       messageBox &&
@@ -8544,16 +8522,14 @@ if (
 
 
   // ========================================================
-  // TRANSLATIONS
+  // TEXTS
   // ========================================================
 
   function updateTexts() {
 
     if (
-      typeof translations ===
-        "undefined" ||
-      typeof currentLanguage ===
-        "undefined"
+      typeof translations === "undefined" ||
+      typeof currentLanguage === "undefined"
     ) {
       return;
     }
@@ -8581,188 +8557,228 @@ if (
       );
 
     if (receive) {
-
       receive.textContent =
-        t.again ||
-        "Receive Another Message";
-
+        t.again || "Receive Another Message";
     }
 
     if (subscribe) {
-
       subscribe.textContent =
-        t.subscribeButton ||
-        "Subscribe";
-
+        t.subscribeButton || "Subscribe";
     }
 
     if (share) {
-
       share.textContent =
-        t.share ||
-        "Share";
-
+        t.share || "Share My Message";
     }
 
   }
 
 
   // ========================================================
-  // LEGACY CONTROL CLEANUP
+  // HIDE ORIGINAL CONTROLS
   // ========================================================
 
   function hideLegacyControls() {
 
-    const again =
-      document.getElementById(
-        "againBtn"
-      );
+    const ids = [
+      "againBtn",
+      "shareBtn",
+      "universe139SubscribeBox"
+    ];
 
-    const share =
-      document.getElementById(
-        "shareBtn"
-      );
+    ids.forEach(id => {
 
-    const subscribe =
-      document.getElementById(
-        "universe139SubscribeBox"
-      );
+      const element =
+        document.getElementById(id);
 
-    if (again) {
-      again.style.display = "none";
-    }
+      if (element) {
+        element.style.display = "none";
+      }
 
-    if (share) {
-      share.style.display = "none";
-    }
-
-    if (subscribe) {
-      subscribe.style.display = "none";
-    }
+    });
 
   }
 
 
   // ========================================================
-  // ACTION AREA VISIBILITY
+  // SHOW / HIDE NEW ACTION AREA
   // ========================================================
 
-  function syncVisibility() {
+  function showActions() {
 
     const area =
-      document.getElementById(
-        ACTION_ID
-      );
+      document.getElementById(ACTION_ID);
 
-    const messageBox =
-      document.getElementById(
-        "messageBox"
-      );
-
-    if (!area || !messageBox) {
+    if (!area) {
       return;
     }
 
-    if (
-      messageBox.classList.contains(
-        "hidden"
-      )
-    ) {
+    area.classList.remove("transitioning");
+    area.classList.add("visible");
 
-      area.classList.remove(
-        "visible"
-      );
-
-    } else {
-
-      area.classList.add(
-        "visible"
-      );
-
-    }
+    updateTexts();
+    hideLegacyControls();
 
   }
 
 
-  // ========================================================
-  // RECEIVE ANOTHER MESSAGE
-  // ========================================================
-
-  function receiveAnother() {
-
-    if (
-      typeof receiveAnotherMessage !==
-        "function"
-    ) {
-
-      console.error(
-        "Universe139: receiveAnotherMessage() is unavailable."
-      );
-
-      return;
-
-    }
+  function hideActions() {
 
     const area =
-      document.getElementById(
-        ACTION_ID
-      );
+      document.getElementById(ACTION_ID);
 
-    if (area) {
-
-      area.classList.add(
-        "transitioning"
-      );
-
+    if (!area) {
+      return;
     }
 
-    receiveAnotherMessage();
+    area.classList.remove("visible");
 
-    if (receiveTimer) {
-
-      window.clearTimeout(
-        receiveTimer
-      );
-
-    }
-
-    /*
-      The existing reveal cycle takes about 2.4 seconds.
-      Give it a small buffer, then restore all three buttons.
-    */
-
-    receiveTimer =
-      window.setTimeout(
-        () => {
-
-          if (area) {
-
-            area.classList.remove(
-              "transitioning"
-            );
-
-          }
-
-          syncVisibility();
-          updateTexts();
-          hideLegacyControls();
-
-        },
-        2900
-      );
+    area.classList.add("transitioning");
 
   }
 
 
   // ========================================================
-  // SUBSCRIBE
+  // FORCE ACTIONS AFTER MESSAGE IS READY
+  // ========================================================
+
+  function showActionsWhenMessageReady() {
+
+    window.setTimeout(
+      () => {
+
+        const messageBox =
+          document.getElementById("messageBox");
+
+        if (
+          messageBox &&
+          !messageBox.classList.contains("hidden")
+        ) {
+
+          showActions();
+
+        }
+
+      },
+      40
+    );
+
+  }
+
+
+  // ========================================================
+  // WRAP ORIGINAL SHOW MESSAGE
+  // ========================================================
+
+  function hookShowMessage() {
+
+    if (
+      typeof showMessage !== "function" ||
+      showMessage.__universe139SimpleWrapped
+    ) {
+      return;
+    }
+
+    const originalShowMessage =
+      showMessage;
+
+    const wrappedShowMessage =
+      function universe139WrappedShowMessage() {
+
+        const result =
+          originalShowMessage.apply(
+            this,
+            arguments
+          );
+
+        showActionsWhenMessageReady();
+
+        return result;
+
+      };
+
+    wrappedShowMessage
+      .__universe139SimpleWrapped = true;
+
+    wrappedShowMessage
+      .__universe139Original =
+        originalShowMessage;
+
+    showMessage =
+      wrappedShowMessage;
+
+  }
+
+
+  // ========================================================
+  // WRAP ORIGINAL RECEIVE FUNCTION
+  // ========================================================
+
+  function hookReceiveAnotherMessage() {
+
+    if (
+      typeof receiveAnotherMessage !== "function" ||
+      receiveAnotherMessage.__universe139SimpleWrapped
+    ) {
+      return;
+    }
+
+    const originalReceiveAnotherMessage =
+      receiveAnotherMessage;
+
+    const wrappedReceiveAnotherMessage =
+      function universe139WrappedReceiveAnotherMessage() {
+
+        hideActions();
+
+        const result =
+          originalReceiveAnotherMessage.apply(
+            this,
+            arguments
+          );
+
+        if (receiveTimer) {
+
+          window.clearTimeout(
+            receiveTimer
+          );
+
+        }
+
+        receiveTimer =
+          window.setTimeout(
+            () => {
+              showActionsWhenMessageReady();
+            },
+            2550
+          );
+
+        return result;
+
+      };
+
+    wrappedReceiveAnotherMessage
+      .__universe139SimpleWrapped = true;
+
+    wrappedReceiveAnotherMessage
+      .__universe139SimpleOriginal =
+        originalReceiveAnotherMessage;
+
+    receiveAnotherMessage =
+      wrappedReceiveAnotherMessage;
+
+  }
+
+
+  // ========================================================
+  // BUTTON ACTIONS
   // ========================================================
 
   function subscribe() {
 
     if (
       typeof openSubscriptionForm ===
-        "function"
+      "function"
     ) {
 
       openSubscriptionForm();
@@ -8777,15 +8793,11 @@ if (
   }
 
 
-  // ========================================================
-  // SHARE
-  // ========================================================
-
   function share() {
 
     if (
       typeof shareMessage ===
-        "function"
+      "function"
     ) {
 
       shareMessage();
@@ -8795,6 +8807,25 @@ if (
 
     console.error(
       "Universe139: shareMessage() is unavailable."
+    );
+
+  }
+
+
+  function receiveAnother() {
+
+    if (
+      typeof receiveAnotherMessage ===
+      "function"
+    ) {
+
+      receiveAnotherMessage();
+      return;
+
+    }
+
+    console.error(
+      "Universe139: receiveAnotherMessage() is unavailable."
     );
 
   }
@@ -8814,7 +8845,9 @@ if (
 
     updateTexts();
 
-    syncVisibility();
+    hookShowMessage();
+
+    hookReceiveAnotherMessage();
 
     const receive =
       document.getElementById(
@@ -8858,32 +8891,19 @@ if (
 
     }
 
-    /*
-      Small periodic sync only.
-      It does NOT observe attributes, so it cannot freeze the app.
-    */
-
-    window.setInterval(
-      () => {
-
-        hideLegacyControls();
-        updateTexts();
-        syncVisibility();
-
-      },
-      1000
-    );
-
     console.log(
-      "Universe139: desktop and mobile now use the same simple action layout."
+      "Universe139: one consistent action layout installed for desktop and mobile."
     );
 
   }
 
 
+  // ========================================================
+  // DOM READY
+  // ========================================================
+
   if (
-    document.readyState ===
-      "loading"
+    document.readyState === "loading"
   ) {
 
     document.addEventListener(
