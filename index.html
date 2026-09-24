@@ -231,6 +231,146 @@
     }
 
     /* ======================================================
+       MOBILE APP LAYOUT
+       - Keep the message card compact
+       - Put subscription BELOW the message card
+       - Keep video truly full screen
+       ====================================================== */
+
+    @media (max-width: 600px) {
+      html,
+      body {
+        min-height: 100%;
+        overflow-x: hidden;
+      }
+
+      #backgroundVideo {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        min-width: 100vw !important;
+        min-height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+      }
+
+      .container {
+        position: relative !important;
+        z-index: 3 !important;
+        min-height: 100dvh;
+        width: 100%;
+        padding: 72px 14px 34px !important;
+        overflow: visible;
+      }
+
+      header {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      h1 {
+        max-width: 94vw;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #messageBox {
+        width: calc(100vw - 28px) !important;
+        max-width: 500px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-top: 18px !important;
+        padding: 24px 16px 20px !important;
+      }
+
+      #message {
+        font-size: 17px !important;
+        line-height: 1.48 !important;
+        max-width: 330px !important;
+      }
+
+      #smallText {
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 16px !important;
+      }
+
+      #shareBtn {
+        display: inline-flex !important;
+        margin-top: 2px !important;
+      }
+
+      /* The subscription is moved here by JS after the box is created. */
+      #universe139SubscriptionMount {
+        position: relative !important;
+        width: calc(100vw - 28px) !important;
+        max-width: 500px !important;
+        margin: 14px auto 0 !important;
+        z-index: 12 !important;
+        display: block;
+      }
+
+      #universe139SubscriptionMount #universe139SubscribeBox {
+        position: relative !important;
+        inset: auto !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 14px 14px 15px !important;
+        border-radius: 18px !important;
+        background: rgba(20, 8, 40, .72) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+      }
+
+      #universe139SubscriptionMount .universe139SubscribeTitle {
+        font-size: 15px !important;
+        line-height: 1.35 !important;
+      }
+
+      #universe139SubscriptionMount .universe139SubscribeText {
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+        margin-top: 5px !important;
+      }
+
+      #universe139SubscriptionMount .universe139SubscribeButton {
+        min-height: 40px !important;
+        margin-top: 10px !important;
+        padding: 8px 18px !important;
+        font-size: 12px !important;
+      }
+
+      /* Never leave the subscription floating over the message on mobile. */
+      #messageBox > #universe139SubscribeBox {
+        position: static !important;
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .container {
+        padding-left: 11px !important;
+        padding-right: 11px !important;
+      }
+
+      #messageBox,
+      #universe139SubscriptionMount {
+        width: calc(100vw - 22px) !important;
+      }
+
+      #message {
+        font-size: 16px !important;
+        max-width: 300px !important;
+      }
+    }
+
+    /* ======================================================
        REDUCE MOTION
        ====================================================== */
 
@@ -258,6 +398,7 @@
     muted
     loop
     playsinline
+    webkit-playsinline="true"
     preload="auto"
     aria-hidden="true"
   >
@@ -430,6 +571,76 @@
         }
       );
 
+    })();
+  </script>
+
+  <!-- Mobile playback reliability -->
+  <script>
+    (function () {
+      const video = document.getElementById("backgroundVideo");
+      if (!video) return;
+
+      video.muted = true;
+      video.defaultMuted = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.playsInline = true;
+
+      function tryPlay() {
+        if (document.hidden) return;
+        try {
+          const result = video.play();
+          if (result && typeof result.catch === "function") {
+            result.catch(function () {});
+          }
+        } catch (e) {
+          // Browser may require a gesture; listeners below retry.
+        }
+      }
+
+      tryPlay();
+      video.addEventListener("loadedmetadata", tryPlay, { once: true });
+      video.addEventListener("loadeddata", tryPlay, { once: true });
+      video.addEventListener("canplay", tryPlay, { once: true });
+      window.addEventListener("pageshow", tryPlay);
+      window.addEventListener("focus", tryPlay);
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) tryPlay();
+      });
+
+      ["touchstart", "pointerdown", "click"].forEach(function (eventName) {
+        document.addEventListener(eventName, tryPlay, {
+          passive: true
+        });
+      });
+    })();
+  </script>
+
+  <!-- Move the dynamically-created subscription outside the message card on mobile -->
+  <script>
+    (function () {
+      const mount = document.getElementById("universe139SubscriptionMount");
+      if (!mount) return;
+
+      function moveSubscriptionForMobile() {
+        const box = document.getElementById("universe139SubscribeBox");
+        if (!box) return;
+
+        if (window.matchMedia("(max-width: 600px)").matches) {
+          if (box.parentElement !== mount) {
+            mount.appendChild(box);
+          }
+        }
+      }
+
+      const observer = new MutationObserver(moveSubscriptionForMobile);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      moveSubscriptionForMobile();
+      window.addEventListener("resize", moveSubscriptionForMobile);
     })();
   </script>
 
