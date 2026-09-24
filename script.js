@@ -8130,30 +8130,35 @@ if (
 
 // ==========================================================
 // ==========================================================
+// ==========================================================
 // UNIVERSE139 - SIMPLE MESSAGE ACTION LAYOUT
-// FIXED: no recursive MutationObserver / no language freeze
+// DESKTOP + MOBILE IDENTICAL
 //
-// One main action under the message:
+// After a message is shown:
+//     Subscribe | Share
 //     Receive Another Message
 //
-// After it is pressed and the next message is shown:
-//     Subscribe | Share
-//
-// No floating corner panels.
+// All three actions remain visible under the message.
+// During a new-message transition they temporarily hide and
+// return automatically after the new message is displayed.
+// No floating corner controls.
+// No MutationObserver loops.
 // ==========================================================
 
-(function installUniverse139CleanLayout() {
+(function installUniverse139SimpleMessageActions() {
 
   const STYLE_ID =
-    "universe139CleanLayoutCSS";
+    "universe139SimpleMessageActionsCSS";
 
   const ACTION_ID =
-    "universe139CleanActions";
+    "universe139SimpleMessageActions";
 
-  let actionArea = null;
-  let syncTimer = null;
-  let anotherMessageTimer = null;
+  let receiveTimer = null;
 
+
+  // ========================================================
+  // STYLES
+  // ========================================================
 
   function addStyles() {
 
@@ -8170,7 +8175,9 @@ if (
 
     style.textContent = `
 
-      /* Remove all old floating/legacy controls. */
+      /* --------------------------------------------------
+         Disable legacy controls completely.
+         -------------------------------------------------- */
 
       #againBtn,
       #shareBtn,
@@ -8181,7 +8188,9 @@ if (
       }
 
 
-      /* Clean action area below the message card. */
+      /* --------------------------------------------------
+         Main action area
+         -------------------------------------------------- */
 
       #${ACTION_ID} {
 
@@ -8190,23 +8199,22 @@ if (
           calc(100vw - 40px)
         );
 
-        margin: 12px auto 24px;
+        margin:
+          12px auto 24px;
 
         display: none;
 
         flex-direction: column;
 
-        align-items: center;
-
-        justify-content: center;
+        align-items: stretch;
 
         gap: 8px;
 
         position: relative;
 
-        z-index: 20;
+        z-index: 50;
 
-        text-align: center;
+        box-sizing: border-box;
 
       }
 
@@ -8218,15 +8226,94 @@ if (
       }
 
 
-      .universe139MainAction {
+      /* --------------------------------------------------
+         Subscribe + Share row
+         -------------------------------------------------- */
+
+      .universe139SimpleSecondary {
+
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns:
+          1fr 1fr;
+
+        gap: 8px;
+
+      }
+
+
+      .universe139SimpleSecondary button,
+      .universe139SimpleReceive {
+
+        box-sizing: border-box;
+
+        border:
+          1px solid
+          rgba(255,255,255,.20);
+
+        color: #ffffff;
+
+        font-family: inherit;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition:
+          transform .18s ease,
+          background .18s ease,
+          box-shadow .18s ease;
+
+      }
+
+
+      .universe139SimpleSecondary button {
+
+        width: 100%;
+
+        min-height: 38px;
+
+        padding:
+          8px 12px;
+
+        border-radius: 999px;
+
+        background:
+          rgba(255,255,255,.08);
+
+        font-size: 10px;
+
+        line-height: 1.15;
+
+      }
+
+
+      .universe139SimpleSecondary button:hover {
+
+        background:
+          rgba(255,255,255,.14);
+
+        transform:
+          translateY(-1px);
+
+      }
+
+
+      /* --------------------------------------------------
+         Receive Another Message
+         Always underneath the two secondary buttons.
+         -------------------------------------------------- */
+
+      .universe139SimpleReceive {
 
         width: 100%;
 
         min-height: 44px;
 
-        padding: 10px 20px;
-
-        border: 1px solid rgba(255,255,255,.25);
+        padding:
+          10px 18px;
 
         border-radius: 999px;
 
@@ -8237,132 +8324,135 @@ if (
             rgba(79,35,155,.94)
           );
 
-        color: #fff;
-
-        font-family: inherit;
-
         font-size: 12px;
-
-        font-weight: 600;
 
         line-height: 1.2;
 
-        letter-spacing: .25px;
-
-        cursor: pointer;
-
-      }
-
-
-      .universe139MainAction.hiddenAction {
-
-        display: none !important;
+        box-shadow:
+          0 8px 25px
+          rgba(66,28,125,.22),
+          0 0 18px
+          rgba(175,110,255,.10);
 
       }
 
 
-      .universe139SecondaryActions {
+      .universe139SimpleReceive:hover {
 
-        width: 100%;
+        transform:
+          translateY(-1px);
 
-        display: none;
-
-        grid-template-columns: 1fr 1fr;
-
-        gap: 8px;
-
-      }
-
-
-      .universe139SecondaryActions.visible {
-
-        display: grid;
+        box-shadow:
+          0 10px 28px
+          rgba(66,28,125,.30),
+          0 0 22px
+          rgba(175,110,255,.16);
 
       }
 
 
-      .universe139SecondaryAction {
+      .universe139SimpleReceive:active,
+      .universe139SimpleSecondary button:active {
 
-        min-height: 36px;
-
-        padding: 8px 13px;
-
-        border: 1px solid rgba(255,255,255,.17);
-
-        border-radius: 999px;
-
-        background: rgba(255,255,255,.08);
-
-        color: #fff;
-
-        font-family: inherit;
-
-        font-size: 10px;
-
-        font-weight: 600;
-
-        line-height: 1.15;
-
-        cursor: pointer;
+        transform:
+          scale(.98);
 
       }
 
+
+      /* --------------------------------------------------
+         Transition state
+         -------------------------------------------------- */
+
+      #${ACTION_ID}.transitioning {
+
+        visibility: hidden;
+
+      }
+
+
+      /* --------------------------------------------------
+         Mobile
+         -------------------------------------------------- */
 
       @media (max-width: 600px) {
 
         #${ACTION_ID} {
 
-          width: calc(100vw - 36px);
+          width:
+            calc(100vw - 36px);
 
-          margin: 10px auto 18px;
+          margin:
+            10px auto 18px;
 
-        }
-
-        .universe139MainAction {
-
-          min-height: 42px;
-
-          padding: 9px 15px;
-
-          font-size: 11px;
+          gap: 7px;
 
         }
 
-        .universe139SecondaryAction {
+
+        .universe139SimpleSecondary {
+
+          gap: 7px;
+
+        }
+
+
+        .universe139SimpleSecondary button {
 
           min-height: 34px;
 
-          padding: 7px 8px;
+          padding:
+            7px 8px;
 
           font-size: 9px;
 
         }
 
-      }
 
-      @media (max-width: 380px) {
+        .universe139SimpleReceive {
 
-        #${ACTION_ID} {
+          min-height: 42px;
 
-          width: calc(100vw - 26px);
-
-          margin-top: 8px;
-
-        }
-
-        .universe139MainAction {
-
-          min-height: 40px;
+          padding:
+            9px 13px;
 
           font-size: 10px;
 
         }
 
-        .universe139SecondaryAction {
+      }
+
+
+      /* --------------------------------------------------
+         Very small phones
+         -------------------------------------------------- */
+
+      @media (max-width: 380px) {
+
+        #${ACTION_ID} {
+
+          width:
+            calc(100vw - 26px);
+
+          margin-top: 8px;
+
+        }
+
+
+        .universe139SimpleSecondary button {
 
           min-height: 32px;
 
           font-size: 8px;
+
+        }
+
+
+        .universe139SimpleReceive {
+
+          min-height: 40px;
+
+          font-size: 9px;
 
         }
 
@@ -8375,17 +8465,19 @@ if (
   }
 
 
+  // ========================================================
+  // CREATE ACTION AREA
+  // ========================================================
+
   function createActionArea() {
 
     let area =
-      document.getElementById(ACTION_ID);
+      document.getElementById(
+        ACTION_ID
+      );
 
     if (area) {
-
-      actionArea = area;
-
       return area;
-
     }
 
     area =
@@ -8396,22 +8488,19 @@ if (
     area.innerHTML = `
 
       <div
-        class="universe139SecondaryActions visible"
-        id="universe139CleanSecondary"
+        class="universe139SimpleSecondary"
       >
 
         <button
           type="button"
-          class="universe139SecondaryAction"
-          id="universe139CleanSubscribe"
+          id="universe139SimpleSubscribe"
         >
           Subscribe
         </button>
 
         <button
           type="button"
-          class="universe139SecondaryAction"
-          id="universe139CleanShare"
+          id="universe139SimpleShare"
         >
           Share
         </button>
@@ -8420,8 +8509,8 @@ if (
 
       <button
         type="button"
-        class="universe139MainAction"
-        id="universe139CleanAgain"
+        class="universe139SimpleReceive"
+        id="universe139SimpleReceive"
       >
         Receive Another Message
       </button>
@@ -8429,7 +8518,9 @@ if (
     `;
 
     const messageBox =
-      document.getElementById("messageBox");
+      document.getElementById(
+        "messageBox"
+      );
 
     if (
       messageBox &&
@@ -8447,18 +8538,22 @@ if (
 
     }
 
-    actionArea = area;
-
     return area;
 
   }
 
 
+  // ========================================================
+  // TRANSLATIONS
+  // ========================================================
+
   function updateTexts() {
 
     if (
-      typeof translations === "undefined" ||
-      typeof currentLanguage === "undefined"
+      typeof translations ===
+        "undefined" ||
+      typeof currentLanguage ===
+        "undefined"
     ) {
       return;
     }
@@ -8470,18 +8565,24 @@ if (
       return;
     }
 
-    const main =
-      document.getElementById("universe139CleanAgain");
+    const receive =
+      document.getElementById(
+        "universe139SimpleReceive"
+      );
 
     const subscribe =
-      document.getElementById("universe139CleanSubscribe");
+      document.getElementById(
+        "universe139SimpleSubscribe"
+      );
 
     const share =
-      document.getElementById("universe139CleanShare");
+      document.getElementById(
+        "universe139SimpleShare"
+      );
 
-    if (main) {
+    if (receive) {
 
-      main.textContent =
+      receive.textContent =
         t.again ||
         "Receive Another Message";
 
@@ -8506,16 +8607,26 @@ if (
   }
 
 
+  // ========================================================
+  // LEGACY CONTROL CLEANUP
+  // ========================================================
+
   function hideLegacyControls() {
 
     const again =
-      document.getElementById("againBtn");
+      document.getElementById(
+        "againBtn"
+      );
 
     const share =
-      document.getElementById("shareBtn");
+      document.getElementById(
+        "shareBtn"
+      );
 
     const subscribe =
-      document.getElementById("universe139SubscribeBox");
+      document.getElementById(
+        "universe139SubscribeBox"
+      );
 
     if (again) {
       again.style.display = "none";
@@ -8532,46 +8643,56 @@ if (
   }
 
 
-  function setActionVisibility() {
+  // ========================================================
+  // ACTION AREA VISIBILITY
+  // ========================================================
 
-    if (!actionArea) {
-      return;
-    }
+  function syncVisibility() {
+
+    const area =
+      document.getElementById(
+        ACTION_ID
+      );
 
     const messageBox =
-      document.getElementById("messageBox");
+      document.getElementById(
+        "messageBox"
+      );
 
-    if (!messageBox) {
-      actionArea.classList.remove("visible");
+    if (!area || !messageBox) {
       return;
     }
 
-    const isHidden =
-      messageBox.classList.contains("hidden");
+    if (
+      messageBox.classList.contains(
+        "hidden"
+      )
+    ) {
 
-    if (isHidden) {
-
-      actionArea.classList.remove("visible");
+      area.classList.remove(
+        "visible"
+      );
 
     } else {
 
-      actionArea.classList.add("visible");
+      area.classList.add(
+        "visible"
+      );
 
     }
 
   }
 
 
-  function requestAnotherMessage() {
+  // ========================================================
+  // RECEIVE ANOTHER MESSAGE
+  // ========================================================
 
-    const main =
-      document.getElementById("universe139CleanAgain");
-
-    const secondary =
-      document.getElementById("universe139CleanSecondary");
+  function receiveAnother() {
 
     if (
-      typeof receiveAnotherMessage !== "function"
+      typeof receiveAnotherMessage !==
+        "function"
     ) {
 
       console.error(
@@ -8582,47 +8703,69 @@ if (
 
     }
 
-    if (main) {
-      main.classList.add("hiddenAction");
-    }
+    const area =
+      document.getElementById(
+        ACTION_ID
+      );
 
-    if (secondary) {
-      secondary.classList.remove("visible");
+    if (area) {
+
+      area.classList.add(
+        "transitioning"
+      );
+
     }
 
     receiveAnotherMessage();
 
-    if (anotherMessageTimer) {
-      window.clearTimeout(anotherMessageTimer);
+    if (receiveTimer) {
+
+      window.clearTimeout(
+        receiveTimer
+      );
+
     }
 
-    anotherMessageTimer =
+    /*
+      The existing reveal cycle takes about 2.4 seconds.
+      Give it a small buffer, then restore all three buttons.
+    */
+
+    receiveTimer =
       window.setTimeout(
         () => {
 
-          if (secondary) {
-            secondary.classList.add("visible");
+          if (area) {
+
+            area.classList.remove(
+              "transitioning"
+            );
+
           }
 
-          if (main) {
-            main.classList.remove("hiddenAction");
-          }
+          syncVisibility();
+          updateTexts();
+          hideLegacyControls();
 
         },
-        3000
+        2900
       );
 
   }
 
 
+  // ========================================================
+  // SUBSCRIBE
+  // ========================================================
+
   function subscribe() {
 
     if (
-      typeof openSubscriptionForm === "function"
+      typeof openSubscriptionForm ===
+        "function"
     ) {
 
       openSubscriptionForm();
-
       return;
 
     }
@@ -8634,14 +8777,18 @@ if (
   }
 
 
+  // ========================================================
+  // SHARE
+  // ========================================================
+
   function share() {
 
     if (
-      typeof shareMessage === "function"
+      typeof shareMessage ===
+        "function"
     ) {
 
       shareMessage();
-
       return;
 
     }
@@ -8653,36 +8800,9 @@ if (
   }
 
 
-  function resetMainAction() {
-
-    const main =
-      document.getElementById("universe139CleanAgain");
-
-    const secondary =
-      document.getElementById("universe139CleanSecondary");
-
-    const messageBox =
-      document.getElementById("messageBox");
-
-    if (!main || !secondary || !messageBox) {
-      return;
-    }
-
-    if (
-      messageBox.classList.contains("hidden")
-    ) {
-      return;
-    }
-
-    main.classList.remove("hiddenAction");
-    secondary.classList.add("visible");
-
-    if (actionArea) {
-      actionArea.classList.add("visible");
-    }
-
-  }
-
+  // ========================================================
+  // INITIALIZE
+  // ========================================================
 
   function initialize() {
 
@@ -8694,22 +8814,28 @@ if (
 
     updateTexts();
 
-    setActionVisibility();
+    syncVisibility();
 
-    const main =
-      document.getElementById("universe139CleanAgain");
+    const receive =
+      document.getElementById(
+        "universe139SimpleReceive"
+      );
 
     const subscribeButton =
-      document.getElementById("universe139CleanSubscribe");
+      document.getElementById(
+        "universe139SimpleSubscribe"
+      );
 
     const shareButton =
-      document.getElementById("universe139CleanShare");
+      document.getElementById(
+        "universe139SimpleShare"
+      );
 
-    if (main) {
+    if (receive) {
 
-      main.addEventListener(
+      receive.addEventListener(
         "click",
-        requestAnotherMessage
+        receiveAnother
       );
 
     }
@@ -8733,44 +8859,31 @@ if (
     }
 
     /*
-      IMPORTANT:
-      Do NOT observe class/style attributes here.
-      The old MutationObserver observed its own style changes,
-      causing a recursive callback loop and freezing the page.
+      Small periodic sync only.
+      It does NOT observe attributes, so it cannot freeze the app.
     */
 
-    syncTimer =
-      window.setInterval(
-        () => {
-
-          hideLegacyControls();
-          updateTexts();
-          setActionVisibility();
-
-        },
-        600
-      );
-
-    window.setTimeout(
+    window.setInterval(
       () => {
 
         hideLegacyControls();
         updateTexts();
-        resetMainAction();
+        syncVisibility();
 
       },
-      2800
+      1000
     );
 
     console.log(
-      "Universe139: clean message action layout installed without recursive observer."
+      "Universe139: desktop and mobile now use the same simple action layout."
     );
 
   }
 
 
   if (
-    document.readyState === "loading"
+    document.readyState ===
+      "loading"
   ) {
 
     document.addEventListener(
