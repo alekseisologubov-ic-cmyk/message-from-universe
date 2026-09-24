@@ -367,6 +367,108 @@ const translations = {
     subscribeNote: "अभी मुफ्त है। आप कभी भी सदस्यता समाप्त कर सकते हैं।"
   },
 
+  de: {
+    chooseLanguage: "Wähle deine Sprache",
+    title: "Eine Botschaft aus dem Universum",
+    subtitle: "Deine Botschaft wartet...",
+    reveal: "Meine Botschaft enthüllen",
+    loading: "Das Universum bereitet deine Botschaft vor...",
+    month: "Deine Botschaft",
+    again: "Eine weitere Botschaft erhalten",
+    share: "Meine Botschaft teilen",
+    shareTitle: "Teile deine Universe139-Botschaft",
+    close: "Schließen",
+    copyMessage: "Botschaft kopieren",
+    copyLink: "Link kopieren",
+    more: "Mehr...",
+    copied: "Kopiert!",
+    copiedShare: "Botschaft und Link wurden kopiert! Füge sie zum Teilen in die App ein.",
+    noMessage: "Enthülle zuerst deine Botschaft.",
+    inAppBrowserNotice: `Du befindest dich in einem App-Browser — tippe auf ⋯ oder ⋮ und wähle "Im Browser öffnen", um alle Teilen-Optionen zu nutzen.`,
+    shareInstructions: "Wähle, wo du deine Botschaft teilen möchtest.",
+    shareLink: "👆 Universe139 — Drücke hier, um deine heutige Botschaft zu sehen",
+    subscribeTitle: "✨ Erhalte jeden Tag eine Botschaft",
+    subscribeText: "Erhalte jeden Tag eine neue Botschaft aus dem Universum.",
+    subscribeButton: "Abonnieren",
+    subscribeFormTitle: "✉️ Erhalte deine tägliche Botschaft",
+    subscribeFormText: "Gib deine E-Mail-Adresse ein und erhalte jeden Tag eine neue Botschaft aus dem Universum.",
+    subscribeEmailPlaceholder: "Deine E-Mail-Adresse",
+    subscribeSubmit: "Tägliche Botschaften starten",
+    subscribeClose: "Schließen",
+    subscribeSuccess: "✨ Du bist jetzt angemeldet! Deine täglichen Botschaften beginnen bald.",
+    subscribeError: "Bitte gib eine gültige E-Mail-Adresse ein und versuche es erneut.",
+    subscribeAlready: "Du bist bereits angemeldet. Wir senden dir weiterhin deine täglichen Botschaften.",
+    subscribeNote: "Derzeit kostenlos. Du kannst dich jederzeit abmelden."
+  },
+
+  fr: {
+    chooseLanguage: "Choisissez votre langue",
+    title: "Un Message de l’Univers",
+    subtitle: "Votre message vous attend...",
+    reveal: "Révéler mon message",
+    loading: "L’Univers prépare votre message...",
+    month: "Votre message",
+    again: "Recevoir un autre message",
+    share: "Partager mon message",
+    shareTitle: "Partagez votre message Universe139",
+    close: "Fermer",
+    copyMessage: "Copier le message",
+    copyLink: "Copier le lien",
+    more: "Plus...",
+    copied: "Copié !",
+    copiedShare: "Message et lien copiés ! Collez-les dans l’application pour partager.",
+    noMessage: "Révélez d’abord votre message.",
+    inAppBrowserNotice: `Vous êtes dans le navigateur intégré d’une application — touchez ⋯ ou ⋮ puis choisissez "Ouvrir dans le navigateur" pour accéder à toutes les options de partage.`,
+    shareInstructions: "Choisissez où vous souhaitez partager votre message.",
+    shareLink: "👆 Universe139 — Appuyez ici pour voir votre message du jour",
+    subscribeTitle: "✨ Recevez un message chaque jour",
+    subscribeText: "Recevez chaque jour un nouveau message de l’Univers.",
+    subscribeButton: "S’abonner",
+    subscribeFormTitle: "✉️ Recevez votre message quotidien",
+    subscribeFormText: "Entrez votre e-mail et recevez chaque jour un nouveau message de l’Univers.",
+    subscribeEmailPlaceholder: "Votre adresse e-mail",
+    subscribeSubmit: "Commencer les messages quotidiens",
+    subscribeClose: "Fermer",
+    subscribeSuccess: "✨ Vous êtes abonné ! Vos messages quotidiens commenceront bientôt.",
+    subscribeError: "Veuillez saisir une adresse e-mail valide et réessayer.",
+    subscribeAlready: "Vous êtes déjà abonné. Nous continuerons à vous envoyer vos messages quotidiens.",
+    subscribeNote: "Gratuit pour le moment. Vous pouvez vous désabonner à tout moment."
+  },
+
+  it: {
+    chooseLanguage: "Scegli la tua lingua",
+    title: "Un Messaggio dall’Universo",
+    subtitle: "Il tuo messaggio ti sta aspettando...",
+    reveal: "Rivela il mio messaggio",
+    loading: "L’Universo sta preparando il tuo messaggio...",
+    month: "Il tuo messaggio",
+    again: "Ricevi un altro messaggio",
+    share: "Condividi il mio messaggio",
+    shareTitle: "Condividi il tuo messaggio Universe139",
+    close: "Chiudi",
+    copyMessage: "Copia messaggio",
+    copyLink: "Copia link",
+    more: "Altro...",
+    copied: "Copiato!",
+    copiedShare: "Messaggio e link copiati! Incollali nell’app per condividere.",
+    noMessage: "Prima rivela il tuo messaggio.",
+    inAppBrowserNotice: `Sei nel browser integrato di un’app — tocca ⋯ o ⋮ e scegli "Apri nel browser" per utilizzare tutte le opzioni di condivisione.`,
+    shareInstructions: "Scegli dove vuoi condividere il tuo messaggio.",
+    shareLink: "👆 Universe139 — Premi qui per vedere il tuo messaggio di oggi",
+    subscribeTitle: "✨ Ricevi un messaggio ogni giorno",
+    subscribeText: "Ricevi ogni giorno un nuovo messaggio dall’Universo.",
+    subscribeButton: "Iscriviti",
+    subscribeFormTitle: "✉️ Ricevi il tuo messaggio quotidiano",
+    subscribeFormText: "Inserisci la tua e-mail e ricevi ogni giorno un nuovo messaggio dall’Universo.",
+    subscribeEmailPlaceholder: "Il tuo indirizzo e-mail",
+    subscribeSubmit: "Inizia a ricevere i messaggi quotidiani",
+    subscribeClose: "Chiudi",
+    subscribeSuccess: "✨ Ti sei iscritto! I tuoi messaggi quotidiani inizieranno presto.",
+    subscribeError: "Inserisci un indirizzo e-mail valido e riprova.",
+    subscribeAlready: "Sei già iscritto. Continueremo a inviarti i tuoi messaggi quotidiani.",
+    subscribeNote: "Gratis per ora. Puoi annullare l’iscrizione in qualsiasi momento."
+  },
+
   th: {
     chooseLanguage: "เลือกภาษาของคุณ",
     title: "ข้อความจากจักรวาล",
@@ -6859,7 +6961,10 @@ if (
 // 4. Russian = 500 messages
 // 5. Hindi = 500 messages
 // 6. Thai = 500 messages
-// 7. A language never borrows a message from another language.
+// 7. German = 500 messages
+// 8. French = 500 messages
+// 9. Italian = 500 messages
+// 10. A language never borrows a message from another language.
 // 8. The first message is random.
 // 9. Every "Receive Another Message" is random among the
 //    remaining messages in the current language.
@@ -6870,7 +6975,7 @@ if (
 (function installUniverse139MessageSystem() {
 
   const STORAGE_KEY = "universe139_message_cycles_v4";
-  const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th"];
+  const LANGUAGES = ["en", "es", "zh", "ru", "hi", "th", "de", "fr", "it"];
 
   // --------------------------------------------------------
   // Source material already used by the app:
@@ -7189,6 +7294,162 @@ if (
         "เดินหน้าต่อไปหาสิ่งที่มีความหมายสำหรับคุณ",
         "เรื่องราวของคุณยังคงดำเนินต่อไป",
         "ปล่อยให้ช่วงเวลาถัดไปนำคำตอบของมันมาเอง"
+      ]
+    },
+
+    de: {
+      openers: [
+        "Vertraue dem Gefühl, das immer wieder in dein Herz zurückkehrt.",
+        "Eine stille Veränderung beginnt, sich durch dein Leben zu bewegen.",
+        "Du bist einem neuen Anfang näher, als du denkst.",
+        "Deine Geduld schafft Raum für etwas Bedeutungsvolles.",
+        "Der Weg vor dir wird Schritt für Schritt klarer.",
+        "Deine Intuition bemerkt etwas, das dein Verstand noch nicht benannt hat.",
+        "Ein Kapitel, das einst unsicher wirkte, beginnt einen Sinn zu ergeben.",
+        "Um dich herum gibt es mehr Möglichkeiten, als du im Moment sehen kannst.",
+        "Deine Energie bewegt sich auf etwas Friedlicheres zu.",
+        "Eine kleine Entscheidung heute kann eine überraschend wichtige Tür öffnen.",
+        "Du hast bereits genug gelernt, um den nächsten Schritt zu gehen.",
+        "Etwas, worauf du gewartet hast, kommt näher.",
+        "Der Druck, den du getragen hast, muss dich nicht in die Zukunft begleiten.",
+        "Dein Herz weiß, wann sich etwas für dich richtig anfühlt.",
+        "Ein unerwarteter Moment kann dir eine wertvolle Richtung zeigen.",
+        "Du darfst neu beginnen, ohne dich erklären zu müssen.",
+        "Deine jüngsten Anstrengungen bringen im Verborgenen Ergebnisse hervor.",
+        "Eine friedliche Antwort kann kommen, wenn du aufhörst, die Frage zu erzwingen.",
+        "Die Zukunft bittet dich, Platz für etwas Neues zu schaffen.",
+        "Dein Mut wächst still mit jeder Erfahrung.",
+        "Was heute klein erscheint, kann später wichtig werden.",
+        "Du musst nicht den ganzen Weg kennen, bevor du weitergehst.",
+        "Eine neue Perspektive kann verändern, wie du alles um dich herum siehst.",
+        "Dein Leben kann dich weiterhin auf schöne Weise überraschen.",
+        "Der nächste Schritt muss nicht perfekt sein, um bedeutsam zu sein."
+      ],
+      closers: [
+        "Erlaube dir, in deinem eigenen Tempo voranzugehen.",
+        "Bleibe offen für die Gelegenheit, die ganz natürlich kommt.",
+        "Höre aufmerksam auf das, was dir Frieden bringt.",
+        "Lass den heutigen Tag leichter sein als den gestrigen.",
+        "Wähle die Richtung, die sich für dich ehrlich anfühlt.",
+        "Übersehe nicht die kleinen Zeichen, die dich ermutigen.",
+        "Schaffe Raum für Freude, ohne zuerst einen Grund dafür zu brauchen.",
+        "Vertraue darauf, dass Fortschritt auch leise geschehen kann.",
+        "Lass das Bedürfnis los, jedes Detail kontrollieren zu müssen.",
+        "Tu einen kleinen Schritt und lass ihn zum nächsten führen.",
+        "Denke daran, dass Ruhe ebenfalls Teil des Fortschritts sein kann.",
+        "Erlaube dir zu sehen, wie weit du bereits gekommen bist.",
+        "Sei geduldig mit dem richtigen Zeitpunkt deines Lebens.",
+        "Bewahre die Energie, die du für das Wichtigste brauchst.",
+        "Lass Unsicherheit da sein, ohne dass sie dich aufhält.",
+        "Richte deine Aufmerksamkeit auf das, was du jetzt aufbauen kannst.",
+        "Etwas Besseres kann mit einer einfachen Entscheidung beginnen.",
+        "Gehe weiter auf das zu, was für dich bedeutungsvoll ist.",
+        "Deine Geschichte entfaltet sich noch.",
+        "Lass der nächste Moment seine eigene Antwort bringen."
+      ]
+    },
+
+    fr: {
+      openers: [
+        "Faites confiance à ce sentiment qui revient sans cesse dans votre cœur.",
+        "Un changement paisible commence à traverser votre vie.",
+        "Vous êtes plus proche d’un nouveau départ que vous ne le pensez.",
+        "Votre patience crée de la place pour quelque chose de précieux.",
+        "Le chemin devant vous devient plus clair, un pas après l’autre.",
+        "Votre intuition remarque quelque chose que votre esprit n’a pas encore nommé.",
+        "Un chapitre autrefois incertain commence à prendre sens.",
+        "Il y a autour de vous plus de possibilités que vous ne pouvez en voir aujourd’hui.",
+        "Votre énergie se dirige vers quelque chose de plus paisible.",
+        "Une petite décision aujourd’hui peut ouvrir une porte étonnamment importante.",
+        "Vous avez déjà appris suffisamment pour faire le prochain pas.",
+        "Quelque chose que vous attendez se rapproche.",
+        "La pression que vous avez portée n’a pas besoin de vous suivre dans l’avenir.",
+        "Votre cœur sait quand quelque chose est juste pour vous.",
+        "Un moment inattendu peut révéler une direction précieuse.",
+        "Vous avez le droit de recommencer sans vous justifier.",
+        "Vos efforts récents créent des résultats en profondeur.",
+        "Une réponse apaisée peut arriver lorsque vous cessez de forcer la question.",
+        "L’avenir vous demande de faire de la place à quelque chose de nouveau.",
+        "Votre courage grandit doucement à travers chaque expérience.",
+        "Ce qui semble petit aujourd’hui peut devenir important plus tard.",
+        "Vous n’avez pas besoin de connaître toute la route pour avancer.",
+        "Une nouvelle perspective peut changer votre manière de voir tout ce qui vous entoure.",
+        "Votre vie peut encore vous surprendre de belles façons.",
+        "Le prochain pas n’a pas besoin d’être parfait pour avoir du sens."
+      ],
+      closers: [
+        "Donnez-vous la permission d’avancer à votre propre rythme.",
+        "Restez ouvert à l’occasion qui arrive naturellement.",
+        "Écoutez attentivement ce qui vous apporte de la paix.",
+        "Laissez aujourd’hui être plus léger qu’hier.",
+        "Choisissez la direction qui vous semble honnête.",
+        "Ne négligez pas les petits signes qui vous encouragent.",
+        "Faites de la place à la joie sans avoir besoin d’une raison.",
+        "Ayez confiance : le progrès peut aussi se faire discrètement.",
+        "Relâchez le besoin de contrôler chaque détail.",
+        "Faites une petite action et laissez-la vous guider vers la suivante.",
+        "Souvenez-vous que le repos peut aussi faire partie du progrès.",
+        "Permettez-vous de voir le chemin déjà parcouru.",
+        "Soyez patient avec le rythme de votre propre vie.",
+        "Protégez l’énergie dont vous avez besoin pour ce qui compte le plus.",
+        "Laissez l’incertitude exister sans lui permettre de vous arrêter.",
+        "Donnez votre attention à ce que vous pouvez construire maintenant.",
+        "Quelque chose de meilleur peut commencer par un choix simple.",
+        "Continuez vers ce qui a du sens pour vous.",
+        "Votre histoire est toujours en train de s’écrire.",
+        "Laissez au prochain instant le soin d’apporter sa propre réponse."
+      ]
+    },
+
+    it: {
+      openers: [
+        "Fidati di quella sensazione che continua a tornare nel tuo cuore.",
+        "Un cambiamento silenzioso sta iniziando a muoversi nella tua vita.",
+        "Sei più vicino a un nuovo inizio di quanto immagini.",
+        "La tua pazienza sta creando spazio per qualcosa di importante.",
+        "La strada davanti a te diventa più chiara, un passo alla volta.",
+        "La tua intuizione nota qualcosa che la tua mente non ha ancora nominato.",
+        "Un capitolo che sembrava incerto sta iniziando ad avere senso.",
+        "Intorno a te ci sono più possibilità di quante tu riesca a vedere ora.",
+        "La tua energia si sta spostando verso qualcosa di più sereno.",
+        "Una piccola decisione oggi può aprire una porta sorprendentemente importante.",
+        "Hai già imparato abbastanza per fare il prossimo passo.",
+        "Qualcosa che stavi aspettando si sta avvicinando.",
+        "La pressione che hai portato con te non deve seguirti nel futuro.",
+        "Il tuo cuore sa quando qualcosa è giusto per te.",
+        "Un momento inaspettato può rivelare una direzione preziosa.",
+        "Puoi ricominciare senza doverti spiegare.",
+        "I tuoi sforzi recenti stanno creando risultati sotto la superficie.",
+        "Una risposta serena può arrivare quando smetti di forzare la domanda.",
+        "Il futuro ti chiede di fare spazio a qualcosa di nuovo.",
+        "Il tuo coraggio cresce silenziosamente attraverso ogni esperienza.",
+        "Ciò che oggi sembra piccolo potrebbe diventare importante più avanti.",
+        "Non devi conoscere tutta la strada prima di andare avanti.",
+        "Una nuova prospettiva può cambiare il modo in cui vedi tutto ciò che ti circonda.",
+        "La tua vita può ancora sorprenderti in modi bellissimi.",
+        "Il prossimo passo non deve essere perfetto per avere significato."
+      ],
+      closers: [
+        "Permettiti di procedere al tuo ritmo.",
+        "Resta aperto all’opportunità che arriva naturalmente.",
+        "Ascolta con attenzione ciò che ti porta pace.",
+        "Lascia che oggi sia più leggero di ieri.",
+        "Scegli la direzione che senti autentica per te.",
+        "Non ignorare i piccoli segnali che ti incoraggiano.",
+        "Fai spazio alla gioia senza aver bisogno prima di un motivo.",
+        "Abbi fiducia: il progresso può avvenire anche in silenzio.",
+        "Lascia andare il bisogno di controllare ogni dettaglio.",
+        "Fai una piccola azione e lascia che ti conduca alla successiva.",
+        "Ricorda che anche il riposo può essere parte del progresso.",
+        "Permettiti di notare quanta strada hai già percorso.",
+        "Sii paziente con i tempi della tua vita.",
+        "Proteggi l’energia che ti serve per ciò che conta di più.",
+        "Lascia che l’incertezza esista senza permetterle di fermarti.",
+        "Dai la tua attenzione a ciò che puoi costruire ora.",
+        "Qualcosa di migliore può iniziare con una scelta semplice.",
+        "Continua verso ciò che per te ha significato.",
+        "La tua storia si sta ancora svolgendo.",
+        "Lascia che il prossimo momento porti la sua risposta."
       ]
     }
   };
