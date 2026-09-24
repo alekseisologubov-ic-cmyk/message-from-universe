@@ -8747,108 +8747,6 @@ if (
 
 
       /* =====================================================
-         EXTRA ORBIT RINGS
-         ===================================================== */
-
-      .universe139BallOrbit {
-
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        width: 120%;
-
-        height: 120%;
-
-        border-radius: 50%;
-
-        pointer-events: none;
-
-        border:
-          1px solid
-          rgba(210,174,255,.15);
-
-        transform:
-          translate(-50%, -50%)
-          rotateX(68deg)
-          rotateZ(0deg);
-
-        box-shadow:
-          0 0 18px
-          rgba(161,105,255,.10);
-
-        animation:
-          universe139OrbitRotate
-          13s
-          linear
-          infinite;
-
-      }
-
-
-      .universe139BallOrbit.two {
-
-        width: 108%;
-
-        height: 108%;
-
-        transform:
-          translate(-50%, -50%)
-          rotateX(72deg)
-          rotateZ(38deg);
-
-        animation-duration:
-          17s;
-
-        animation-direction:
-          reverse;
-
-      }
-
-
-      .universe139BallOrbit.three {
-
-        width: 132%;
-
-        height: 132%;
-
-        transform:
-          translate(-50%, -50%)
-          rotateY(66deg)
-          rotateZ(-24deg);
-
-        animation-duration:
-          21s;
-
-      }
-
-
-      @keyframes universe139OrbitRotate {
-
-        from {
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(0deg);
-
-        }
-
-        to {
-
-          transform:
-            translate(-50%, -50%)
-            rotateX(68deg)
-            rotateZ(360deg);
-
-        }
-
-      }
-
-
-      /* =====================================================
          REVEAL BUTTON
          ===================================================== */
 
@@ -9112,7 +9010,6 @@ if (
         #title,
         #revealBtn::before,
         .universe139HeroParticle,
-        .universe139BallOrbit,
         #crystalBallWrap::before {
 
           animation:
@@ -9140,27 +9037,6 @@ if (
         #crystalBallWrap::before {
 
           width: 126%;
-
-        }
-
-        .universe139BallOrbit {
-
-          width: 116%;
-          height: 116%;
-
-        }
-
-        .universe139BallOrbit.two {
-
-          width: 106%;
-          height: 106%;
-
-        }
-
-        .universe139BallOrbit.three {
-
-          width: 128%;
-          height: 128%;
 
         }
 
@@ -9249,62 +9125,6 @@ if (
 
     document.body.appendChild(
       field
-    );
-
-  }
-
-
-  // ========================================================
-  // ADD BALL ORBITS
-  // ========================================================
-
-  function addBallOrbits() {
-
-    const ball =
-      document.getElementById(
-        "crystalBallWrap"
-      );
-
-    if (!ball) {
-      return;
-    }
-
-    if (
-      ball.querySelector(
-        ".universe139BallOrbit"
-      )
-    ) {
-      return;
-    }
-
-    const orbit1 =
-      document.createElement("div");
-
-    orbit1.className =
-      "universe139BallOrbit";
-
-    const orbit2 =
-      document.createElement("div");
-
-    orbit2.className =
-      "universe139BallOrbit two";
-
-    const orbit3 =
-      document.createElement("div");
-
-    orbit3.className =
-      "universe139BallOrbit three";
-
-    ball.appendChild(
-      orbit1
-    );
-
-    ball.appendChild(
-      orbit2
-    );
-
-    ball.appendChild(
-      orbit3
     );
 
   }
@@ -9544,7 +9364,6 @@ if (
 
     createParticleField();
 
-    addBallOrbits();
 
     attachRevealHook();
 
@@ -9581,22 +9400,22 @@ if (
   }
 
 })();
+
 // ==========================================================
-// UNIVERSE139 - FLOATING CORNER CONTROLS
+// UNIVERSE139 - COMPACT CORNER CONTROLS
 //
 // Receive Another Message -> bottom left
 // Get a Message Every Day -> bottom right
-//
 // Share My Message remains under the message.
 // ==========================================================
 
-(function installUniverse139FloatingControls() {
+(function installUniverse139CompactCornerControls() {
 
-  function addFloatingStyles() {
+  function addStyles() {
 
     if (
       document.getElementById(
-        "universe139FloatingControlsCSS"
+        "universe139CompactCornerCSS"
       )
     ) {
       return;
@@ -9606,7 +9425,7 @@ if (
       document.createElement("style");
 
     style.id =
-      "universe139FloatingControlsCSS";
+      "universe139CompactCornerCSS";
 
     style.textContent = `
 
@@ -9618,30 +9437,36 @@ if (
 
         position: fixed !important;
 
-        left: 22px !important;
-        bottom: 22px !important;
+        left: 18px !important;
+        bottom: 18px !important;
 
-        z-index: 1200 !important;
+        width: 185px !important;
+        min-width: 0 !important;
+        max-width: 185px !important;
 
-        width: auto !important;
-        min-width: 190px !important;
-
-        max-width: 250px !important;
+        height: auto !important;
+        min-height: 42px !important;
+        max-height: 56px !important;
 
         margin: 0 !important;
+        padding: 10px 14px !important;
 
-        padding: 13px 20px !important;
+        box-sizing: border-box !important;
 
         border-radius: 999px !important;
 
-        font-size: 12px !important;
+        font-family: inherit !important;
+        font-size: 11px !important;
+        line-height: 1.2 !important;
 
-        line-height: 1.25 !important;
+        white-space: normal !important;
+
+        z-index: 5000 !important;
 
         box-shadow:
-          0 10px 35px
-          rgba(0,0,0,.25),
-          0 0 20px
+          0 8px 28px
+          rgba(0,0,0,.28),
+          0 0 18px
           rgba(150,90,255,.18) !important;
 
       }
@@ -9655,49 +9480,51 @@ if (
 
         position: fixed !important;
 
-        right: 22px !important;
-        bottom: 22px !important;
+        right: 18px !important;
+        bottom: 18px !important;
 
-        z-index: 1200 !important;
+        left: auto !important;
+        top: auto !important;
 
-        width: 250px !important;
+        width: 205px !important;
+        min-width: 0 !important;
+        max-width: 205px !important;
 
-        max-width: calc(
-          100vw - 44px
-        ) !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
 
         margin: 0 !important;
-
-        padding: 13px 15px !important;
-
-        border-radius: 18px !important;
+        padding: 11px 13px !important;
 
         box-sizing: border-box !important;
 
-        text-align: center !important;
+        border-radius: 17px !important;
 
         background:
-          linear-gradient(
-            145deg,
-            rgba(37,18,67,.94),
-            rgba(17,8,35,.94)
-          ) !important;
+          rgba(24, 10, 45, .94) !important;
 
         border:
           1px solid
-          rgba(255,255,255,.17) !important;
+          rgba(255,255,255,.16) !important;
 
         box-shadow:
-          0 12px 40px
+          0 8px 30px
           rgba(0,0,0,.30),
-          0 0 22px
+          0 0 20px
           rgba(142,80,255,.16) !important;
 
         backdrop-filter:
-          blur(16px) !important;
+          blur(14px) !important;
 
         -webkit-backdrop-filter:
-          blur(16px) !important;
+          blur(14px) !important;
+
+        text-align: center !important;
+
+        z-index: 5000 !important;
+
+        overflow: visible !important;
 
       }
 
@@ -9705,9 +9532,13 @@ if (
       #universe139SubscribeBox
       .universe139SubscribeTitle {
 
-        font-size: 15px !important;
+        margin: 0 !important;
+        padding: 0 !important;
 
-        line-height: 1.25 !important;
+        font-size: 14px !important;
+        line-height: 1.2 !important;
+
+        font-weight: 600 !important;
 
       }
 
@@ -9715,11 +9546,14 @@ if (
       #universe139SubscribeBox
       .universe139SubscribeText {
 
-        margin-top: 5px !important;
+        margin: 4px 0 0 !important;
+        padding: 0 !important;
 
-        font-size: 11px !important;
+        font-size: 10px !important;
+        line-height: 1.3 !important;
 
-        line-height: 1.4 !important;
+        color:
+          rgba(255,255,255,.66) !important;
 
       }
 
@@ -9727,36 +9561,34 @@ if (
       #universe139SubscribeBox
       .universe139SubscribeButton {
 
-        margin-top: 9px !important;
+        display: inline-flex !important;
 
-        min-height: 36px !important;
+        align-items: center !important;
+        justify-content: center !important;
 
-        padding: 7px 18px !important;
+        margin: 8px 0 0 !important;
 
-        font-size: 12px !important;
+        min-height: 32px !important;
+        height: 32px !important;
 
-      }
+        padding: 5px 15px !important;
 
+        font-size: 10px !important;
+        line-height: 1 !important;
 
-      /* =====================================================
-         HIDDEN STATE
-         ===================================================== */
-
-      #againBtn.hidden {
-
-        display: none !important;
+        border-radius: 999px !important;
 
       }
 
 
-      #universe139SubscribeBox
-      .universe139SubscribeHidden {
+      #universe139SubscribeBox * {
 
-        display: none !important;
+        max-height: none !important;
 
       }
 
 
+      #againBtn.hidden,
       #universe139SubscribeBox.universe139SubscribeHidden {
 
         display: none !important;
@@ -9765,79 +9597,35 @@ if (
 
 
       /* =====================================================
-         TABLETS
+         TABLET
          ===================================================== */
 
       @media (max-width: 900px) {
 
         #againBtn {
 
-          left: 14px !important;
-          bottom: 16px !important;
-
-          min-width: 170px !important;
-
-          font-size: 11px !important;
-
-          padding:
-            12px 16px !important;
-
-        }
-
-
-        #universe139SubscribeBox {
-
-          right: 14px !important;
-          bottom: 16px !important;
-
-          width: 220px !important;
-
-          padding:
-            12px 13px !important;
-
-        }
-
-      }
-
-
-      /* =====================================================
-         MOBILE
-         ===================================================== */
-
-      @media (max-width: 600px) {
-
-        #againBtn {
-
-          left: 10px !important;
+          left: 12px !important;
           bottom: 12px !important;
 
-          min-width: 145px !important;
+          width: 165px !important;
+          max-width: 165px !important;
 
-          max-width: 46vw !important;
-
-          padding:
-            10px 12px !important;
+          min-height: 40px !important;
 
           font-size: 10px !important;
 
-          white-space: normal !important;
-
         }
 
 
         #universe139SubscribeBox {
 
-          right: 10px !important;
+          right: 12px !important;
           bottom: 12px !important;
 
           width: 180px !important;
+          max-width: 180px !important;
 
-          max-width: 48vw !important;
-
-          padding:
-            10px 10px !important;
-
-          border-radius: 15px !important;
+          padding: 9px 10px !important;
 
         }
 
@@ -9855,7 +9643,81 @@ if (
 
           font-size: 9px !important;
 
-          line-height: 1.35 !important;
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeButton {
+
+          min-height: 29px !important;
+          height: 29px !important;
+
+          font-size: 9px !important;
+
+        }
+
+      }
+
+
+      /* =====================================================
+         MOBILE
+         ===================================================== */
+
+      @media (max-width: 600px) {
+
+        #againBtn {
+
+          left: 9px !important;
+          bottom: 10px !important;
+
+          width: 145px !important;
+          max-width: 145px !important;
+
+          min-height: 38px !important;
+          max-height: 48px !important;
+
+          padding:
+            8px 10px !important;
+
+          font-size: 9px !important;
+
+          letter-spacing: .2px !important;
+
+        }
+
+
+        #universe139SubscribeBox {
+
+          right: 9px !important;
+          bottom: 10px !important;
+
+          width: 155px !important;
+          max-width: 155px !important;
+
+          padding:
+            8px 9px !important;
+
+          border-radius: 14px !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeTitle {
+
+          font-size: 10px !important;
+          line-height: 1.15 !important;
+
+        }
+
+
+        #universe139SubscribeBox
+        .universe139SubscribeText {
+
+          font-size: 8px !important;
+          line-height: 1.25 !important;
+
+          margin-top: 3px !important;
 
         }
 
@@ -9863,12 +9725,15 @@ if (
         #universe139SubscribeBox
         .universe139SubscribeButton {
 
-          min-height: 31px !important;
+          margin-top: 6px !important;
+
+          min-height: 27px !important;
+          height: 27px !important;
 
           padding:
-            5px 13px !important;
+            4px 11px !important;
 
-          font-size: 10px !important;
+          font-size: 9px !important;
 
         }
 
@@ -9884,16 +9749,15 @@ if (
         #againBtn {
 
           left: 7px !important;
-          bottom: 9px !important;
+          bottom: 8px !important;
 
-          min-width: 125px !important;
+          width: 125px !important;
+          max-width: 125px !important;
 
-          max-width: 43vw !important;
-
-          font-size: 9px !important;
+          font-size: 8px !important;
 
           padding:
-            9px 10px !important;
+            7px 8px !important;
 
         }
 
@@ -9901,14 +9765,13 @@ if (
         #universe139SubscribeBox {
 
           right: 7px !important;
-          bottom: 9px !important;
+          bottom: 8px !important;
 
-          width: 155px !important;
-
-          max-width: 45vw !important;
+          width: 140px !important;
+          max-width: 140px !important;
 
           padding:
-            8px 8px !important;
+            7px 7px !important;
 
         }
 
@@ -9916,7 +9779,7 @@ if (
         #universe139SubscribeBox
         .universe139SubscribeTitle {
 
-          font-size: 10px !important;
+          font-size: 9px !important;
 
         }
 
@@ -9924,7 +9787,7 @@ if (
         #universe139SubscribeBox
         .universe139SubscribeText {
 
-          font-size: 8px !important;
+          font-size: 7px !important;
 
         }
 
@@ -9932,10 +9795,13 @@ if (
         #universe139SubscribeBox
         .universe139SubscribeButton {
 
-          font-size: 9px !important;
+          min-height: 25px !important;
+          height: 25px !important;
+
+          font-size: 8px !important;
 
           padding:
-            5px 10px !important;
+            4px 9px !important;
 
         }
 
@@ -9948,61 +9814,38 @@ if (
   }
 
 
-  // ========================================================
-  // MOVE "ANOTHER MESSAGE" OUTSIDE MESSAGE CARD
-  // ========================================================
+  function moveControlsToBody() {
 
-  function moveAgainButton() {
-
-    const button =
+    const again =
       document.getElementById(
         "againBtn"
       );
 
-    if (!button) {
-      return;
-    }
-
-    if (
-      button.parentElement !==
-      document.body
-    ) {
-
-      document.body.appendChild(
-        button
-      );
-
-    }
-
-    button.classList.add(
-      "universe139FloatingAgain"
-    );
-
-  }
-
-
-  // ========================================================
-  // MOVE SUBSCRIPTION CARD OUTSIDE MESSAGE CARD
-  // ========================================================
-
-  function moveSubscribeBox() {
-
-    const box =
+    const subscribe =
       document.getElementById(
         "universe139SubscribeBox"
       );
 
-    if (!box) {
-      return;
-    }
-
     if (
-      box.parentElement !==
+      again &&
+      again.parentElement !==
       document.body
     ) {
 
       document.body.appendChild(
-        box
+        again
+      );
+
+    }
+
+    if (
+      subscribe &&
+      subscribe.parentElement !==
+      document.body
+    ) {
+
+      document.body.appendChild(
+        subscribe
       );
 
     }
@@ -10010,18 +9853,16 @@ if (
   }
 
 
-  // ========================================================
-  // WATCH FOR SUBSCRIPTION BOX CREATION
-  // ========================================================
+  function initialize() {
 
-  function watchSubscriptionBox() {
+    addStyles();
+
+    moveControlsToBody();
 
     const observer =
       new MutationObserver(
         () => {
-
-          moveSubscribeBox();
-
+          moveControlsToBody();
         }
       );
 
@@ -10032,23 +9873,6 @@ if (
         subtree: true
       }
     );
-
-  }
-
-
-  // ========================================================
-  // START
-  // ========================================================
-
-  function initialize() {
-
-    addFloatingStyles();
-
-    moveAgainButton();
-
-    moveSubscribeBox();
-
-    watchSubscriptionBox();
 
   }
 
@@ -10073,3 +9897,4 @@ if (
   }
 
 })();
+
