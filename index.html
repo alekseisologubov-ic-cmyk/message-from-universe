@@ -379,6 +379,324 @@
         animation: none !important;
       }
     }
+
+    /* ======================================================
+       UNIVERSE139 - PARCHMENT MESSAGE VIEW
+       Activates only after a message is visible.
+       The language screen, reveal animation, subscriptions,
+       sharing, and all existing application logic stay intact.
+       ====================================================== */
+
+    body.universe139ParchmentMode {
+      background: #020714 !important;
+      overflow: hidden !important;
+    }
+
+    body.universe139ParchmentMode #backgroundVideo,
+    body.universe139ParchmentMode #universe139VideoOverlay,
+    body.universe139ParchmentMode .stars,
+    body.universe139ParchmentMode #universeMessageEffect,
+    body.universe139ParchmentMode #universe139TopControls {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    body.universe139ParchmentMode .container {
+      position: fixed !important;
+      left: 50% !important;
+      top: 50% !important;
+      width: min(100vw, 55.8139535vh) !important;
+      height: min(100vh, 179.1666667vw) !important;
+      width: min(100vw, 55.8139535dvh) !important;
+      height: min(100dvh, 179.1666667vw) !important;
+      min-height: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      transform: translate(-50%, -50%) !important;
+      overflow: hidden !important;
+      isolation: isolate !important;
+      z-index: 30 !important;
+      background:
+        #06112c
+        url("universe-message-template.jpg")
+        center center / 100% 100%
+        no-repeat !important;
+    }
+
+    body.universe139ParchmentMode #languageBox,
+    body.universe139ParchmentMode #revealBtn,
+    body.universe139ParchmentMode #loading,
+    body.universe139ParchmentMode #crystalBallWrap,
+    body.universe139ParchmentMode #universe139SubscriptionMount,
+    body.universe139ParchmentMode #againBtn,
+    body.universe139ParchmentMode #shareBtn,
+    body.universe139ParchmentMode #universe139SubscribeBox {
+      display: none !important;
+    }
+
+    body.universe139ParchmentMode .container > header {
+      position: absolute !important;
+      left: 18.5% !important;
+      top: 25.25% !important;
+      width: 63% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      text-align: center !important;
+      z-index: 6 !important;
+    }
+
+    body.universe139ParchmentMode .container > header .moon {
+      display: none !important;
+    }
+
+    body.universe139ParchmentMode #title {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #2c1915 !important;
+      font-family: "Cinzel", Georgia, serif !important;
+      font-size: clamp(13px, 2.05vh, 23px) !important;
+      font-weight: 700 !important;
+      line-height: 1.12 !important;
+      letter-spacing: 0.015em !important;
+      text-align: center !important;
+      text-shadow: none !important;
+      white-space: nowrap !important;
+    }
+
+    body.universe139ParchmentMode #title[data-parchment-title="long"] {
+      font-size: clamp(11px, 1.72vh, 19px) !important;
+      letter-spacing: 0 !important;
+    }
+
+    body.universe139ParchmentMode #subtitle {
+      width: 100% !important;
+      margin: 0.55vh 0 0 !important;
+      padding: 0 !important;
+      color: #644233 !important;
+      font-family: Georgia, "Times New Roman", serif !important;
+      font-size: clamp(9px, 1.24vh, 14px) !important;
+      font-weight: 400 !important;
+      line-height: 1.2 !important;
+      letter-spacing: 0 !important;
+      text-align: center !important;
+      text-shadow: none !important;
+    }
+
+    body.universe139ParchmentMode #messageBox {
+      position: absolute !important;
+      left: 19.4% !important;
+      top: 30.8% !important;
+      width: 61.2% !important;
+      height: 29.1% !important;
+      max-width: none !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      overflow: hidden !important;
+      background: transparent !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      transform: none !important;
+      text-align: center !important;
+      z-index: 7 !important;
+    }
+
+    body.universe139ParchmentMode #universe139MessageDate {
+      order: 1 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      margin: 0 0 0.45vh !important;
+      padding: 0 !important;
+      color: #6b4431 !important;
+      font-family: Georgia, "Times New Roman", serif !important;
+      font-size: clamp(8px, 1.08vh, 12px) !important;
+      font-weight: 600 !important;
+      line-height: 1.2 !important;
+      letter-spacing: 0.02em !important;
+      text-align: center !important;
+      opacity: 1 !important;
+      text-shadow: none !important;
+    }
+
+    body.universe139ParchmentMode #month {
+      order: 2 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      margin: 0 0 0.8vh !important;
+      padding: 0 !important;
+      color: #4c2c21 !important;
+      font-family: Georgia, "Times New Roman", serif !important;
+      font-size: clamp(10px, 1.45vh, 16px) !important;
+      font-style: italic !important;
+      font-weight: 500 !important;
+      line-height: 1.2 !important;
+      letter-spacing: 0.01em !important;
+      text-align: center !important;
+      text-shadow: none !important;
+    }
+
+    body.universe139ParchmentMode #message {
+      order: 3 !important;
+      flex: 1 1 auto !important;
+      width: 100% !important;
+      max-width: none !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 1.8% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      overflow: hidden !important;
+      color: #2b1914 !important;
+      font-family: Georgia, "Times New Roman", serif !important;
+      font-size: clamp(13px, 2.02vh, 22px) !important;
+      font-style: normal !important;
+      font-weight: 600 !important;
+      line-height: 1.28 !important;
+      letter-spacing: 0 !important;
+      text-align: center !important;
+      text-shadow: none !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    body.universe139ParchmentMode #message[data-parchment-size="long"] {
+      font-size: clamp(11px, 1.72vh, 19px) !important;
+      line-height: 1.24 !important;
+    }
+
+    body.universe139ParchmentMode #message[data-parchment-size="very-long"] {
+      font-size: clamp(10px, 1.48vh, 16px) !important;
+      line-height: 1.2 !important;
+    }
+
+    body.universe139ParchmentMode #smallText {
+      order: 4 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      margin: 0.75vh 0 0 !important;
+      padding: 0 !important;
+      color: #5a382a !important;
+      font-family: Georgia, "Times New Roman", serif !important;
+      font-size: clamp(8px, 1.08vh, 12px) !important;
+      font-weight: 400 !important;
+      line-height: 1.2 !important;
+      letter-spacing: 0 !important;
+      text-align: center !important;
+      text-shadow: none !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions {
+      position: absolute !important;
+      left: 22.8% !important;
+      top: 78.8% !important;
+      width: 54.4% !important;
+      height: auto !important;
+      margin: 0 !important;
+      padding: 0.45vh 0.5vw !important;
+      box-sizing: border-box !important;
+      gap: 0.55vh !important;
+      z-index: 40 !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions.visible {
+      display: flex !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions.hidden {
+      display: none !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary {
+      width: 100% !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0.55vh !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary button,
+    body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleReceive {
+      width: 100% !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+      border: 1px solid rgba(244, 211, 142, 0.58) !important;
+      color: #fff4d1 !important;
+      font-family: "Montserrat", Arial, sans-serif !important;
+      font-weight: 700 !important;
+      line-height: 1.1 !important;
+      letter-spacing: 0.04em !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,.65) !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,.22) !important;
+      cursor: pointer !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary button {
+      height: clamp(24px, 3.25vh, 34px) !important;
+      padding: 0.25vh 0.35vw !important;
+      border-radius: 999px !important;
+      background: rgba(24, 30, 65, 0.78) !important;
+      font-size: clamp(7px, 0.95vh, 10px) !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleReceive {
+      height: clamp(28px, 3.75vh, 40px) !important;
+      padding: 0.35vh 0.5vw !important;
+      border-radius: 999px !important;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(115, 67, 183, 0.95),
+          rgba(53, 32, 112, 0.96)
+        ) !important;
+      font-size: clamp(8px, 1.05vh, 11px) !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions button:hover {
+      filter: brightness(1.12) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    body.universe139ParchmentMode #universe139SimpleMessageActions button:active {
+      transform: scale(0.98) !important;
+    }
+
+    @media (max-width: 600px) {
+      body.universe139ParchmentMode .container {
+        width: min(100vw, calc(100dvh * 0.558139535)) !important;
+        height: min(100dvh, calc(100vw * 1.791666667)) !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+      }
+
+      body.universe139ParchmentMode #messageBox {
+        width: 61.2% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      body.universe139ParchmentMode #message {
+        max-width: none !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -649,6 +967,139 @@
 
   <!-- Existing application logic -->
   <script src="script.js"></script>
+
+  <!-- Activate the parchment picture only while a revealed message is visible -->
+  <script>
+    (function installUniverse139ParchmentView() {
+      const BODY_CLASS = "universe139ParchmentMode";
+
+      function getMessageElements() {
+        return {
+          box: document.getElementById("messageBox"),
+          message: document.getElementById("message"),
+          title: document.getElementById("title"),
+          video: document.getElementById("backgroundVideo")
+        };
+      }
+
+      function applyTextSizes(messageElement, titleElement) {
+        if (messageElement) {
+          const length = String(messageElement.textContent || "").trim().length;
+
+          messageElement.dataset.parchmentSize =
+            length > 185
+              ? "very-long"
+              : length > 120
+                ? "long"
+                : "normal";
+        }
+
+        if (titleElement) {
+          const titleLength = String(titleElement.textContent || "").trim().length;
+          titleElement.dataset.parchmentTitle =
+            titleLength > 27 ? "long" : "normal";
+        }
+      }
+
+      function isRevealedMessageVisible(box, messageElement) {
+        if (!box || !messageElement) {
+          return false;
+        }
+
+        if (!String(messageElement.textContent || "").trim()) {
+          return false;
+        }
+
+        if (box.classList.contains("hidden")) {
+          return false;
+        }
+
+        const computed = window.getComputedStyle(box);
+
+        return (
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          Number.parseFloat(computed.opacity || "1") > 0.05
+        );
+      }
+
+      function refreshParchmentView() {
+        const { box, message, title, video } = getMessageElements();
+        const isVisible = isRevealedMessageVisible(box, message);
+
+        applyTextSizes(message, title);
+        document.body.classList.toggle(BODY_CLASS, isVisible);
+
+        if (!video) {
+          return;
+        }
+
+        if (isVisible) {
+          try {
+            video.pause();
+          } catch (error) {
+            console.warn("Universe139: background video could not be paused.", error);
+          }
+        } else if (!document.hidden) {
+          try {
+            const playback = video.play();
+            if (playback && typeof playback.catch === "function") {
+              playback.catch(function () {});
+            }
+          } catch (error) {
+            // A browser may require another user gesture before playback resumes.
+          }
+        }
+      }
+
+      function initializeParchmentView() {
+        const { box, message, title } = getMessageElements();
+
+        if (!box || !message) {
+          return;
+        }
+
+        const observer = new MutationObserver(refreshParchmentView);
+
+        observer.observe(box, {
+          attributes: true,
+          attributeFilter: ["class", "style"],
+          childList: true,
+          subtree: true
+        });
+
+        observer.observe(message, {
+          characterData: true,
+          childList: true,
+          subtree: true
+        });
+
+        if (title) {
+          observer.observe(title, {
+            characterData: true,
+            childList: true,
+            subtree: true
+          });
+        }
+
+        window.addEventListener("resize", refreshParchmentView);
+        window.addEventListener("pageshow", refreshParchmentView);
+        document.addEventListener("visibilitychange", refreshParchmentView);
+
+        refreshParchmentView();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          initializeParchmentView,
+          { once: true }
+        );
+      } else {
+        initializeParchmentView();
+      }
+    })();
+  </script>
 
 </body>
 </html>
