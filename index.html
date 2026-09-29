@@ -381,26 +381,27 @@
     }
 
     /* ======================================================
-       UNIVERSE139 - PARCHMENT MESSAGE VIEW
-       Activates only after a message is visible.
-       The language screen, reveal animation, subscriptions,
-       sharing, and all existing application logic stay intact.
+       UNIVERSE139 - SOFT FLOATING PARCHMENT MESSAGE VIEW
+       Shows only the rolled parchment, magical waves,
+       message, and buttons. The full moving video remains
+       visible behind it with no rectangular picture frame.
        ====================================================== */
 
     body.universe139ParchmentMode {
-      background: #020714 !important;
+      background: #05020a !important;
       overflow: hidden !important;
     }
 
-    /* Keep the original moving background visible behind the parchment. */
+    /* Keep the original moving background visible and gently darkened. */
     body.universe139ParchmentMode #backgroundVideo {
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: none !important;
-      filter: brightness(0.68) saturate(0.95) blur(0.5px) !important;
+      filter: brightness(0.72) saturate(0.96) blur(0.35px) !important;
       transform: scale(1.02) !important;
     }
 
+    /* Soft vignette connects the moving background with the parchment. */
     body.universe139ParchmentMode #universe139VideoOverlay {
       opacity: 1 !important;
       visibility: visible !important;
@@ -408,13 +409,19 @@
       background:
         radial-gradient(
           ellipse at center,
-          rgba(5, 8, 28, 0.04) 0%,
-          rgba(3, 6, 20, 0.18) 56%,
-          rgba(1, 3, 12, 0.38) 100%
+          rgba(7, 7, 24, 0.02) 0%,
+          rgba(4, 5, 20, 0.12) 52%,
+          rgba(1, 2, 10, 0.34) 100%
         ) !important;
     }
 
-    body.universe139ParchmentMode .stars,
+    /* Keep a little atmosphere, but remove competing message effects. */
+    body.universe139ParchmentMode .stars {
+      opacity: 0.32 !important;
+      visibility: visible !important;
+      pointer-events: none !important;
+    }
+
     body.universe139ParchmentMode #universeMessageEffect,
     body.universe139ParchmentMode #universe139TopControls {
       opacity: 0 !important;
@@ -422,14 +429,17 @@
       pointer-events: none !important;
     }
 
+    /*
+      The container is now only the transparent parchment artwork.
+      Its original transparent PNG ratio is 652 x 863.
+    */
     body.universe139ParchmentMode .container {
       position: fixed !important;
       left: 50% !important;
-      top: 50% !important;
-      width: min(100vw, 55.8139535vh) !important;
-      height: min(100vh, 179.1666667vw) !important;
-      width: min(100vw, 55.8139535dvh) !important;
-      height: min(100dvh, 179.1666667vw) !important;
+      top: 45% !important;
+      width: min(94vw, 620px, calc(74dvh * 0.7555040556)) !important;
+      height: auto !important;
+      aspect-ratio: 652 / 863 !important;
       min-height: 0 !important;
       max-width: none !important;
       max-height: none !important;
@@ -437,14 +447,27 @@
       padding: 0 !important;
       box-sizing: border-box !important;
       transform: translate(-50%, -50%) !important;
-      overflow: hidden !important;
+      overflow: visible !important;
       isolation: isolate !important;
       z-index: 30 !important;
+      background: transparent !important;
+    }
+
+    /* Transparent artwork: no hard frame, only parchment + magical waves. */
+    body.universe139ParchmentMode .container::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
       background:
-        #06112c
-        url("universe-message-template.jpg")
+        transparent
+        url("universe-message-scroll-soft.png")
         center center / 100% 100%
         no-repeat !important;
+      filter:
+        drop-shadow(0 18px 34px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 22px rgba(115, 74, 225, 0.24)) !important;
     }
 
     body.universe139ParchmentMode #languageBox,
@@ -458,16 +481,17 @@
       display: none !important;
     }
 
+    /* Title and subtitle sit near the top of the open parchment. */
     body.universe139ParchmentMode .container > header {
       position: absolute !important;
-      left: 18.5% !important;
-      top: 25.25% !important;
-      width: 63% !important;
+      left: 17.5% !important;
+      top: 18.8% !important;
+      width: 65% !important;
       max-width: none !important;
       margin: 0 !important;
       padding: 0 !important;
       text-align: center !important;
-      z-index: 6 !important;
+      z-index: 3 !important;
     }
 
     body.universe139ParchmentMode .container > header .moon {
@@ -479,42 +503,43 @@
       max-width: none !important;
       margin: 0 !important;
       padding: 0 !important;
-      color: #2c1915 !important;
+      color: #2b1813 !important;
       font-family: "Cinzel", Georgia, serif !important;
-      font-size: clamp(13px, 2.05vh, 23px) !important;
+      font-size: clamp(14px, 3.5vw, 22px) !important;
       font-weight: 700 !important;
-      line-height: 1.12 !important;
-      letter-spacing: 0.015em !important;
+      line-height: 1.1 !important;
+      letter-spacing: 0.012em !important;
       text-align: center !important;
       text-shadow: none !important;
       white-space: nowrap !important;
     }
 
     body.universe139ParchmentMode #title[data-parchment-title="long"] {
-      font-size: clamp(11px, 1.72vh, 19px) !important;
+      font-size: clamp(11px, 2.8vw, 18px) !important;
       letter-spacing: 0 !important;
     }
 
     body.universe139ParchmentMode #subtitle {
       width: 100% !important;
-      margin: 0.55vh 0 0 !important;
+      margin: 0.45vh 0 0 !important;
       padding: 0 !important;
-      color: #644233 !important;
+      color: #664232 !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(9px, 1.24vh, 14px) !important;
+      font-size: clamp(8px, 1.8vw, 13px) !important;
       font-weight: 400 !important;
-      line-height: 1.2 !important;
+      line-height: 1.18 !important;
       letter-spacing: 0 !important;
       text-align: center !important;
       text-shadow: none !important;
     }
 
+    /* Dynamic date, label, message, and footer remain inside the parchment. */
     body.universe139ParchmentMode #messageBox {
       position: absolute !important;
-      left: 19.4% !important;
-      top: 30.8% !important;
-      width: 61.2% !important;
-      height: 29.1% !important;
+      left: 17.5% !important;
+      top: 25.5% !important;
+      width: 65% !important;
+      height: 43.5% !important;
       max-width: none !important;
       min-height: 0 !important;
       margin: 0 !important;
@@ -533,20 +558,20 @@
       -webkit-backdrop-filter: none !important;
       transform: none !important;
       text-align: center !important;
-      z-index: 7 !important;
+      z-index: 4 !important;
     }
 
     body.universe139ParchmentMode #universe139MessageDate {
       order: 1 !important;
       flex: 0 0 auto !important;
       width: 100% !important;
-      margin: 0 0 0.45vh !important;
+      margin: 0 0 0.35vh !important;
       padding: 0 !important;
-      color: #6b4431 !important;
+      color: #704936 !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(8px, 1.08vh, 12px) !important;
+      font-size: clamp(7px, 1.45vw, 11px) !important;
       font-weight: 600 !important;
-      line-height: 1.2 !important;
+      line-height: 1.18 !important;
       letter-spacing: 0.02em !important;
       text-align: center !important;
       opacity: 1 !important;
@@ -557,14 +582,14 @@
       order: 2 !important;
       flex: 0 0 auto !important;
       width: 100% !important;
-      margin: 0 0 0.8vh !important;
+      margin: 0 0 0.65vh !important;
       padding: 0 !important;
-      color: #4c2c21 !important;
+      color: #4c2b20 !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(10px, 1.45vh, 16px) !important;
+      font-size: clamp(9px, 1.9vw, 14px) !important;
       font-style: italic !important;
       font-weight: 500 !important;
-      line-height: 1.2 !important;
+      line-height: 1.18 !important;
       letter-spacing: 0.01em !important;
       text-align: center !important;
       text-shadow: none !important;
@@ -577,18 +602,18 @@
       max-width: none !important;
       min-height: 0 !important;
       margin: 0 !important;
-      padding: 0 1.8% !important;
+      padding: 0 2.2% !important;
       box-sizing: border-box !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       overflow: hidden !important;
-      color: #2b1914 !important;
+      color: #2a1712 !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(13px, 2.02vh, 22px) !important;
+      font-size: clamp(12px, 3vw, 20px) !important;
       font-style: normal !important;
       font-weight: 600 !important;
-      line-height: 1.28 !important;
+      line-height: 1.25 !important;
       letter-spacing: 0 !important;
       text-align: center !important;
       text-shadow: none !important;
@@ -597,42 +622,44 @@
     }
 
     body.universe139ParchmentMode #message[data-parchment-size="long"] {
-      font-size: clamp(11px, 1.72vh, 19px) !important;
-      line-height: 1.24 !important;
+      font-size: clamp(10.5px, 2.55vw, 17px) !important;
+      line-height: 1.22 !important;
     }
 
     body.universe139ParchmentMode #message[data-parchment-size="very-long"] {
-      font-size: clamp(10px, 1.48vh, 16px) !important;
-      line-height: 1.2 !important;
+      font-size: clamp(9.5px, 2.2vw, 15px) !important;
+      line-height: 1.18 !important;
     }
 
     body.universe139ParchmentMode #smallText {
       order: 4 !important;
       flex: 0 0 auto !important;
       width: 100% !important;
-      margin: 0.75vh 0 0 !important;
+      margin: 0.55vh 0 0 !important;
       padding: 0 !important;
-      color: #5a382a !important;
+      color: #5d3b2c !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(8px, 1.08vh, 12px) !important;
+      font-size: clamp(7px, 1.5vw, 11px) !important;
       font-weight: 400 !important;
-      line-height: 1.2 !important;
+      line-height: 1.18 !important;
       letter-spacing: 0 !important;
       text-align: center !important;
       text-shadow: none !important;
     }
 
+    /* Buttons float below the scroll without a surrounding rectangular panel. */
     body.universe139ParchmentMode #universe139SimpleMessageActions {
       position: absolute !important;
-      left: 22.8% !important;
-      top: 78.8% !important;
-      width: 54.4% !important;
+      left: 15% !important;
+      top: calc(100% + 3px) !important;
+      width: 70% !important;
       height: auto !important;
       margin: 0 !important;
-      padding: 0.45vh 0.5vw !important;
+      padding: 0 !important;
       box-sizing: border-box !important;
-      gap: 0.55vh !important;
-      z-index: 40 !important;
+      gap: 7px !important;
+      z-index: 6 !important;
+      filter: none !important;
     }
 
     body.universe139ParchmentMode #universe139SimpleMessageActions.visible {
@@ -647,7 +674,7 @@
       width: 100% !important;
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
-      gap: 0.55vh !important;
+      gap: 7px !important;
     }
 
     body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary button,
@@ -656,36 +683,39 @@
       min-height: 0 !important;
       margin: 0 !important;
       box-sizing: border-box !important;
-      border: 1px solid rgba(244, 211, 142, 0.58) !important;
-      color: #fff4d1 !important;
+      border: 1px solid rgba(245, 214, 151, 0.62) !important;
+      border-radius: 999px !important;
+      color: #fff4d3 !important;
       font-family: "Montserrat", Arial, sans-serif !important;
       font-weight: 700 !important;
-      line-height: 1.1 !important;
-      letter-spacing: 0.04em !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,.65) !important;
-      box-shadow: 0 4px 14px rgba(0,0,0,.22) !important;
+      line-height: 1.12 !important;
+      letter-spacing: 0.025em !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.68) !important;
+      box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.25),
+        0 0 14px rgba(137, 83, 230, 0.12) !important;
+      backdrop-filter: blur(9px) !important;
+      -webkit-backdrop-filter: blur(9px) !important;
       cursor: pointer !important;
     }
 
     body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary button {
-      height: clamp(24px, 3.25vh, 34px) !important;
-      padding: 0.25vh 0.35vw !important;
-      border-radius: 999px !important;
-      background: rgba(24, 30, 65, 0.78) !important;
-      font-size: clamp(7px, 0.95vh, 10px) !important;
+      min-height: 36px !important;
+      padding: 7px 10px !important;
+      background: rgba(12, 18, 45, 0.66) !important;
+      font-size: clamp(8px, 1.65vw, 10px) !important;
     }
 
     body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleReceive {
-      height: clamp(28px, 3.75vh, 40px) !important;
-      padding: 0.35vh 0.5vw !important;
-      border-radius: 999px !important;
+      min-height: 43px !important;
+      padding: 9px 14px !important;
       background:
         linear-gradient(
           135deg,
-          rgba(115, 67, 183, 0.95),
-          rgba(53, 32, 112, 0.96)
+          rgba(128, 72, 218, 0.94),
+          rgba(56, 33, 123, 0.95)
         ) !important;
-      font-size: clamp(8px, 1.05vh, 11px) !important;
+      font-size: clamp(9px, 1.85vw, 12px) !important;
     }
 
     body.universe139ParchmentMode #universe139SimpleMessageActions button:hover {
@@ -699,14 +729,12 @@
 
     @media (max-width: 600px) {
       body.universe139ParchmentMode .container {
-        width: min(100vw, calc(100dvh * 0.558139535)) !important;
-        height: min(100dvh, calc(100vw * 1.791666667)) !important;
-        min-height: 0 !important;
-        padding: 0 !important;
+        top: 43.5% !important;
+        width: min(94vw, calc(68dvh * 0.7555040556)) !important;
       }
 
       body.universe139ParchmentMode #messageBox {
-        width: 61.2% !important;
+        width: 65% !important;
         max-width: none !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -714,6 +742,47 @@
 
       body.universe139ParchmentMode #message {
         max-width: none !important;
+      }
+
+      body.universe139ParchmentMode #universe139SimpleMessageActions {
+        left: 8% !important;
+        top: calc(100% + 1px) !important;
+        width: 84% !important;
+        gap: 6px !important;
+      }
+
+      body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary {
+        gap: 6px !important;
+      }
+
+      body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleSecondary button {
+        min-height: 34px !important;
+        padding: 6px 7px !important;
+        font-size: 8px !important;
+      }
+
+      body.universe139ParchmentMode #universe139SimpleMessageActions .universe139SimpleReceive {
+        min-height: 40px !important;
+        padding: 8px 10px !important;
+        font-size: 9px !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      body.universe139ParchmentMode .container {
+        width: min(96vw, calc(67dvh * 0.7555040556)) !important;
+      }
+
+      body.universe139ParchmentMode #universe139SimpleMessageActions {
+        left: 6% !important;
+        width: 88% !important;
+      }
+    }
+
+    @media (max-height: 650px) and (min-width: 601px) {
+      body.universe139ParchmentMode .container {
+        top: 43% !important;
+        width: min(78vw, calc(64dvh * 0.7555040556)) !important;
       }
     }
 
