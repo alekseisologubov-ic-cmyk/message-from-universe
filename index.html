@@ -1057,10 +1057,11 @@
   <!-- Existing application logic -->
   <script src="script.js"></script>
 
-  <!-- Activate the parchment picture only while a revealed message is visible -->
+  <!-- Keep the parchment design active for every revealed message -->
   <script>
-    (function installUniverse139ParchmentView() {
+    (function installUniverse139StableParchmentView() {
       const BODY_CLASS = "universe139ParchmentMode";
+      let parchmentSessionStarted = false;
 
       function getMessageElements() {
         return {
@@ -1085,55 +1086,101 @@
 
         if (titleElement) {
           const titleLength = String(titleElement.textContent || "").trim().length;
+
           titleElement.dataset.parchmentTitle =
             titleLength > 27 ? "long" : "normal";
         }
       }
 
-      function isRevealedMessageVisible(box, messageElement) {
-        if (!box || !messageElement) {
-          return false;
-        }
-
-        if (!String(messageElement.textContent || "").trim()) {
-          return false;
-        }
-
-        if (box.classList.contains("hidden")) {
-          return false;
-        }
-
-        const computed = window.getComputedStyle(box);
-
-        return (
-          computed.display !== "none" &&
-          computed.visibility !== "hidden" &&
-          Number.parseFloat(computed.opacity || "1") > 0.05
+      function hasGeneratedMessage(messageElement) {
+        return Boolean(
+          messageElement &&
+          String(messageElement.textContent || "").trim()
         );
       }
 
-      function refreshParchmentView() {
-        const { box, message, title, video } = getMessageElements();
-        const isVisible = isRevealedMessageVisible(box, message);
-
-        applyTextSizes(message, title);
-        document.body.classList.toggle(BODY_CLASS, isVisible);
-
+      function keepBackgroundVideoPlaying(video) {
         if (!video || document.hidden) {
           return;
         }
 
-        /*
-          Keep the original background video moving both before and after
-          the parchment message appears. The parchment stays above it.
-        */
         try {
           const playback = video.play();
+
           if (playback && typeof playback.catch === "function") {
             playback.catch(function () {});
           }
         } catch (error) {
-          // A browser may require another user gesture before playback resumes.
+          // A mobile browser may wait for another user gesture.
+        }
+      }
+
+      function activateParchmentImmediately() {
+        parchmentSessionStarted = true;
+        document.body.classList.add(BODY_CLASS);
+
+        const { message, title, video } = getMessageElements();
+        applyTextSizes(message, title);
+        keepBackgroundVideoPlaying(video);
+      }
+
+      function refreshParchmentView() {
+        const { message, title, video } = getMessageElements();
+
+        applyTextSizes(message, title);
+
+        /*
+          IMPORTANT:
+          Start parchment mode as soon as a real message exists, and never
+          turn it off while another message is loading. The original script
+          temporarily hides #messageBox between messages. Removing the body
+          class during that moment caused the old purple design to reappear.
+        */
+        if (hasGeneratedMessage(message)) {
+          parchmentSessionStarted = true;
+        }
+
+        if (parchmentSessionStarted) {
+          document.body.classList.add(BODY_CLASS);
+        }
+
+        keepBackgroundVideoPlaying(video);
+      }
+
+      function wrapMessageFunctions() {
+        if (
+          typeof window.showMessage === "function" &&
+          !window.showMessage.__universe139StableParchmentWrapped
+        ) {
+          const originalShowMessage = window.showMessage;
+
+          const wrappedShowMessage = function () {
+            /* Add the new design BEFORE the old message box is made visible. */
+            activateParchmentImmediately();
+
+            const result = originalShowMessage.apply(this, arguments);
+            refreshParchmentView();
+            return result;
+          };
+
+          wrappedShowMessage.__universe139StableParchmentWrapped = true;
+          window.showMessage = wrappedShowMessage;
+        }
+
+        if (
+          typeof window.receiveAnotherMessage === "function" &&
+          !window.receiveAnotherMessage.__universe139StableParchmentWrapped
+        ) {
+          const originalReceiveAnotherMessage = window.receiveAnotherMessage;
+
+          const wrappedReceiveAnotherMessage = function () {
+            /* Keep the parchment visible during the complete next-message cycle. */
+            activateParchmentImmediately();
+            return originalReceiveAnotherMessage.apply(this, arguments);
+          };
+
+          wrappedReceiveAnotherMessage.__universe139StableParchmentWrapped = true;
+          window.receiveAnotherMessage = wrappedReceiveAnotherMessage;
         }
       }
 
@@ -1143,6 +1190,8 @@
         if (!box || !message) {
           return;
         }
+
+        wrapMessageFunctions();
 
         const observer = new MutationObserver(refreshParchmentView);
 
@@ -1170,6 +1219,12 @@
         window.addEventListener("resize", refreshParchmentView);
         window.addEventListener("pageshow", refreshParchmentView);
         document.addEventListener("visibilitychange", refreshParchmentView);
+
+        /* One extra mobile-safe refresh after the page finishes settling. */
+        window.setTimeout(function () {
+          wrapMessageFunctions();
+          refreshParchmentView();
+        }, 250);
 
         refreshParchmentView();
       }
