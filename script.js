@@ -5036,17 +5036,13 @@ async function createMessageImageBlob() {
   const canvas =
     document.createElement("canvas");
 
-  const width =
-    1080;
+  // 9:16 portrait format for TikTok, Instagram Stories,
+  // Facebook Stories, WhatsApp and mobile sharing.
+  const width = 1080;
+  const height = 1920;
 
-  const height =
-    1350;
-
-  canvas.width =
-    width;
-
-  canvas.height =
-    height;
+  canvas.width = width;
+  canvas.height = height;
 
   const ctx =
     canvas.getContext("2d");
@@ -5057,375 +5053,864 @@ async function createMessageImageBlob() {
     );
   }
 
+  // Wait for the fonts already loaded by the existing HTML.
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+  } catch (error) {
+    console.warn(
+      "Universe139: fonts were not fully ready for the share image.",
+      error
+    );
+  }
 
-  // ========================================
-  // COSMIC BACKGROUND
-  // ========================================
+  const language =
+    typeof currentLanguage === "string" &&
+    translations[currentLanguage]
+      ? currentLanguage
+      : "en";
 
-  const background =
-    ctx.createLinearGradient(
+  const t =
+    translations[language] ||
+    translations.en;
+
+  const localeMap = {
+    en: "en-US",
+    es: "es-ES",
+    zh: "zh-CN",
+    ru: "ru-RU",
+    hi: "hi-IN",
+    th: "th-TH",
+    de: "de-DE",
+    fr: "fr-FR",
+    it: "it-IT"
+  };
+
+  const locale =
+    localeMap[language] ||
+    "en-US";
+
+  const imageCopy = {
+    en: {
+      keep: "Keep this message close to your heart.",
+      share: "👇 Share!"
+    },
+    es: {
+      keep: "Guarda este mensaje cerca de tu corazón.",
+      share: "👇 ¡Comparte!"
+    },
+    zh: {
+      keep: "把这条讯息珍藏在心中。",
+      share: "👇 分享"
+    },
+    ru: {
+      keep: "Сохрани это послание в своём сердце.",
+      share: "👇 Поделись!"
+    },
+    hi: {
+      keep: "इस संदेश को अपने दिल के करीब रखें।",
+      share: "👇 साझा करें!"
+    },
+    th: {
+      keep: "เก็บข้อความนี้ไว้ใกล้หัวใจของคุณ",
+      share: "👇 แชร์!"
+    },
+    de: {
+      keep: "Bewahre diese Botschaft in deinem Herzen.",
+      share: "👇 Teilen!"
+    },
+    fr: {
+      keep: "Gardez ce message près de votre cœur.",
+      share: "👇 Partagez !"
+    },
+    it: {
+      keep: "Custodisci questo messaggio nel tuo cuore.",
+      share: "👇 Condividi!"
+    }
+  };
+
+  const copy =
+    imageCopy[language] ||
+    imageCopy.en;
+
+  let dateText = "";
+
+  try {
+    dateText =
+      new Intl.DateTimeFormat(
+        locale,
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }
+      ).format(new Date());
+  } catch (error) {
+    dateText = getCurrentDateText();
+  }
+
+  // Uppercase looks closest to the supplied parchment example.
+  if (!["zh", "hi", "th"].includes(language)) {
+    try {
+      dateText =
+        dateText.toLocaleUpperCase(locale);
+    } catch (error) {
+      dateText = dateText.toUpperCase();
+    }
+  }
+
+  const fontFamilies = (() => {
+
+    if (language === "zh") {
+      return {
+        title:
+          '"Noto Serif SC", "Songti SC", "Microsoft YaHei", "PingFang SC", serif',
+        body:
+          '"Noto Serif SC", "Songti SC", "Microsoft YaHei", "PingFang SC", serif'
+      };
+    }
+
+    if (language === "hi") {
+      return {
+        title:
+          '"Noto Serif Devanagari", "Nirmala UI", Mangal, serif',
+        body:
+          '"Noto Serif Devanagari", "Nirmala UI", Mangal, serif'
+      };
+    }
+
+    if (language === "th") {
+      return {
+        title:
+          '"Noto Serif Thai", "Leelawadee UI", Tahoma, sans-serif',
+        body:
+          '"Noto Serif Thai", "Leelawadee UI", Tahoma, sans-serif'
+      };
+    }
+
+    if (language === "ru") {
+      return {
+        title:
+          'Georgia, "Times New Roman", serif',
+        body:
+          'Georgia, "Times New Roman", serif'
+      };
+    }
+
+    return {
+      title:
+        '"Cinzel", Georgia, "Times New Roman", serif',
+      body:
+        'Georgia, "Times New Roman", serif'
+    };
+
+  })();
+
+  function loadImage(source) {
+
+    return new Promise(
+      (resolve, reject) => {
+
+        const image = new Image();
+
+        image.crossOrigin = "anonymous";
+        image.decoding = "async";
+
+        image.onload = () => {
+          resolve(image);
+        };
+
+        image.onerror = () => {
+          reject(
+            new Error(
+              `Unable to load Universe139 image template: ${source}`
+            )
+          );
+        };
+
+        image.src = source;
+
+      }
+    );
+  }
+
+  function drawTemplateFallback() {
+
+    const background =
+      ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        height
+      );
+
+    background.addColorStop(
+      0,
+      "#07162f"
+    );
+
+    background.addColorStop(
+      .48,
+      "#102851"
+    );
+
+    background.addColorStop(
+      1,
+      "#031020"
+    );
+
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, width, height);
+
+    for (let i = 0; i < 190; i++) {
+
+      const x = Math.random() * width;
+      const y = Math.random() * height;
+      const radius = Math.random() * 2.2 + .4;
+
+      ctx.beginPath();
+      ctx.arc(
+        x,
+        y,
+        radius,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.fillStyle =
+        `rgba(255,255,255,${.25 + Math.random() * .65})`;
+
+      ctx.fill();
+    }
+
+    const parchment =
+      ctx.createLinearGradient(
+        230,
+        470,
+        850,
+        1200
+      );
+
+    parchment.addColorStop(
+      0,
+      "#f1d49f"
+    );
+
+    parchment.addColorStop(
+      .5,
+      "#dcb77a"
+    );
+
+    parchment.addColorStop(
+      1,
+      "#c79656"
+    );
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,.48)";
+    ctx.shadowBlur = 36;
+    ctx.shadowOffsetY = 18;
+    ctx.fillStyle = parchment;
+    ctx.beginPath();
+    ctx.roundRect(
+      220,
+      455,
+      640,
+      770,
+      28
+    );
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = "#07152f";
+    ctx.beginPath();
+    ctx.roundRect(
+      175,
+      1500,
+      730,
+      210,
+      58
+    );
+    ctx.fill();
+  }
+
+  // The supplied magical forest artwork is used as the picture template.
+  // Keep this JPG in the same project folder as index.html and script.js.
+  const templateURL =
+    new URL(
+      "universe-message-template.jpg",
+      document.baseURI
+    ).href;
+
+  try {
+
+    const template =
+      await loadImage(templateURL);
+
+    const scale =
+      Math.max(
+        width / template.naturalWidth,
+        height / template.naturalHeight
+      );
+
+    const sourceWidth =
+      width / scale;
+
+    const sourceHeight =
+      height / scale;
+
+    const sourceX =
+      (template.naturalWidth - sourceWidth) / 2;
+
+    const sourceY =
+      (template.naturalHeight - sourceHeight) / 2;
+
+    ctx.drawImage(
+      template,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
       0,
       0,
       width,
       height
     );
 
-  background.addColorStop(
-    0,
-    "#080512"
-  );
+  } catch (error) {
 
-  background.addColorStop(
-    .35,
-    "#25113f"
-  );
-
-  background.addColorStop(
-    .7,
-    "#120827"
-  );
-
-  background.addColorStop(
-    1,
-    "#030207"
-  );
-
-  ctx.fillStyle =
-    background;
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  // ========================================
-  // COSMIC GLOW
-  // ========================================
-
-  const glow =
-    ctx.createRadialGradient(
-      width / 2,
-      430,
-      20,
-      width / 2,
-      430,
-      650
+    console.error(
+      "Universe139 share-picture template error:",
+      error
     );
 
-  glow.addColorStop(
-    0,
-    "rgba(190,120,255,.45)"
-  );
-
-  glow.addColorStop(
-    .3,
-    "rgba(110,50,200,.20)"
-  );
-
-  glow.addColorStop(
-    1,
-    "rgba(0,0,0,0)"
-  );
-
-  ctx.fillStyle =
-    glow;
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  // ========================================
-  // STARS
-  // ========================================
-
-  for (
-    let i = 0;
-    i < 150;
-    i++
-  ) {
-
-    const x =
-      Math.random() * width;
-
-    const y =
-      Math.random() * height;
-
-    const radius =
-      Math.random() * 2 + .5;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      x,
-      y,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fillStyle =
-      `rgba(255,255,255,${.25 + Math.random() * .7})`;
-
-    ctx.fill();
-
+    drawTemplateFallback();
   }
 
+  function getTextTokens(
+    value,
+    textLanguage
+  ) {
 
-  // ========================================
-  // BRAND
-  // ========================================
+    const cleanValue =
+      String(value || "");
 
-  ctx.textAlign =
-    "center";
+    if (textLanguage === "zh") {
+      return Array.from(cleanValue);
+    }
 
-  ctx.fillStyle =
-    "#d9b7ff";
+    if (
+      typeof Intl !== "undefined" &&
+      typeof Intl.Segmenter === "function" &&
+      ["th", "hi"].includes(textLanguage)
+    ) {
 
-  ctx.font =
-    "600 30px Arial, sans-serif";
+      try {
 
-  ctx.fillText(
-    "UNIVERSE139",
-    width / 2,
-    115
-  );
+        const segmenter =
+          new Intl.Segmenter(
+            localeMap[textLanguage] || locale,
+            {
+              granularity: "word"
+            }
+          );
 
+        return Array.from(
+          segmenter.segment(cleanValue),
+          segment => segment.segment
+        );
 
-  ctx.fillStyle =
-    "rgba(255,255,255,.75)";
+      } catch (error) {
+        // Continue with the normal whitespace method.
+      }
+    }
 
-  ctx.font =
-    "500 20px Arial, sans-serif";
+    const words =
+      cleanValue
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
 
-  ctx.fillText(
-    "A MESSAGE FROM THE UNIVERSE",
-    width / 2,
-    155
-  );
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.5)";
-
-  ctx.font =
-    "500 18px Arial, sans-serif";
-
-  ctx.fillText(
-    getCurrentDateText(),
-    width / 2,
-    195
-  );
-
-
-  // ========================================
-  // MESSAGE CARD
-  // ========================================
-
-  const cardX =
-    75;
-
-  const cardY =
-    270;
-
-  const cardW =
-    width - 150;
-
-  const cardH =
-    720;
-
-  const radius =
-    42;
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    cardX + radius,
-    cardY
-  );
-
-  ctx.lineTo(
-    cardX + cardW - radius,
-    cardY
-  );
-
-  ctx.quadraticCurveTo(
-    cardX + cardW,
-    cardY,
-    cardX + cardW,
-    cardY + radius
-  );
-
-  ctx.lineTo(
-    cardX + cardW,
-    cardY + cardH - radius
-  );
-
-  ctx.quadraticCurveTo(
-    cardX + cardW,
-    cardY + cardH,
-    cardX + cardW - radius,
-    cardY + cardH
-  );
-
-  ctx.lineTo(
-    cardX + radius,
-    cardY + cardH
-  );
-
-  ctx.quadraticCurveTo(
-    cardX,
-    cardY + cardH,
-    cardX,
-    cardY + cardH - radius
-  );
-
-  ctx.lineTo(
-    cardX,
-    cardY + radius
-  );
-
-  ctx.quadraticCurveTo(
-    cardX,
-    cardY,
-    cardX + radius,
-    cardY
-  );
-
-  ctx.closePath();
-
-  const cardGradient =
-    ctx.createLinearGradient(
-      cardX,
-      cardY,
-      cardX + cardW,
-      cardY + cardH
+    return words.map(
+      (word, index) =>
+        index === 0
+          ? word
+          : ` ${word}`
     );
+  }
 
-  cardGradient.addColorStop(
-    0,
-    "rgba(100,55,150,.55)"
-  );
+  function splitOversizedToken(
+    token,
+    maxWidth
+  ) {
 
-  cardGradient.addColorStop(
-    1,
-    "rgba(20,8,40,.92)"
-  );
+    const characters =
+      Array.from(token);
 
-  ctx.fillStyle =
-    cardGradient;
+    const pieces = [];
+    let currentPiece = "";
 
-  ctx.fill();
+    characters.forEach(character => {
 
-  ctx.strokeStyle =
-    "rgba(255,255,255,.18)";
+      const testPiece =
+        currentPiece + character;
 
-  ctx.lineWidth =
-    2;
+      if (
+        currentPiece &&
+        ctx.measureText(testPiece).width > maxWidth
+      ) {
+        pieces.push(currentPiece);
+        currentPiece = character;
+      } else {
+        currentPiece = testPiece;
+      }
 
-  ctx.stroke();
+    });
 
+    if (currentPiece) {
+      pieces.push(currentPiece);
+    }
 
-  // ========================================
-  // QUOTE
-  // ========================================
+    return pieces;
+  }
 
-  ctx.fillStyle =
-    "#ffffff";
+  function wrapImageText(
+    value,
+    maxWidth,
+    textLanguage = language
+  ) {
 
-  ctx.font =
-    "italic 64px Georgia, serif";
+    const paragraphs =
+      String(value || "")
+        .split(/\n+/);
 
-  ctx.fillText(
-    "\u201C",
-    150,
-    400
-  );
+    const allLines = [];
 
-  ctx.font =
-    "700 48px Arial, sans-serif";
+    paragraphs.forEach(paragraph => {
 
-  const maxWidth =
-    cardW - 150;
+      const tokens =
+        getTextTokens(
+          paragraph,
+          textLanguage
+        );
 
-  const lines =
-    wrapCanvasText(
-      ctx,
-      currentMessage,
-      maxWidth
-    );
+      let currentLine = "";
 
-  const lineHeight =
-    72;
+      tokens.forEach(token => {
 
-  const startY =
-    520 -
-    ((lines.length - 1) *
-      lineHeight) / 2;
+        const pieces =
+          ctx.measureText(token).width > maxWidth
+            ? splitOversizedToken(
+                token,
+                maxWidth
+              )
+            : [token];
 
-  lines.forEach(
-    (line, index) => {
+        pieces.forEach(piece => {
 
-      ctx.fillStyle =
-        "#ffffff";
+          const testLine =
+            currentLine + piece;
 
-      ctx.fillText(
-        line,
-        width / 2,
-        startY +
-          index *
-          lineHeight
-      );
+          if (
+            !currentLine ||
+            ctx.measureText(testLine).width <= maxWidth
+          ) {
+            currentLine = testLine;
+          } else {
+            allLines.push(currentLine.trim());
+            currentLine = piece.trimStart();
+          }
+
+        });
+
+      });
+
+      if (currentLine.trim()) {
+        allLines.push(currentLine.trim());
+      }
+
+    });
+
+    return allLines.length
+      ? allLines
+      : [""];
+  }
+
+  function fitTextBlock({
+    text,
+    maxWidth,
+    maxHeight,
+    maxFontSize,
+    minFontSize,
+    lineHeightRatio,
+    fontFactory,
+    textLanguage = language
+  }) {
+
+    let best = null;
+
+    for (
+      let fontSize = maxFontSize;
+      fontSize >= minFontSize;
+      fontSize--
+    ) {
+
+      ctx.font =
+        fontFactory(fontSize);
+
+      const lines =
+        wrapImageText(
+          text,
+          maxWidth,
+          textLanguage
+        );
+
+      const lineHeight =
+        fontSize * lineHeightRatio;
+
+      const blockHeight =
+        lines.length * lineHeight;
+
+      best = {
+        fontSize,
+        lines,
+        lineHeight,
+        blockHeight
+      };
+
+      if (blockHeight <= maxHeight) {
+        return best;
+      }
 
     }
-  );
 
+    return best;
+  }
 
-  // ========================================
-  // FOOTER
-  // ========================================
+  function drawCenteredBlock({
+    fit,
+    centerX,
+    topY,
+    fillStyle,
+    strokeStyle = null,
+    strokeWidth = 0,
+    shadowColor = "transparent",
+    shadowBlur = 0,
+    shadowOffsetY = 0
+  }) {
 
-  ctx.fillStyle =
-    "rgba(255,255,255,.55)";
+    ctx.save();
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = fillStyle;
+    ctx.shadowColor = shadowColor;
+    ctx.shadowBlur = shadowBlur;
+    ctx.shadowOffsetY = shadowOffsetY;
+
+    if (strokeStyle && strokeWidth > 0) {
+      ctx.strokeStyle = strokeStyle;
+      ctx.lineWidth = strokeWidth;
+      ctx.lineJoin = "round";
+    }
+
+    fit.lines.forEach(
+      (line, index) => {
+
+        const y =
+          topY +
+          fit.lineHeight * index +
+          fit.lineHeight / 2;
+
+        if (strokeStyle && strokeWidth > 0) {
+          ctx.strokeText(
+            line,
+            centerX,
+            y
+          );
+        }
+
+        ctx.fillText(
+          line,
+          centerX,
+          y
+        );
+
+      }
+    );
+
+    ctx.restore();
+  }
+
+  const scrollCenterX = width / 2;
+  const parchmentTextWidth = 610;
+
+  // ---------------------------------------------------------
+  // TITLE
+  // ---------------------------------------------------------
+
+  let titleText =
+    t.title ||
+    "A Message From The Universe";
+
+  if (!["zh", "hi", "th"].includes(language)) {
+    try {
+      titleText =
+        titleText.toLocaleUpperCase(locale);
+    } catch (error) {
+      titleText = titleText.toUpperCase();
+    }
+  }
+
+  const titleFit =
+    fitTextBlock({
+      text: titleText,
+      maxWidth: parchmentTextWidth,
+      maxHeight: 102,
+      maxFontSize: 48,
+      minFontSize: 31,
+      lineHeightRatio: 1.08,
+      fontFactory:
+        size =>
+          `700 ${size}px ${fontFamilies.title}`
+    });
 
   ctx.font =
-    "20px Arial, sans-serif";
+    `700 ${titleFit.fontSize}px ${fontFamilies.title}`;
 
-  ctx.fillText(
-    "Keep this message close to your heart.",
-    width / 2,
-    1100
-  );
+  drawCenteredBlock({
+    fit: titleFit,
+    centerX: scrollCenterX,
+    topY: 500,
+    fillStyle: "#25303d",
+    shadowColor: "rgba(255,244,213,.28)",
+    shadowBlur: 2,
+    shadowOffsetY: 1
+  });
 
-  ctx.fillStyle =
-    "#d9b7ff";
+  // ---------------------------------------------------------
+  // SUBTITLE
+  // ---------------------------------------------------------
+
+  const subtitleFit =
+    fitTextBlock({
+      text:
+        t.subtitle ||
+        "Your message is waiting...",
+      maxWidth: 575,
+      maxHeight: 58,
+      maxFontSize: 30,
+      minFontSize: 22,
+      lineHeightRatio: 1.15,
+      fontFactory:
+        size =>
+          `500 ${size}px ${fontFamilies.body}`
+    });
 
   ctx.font =
-    "700 28px Arial, sans-serif";
+    `500 ${subtitleFit.fontSize}px ${fontFamilies.body}`;
 
-  ctx.fillText(
-    getDisplayURL(),
-    width / 2,
-    1200
-  );
+  drawCenteredBlock({
+    fit: subtitleFit,
+    centerX: scrollCenterX,
+    topY: 602,
+    fillStyle: "#3b2822"
+  });
 
-  ctx.fillStyle =
-    "rgba(255,255,255,.45)";
+  // ---------------------------------------------------------
+  // DATE
+  // ---------------------------------------------------------
+
+  const dateFit =
+    fitTextBlock({
+      text: dateText,
+      maxWidth: 570,
+      maxHeight: 60,
+      maxFontSize: 40,
+      minFontSize: 27,
+      lineHeightRatio: 1.12,
+      fontFactory:
+        size =>
+          `700 ${size}px ${fontFamilies.title}`
+    });
 
   ctx.font =
-    "18px Arial, sans-serif";
+    `700 ${dateFit.fontSize}px ${fontFamilies.title}`;
 
-  ctx.fillText(
-    "Your message is waiting...",
-    width / 2,
-    1250
-  );
+  drawCenteredBlock({
+    fit: dateFit,
+    centerX: scrollCenterX,
+    topY: 664,
+    fillStyle: "#422319"
+  });
 
+  // Small decorative divider.
+  ctx.save();
+  ctx.strokeStyle = "rgba(91,52,31,.42)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(385, 730);
+  ctx.lineTo(495, 730);
+  ctx.moveTo(585, 730);
+  ctx.lineTo(695, 730);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(91,52,31,.66)";
+  ctx.translate(scrollCenterX, 730);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillRect(-7, -7, 14, 14);
+  ctx.restore();
+
+  // ---------------------------------------------------------
+  // "YOUR MESSAGE" LABEL
+  // ---------------------------------------------------------
+
+  const labelFit =
+    fitTextBlock({
+      text:
+        t.month ||
+        "Your Message",
+      maxWidth: 520,
+      maxHeight: 60,
+      maxFontSize: 37,
+      minFontSize: 25,
+      lineHeightRatio: 1.12,
+      fontFactory:
+        size =>
+          `italic 500 ${size}px ${fontFamilies.body}`
+    });
+
+  ctx.font =
+    `italic 500 ${labelFit.fontSize}px ${fontFamilies.body}`;
+
+  drawCenteredBlock({
+    fit: labelFit,
+    centerX: scrollCenterX,
+    topY: 746,
+    fillStyle: "#4b2b20"
+  });
+
+  // ---------------------------------------------------------
+  // DYNAMIC MESSAGE
+  // ---------------------------------------------------------
+
+  const messageFit =
+    fitTextBlock({
+      text: currentMessage,
+      maxWidth: 610,
+      maxHeight: 325,
+      maxFontSize: 49,
+      minFontSize: 25,
+      lineHeightRatio: 1.18,
+      fontFactory:
+        size =>
+          `600 ${size}px ${fontFamilies.body}`
+    });
+
+  ctx.font =
+    `600 ${messageFit.fontSize}px ${fontFamilies.body}`;
+
+  const messageTop =
+    808 +
+    Math.max(
+      0,
+      (325 - messageFit.blockHeight) / 2
+    );
+
+  drawCenteredBlock({
+    fit: messageFit,
+    centerX: scrollCenterX,
+    topY: messageTop,
+    fillStyle: "#352019",
+    shadowColor: "rgba(255,246,216,.18)",
+    shadowBlur: 1,
+    shadowOffsetY: 1
+  });
+
+  // ---------------------------------------------------------
+  // FOOTER ON THE PARCHMENT
+  // ---------------------------------------------------------
+
+  const footerFit =
+    fitTextBlock({
+      text: copy.keep,
+      maxWidth: 590,
+      maxHeight: 54,
+      maxFontSize: 25,
+      minFontSize: 18,
+      lineHeightRatio: 1.18,
+      fontFactory:
+        size =>
+          `500 ${size}px ${fontFamilies.body}`
+    });
+
+  ctx.font =
+    `500 ${footerFit.fontSize}px ${fontFamilies.body}`;
+
+  drawCenteredBlock({
+    fit: footerFit,
+    centerX: scrollCenterX,
+    topY: 1150,
+    fillStyle: "#4c3328"
+  });
+
+  // ---------------------------------------------------------
+  // SHARE CALL-TO-ACTION ON THE LOWER MAGIC PANEL
+  // ---------------------------------------------------------
+
+  const shareFit =
+    fitTextBlock({
+      text: copy.share,
+      maxWidth: 620,
+      maxHeight: 72,
+      maxFontSize: 51,
+      minFontSize: 32,
+      lineHeightRatio: 1.05,
+      fontFactory:
+        size =>
+          `italic 700 ${size}px ${fontFamilies.body}`
+    });
+
+  ctx.font =
+    `italic 700 ${shareFit.fontSize}px ${fontFamilies.body}`;
+
+  drawCenteredBlock({
+    fit: shareFit,
+    centerX: width / 2,
+    topY: 1538,
+    fillStyle: "#ffd78b",
+    strokeStyle: "rgba(62,30,8,.48)",
+    strokeWidth: 2,
+    shadowColor: "rgba(255,191,78,.48)",
+    shadowBlur: 16,
+    shadowOffsetY: 3
+  });
+
+  const urlFit =
+    fitTextBlock({
+      text: getDisplayURL(),
+      maxWidth: 590,
+      maxHeight: 42,
+      maxFontSize: 23,
+      minFontSize: 17,
+      lineHeightRatio: 1.1,
+      fontFactory:
+        size =>
+          `600 ${size}px Arial, sans-serif`
+    });
+
+  ctx.font =
+    `600 ${urlFit.fontSize}px Arial, sans-serif`;
+
+  drawCenteredBlock({
+    fit: urlFit,
+    centerX: width / 2,
+    topY: 1632,
+    fillStyle: "rgba(255,255,255,.82)",
+    shadowColor: "rgba(0,0,0,.7)",
+    shadowBlur: 5,
+    shadowOffsetY: 2
+  });
 
   return new Promise(
     (resolve, reject) => {
