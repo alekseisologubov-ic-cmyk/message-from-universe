@@ -484,12 +484,13 @@
     /* Title and subtitle sit near the top of the open parchment. */
     body.universe139ParchmentMode .container > header {
       position: absolute !important;
-      left: 17.5% !important;
-      top: 24.5% !important;
-      width: 65% !important;
+      left: 13% !important;
+      top: 18.5% !important;
+      width: 74% !important;
       max-width: none !important;
       margin: 0 !important;
       padding: 0 !important;
+      box-sizing: border-box !important;
       text-align: center !important;
       z-index: 3 !important;
     }
@@ -499,24 +500,29 @@
     }
 
     body.universe139ParchmentMode #title {
+      display: block !important;
       width: 100% !important;
-      max-width: none !important;
-      margin: 0 !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
       padding: 0 !important;
+      box-sizing: border-box !important;
       color: #2b1813 !important;
       font-family: "Cinzel", Georgia, serif !important;
-      font-size: clamp(14px, 3.5vw, 22px) !important;
+      font-size: clamp(11px, 2.15vw, 16px) !important;
       font-weight: 700 !important;
-      line-height: 1.1 !important;
-      letter-spacing: 0.012em !important;
+      line-height: 1.05 !important;
+      letter-spacing: 0 !important;
       text-align: center !important;
       text-shadow: none !important;
-      white-space: nowrap !important;
+      white-space: normal !important;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
     }
 
     body.universe139ParchmentMode #title[data-parchment-title="long"] {
-      font-size: clamp(11px, 2.8vw, 18px) !important;
+      font-size: clamp(10px, 1.9vw, 14px) !important;
       letter-spacing: 0 !important;
+      white-space: normal !important;
     }
 
     body.universe139ParchmentMode #subtitle {
@@ -536,10 +542,10 @@
     /* Dynamic date, label, message, and footer remain inside the parchment. */
     body.universe139ParchmentMode #messageBox {
       position: absolute !important;
-      left: 17.5% !important;
-      top: 31% !important;
-      width: 65% !important;
-      height: 38% !important;
+      left: 15% !important;
+      top: 29% !important;
+      width: 70% !important;
+      height: 40% !important;
       max-width: none !important;
       min-height: 0 !important;
       margin: 0 !important;
@@ -599,10 +605,10 @@
       order: 3 !important;
       flex: 1 1 auto !important;
       width: 100% !important;
-      max-width: none !important;
+      max-width: 100% !important;
       min-height: 0 !important;
       margin: 0 !important;
-      padding: 0 2.2% !important;
+      padding: 0 1.5% !important;
       box-sizing: border-box !important;
       display: flex !important;
       align-items: center !important;
@@ -610,10 +616,10 @@
       overflow: hidden !important;
       color: #2a1712 !important;
       font-family: Georgia, "Times New Roman", serif !important;
-      font-size: clamp(11px, 2.65vw, 18px) !important;
+      font-size: clamp(10px, 2.45vw, 17px) !important;
       font-style: normal !important;
       font-weight: 600 !important;
-      line-height: 1.28 !important;
+      line-height: 1.25 !important;
       letter-spacing: 0 !important;
       text-align: center !important;
       text-shadow: none !important;
@@ -622,13 +628,13 @@
     }
 
     body.universe139ParchmentMode #message[data-parchment-size="long"] {
-      font-size: clamp(10.5px, 2.55vw, 17px) !important;
-      line-height: 1.22 !important;
+      font-size: clamp(9.5px, 2.2vw, 15px) !important;
+      line-height: 1.2 !important;
     }
 
     body.universe139ParchmentMode #message[data-parchment-size="very-long"] {
-      font-size: clamp(9.5px, 2.2vw, 15px) !important;
-      line-height: 1.18 !important;
+      font-size: clamp(8.5px, 1.95vw, 13.5px) !important;
+      line-height: 1.16 !important;
     }
 
     body.universe139ParchmentMode #smallText {
@@ -733,15 +739,31 @@
         width: min(94vw, calc(68dvh * 0.7555040556)) !important;
       }
 
+      body.universe139ParchmentMode .container > header {
+        left: 13% !important;
+        top: 18.5% !important;
+        width: 74% !important;
+      }
+
+      body.universe139ParchmentMode #title {
+        font-size: clamp(10px, 3.4vw, 15px) !important;
+        white-space: normal !important;
+      }
+
       body.universe139ParchmentMode #messageBox {
-        width: 65% !important;
+        left: 15% !important;
+        top: 29% !important;
+        width: 70% !important;
+        height: 40% !important;
         max-width: none !important;
         margin: 0 !important;
         padding: 0 !important;
       }
 
       body.universe139ParchmentMode #message {
-        max-width: none !important;
+        max-width: 100% !important;
+        font-size: clamp(9px, 3.2vw, 15px) !important;
+        line-height: 1.2 !important;
       }
 
       body.universe139ParchmentMode #universe139SimpleMessageActions {
